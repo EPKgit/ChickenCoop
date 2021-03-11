@@ -4,33 +4,51 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(StatBlock))]
+[CustomEditor(typeof(StatBlockComponent))]
 public class StatBlockInspector : Editor
 {
-	private StatBlock statBlock;
-	private float value;
+    private static StatName newKey = StatName.Strength;
 
-	void OnEnable()
+    private StatBlockComponent statBlock;
+
+    void OnEnable()
 	{
-		statBlock = target as StatBlock;
-	}	
+		statBlock = target as StatBlockComponent;
+    }	
 
 	public override void OnInspectorGUI()
 	{
-		if(EditorApplication.isPlaying || EditorApplication.isPaused)
+        Dictionary<StatName, Stat> stats = statBlock.GetStatBlock().GetStats();
+        if (EditorApplication.isPlaying || EditorApplication.isPaused)
 		{
-			foreach(StatName s in Enum.GetValues(typeof(StatName)))
-			{
-				value = statBlock.GetValue(s);
-				if(value != -1)
-				{
-					EditorGUILayout.LabelField(string.Format("{0}:{1}", s.ToString(), value));
-				}
+            foreach (var pair in stats)
+            {
+				EditorGUILayout.LabelField(string.Format("{0}:{1}", pair.Key.ToString(), pair.Value.Value));
 			}
 		}
 		else
 		{
-			base.OnInspectorGUI();
-		}
+            foreach(var pair in stats)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField(pair.Key.ToString());
+                pair.Value.BaseValue = EditorGUILayout.FloatField(pair.Value.BaseValue);
+                if(GUILayout.Button("-"))
+                {
+                    stats.Remove(pair.Key);
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+            EditorGUILayout.Separator();
+            EditorGUILayout.BeginHorizontal();
+            newKey = (StatName)EditorGUILayout.EnumPopup(newKey);
+            if (GUILayout.Button("+") && !stats.ContainsKey(newKey))
+            {
+                stats.Add(newKey, new Stat(newKey, 1));
+            }
+            EditorGUILayout.EndHorizontal();
+
+            serializedObject.ApplyModifiedProperties();
+        }
 	}
 }

@@ -14,20 +14,19 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 	public float maxHealth;
 
 	private float currentHealth;
-	private StatBlock stats;
+	private StatBlockComponent stats;
 
     void Awake()
     {
-		stats = GetComponent<StatBlock>();
+		stats = GetComponent<StatBlockComponent>();
 		maxHealth = stats?.GetValue(StatName.Toughness) ?? maxHealth;
 		currentHealth = maxHealth;
-		stats?.RegisterInitializationCallback(UpdateMaxHealth);
+		stats?.RegisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
     }
 
 	void OnDisable()
 	{
-		stats?.GetStat(StatName.Toughness)?.UnregisterStatChangeCallback(UpdateMaxHealth);	
-		stats?.DeregisterInitializationCallback(UpdateMaxHealth);
+		stats?.DeregisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
 	}
 
 	public void UpdateMaxHealth(float value)
@@ -35,18 +34,6 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		currentHealth = currentHealth / maxHealth * value;
 		maxHealth = value;
 		healthValueUpdateEvent(currentHealth, maxHealth);
-	}
-
-	public void UpdateMaxHealth(StatBlock s)
-	{
-		float value = s.GetValue(StatName.Toughness);
-		if(value == -1)
-		{
-			return;
-		}
-		stats?.GetStat(StatName.Toughness)?.RegisterStatChangeCallback(UpdateMaxHealth);
-		stats = s;
-		UpdateMaxHealth(value);
 	}
 
 	public void SetHealth(float delta)
@@ -65,18 +52,18 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 
 	public void Damage(float delta, GameObject localSource, GameObject overallSource = null)
 	{
-		if(DEBUGFLAGS.HEALTH) Debug.Log("taking damage");
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "taking damage");
 		HealthChangeEventData data = new HealthChangeEventData(overallSource, localSource, gameObject, delta);
-		if(DEBUGFLAGS.HEALTH) Debug.Log("pre damage");
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "pre damage");
 		preDamageEvent(data);
 		if(data.cancelled)
 		{
-			if(DEBUGFLAGS.HEALTH) Debug.Log("cancelled");
+			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "cancelled");
 			return;
 		}
-		if(DEBUGFLAGS.HEALTH) Debug.Log("not cancelled");
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "not cancelled");
 		currentHealth -= data.delta;
-		float aggroValue = overallSource?.GetComponent<StatBlock>()?.GetStat(StatName.AggroPercentage)?.value ?? 1;
+		float aggroValue = overallSource?.GetComponent<StatBlock>()?.GetStat(StatName.AggroPercentage)?.Value ?? 1;
 		HealthChangeNotificationData notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, data.delta, aggroValue);
 		postDamageEvent(notifData);
 		overallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(notifData);
@@ -91,7 +78,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 
 	public void Heal(float delta, GameObject localSource, GameObject overallSource = null)
 	{
-		if(DEBUGFLAGS.HEALTH) Debug.Log("healing");
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "healing");
 		HealthChangeEventData data = new HealthChangeEventData(overallSource, localSource, gameObject, delta);
 		preHealEvent(data);
 		if(data.cancelled)
@@ -99,7 +86,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 			return;
 		}
 		currentHealth += data.delta;
-		float aggroValue = overallSource?.GetComponent<StatBlock>()?.GetStat(StatName.AggroPercentage)?.value ?? 1;
+		float aggroValue = overallSource?.GetComponent<StatBlock>()?.GetStat(StatName.AggroPercentage)?.Value ?? 1;
 		HealthChangeNotificationData notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, delta, aggroValue);
 		postHealEvent(notifData);
 		healthChangeEvent(notifData);

@@ -7,13 +7,13 @@ using UnityEditor;
 public class BaseHealthInspector : Editor
 {
 	private BaseHealth baseHealth;
-	private StatBlock statBlock;
+	private StatBlockComponent statBlock;
 	
 
 	void OnEnable()
 	{
 		baseHealth = target as BaseHealth;
-		statBlock = baseHealth.gameObject.GetComponent<StatBlock>();
+		statBlock = baseHealth.gameObject.GetComponent<StatBlockComponent>();
 	}
 
 	public override void OnInspectorGUI()

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5225427955661809057}
   - component: {fileID: 3188904434013728472}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Render
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1917885057560347455}
   - component: {fileID: 1410123376616271567}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,10 +144,11 @@ GameObject:
   - component: {fileID: 3686969000786025118}
   - component: {fileID: 6564255710090460684}
   - component: {fileID: 8106257808667114684}
-  - component: {fileID: 3137890906980759876}
   - component: {fileID: 2289779271569588805}
   - component: {fileID: 6092204417890813551}
-  m_Layer: 0
+  - component: {fileID: 573234897641872933}
+  - component: {fileID: 863033339}
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -334,7 +335,7 @@ MonoBehaviour:
     m_ActionName: Gameplay/AimDirection[/Mouse/position]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Menu
+  m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &9148293411782098716
@@ -364,10 +365,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e899184b2529e034ab2c301ebf328e10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerClass: {fileID: 0}
   rb: {fileID: 0}
   col: {fileID: 0}
-  stats: {fileID: 0}
   hp: {fileID: 0}
 --- !u!114 &6564255710090460684
 MonoBehaviour:
@@ -393,25 +392,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ca05e179e969544b999a2a775ea4ab5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3137890906980759876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9148293411782098714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 062ac1e1ab4c55c4089c00db3c5acd78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inspectorValues:
-  - name: 0
-    value: 10
-  - name: 1
-    value: 10
-  - name: 2
-    value: 10
 --- !u!114 &2289779271569588805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,3 +419,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 0
+--- !u!114 &573234897641872933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9148293411782098714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 062ac1e1ab4c55c4089c00db3c5acd78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &863033339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9148293411782098714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb4d44e9e06c2d846b14615397a61d91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerClass: {fileID: 0}

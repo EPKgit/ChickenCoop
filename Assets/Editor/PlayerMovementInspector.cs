@@ -7,12 +7,12 @@ using UnityEditor;
 public class PlayerMovementInspector : Editor
 {
 	private PlayerMovement playerMovement;
-	private StatBlock statBlock;
+	private StatBlockComponent statBlock;
 
 	void OnEnable()
 	{
 		playerMovement = target as PlayerMovement;
-		statBlock = playerMovement.gameObject.GetComponent<StatBlock>();
+		statBlock = playerMovement.gameObject.GetComponent<StatBlockComponent>();
 	}
 
 	public override void OnInspectorGUI()

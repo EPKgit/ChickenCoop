@@ -25,7 +25,7 @@ public abstract class BaseInteractable : MonoBehaviour
 		{
 			return;
 		}
-		if(DEBUGFLAGS.INTERACTABLES) Debug.Log("registering");
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "registering");
 		pi.RegisterAction(toPerform);
 	}
 
@@ -36,7 +36,7 @@ public abstract class BaseInteractable : MonoBehaviour
 		{
 			return;
 		}
-		if(DEBUGFLAGS.INTERACTABLES) Debug.Log("deregistering");
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "deregistering");
 		pi.DeregisterAction(toPerform);
 	}
 }

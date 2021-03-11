@@ -10,19 +10,18 @@ public class PlayerMovement : MonoBehaviour
 	public Vector2 direction;
 
 	private Rigidbody2D rb;
-	private StatBlock stats;
+	private StatBlockComponent stats;
 
 	void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
-		stats = GetComponent<StatBlock>();
-		stats?.RegisterInitializationCallback(UpdateSpeed);
+		stats = GetComponent<StatBlockComponent>();
+		stats?.RegisterStatChangeCallback(StatName.Agility, UpdateSpeed);
 	}
 
 	void OnDisable()
 	{
-		stats?.GetStat(StatName.Agility)?.UnregisterStatChangeCallback(UpdateSpeed);
-		stats?.DeregisterInitializationCallback(UpdateSpeed);
+		stats?.DeregisterStatChangeCallback(StatName.Agility, UpdateSpeed);
 	}
 
 	void Update()
@@ -36,12 +35,12 @@ public class PlayerMovement : MonoBehaviour
 			float degrees = Vector2.Angle(rb.velocity, direction);
 			if (150 > degrees)
 			{
-				Debug.Log("adding to force");
+				DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "adding to force");
 				rb.AddForce(direction * movementSpeed * 0.4f);
 			}
 			else
 			{
-				Debug.Log("opossing");
+                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "opossing");
 				rb.AddForce(direction * movementSpeed * 1.5f);
 			}
 		}
@@ -55,12 +54,5 @@ public class PlayerMovement : MonoBehaviour
 	public void UpdateSpeed(float f)
 	{
 		movementSpeed = f;
-	}
-
-	public void UpdateSpeed(StatBlock s)
-	{
-		stats = s;
-		s.GetStat(StatName.Agility)?.RegisterStatChangeCallback(UpdateSpeed);
-		movementSpeed = s?.GetStat(StatName.Agility)?.value ?? movementSpeed;
 	}
 }

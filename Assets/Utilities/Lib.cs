@@ -36,21 +36,21 @@ public static class Lib
 	{
 		if(typeof(T).IsSubclassOf(typeof(Component)))
 		{
-			if(DEBUGFLAGS.LIB) Debug.Log(string.Format("isComponent and toCheck==null:{0} || toCheck.Equals(null):{1}", toCheck != null, !toCheck?.Equals(null)));
+			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, string.Format("isComponent and toCheck==null:{0} || toCheck.Equals(null):{1}", toCheck != null, !toCheck?.Equals(null)));
 			return toCheck != null && !toCheck.Equals(null);
 		}
-		if(DEBUGFLAGS.LIB) Debug.Log(string.Format("isntComponent and toCheck==null:{0}", toCheck != null));
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, string.Format("isntComponent and toCheck==null:{0}", toCheck != null));
 		return toCheck != null;
 	}
 
 	static T ComponentRecursiveHelper<T>(GameObject check) where T: class
 	{
-		if(DEBUGFLAGS.LIB) Debug.Log("checking " + check.name);
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "checking " + check.name);
 		T temp = check.GetComponent<T>();
-		if(DEBUGFLAGS.LIB) Debug.Log("found " + temp);
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "found " + temp);
 		if(IsNotNull<T>(temp))
 		{
-			if(DEBUGFLAGS.LIB) Debug.Log("returning " + temp);
+			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "returning " + temp);
 			return temp;
 		}
 		foreach(Transform t in check.transform)
@@ -58,11 +58,11 @@ public static class Lib
 			temp = Lib.ComponentRecursiveHelper<T>(t.gameObject);
 			if(IsNotNull<T>(temp))
 			{
-				if(DEBUGFLAGS.LIB) Debug.Log("returning " + temp);
+				DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "returning " + temp);
 				return temp;
 			}
 		}
-		if(DEBUGFLAGS.LIB) Debug.Log("returning null");
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "returning null");
 		return null;
 	}
 
@@ -73,7 +73,7 @@ public static class Lib
 		{
 			top = top.transform.parent.gameObject;
 		}
-		if(DEBUGFLAGS.LIB) Debug.Log("Starting search on " + start.name + " for " + tag);
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "Starting search on " + start.name + " for " + tag);
 		return Lib.TagRecursiveHelper(top, tag);
 	}
 
@@ -113,30 +113,37 @@ public static class Lib
 		return false;
 	}
 
- //   public static Vector3 GetMouseDirection(Mouse m, GameObject from)
- //   {
- //       Vector3 val = m.position.ReadValue();
- //       Ray cameraRay = Camera.main.ScreenPointToRay(val);
- //       Plane groundPlane = new Plane(Vector3.forward, Vector3.zero);
- //       float rayLength;
- //       groundPlane.Raycast(cameraRay, out rayLength);
- //       Vector3 worldSpacePosition = cameraRay.GetPoint(rayLength);
- //       return worldSpacePosition - from.transform.position;
- //   }
+    //   public static Vector3 GetMouseDirection(Mouse m, GameObject from)
+    //   {
+    //       Vector3 val = m.position.ReadValue();
+    //       Ray cameraRay = Camera.main.ScreenPointToRay(val);
+    //       Plane groundPlane = new Plane(Vector3.forward, Vector3.zero);
+    //       float rayLength;
+    //       groundPlane.Raycast(cameraRay, out rayLength);
+    //       Vector3 worldSpacePosition = cameraRay.GetPoint(rayLength);
+    //       return worldSpacePosition - from.transform.position;
+    //   }
 
- //   public static Vector2 GetInputDirection(Gamepad g, Mouse m, InputAction.CallbackContext ctx, InputType it, GameObject player, bool isLeftStick = false)
-	//{
-	//	if(it == InputType.GP)
-	//	{
-	//		return isLeftStick ? g.leftStick.ReadValue() : g.rightStick.ReadValue();
-	//	}
-	//	else
-	//	{
-	//		return isLeftStick ? ctx.ReadValue<Vector2>() : (Vector2)Lib.GetMouseDirection(m, player);
-	//	}
-	//}
+    public static Vector2 GetAimDirection(InputAction.CallbackContext ctx, GameObject user)
+    {
+        switch(ctx.control.device.description.deviceClass)
+        {
+            case "Mouse":
+            {
+                Vector2 val = ctx.ReadValue<Vector2>();
+                Ray cameraRay = Camera.main.ScreenPointToRay(val);
+                Plane groundPlane = new Plane(Vector3.forward, Vector3.zero);
+                float rayLength;
+                groundPlane.Raycast(cameraRay, out rayLength);
+                Vector3 worldSpacePosition = cameraRay.GetPoint(rayLength);
+                return (worldSpacePosition - user.transform.position).normalized;
+            }
+        }
 
-	public static Vector2 DefaultDirectionCheck(Vector2 dir)
+        return Vector2.zero;
+    }
+
+    public static Vector2 DefaultDirectionCheck(Vector2 dir)
 	{
 		if(dir.x == 0 && dir.y == 0)
 		{

@@ -29,13 +29,13 @@ public class PlayerCallbacks : MonoBehaviour, IHealthCallbacks
 
     public void DamageDealtCallback(HealthChangeNotificationData hcnd)
 	{
-		if(DEBUGFLAGS.HEALTHCALLBACKS) Debug.Log(gameObject.name + " dealt " + hcnd.value + " to " + hcnd.target);
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTHCALLBACKS, gameObject.name + " dealt " + hcnd.value + " to " + hcnd.target);
 		onDealDamage(hcnd);
 	}
 
 	public void DamageHealedCallback(HealthChangeNotificationData hcnd)
 	{
-		if(DEBUGFLAGS.HEALTHCALLBACKS) Debug.Log(gameObject.name + " healed " + hcnd.value + " to " + hcnd.target);
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTHCALLBACKS, gameObject.name + " healed " + hcnd.value + " to " + hcnd.target);
 		onHealDamage(hcnd);
 	}
 }

@@ -9,8 +9,6 @@ public class PlayerAbilities : MonoBehaviour
 	public delegate void AbilityInitializationDelegate(Ability a1, Ability a2, Ability a3, Ability attack);
 	public event AbilityInitializationDelegate initializedEvent = delegate { };
 
-	public PlayerClass playerClass;
-
 	[HideInInspector]
 	public Rigidbody2D rb;
 	[HideInInspector]
@@ -30,45 +28,26 @@ public class PlayerAbilities : MonoBehaviour
 	private List<Ability> passives = new List<Ability>();
     private List<Ability> currentlyTicking = new List<Ability>();
 
+    private bool initialized = false;
+
 	void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
 		col = transform.Find("Colliders").GetComponent<CircleCollider2D>();
-		stats = GetComponent<StatBlock>();
+		stats = GetComponent<StatBlockComponent>().GetStatBlock();
 		hp = GetComponent<BaseHealth>();
-	}
-
-	void OnEnable()
-	{
-		if(abilitySet)
-		{
-			Initialize(abilitySet);
-		}
-		if(playerClass)
-		{
-			Initialize(playerClass);
-		}
-	}
-
-	void OnDisable()
-	{
-		foreach(Ability a in currentlyTicking)
-		{
-			a.FinishAbility();
-		}
 	}
 
 	public void Initialize(PlayerClass pc)
 	{
-		playerClass = pc;
 		Initialize(pc.abilities);
 	}
 
-	public void Initialize(AbilitySet _as)
+	public void Initialize(AbilitySet abilitySet)
 	{
 		currentlyTicking = new List<Ability>();
         passives = new List<Ability>();
-		abilitySet = _as;
+		abilitySet = Instantiate(abilitySet);
 		attack = ScriptableObject.Instantiate(abilitySet.attack);
 		ability1 = ScriptableObject.Instantiate(abilitySet.ability1);
 		ability2 = ScriptableObject.Instantiate(abilitySet.ability2);
@@ -81,7 +60,7 @@ public class PlayerAbilities : MonoBehaviour
 			}
 			else
 			{
-				Debug.Log("Non-passive ability added to passive ability list of " + abilitySet.name);
+				Debug.LogError("Non-passive ability added to passive ability list of " + abilitySet.name);
 			}
 			
 		}
@@ -94,6 +73,7 @@ public class PlayerAbilities : MonoBehaviour
 			a.Initialize(this);
 			currentlyTicking.Add(a);
 		}
+        initialized = true;
 		initializedEvent(ability1, ability2, ability3, attack);
 	}
 
@@ -107,6 +87,10 @@ public class PlayerAbilities : MonoBehaviour
 
 	public List<string> GetCurrentlyInstantiatedAbilities()
 	{
+        if(!initialized)
+        {
+            return new List<string>();
+        }
 		List<string> ret = new List<string>();
 		ret.Add(attack.ToString());
 		ret.Add(ability1.ToString());
@@ -131,6 +115,10 @@ public class PlayerAbilities : MonoBehaviour
 
 	void Update()
 	{
+        if(!initialized)
+        {
+            return;
+        }
 		for(int x = currentlyTicking.Count - 1; x >= 0; --x)
 		{
 			if(currentlyTicking[x].Tick(Time.deltaTime))
@@ -183,6 +171,10 @@ public class PlayerAbilities : MonoBehaviour
 
 	public void UseAbility(Ability a, InputAction.CallbackContext ctx, Vector2 dir)
 	{
+        if(!initialized)
+        {
+            return;
+        }
 		if(a.AttemptUseAbility(ctx, dir))
 		{
 			if(a.tickingAbility)

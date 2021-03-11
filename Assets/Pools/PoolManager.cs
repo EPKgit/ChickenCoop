@@ -23,7 +23,7 @@ public class PoolData
 	}
 }
 
-public class PoolManager : Singleton<PoolManager>
+public class PoolManager : MonoSingleton<PoolManager>
 {
     private Dictionary<GameObject, PoolData> pools;
 
@@ -71,7 +71,7 @@ public class PoolManager : Singleton<PoolManager>
 	/// <returns>The gameobject that is either created or fetched from a pool</returns>
 	public GameObject RequestObject(GameObject g)
 	{
-		if(DEBUGFLAGS.POOLMANAGER) Debug.Log("Requesting " + g.name);
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "Requesting " + g.name);
 		GameObject ret;
 		if(pools.ContainsKey(g))
 		{
@@ -84,13 +84,13 @@ public class PoolManager : Singleton<PoolManager>
 				pools[g].currentTTL = pools[g].maxTTL;
 				ret = Instantiate(g);
 				ret.GetComponent<Poolable>().PoolInit(g);
-				if(DEBUGFLAGS.POOLMANAGER) Debug.Log("POOL EMPTY, CREATING NEW");
+				DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "POOL EMPTY, CREATING NEW");
 			}
 			else
 			{
 				ret = pools[g].pool[0];
 				pools[g].pool.RemoveAt(0);
-				if(DEBUGFLAGS.POOLMANAGER) Debug.Log("GOT FROM POOL");
+				DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "GOT FROM POOL");
 			}
 		}
 		else
@@ -99,7 +99,7 @@ public class PoolManager : Singleton<PoolManager>
 			abnormalPools.Add(pools[g]);
 			ret = Instantiate(g);
 			ret.GetComponent<Poolable>().PoolInit(g);
-			if(DEBUGFLAGS.POOLMANAGER) Debug.Log("POOL DIDN't EXIST");
+			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "POOL DIDN't EXIST");
 		}
 		ret.SetActive(true);
 		++pools[g].loans;
@@ -117,17 +117,17 @@ public class PoolManager : Singleton<PoolManager>
 	/// </returns>
 	public bool ReturnObject(GameObject prefab, GameObject spawned)
 	{
-		if(DEBUGFLAGS.POOLMANAGER) Debug.Log("Returning " + spawned.name + " into pool " + prefab.name);
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "Returning " + spawned.name + " into pool " + prefab.name);
 		if(pools.ContainsKey(prefab))
 		{
-			if(DEBUGFLAGS.POOLMANAGER) Debug.Log("Successful return");
+			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "Successful return");
 			--pools[prefab].loans;
 			pools[prefab].pool.Add(spawned);
 			pools[prefab].currentTTL = pools[prefab].maxTTL;
 			spawned.SetActive(false);
 			return true;
 		}
-		if(DEBUGFLAGS.POOLMANAGER) Debug.Log("Failed return");
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "Failed return");
 		Destroy(spawned);
 		return false;	
 	}
@@ -235,7 +235,7 @@ public class PoolManager : Singleton<PoolManager>
 		{
 			return;
 		}
-		if(DEBUGFLAGS.POOLMANAGER) Debug.Log("Normalizing " + g.name);
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "Normalizing " + g.name);
 		PoolData p = pools[g];
 		int currentCount = p.pool.Count + p.loans;
 		while(p.pool.Count < p.desiredSize)

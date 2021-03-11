@@ -1,22 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
 public class DEBUGFLAGS
 {
-    public static bool MENU = true;
-	public static bool MOVEMENT = false;
-	public static bool LIB = false;
-	public static bool COLLISIONS = false;
-	public static bool HEALTH = true;
-	public static bool ENEMYHEALTH = false;
-	public static bool STATS = false;
-	public static bool ABILITY = false;
-	public static bool POOLMANAGER = false;
-	public static bool AGGRO = false;
-	public static bool INTERACTABLES = false;
-	public static bool AIMING = false;
-	public static bool HEALTHCALLBACKS = false;
-	public static bool INGAMEUI = true;
+    public enum FLAGS
+    {
+        MENU = 0,
+        MOVEMENT = 0,
+        LIB = 0,
+        COLLISIONS = 0,
+        HEALTH = 0,
+        ENEMYHEALTH = 0,
+        STATS = 0,
+        ABILITY = 0,
+        POOLMANAGER = 0,
+        AGGRO = 0,
+        INTERACTABLES = 0,
+        AIMING = 0,
+        HEALTHCALLBACKS = 0,
+        INGAMEUI = 0,
+        RENDER = 0,
+    }
 
+    public static void Log(FLAGS flag, string printString)
+    {
+        if((int)flag == 1)
+        {
+            Debug.Log(printString);
+        }
+    }
 }

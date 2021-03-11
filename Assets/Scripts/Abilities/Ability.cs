@@ -122,7 +122,7 @@ public class Ability : ScriptableObject
 	/// </returns>
     public virtual bool AttemptUseAbility(InputAction.CallbackContext ctx, Vector2 inputDirection)
 	{
-		if(DEBUGFLAGS.ABILITY) if(DEBUGFLAGS.ABILITY) Debug.Log(string.Format("{0} ATTEMPT USE perf:{1} strt:{2} canc:{3}", name, ctx.performed, ctx.started, ctx.canceled));
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITY, string.Format("{0} ATTEMPT USE perf:{1} strt:{2} canc:{3}", name, ctx.performed, ctx.started, ctx.canceled));
 		// if the ability only wants buttondown and it wasn't or if the ability is already ticking, don't use
 		// should also check cost
 		if( (pressOnly && !ctx.performed) || !IsCastable() )

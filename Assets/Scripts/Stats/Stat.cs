@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public delegate void StatChangeDelegate(float value);
+
 [System.Serializable]
 public class Stat
 {
@@ -13,7 +15,7 @@ public class Stat
 	/// <value>
 	/// Use this value to access the updated current value. Returns the value of _value
 	/// </value>
-    public float value
+    public float Value
 	{
 		get
 		{
@@ -27,7 +29,6 @@ public class Stat
 	/// </summary>
 	public StatName name;
 
-	public delegate void StatChangeDelegate(float value);
 	/// <summary>
 	/// An event that is fired anytime the stat is changed, either through a new base value
 	/// or if a modifier is added or removed
@@ -37,7 +38,19 @@ public class Stat
 	/// <summary>
 	/// Our base value, is added to and multiplied by when we calculate our final value
 	/// </summary>
-    private float baseValue;
+    public float BaseValue
+    {
+        get
+        {
+            return _baseValue;
+        }
+        set
+        {
+            _baseValue = value;
+            UpdateCurrentValue();
+        }
+    }
+    private float _baseValue;
 
 	/// <summary>
 	/// A marker for the currentID we're using, acts as a handle that's returned to callers
@@ -52,14 +65,7 @@ public class Stat
 	public Stat(StatName s, float f)
 	{
 		name = s;
-		SetBaseValue(f);
-	}
-
-	public Stat(StatInspectorValue s)
-	{
-		name = s.name;
-		SetBaseValue(s.value);
-		if(DEBUGFLAGS.STATS) Debug.Log(name + " created with value:" + baseValue);
+		BaseValue = f;
 	}
 
 	/// <summary>
@@ -68,23 +74,17 @@ public class Stat
 	/// </summary>
     private void UpdateCurrentValue()
     {
-        float finalResult = baseValue;
+        float finalResult = BaseValue;
         foreach(Tuple<float, int> t in additiveModifiers)
         {
             finalResult += t.Item1;
         }
         foreach(Tuple<float, int> t in multiplicativeModifiers)
         {
-            finalResult += t.Item1 * baseValue;
+            finalResult += t.Item1 * BaseValue;
         }
         _value = finalResult;
 		statChangeEvent(_value);
-    }
-
-    public void SetBaseValue(float f)
-    {
-        baseValue = f;
-        UpdateCurrentValue();
     }
 
 	int GetID()
@@ -145,13 +145,14 @@ public class Stat
 	public void RegisterStatChangeCallback(StatChangeDelegate d)
 	{
 		statChangeEvent += d;
+        d(Value);
 	}
 
 	/// <summary>
 	/// Deregisters a method to get called when the stat is changed
 	/// </summary>
 	/// <param name="d">The method that was invoked</param>
-	public void UnregisterStatChangeCallback(StatChangeDelegate d)
+	public void DeregisterStatChangeCallback(StatChangeDelegate d)
 	{
 		statChangeEvent -= d;
 	}
