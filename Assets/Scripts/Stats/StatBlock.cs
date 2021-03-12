@@ -12,6 +12,11 @@ public class StatBlock : ISerializationCallbackReceiver
 
     private Dictionary<StatName, Stat> stats = new Dictionary<StatName, Stat>();
 
+    void Awake()
+    {
+        Initialize();
+    }
+
     public void Initialize(StatBlock other)
     {
         foreach (var pair in other.stats)
@@ -110,9 +115,9 @@ public class StatBlock : ISerializationCallbackReceiver
         }
     }
 
-    [SerializeField]
+    [SerializeField, HideInInspector]
     private List<StatName> _keys = new List<StatName>();
-    [SerializeField]
+    [SerializeField, HideInInspector]
     private List<Stat> _values = new List<Stat>();
 
     /// <summary>

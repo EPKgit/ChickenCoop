@@ -8,26 +8,19 @@ public delegate void StatChangeDelegate(float value);
 [System.Serializable]
 public class Stat
 {
-	/// <summary>
-	/// Represents the current value of the stat, given the base value and all of the modifiers. This value
-	/// is kept updated as bonuses are added and removed.
-	/// </summary>
-	/// <value>
-	/// Use this value to access the updated current value. Returns the value of _value
-	/// </value>
-    public float Value
-	{
-		get
-		{
-			return _value;
-		}
-	}
-	private float _value;
+    /// <summary>
+    /// Represents the current value of the stat, given the base value and all of the modifiers. This value
+    /// is kept updated as bonuses are added and removed.
+    /// </summary>
+    /// <value>
+    /// Use this value to access the updated current value. Returns the value of _value
+    /// </value>
+    public float Value { get; private set; }
 
-	/// <summary>
-	/// The name of the stat that this represents
-	/// </summary>
-	public StatName name;
+    /// <summary>
+    /// The name of the stat that this represents
+    /// </summary>
+    public StatName name;
 
 	/// <summary>
 	/// An event that is fired anytime the stat is changed, either through a new base value
@@ -50,6 +43,7 @@ public class Stat
             UpdateCurrentValue();
         }
     }
+    [SerializeField, HideInInspector]
     private float _baseValue;
 
 	/// <summary>
@@ -59,7 +53,9 @@ public class Stat
 	/// </summary>
 	private int currentID = 0;
 
+    [NonSerialized]
     private List<Tuple<float, int>> multiplicativeModifiers = new List<Tuple<float, int>>();
+    [NonSerialized]
     private List<Tuple<float, int>> additiveModifiers = new List<Tuple<float, int>>();
 
 	public Stat(StatName s, float f)
@@ -83,8 +79,8 @@ public class Stat
         {
             finalResult += t.Item1 * BaseValue;
         }
-        _value = finalResult;
-		statChangeEvent(_value);
+        Value = finalResult;
+		statChangeEvent(Value);
     }
 
 	int GetID()
@@ -157,9 +153,13 @@ public class Stat
 		statChangeEvent -= d;
 	}
 
+    public void OverwriteBaseValueNoUpdate(float f)
+    {
+        _baseValue = f;
+    }
 
 	public override string ToString()
 	{
-		return string.Format("{0}:{1}", name, _value);
+		return string.Format("{0}:{1}", name, Value);
 	}
 }

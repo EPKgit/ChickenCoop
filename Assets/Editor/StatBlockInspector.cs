@@ -28,25 +28,43 @@ public class StatBlockInspector : Editor
 		}
 		else
 		{
-            foreach(var pair in stats)
+            bool dirty = false;
+            List<StatName> _keys = new List<StatName>(stats.Keys);
+            foreach (var key in _keys)
             {
+                float baseValue = stats[key].BaseValue;
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(pair.Key.ToString());
-                pair.Value.BaseValue = EditorGUILayout.FloatField(pair.Value.BaseValue);
-                if(GUILayout.Button("-"))
+                EditorGUILayout.LabelField(key.ToString());
+                float f = EditorGUILayout.DelayedFloatField(baseValue);
+
+                if (GUILayout.Button("-"))
                 {
-                    stats.Remove(pair.Key);
+                    stats.Remove(key);
+                    dirty = true;
                 }
+
+                if (f != baseValue)
+                {
+                    stats[key].OverwriteBaseValueNoUpdate(f);
+                    dirty = true;
+                }
+
                 EditorGUILayout.EndHorizontal();
             }
             EditorGUILayout.Separator();
             EditorGUILayout.BeginHorizontal();
             newKey = (StatName)EditorGUILayout.EnumPopup(newKey);
-            if (GUILayout.Button("+") && !stats.ContainsKey(newKey))
+            if (!stats.ContainsKey(newKey) && GUILayout.Button("+"))
             {
                 stats.Add(newKey, new Stat(newKey, 1));
+                dirty = true;
             }
             EditorGUILayout.EndHorizontal();
+
+            if(dirty)
+            {
+                EditorUtility.SetDirty(target);
+            }
 
             serializedObject.ApplyModifiedProperties();
         }

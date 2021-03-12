@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class StatBlockComponent : MonoBehaviour
 {	
+    [SerializeField]
 	private StatBlock stats = new StatBlock();
 
     public void Initialize(StatBlock other)
