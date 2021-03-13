@@ -12,34 +12,43 @@ public class StatBlock : ISerializationCallbackReceiver
 
     private Dictionary<StatName, Stat> stats = new Dictionary<StatName, Stat>();
 
-    void Awake()
-    {
-        Initialize();
-    }
-
     public void Initialize(StatBlock other)
     {
-        foreach (var pair in other.stats)
+        var otherStats = other.stats;
+        foreach (StatName key in Enum.GetValues(typeof(StatName)))
         {
-            if (stats.ContainsKey(pair.Key))
+            if (otherStats.ContainsKey(key)) //if the other stats have a definition for it
             {
-                Stat s = stats[pair.Key];
-                s.BaseValue = pair.Value.BaseValue;
+                if (HasStat(key)) //override our local value with the other stats value
+                {
+                    stats[key].BaseValue = otherStats[key].BaseValue;
+                }
+                else //otherwise add it to our dictionary
+                {
+                    stats.Add(key, new Stat(key, otherStats[key].BaseValue));
+                }
             }
-            else
+            else //otherwise if it's not defined by the other block
             {
-                stats.Add(pair.Key, pair.Value);
+                if (HasStat(key)) //make sure we are reset to default
+                {
+                    stats[key].BaseValue = 1.0f;
+                }
+                else //add it with default value
+                {
+                    stats.Add(key, new Stat(key, 1.0f));
+                }
             }
         }
-        Initialize();
+        FlushInitializationQueue();
     }
     public void Initialize()
     {
-        foreach (StatName t in Enum.GetValues(typeof(StatName)))
+        foreach (StatName key in Enum.GetValues(typeof(StatName)))
         {
-            if (!HasStat(t))
+            if (!HasStat(key))
             {
-                stats.Add(t, new Stat(t, 1));
+                stats.Add(key, new Stat(key, 1));
             }
         }
         FlushInitializationQueue();
@@ -142,5 +151,15 @@ public class StatBlock : ISerializationCallbackReceiver
         {
             stats.Add(_keys[x], _values[x]);
         }
+    }
+
+    public override string ToString()
+    {
+        string s = "";
+        foreach (var pair in stats)
+        {
+            s += string.Format("{0}:{1}\n", pair.Key.ToString(), pair.Value.Value);
+        }
+        return s;
     }
 }

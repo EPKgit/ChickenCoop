@@ -8,6 +8,11 @@ public class StatBlockComponent : MonoBehaviour
     [SerializeField]
 	private StatBlock stats = new StatBlock();
 
+    void Awake()
+    {
+        Initialize();
+    }
+
     public void Initialize(StatBlock other)
     {
         stats.Initialize(other);

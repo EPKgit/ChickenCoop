@@ -6,7 +6,7 @@ using UnityEngine;
 public delegate void StatChangeDelegate(float value);
 
 [System.Serializable]
-public class Stat
+public class Stat : ISerializationCallbackReceiver
 {
     /// <summary>
     /// Represents the current value of the stat, given the base value and all of the modifiers. This value
@@ -15,7 +15,19 @@ public class Stat
     /// <value>
     /// Use this value to access the updated current value. Returns the value of _value
     /// </value>
-    public float Value { get; private set; }
+    public float Value
+    {
+        get
+        {
+            UpdateCurrentValue();
+            return _value;
+        }
+        private set
+        {
+            _value = value;
+        }
+    }
+    private float _value;
 
     /// <summary>
     /// The name of the stat that this represents
@@ -39,8 +51,8 @@ public class Stat
         }
         set
         {
+            dirty = true;
             _baseValue = value;
-            UpdateCurrentValue();
         }
     }
     [SerializeField, HideInInspector]
@@ -51,12 +63,19 @@ public class Stat
 	/// so they can keep track of the bonuses that they've added. Used to remove bonuses
 	/// to ensure that they remove the same bonus they added. 
 	/// </summary>
+    [NonSerialized]
 	private int currentID = 0;
 
     [NonSerialized]
     private List<Tuple<float, int>> multiplicativeModifiers = new List<Tuple<float, int>>();
     [NonSerialized]
     private List<Tuple<float, int>> additiveModifiers = new List<Tuple<float, int>>();
+
+    /// <summary>
+    /// Flag for when we've updated a value and need to recalculate, optimization to prevent extra recalculations
+    /// </summary>
+    [NonSerialized]
+    private bool dirty = true;
 
 	public Stat(StatName s, float f)
 	{
@@ -70,6 +89,10 @@ public class Stat
 	/// </summary>
     private void UpdateCurrentValue()
     {
+        if(!dirty)
+        {
+            return;
+        }
         float finalResult = BaseValue;
         foreach(Tuple<float, int> t in additiveModifiers)
         {
@@ -79,7 +102,8 @@ public class Stat
         {
             finalResult += t.Item1 * BaseValue;
         }
-        Value = finalResult;
+        _value = finalResult;
+        dirty = false;
 		statChangeEvent(Value);
     }
 
@@ -97,7 +121,7 @@ public class Stat
     {
 		int ID = GetID();
         additiveModifiers.Add(new Tuple<float, int>(f, ID));
-		UpdateCurrentValue();
+        dirty = true;
 		return ID;
     }
 
@@ -110,8 +134,8 @@ public class Stat
     {
 		int ID = GetID();
         multiplicativeModifiers.Add(new Tuple<float, int>(f, ID));
-        UpdateCurrentValue();
-		return ID;
+        dirty = true;
+        return ID;
     }
     
 	/// <summary>
@@ -121,7 +145,7 @@ public class Stat
     public void RemoveAdditiveModifier(int i)
     {
         additiveModifiers.RemoveAll( (t) => t.Item2 == i );
-        UpdateCurrentValue();
+        dirty = true;
     }
 
 	/// <summary>
@@ -131,7 +155,7 @@ public class Stat
     public void RemoveMultiplicativeModifier(int i)
     {
         multiplicativeModifiers.RemoveAll( (t) => t.Item2 == i );
-        UpdateCurrentValue();
+        dirty = true;
     }
 
 	/// <summary>
@@ -155,11 +179,29 @@ public class Stat
 
     public void OverwriteBaseValueNoUpdate(float f)
     {
+        dirty = true;
         _baseValue = f;
     }
 
-	public override string ToString()
+    public void Dirty()
+    {
+        dirty = true;
+    }
+
+    public override string ToString()
 	{
 		return string.Format("{0}:{1}", name, Value);
 	}
+
+    public void OnBeforeSerialize()
+    {
+    }
+
+    public void OnAfterDeserialize()
+    {
+        multiplicativeModifiers = new List<Tuple<float, int>>();
+        additiveModifiers = new List<Tuple<float, int>>();
+        dirty = true;
+        statChangeEvent = delegate { };
+    }
 }
