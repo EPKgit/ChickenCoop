@@ -7,8 +7,6 @@ public enum InputType { KB, GP }
 
 public class PlayerInput : MonoBehaviour
 {
-	public static List<PlayerInput> all = new List<PlayerInput>();
-
 	public bool testingController = false;
 	public bool testingMouseAndKeyboard = false;
 
@@ -26,17 +24,6 @@ public class PlayerInput : MonoBehaviour
 
 	#region INIT
 
-	void OnEnable()
-	{
-		all.Add(this);
-		//controls.Enable();
-	}
-	void OnDisable()
-	{
-		all.Remove(this);
-		//controls.Disable();
-	}
-
 	void Awake()
 	{
 		playerMovement = GetComponent<PlayerMovement>();
@@ -48,29 +35,7 @@ public class PlayerInput : MonoBehaviour
 			{
 				throw new System.InvalidOperationException("Cannot test both mouse+KB and controller on " + gameObject.name);
 			}
-			Initialize();
 		}
-	}
-
-	public void Initialize()
-    { 
-		GetPlayerID();
-		gameObject.name = "Player " + playerID;
-	}
-
-
-	void GetPlayerID()
-	{
-		if(playerID != -1)
-		{
-			return;
-		}
-		int max = 0;
-		for(int x = 0; x < all.Count; ++x)
-		{
-			max = Mathf.Max(max, all[x].playerID);
-		}
-		playerID = max + 1;
 	}
 
 	#endregion
