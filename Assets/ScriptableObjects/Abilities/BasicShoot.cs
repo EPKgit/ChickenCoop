@@ -8,6 +8,7 @@ public class BasicShoot : Ability
 	public GameObject bulletPrefab;
 	public float moveSpeed;
 	public float damage;
+	public float lifetime = 6.0f;
 
 	public override void Initialize(PlayerAbilities pa)
 	{
@@ -15,15 +16,19 @@ public class BasicShoot : Ability
 		base.Initialize(pa);
 	}
 
-    protected override void UseAbility(InputAction.CallbackContext ctx, Vector2 inputDirection)
+    protected override void UseAbility(Vector2 targetPoint)
 	{
-		inputDirection = Lib.DefaultDirectionCheck(inputDirection);
-		inputDirection *= moveSpeed;
+        Vector2 direction = GetNormalizedDirectionTowardsTarget(targetPoint);
+        direction = Lib.DefaultDirectionCheck(direction);
+        direction *= moveSpeed;
 		GameObject temp = PoolManager.instance.RequestObject(bulletPrefab);
 		temp.GetComponent<Bullet>().Setup
 		(
-			playerAbilities.transform.position, inputDirection, playerAbilities.gameObject, 
-			damage * playerAbilities.stats.GetValue(StatName.DamagePercentage)
+			playerAbilities.transform.position, 
+            direction, 
+            playerAbilities.gameObject, 
+			damage * playerAbilities.stats.GetValue(StatName.DamagePercentage),
+            lifetime
 		);
 		temp.GetComponent<Poolable>().Reset();
 	}

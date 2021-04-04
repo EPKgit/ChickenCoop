@@ -16,10 +16,16 @@ MonoBehaviour:
   tickingAbility: 0
   hasDuration: 0
   maxDuration: 0
-  pressOnly: 1
   maxCooldown: 1
   cost: 0
   icon: {fileID: 21300000, guid: 3b2f0988acc7c1f49bff9fe686abedbe, type: 3}
+  targetingData:
+    targetType: 1
+    rangePreviewPrefab: {fileID: 5597262486086814138, guid: c7043fb43aabd854882368336e377dee, type: 3}
+    secondaryPreviewPrefab: {fileID: 5927306085603650659, guid: a60985986de8ac14c91279ee3c01c05c, type: 3}
+    range: 5
+    perpendicularScale: 1
   bulletPrefab: {fileID: 600776075276583015, guid: e2689e65d97e40545bff82f6f668ffae, type: 3}
-  moveSpeed: 2
+  moveSpeed: 10
   damage: 1
+  lifetime: 0.5

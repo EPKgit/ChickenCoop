@@ -4,11 +4,18 @@ using UnityEngine;
 
 public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 {
+    public static T Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
     public static T instance
     {
         get
         {
-            if (m_instance == null)
+            if (_instance == null)
             {
                 if (SingletonHelpers.managerObject == null)
                 {
@@ -16,13 +23,13 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
                     DontDestroyOnLoad(SingletonHelpers.managerObject);
                     SingletonHelpers.managerObject.name = "Managers";
                 }
-                m_instance = SingletonHelpers.managerObject.AddComponent(typeof(T)) as T;
-                m_instance.OnCreation();
+                _instance = SingletonHelpers.managerObject.AddComponent(typeof(T)) as T;
+                _instance.OnCreation();
             }
-            return m_instance;
+            return _instance;
         }
     }
-    private static T m_instance;
+    private static T _instance;
 
     protected virtual void Awake()
     {
@@ -32,11 +39,11 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
 
     protected void OverwriteSingleton(T inst)
     {
-        if (m_instance != null)
+        if (_instance != null)
         {
             Destroy(gameObject);
         }
-        m_instance = inst;
+        _instance = inst;
         OnCreation();
     }
 }
@@ -47,14 +54,14 @@ public class Singleton<T> where T : new()
     {
         get
         {
-            if (m_instance == null)
+            if (_instance == null)
             {
-                m_instance = new T();
+                _instance = new T();
             }
-            return m_instance;
+            return _instance;
         }
     }
-    private static T m_instance;
+    private static T _instance;
     protected virtual void Awake() { }
     protected Singleton()
     {

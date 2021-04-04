@@ -13,12 +13,13 @@ public class Bullet : BaseProjectile
 		GetComponentInChildren<TrailRenderer>()?.Clear();
 	}
 
-	public void Setup(Vector3 pos, Vector3 direction, GameObject p, float d)
+	public void Setup(Vector3 pos, Vector3 direction, GameObject p, float d, float l = 6.0f)
 	{
 		transform.position = pos;
 		rb.velocity = direction;
 		creator = p;
 		damage = d;
+        timeLeftMax = l;
 	}
 
 	void OnTriggerEnter2D(Collider2D col)

@@ -321,7 +321,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 9148293411782098716}
         m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
-        m_MethodName: OnAimDirection
+        m_MethodName: OnAimPoint
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -367,6 +367,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   col: {fileID: 0}
+  stats:
+    _keys: 
+    _values: []
   hp: {fileID: 0}
 --- !u!114 &6564255710090460684
 MonoBehaviour:
@@ -431,6 +434,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 062ac1e1ab4c55c4089c00db3c5acd78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats:
+    _keys: 
+    _values: []
 --- !u!114 &863033339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,3 +450,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerClass: {fileID: 0}
+  playerID: 0

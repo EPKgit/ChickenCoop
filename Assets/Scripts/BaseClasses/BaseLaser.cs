@@ -75,7 +75,7 @@ public class BaseLaser : Poolable
     protected virtual void Update()
     {
         if (creator != null)
-            UpdateLine(creator.transform.position, creator.GetComponent<PlayerInput>().GetAimDirection());
+            UpdateLine(creator.transform.position, creator.GetComponent<PlayerInput>().GetAimPoint());
 
         foreach (BaseHealth i in inside)
         {

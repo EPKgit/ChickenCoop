@@ -124,7 +124,7 @@ public static class Lib
     //       return worldSpacePosition - from.transform.position;
     //   }
 
-    public static Vector2 GetAimDirection(InputAction.CallbackContext ctx, GameObject user)
+    public static Vector2 GetAimPoint(InputAction.CallbackContext ctx, GameObject user)
     {
         switch(ctx.control.device.description.deviceClass)
         {
@@ -136,7 +136,7 @@ public static class Lib
                 float rayLength;
                 groundPlane.Raycast(cameraRay, out rayLength);
                 Vector3 worldSpacePosition = cameraRay.GetPoint(rayLength);
-                return (worldSpacePosition - user.transform.position).normalized;
+                return worldSpacePosition;
             }
         }
 

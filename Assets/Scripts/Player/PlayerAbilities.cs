@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,27 +6,28 @@ using UnityEngine.InputSystem;
 
 public class PlayerAbilities : MonoBehaviour
 {
-	public delegate void AbilityInitializationDelegate(Ability a1, Ability a2, Ability a3, Ability attack);
-	public event AbilityInitializationDelegate initializedEvent = delegate { };
+    public delegate void AbilityInitializationDelegate(Ability a1, Ability a2, Ability a3, Ability attack);
+    public event AbilityInitializationDelegate initializedEvent = delegate { };
 
-	[HideInInspector]
-	public Rigidbody2D rb;
-	[HideInInspector]
-	public CircleCollider2D col;
-	[HideInInspector]
-	public StatBlock stats;
-	[HideInInspector]
-	public BaseHealth hp;
+    [HideInInspector]
+    public Rigidbody2D rb;
+    [HideInInspector]
+    public CircleCollider2D col;
+    [HideInInspector]
+    public StatBlock stats;
+    [HideInInspector]
+    public BaseHealth hp;
 
-	private AbilitySet abilitySet;
+    private AbilitySet abilitySet;
 
-	private Ability ability1;
-	private Ability ability2;
-	private Ability ability3;
-	private Ability attack;
+    public Ability ability1 { get; private set; }
+    public Ability ability2 { get; private set; }
+    public Ability ability3 { get; private set; }
+    public Ability attack { get; private set; }
 
-	private List<Ability> passives = new List<Ability>();
-    private List<Ability> currentlyTicking = new List<Ability>();
+    private List<Ability> passives = new List<Ability>();
+
+    private AbilityQueue abilityQueue;
 
     private bool initialized = false;
 
@@ -45,7 +46,7 @@ public class PlayerAbilities : MonoBehaviour
 
 	public void Initialize(AbilitySet abilitySet)
 	{
-		currentlyTicking = new List<Ability>();
+        abilityQueue = new AbilityQueue();
         passives = new List<Ability>();
 		abilitySet = Instantiate(abilitySet);
 		attack = ScriptableObject.Instantiate(abilitySet.attack);
@@ -71,18 +72,29 @@ public class PlayerAbilities : MonoBehaviour
 		foreach(Ability a in passives)
 		{
 			a.Initialize(this);
-			currentlyTicking.Add(a);
-		}
+            abilityQueue.AbilityStarted(a);
+        }
         initialized = true;
 		initializedEvent(ability1, ability2, ability3, attack);
 	}
 
+    /// <summary>
+    /// Register cooldown callbacks for all abilities, will be called immediately with the starting values. These values may be 0
+    /// </summary>
+    /// <param name="at">Attack callback</param>
+    /// <param name="a1">Ability 1 callback</param>
+    /// <param name="a2">Ability 2 callback</param>
+    /// <param name="a3">Ability 3 callback</param>
 	public void RegisterAbilityCooldownCallbacks(CooldownTickDelegate at, CooldownTickDelegate a1, CooldownTickDelegate a2, CooldownTickDelegate a3)
 	{
 		attack.cooldownTick += at;
 		ability1.cooldownTick += a1;
 		ability2.cooldownTick += a2;
 		ability3.cooldownTick += a3;
+        at(attack.currentCooldown, attack.maxCooldown);
+        a1(ability1.currentCooldown, ability1.maxCooldown);
+        a2(ability2.currentCooldown, ability2.maxCooldown);
+        a3(ability3.currentCooldown, ability3.maxCooldown);
 	}
 
 	public List<string> GetCurrentlyInstantiatedAbilities()
@@ -101,16 +113,7 @@ public class PlayerAbilities : MonoBehaviour
 
 	public List<string> GetCurrentlyTickingAbilities()
 	{
-		if(currentlyTicking == null)
-		{
-			return null;
-		}
-		List<string> ret = new List<string>();
-		foreach(Ability a in currentlyTicking)
-		{
-			ret.Add(a.ToString());
-		}
-		return ret;
+        return abilityQueue.GetCurrentlyTickingAbilities();
 	}
 
 	void Update()
@@ -119,19 +122,15 @@ public class PlayerAbilities : MonoBehaviour
         {
             return;
         }
-		for(int x = currentlyTicking.Count - 1; x >= 0; --x)
-		{
-			if(currentlyTicking[x].Tick(Time.deltaTime))
-			{
-				currentlyTicking[x].FinishAbility();
-				currentlyTicking.RemoveAt(x);
-			}
-		}
 		ability1.Cooldown(Time.deltaTime);
 		ability2.Cooldown(Time.deltaTime);
 		ability3.Cooldown(Time.deltaTime);
 		attack.Cooldown(Time.deltaTime);
+
+        abilityQueue.Update(gameObject);
 	}
+
+    
 
 	public Sprite GetIcon(int index)
 	{
@@ -151,40 +150,52 @@ public class PlayerAbilities : MonoBehaviour
 
 	public void Attack(InputAction.CallbackContext ctx, Vector2 dir)
 	{
-		UseAbility(attack, ctx, dir);
+        AbilityInput(attack, ctx, dir);
 	}
 
 	public void Ability1(InputAction.CallbackContext ctx, Vector2 dir)
 	{
-		UseAbility(ability1, ctx, dir);
+        AbilityInput(ability1, ctx, dir);
 	}
 
 	public void Ability2(InputAction.CallbackContext ctx, Vector2 dir)
 	{
-		UseAbility(ability2, ctx, dir);
+        AbilityInput(ability2, ctx, dir);
 	}
 
 	public void Ability3(InputAction.CallbackContext ctx, Vector2 dir)
 	{
-		UseAbility(ability3, ctx, dir);
+        AbilityInput(ability3, ctx, dir);
 	}
 
-	public void UseAbility(Ability a, InputAction.CallbackContext ctx, Vector2 dir)
-	{
-        if(!initialized)
+    public void AbilityInput(Ability a, InputAction.CallbackContext ctx, Vector2 point)
+    {
+        if (!initialized)
         {
             return;
         }
-		if(a.AttemptUseAbility(ctx, dir))
-		{
-			if(a.tickingAbility)
-			{
-				currentlyTicking.Add(a);
-			}
-			else
-			{
-				a.FinishAbility();
-			}
-		}
-	}
+        switch(ctx.phase) //on press
+        {
+            case InputActionPhase.Started: //on press
+            {
+                abilityQueue.AbilityStarted(a);
+            } break;
+            case InputActionPhase.Performed: //on finish
+            {
+            }
+            break;
+            case InputActionPhase.Canceled: //cleanup
+            {
+                abilityQueue.AbilityRecieveInput(a, point);
+
+                //Debug.LogError("Input Cancelled");
+                //throw new System.NotImplementedException();
+            } break;
+        }
+    }
+
+    public bool IsInitialized()
+    {
+        return initialized;
+    }
 }

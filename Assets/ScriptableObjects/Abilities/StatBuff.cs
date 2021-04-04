@@ -16,7 +16,7 @@ public class StatBuff : Ability
 		bonusHandle = null;
 	}
 
-    protected override void UseAbility(InputAction.CallbackContext ctx, Vector2 inputDirection)
+    protected override void UseAbility(Vector2 targetPoint)
 	{
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITY, string.Format("{0}/{1} tick:{2}", currentDuration, maxDuration, tickingAbility));
 		bonusHandle = playerAbilities.stats.GetStat(statToBuff)?.AddAdditiveModifier(buffAmount);

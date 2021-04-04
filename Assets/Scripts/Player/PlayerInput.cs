@@ -20,7 +20,7 @@ public class PlayerInput : MonoBehaviour
 	private PlayerMovement playerMovement;
 	private PlayerAbilities playerAbilities;
 	private PlayerInteraction playerInteraction;
-  	private Vector2 aimDirection;
+  	private Vector2 aimPoint;
 
 	#region INIT
 
@@ -51,22 +51,23 @@ public class PlayerInput : MonoBehaviour
 	#endregion
 
 
-	#region AIMDIRECTION
+	#region AIMPOINT
 
-	public void OnAimDirection(InputAction.CallbackContext ctx)
-	{	
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AIMING, gameObject.name + " AIMING");
-        DoAimDirection(ctx);
-	}
+	public void OnAimPoint(InputAction.CallbackContext ctx)
+	{
+        DoAimPoint(ctx);
+        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AIMING, gameObject.name + " AIMING AT " + aimPoint);
 
-    void DoAimDirection(InputAction.CallbackContext ctx)
-    {
-        aimDirection = Lib.GetAimDirection(ctx, gameObject);
     }
 
-    public Vector2 GetAimDirection()
+    void DoAimPoint(InputAction.CallbackContext ctx)
     {
-        return aimDirection;
+        aimPoint = Lib.GetAimPoint(ctx, gameObject);
+    }
+
+    public Vector2 GetAimPoint()
+    {
+        return aimPoint;
     }
 
     #endregion
@@ -80,7 +81,7 @@ public class PlayerInput : MonoBehaviour
 
 	void DoAttack(InputAction.CallbackContext ctx)
 	{
-		playerAbilities.Attack(ctx, aimDirection);
+		playerAbilities.Attack(ctx, aimPoint);
 	}
 
 	#endregion
@@ -89,17 +90,17 @@ public class PlayerInput : MonoBehaviour
 
 	public void OnAbility1(InputAction.CallbackContext ctx)
 	{
-		playerAbilities.Ability1(ctx, aimDirection);
+		playerAbilities.Ability1(ctx, aimPoint);
 	}
 
 	public void OnAbility2(InputAction.CallbackContext ctx)
 	{
-		playerAbilities.Ability2(ctx, aimDirection);
+		playerAbilities.Ability2(ctx, aimPoint);
 	}
 
 	public void OnAbility3(InputAction.CallbackContext ctx)
 	{
-		playerAbilities.Ability3(ctx, aimDirection);
+		playerAbilities.Ability3(ctx, aimPoint);
 	}
 
 	#endregion

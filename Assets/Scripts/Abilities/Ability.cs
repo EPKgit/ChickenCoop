@@ -37,11 +37,6 @@ public class Ability : ScriptableObject
 	public float maxDuration;
 
 	/// <summary>
-	/// Set true if you want the ability to only respond to the button press event
-	/// </summary>
-	public bool pressOnly = true;
-
-	/// <summary>
 	/// The amount of time to wait after casting the ability before you can cast it again.
 	/// </summary>
 	public float maxCooldown;
@@ -56,16 +51,29 @@ public class Ability : ScriptableObject
 	/// </summary>
 	public Sprite icon;
 
+    /// <summary>
+    /// The targeting information e.g. range type
+    /// </summary>
+    public AbilityTargetingData targetingData;
+
 	/// <summary>
 	/// Represents the current duration of the ticking ability while it is running.
 	/// Resets to the max duration after the ability is finished
 	/// </summary>
-	protected float currentDuration;
+	public float currentDuration
+    {
+        get;
+        protected set;
+    }
 
 	/// <summary>
 	/// Rerpresents the amount of time remaining while the ablity is cooling down.
 	/// </summary>
-	protected float currentCooldown;
+	public float currentCooldown
+    {
+        get;
+        protected set;
+    }
 
 	protected PlayerAbilities playerAbilities;
 
@@ -114,29 +122,29 @@ public class Ability : ScriptableObject
 		return currentCooldown <= 0 && currentDuration == maxDuration;
 	}
 
-	/// <summary>
-	/// Parental default just checks if the cost is payable, children can have more requirements
-	/// </summary>
-	/// <returns>
-	/// Returns true if the ability is used succesfully
-	/// </returns>
-    public virtual bool AttemptUseAbility(InputAction.CallbackContext ctx, Vector2 inputDirection)
+
+    /// <summary>
+    /// Parental default just checks if the cost is payable, children can have more requirements
+    /// </summary>
+    /// <param name="targetPoint">The point at which the ability was targeted</param>
+    /// <returns>Returns true if the ability is used succesfully</returns>
+    public virtual bool AttemptUseAbility(Vector2 targetPoint)
 	{
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITY, string.Format("{0} ATTEMPT USE perf:{1} strt:{2} canc:{3}", name, ctx.performed, ctx.started, ctx.canceled));
-		// if the ability only wants buttondown and it wasn't or if the ability is already ticking, don't use
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITY, string.Format("{0} ATTEMPT USE AT {1}", name, targetPoint));
+		// if the ability is already ticking or on cooldown
 		// should also check cost
-		if( (pressOnly && !ctx.performed) || !IsCastable() )
+		if(!IsCastable())
 		{
 			return false;
 		}
-		UseAbility(ctx, inputDirection);
+		UseAbility(targetPoint);
 		return true;
 	}
 
 	/// <summary>
 	/// Actually uses the ability if AttemptUseAbility completes
 	/// </summary>
-	protected virtual void UseAbility(InputAction.CallbackContext ctx, Vector2 inputDirection)
+	protected virtual void UseAbility(Vector2 targetPoint)
 	{
 
 	}
@@ -169,6 +177,45 @@ public class Ability : ScriptableObject
 	{
 		return currentCooldown / maxCooldown;
 	}
+
+    /// <summary>
+    /// Helper for the targetting data to be a non-monobehaviour but still instantiate
+    /// </summary>
+    /// <param name="g">Prefab to instance</param>
+    /// <param name="create">To instantiate or destroy</param>
+    /// <returns></returns>
+    public GameObject GameObjectManipulation(GameObject g, bool create)
+    {
+        if (create)
+        {
+            return Instantiate(g);
+        }
+        else
+        {
+            Destroy(g);
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Helper method for children to convert a mouse position to a direction
+    /// </summary>
+    /// <param name="point">The input mouse position</param>
+    /// <returns>Vector2 represetning the direction towards the mouse from the player</returns>
+    protected Vector2 GetDirectionTowardsTarget(Vector2 point)
+    {
+        return point - new Vector2(playerAbilities.transform.position.x, playerAbilities.transform.position.y);
+    }
+
+    /// <summary>
+    /// Helper method for children to convert a mouse position to a normalized direction
+    /// </summary>
+    /// <param name="point">The input mouse position</param>
+    /// <returns>Normalized Vector2 represetning the direction towards the mouse from the player</returns>
+    protected Vector2 GetNormalizedDirectionTowardsTarget(Vector2 point)
+    {
+        return GetDirectionTowardsTarget(point).normalized;
+    }
 
 	public new virtual string ToString()
 	{

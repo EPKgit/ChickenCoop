@@ -52,8 +52,15 @@ public class InGamePlayerUI : MonoBehaviour
 		playerHealth.healthChangeEvent += HealthChange;
 
 		playerAbilities = Lib.FindInHierarchy<PlayerAbilities>(player);
-		playerAbilities.initializedEvent += OnAbilityInitialized;
-	}
+        playerAbilities.initializedEvent += OnAbilityInitialized;
+        if(playerAbilities.IsInitialized())
+        {
+            SetUIIcons();
+            OnAbilityInitialized(playerAbilities.attack, playerAbilities.ability1, playerAbilities.ability2, playerAbilities.ability3);
+        }
+
+        UpdateHealthUI();
+    }
 
 	public void SetUIIcons()
 	{
@@ -91,22 +98,42 @@ public class InGamePlayerUI : MonoBehaviour
 
 	void UpdateAttackUI(float currentCD, float maxCD)
 	{
+        if(maxCD == 0)
+        {
+            maxCD = 1;
+            currentCD = 0;
+        }
 		attackCD.fillAmount = currentCD / maxCD;
 	}
 
 	void UpdateAbility1UI(float currentCD, float maxCD)
 	{
-		ability1CD.fillAmount = currentCD / maxCD;
+        if (maxCD == 0)
+        {
+            maxCD = 1;
+            currentCD = 0;
+        }
+        ability1CD.fillAmount = currentCD / maxCD;
 	}
 
 	void UpdateAbility2UI(float currentCD, float maxCD)
 	{
-		ability2CD.fillAmount = currentCD / maxCD;
+        if (maxCD == 0)
+        {
+            maxCD = 1;
+            currentCD = 0;
+        }
+        ability2CD.fillAmount = currentCD / maxCD;
 	}
 
 	void UpdateAbility3UI(float currentCD, float maxCD)
 	{
-		ability3CD.fillAmount = currentCD / maxCD;
+        if (maxCD == 0)
+        {
+            maxCD = 1;
+            currentCD = 0;
+        }
+        ability3CD.fillAmount = currentCD / maxCD;
 	}
 	
 	public void HideSelf()
