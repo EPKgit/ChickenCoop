@@ -16,7 +16,7 @@ MonoBehaviour:
   tickingAbility: 1
   hasDuration: 1
   maxDuration: 10
-  maxCooldown: 0
+  maxCooldown: 15
   cost: 0
   icon: {fileID: 21300000, guid: 29eef8e8a251f4942bb06be597e9677e, type: 3}
   targetingData:

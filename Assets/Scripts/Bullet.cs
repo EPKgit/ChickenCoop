@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : BaseProjectile
+public class Bullet : BaseLineTargeted
 {
 	public GameObject bulletEffect;
 	public float damage;

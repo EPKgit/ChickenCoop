@@ -18,7 +18,7 @@ public class DEBUGFLAGS
         HEALTHCALLBACKS = 0,
         INGAMEUI = 0,
         RENDER = 0,
-        ABILITYQUEUE = 0,
+        ABILITYQUEUE = 1,
     }
 
     public static void Log(FLAGS flag, string printString)

@@ -50,7 +50,7 @@ public class AbilityQueue
         {
             AbilityInputData current = abilityInputQueue.Peek();
             Ability a = current.ability;
-            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("ABILITY QUEUE UPDATE WITH {0}", current));
+            //DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("ABILITY QUEUE UPDATE WITH {0}", current));
 
             switch (current.state)
             {
@@ -96,7 +96,7 @@ public class AbilityQueue
                 }
                 case AbilityInputData.AbilityInputState.FINISHED:
                 {
-                    DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} FINISHED AT POSITION", current.ability.name));
+                    DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} FINISHED", current.ability.name));
                     a.targetingData.Cleanup(a, attached);
                     abilityInputQueue.Dequeue();
                 } break;
@@ -115,24 +115,32 @@ public class AbilityQueue
         {
             return;
         }
+        foreach(var data in abilityInputQueue)
+        {
+            if(data.ability == a)
+            {
+                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("FAILED ENQUEING {0} BECAUSE IT WAS ALREADY IN QUEUE", a.name));
+                return;
+            }
+        }
+        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("ENQUEING {0}", a.name));
         abilityInputQueue.Enqueue(new AbilityInputData(a));
     }
 
     public void AbilityRecieveInput(Ability a, Vector2 targetData)
     {
-        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("ABILITY:{0} MAYBE RECIEVE INPUT OF {1}", a.name, targetData));
         AbilityInputData aid = null;
         foreach(var data in abilityInputQueue)
         {
             if (data.ability == a)
             {
-                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("\tABILITY:{0} FOUND", a.name));
                 aid = data;
                 break;
             }
         }
         if(aid != null)
         {
+            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", a.name, targetData));
             aid.cachedTargetingInput = targetData;
             aid.inputSet = true;
         }

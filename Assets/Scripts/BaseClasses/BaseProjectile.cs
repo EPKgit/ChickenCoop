@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseProjectile : Poolable
+public class BaseLineTargeted : Poolable
 {
 	protected float timeLeftMax = 6.0f;
 	protected float timeLeftCurrent;

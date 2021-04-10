@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TestingClass
   m_EditorClassIdentifier: 
   name: TESTING
-  abilities: {fileID: 11400000, guid: bbd6d0a16d8d1254fbe1462942329a04, type: 2}
+  abilities: {fileID: 11400000, guid: 83bfd890b50cdf14db895b40d5f91ca5, type: 2}
   playerModelPrefab: {fileID: 3835468119574595567, guid: ce07186f8d3f118409561a1f700bc9fb, type: 3}
   stats:
     _keys: 

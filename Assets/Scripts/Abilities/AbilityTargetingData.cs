@@ -35,13 +35,16 @@ public class AbilityTargetingData
     public float range;
 
     /// <summary>
-    /// The scale perpindicular to the cast direction that the ability covers e.g. the width of the line
+    /// The scale of the preview, this means different things to different targeting types
     /// </summary>
-    public float perpendicularScale;
+    public Vector3 previewScale;
 
     public void Preview(Ability usedAbility, GameObject user)
     {
-        preview = usedAbility.GameObjectManipulation(rangePreviewPrefab, true);
+        if (rangePreviewPrefab != null)
+        {
+            preview = usedAbility.GameObjectManipulation(rangePreviewPrefab, true);
+        }
         switch (targetType)
         {
             case TargetType.NONE:
@@ -55,11 +58,12 @@ public class AbilityTargetingData
             } break;
             case TargetType.ENTITY_TARGETED:
             {
-
+                
             } break;
             case TargetType.GROUND_TARGETED:
             {
-
+                previewSecondary = usedAbility.GameObjectManipulation(secondaryPreviewPrefab, true);
+                PreviewGround(usedAbility, user);
             } break;
             case TargetType.CUSTOM_TARGETING:
             {
@@ -70,15 +74,13 @@ public class AbilityTargetingData
 
     public void PreviewUpdate(Ability usedAbility, GameObject user)
     {
-        preview.transform.localScale = new Vector3(range, range, 1);
-        preview.transform.position = user.transform.position;
+        if (targetType != TargetType.NONE && rangePreviewPrefab != null)
+        {
+            preview.transform.localScale = new Vector3(range, range, 1);
+            preview.transform.position = user.transform.position;
+        }
         switch (targetType)
         {
-            case TargetType.NONE:
-            {
-
-            }
-            break;
             case TargetType.LINE_TARGETED:
             {
                 PreviewLine(usedAbility, user);
@@ -86,12 +88,11 @@ public class AbilityTargetingData
             break;
             case TargetType.ENTITY_TARGETED:
             {
-
             }
             break;
             case TargetType.GROUND_TARGETED:
             {
-
+                PreviewGround(usedAbility, user);
             }
             break;
             case TargetType.CUSTOM_TARGETING:
@@ -119,7 +120,7 @@ public class AbilityTargetingData
     void PreviewLine(Ability usedAbility, GameObject user)
     {
         previewSecondary.transform.position = user.transform.position;
-        Vector3 direction = user.GetComponent<PlayerInput>().GetAimPoint() - (Vector2)user.transform.position;
+        Vector3 direction = user.GetComponent<PlayerInput>().aimPoint - (Vector2)user.transform.position;
         bool right = Vector3.Dot(Vector3.right, direction) > 0;
         if (!right)
         {
@@ -129,7 +130,13 @@ public class AbilityTargetingData
         {
             previewSecondary.transform.rotation = Quaternion.Euler(0, 0, 360 - Vector3.Angle(Vector3.up, direction));
         }
-        previewSecondary.transform.localScale = new Vector3(perpendicularScale, range, 1);
+        previewSecondary.transform.localScale = new Vector3(previewScale.x, range, 1);
+    }
+
+    void PreviewGround(Ability usedAbility, GameObject user)
+    {
+        previewSecondary.transform.position = usedAbility.ClampPointWithinRange(user.GetComponent<PlayerInput>().aimPoint);
+        previewSecondary.transform.localScale = new Vector3(previewScale.x, previewScale.y, 1);
     }
 
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerClass : ScriptableObject
 {
 	public new string name;
-    public AbilitySet abilities;
+    public AbilitySetAsset abilities;
 	public GameObject playerModelPrefab;
 	public StatBlock stats;
 }

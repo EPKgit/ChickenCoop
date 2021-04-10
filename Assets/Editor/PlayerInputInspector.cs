@@ -21,8 +21,9 @@ public class PlayerInputInspector : Editor
 		if(debugFoldout = EditorGUILayout.Foldout(debugFoldout, "Debug"))
 		{
 			EditorGUI.indentLevel++;
-			playerInput.testingController = EditorGUILayout.Toggle("Controller", playerInput.testingController);
-			playerInput.testingMouseAndKeyboard = EditorGUILayout.Toggle("Mouse+KB", playerInput.testingMouseAndKeyboard);
+            EditorGUILayout.LabelField("Empty for now ;)");
+			//playerInput.testingController = EditorGUILayout.Toggle("Controller", playerInput.testingController);
+			//playerInput.testingMouseAndKeyboard = EditorGUILayout.Toggle("Mouse+KB", playerInput.testingMouseAndKeyboard);
 			EditorGUI.indentLevel--;
 		}
 		EditorGUILayout.LabelField("Player ID:" + playerInput.playerID);

@@ -95,7 +95,13 @@ public class AbilityInspector : Editor
             case AbilityTargetingData.TargetType.LINE_TARGETED:
             {
                 LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Line Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
-                LayoutField((a) => { return EditorGUILayout.DelayedFloatField("Perpindicular Scale", a); }, ref targetingData.perpendicularScale, ref dirty);
+                LayoutField((a) => { return EditorGUILayout.DelayedFloatField("Perpindicular Scale", a); }, ref targetingData.previewScale.x, ref dirty);
+            }
+            break;
+            case AbilityTargetingData.TargetType.GROUND_TARGETED:
+            {
+                LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Target Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
+                LayoutField((a) => { return EditorGUILayout.Vector3Field("Preview Scale", a); }, ref targetingData.previewScale, ref dirty);
             }
             break;
         }
