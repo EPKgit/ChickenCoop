@@ -8,7 +8,7 @@ public class DEBUGFLAGS
         LIB = 0,
         COLLISIONS = 0,
         HEALTH = 0,
-        ENEMYHEALTH = 0,
+        ENEMYHEALTH = 1,
         STATS = 0,
         ABILITY = 0,
         POOLMANAGER = 0,
@@ -18,7 +18,7 @@ public class DEBUGFLAGS
         HEALTHCALLBACKS = 0,
         INGAMEUI = 0,
         RENDER = 0,
-        ABILITYQUEUE = 1,
+        ABILITYQUEUE = 0,
     }
 
     public static void Log(FLAGS flag, string printString)

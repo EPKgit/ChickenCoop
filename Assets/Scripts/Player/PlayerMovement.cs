@@ -11,11 +11,18 @@ public class PlayerMovement : MonoBehaviour
 
 	private Rigidbody2D rb;
 	private StatBlockComponent stats;
+    private Animator animator;
+    private SpriteRenderer sprite;
+
+    private int animatorMovingHashCode;
 
 	void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
 		stats = GetComponent<StatBlockComponent>();
+		animator = GetComponentInChildren<Animator>();
+		sprite = GetComponentInChildren<SpriteRenderer>();
+        animatorMovingHashCode = Animator.StringToHash("moving");
 		stats?.RegisterStatChangeCallback(StatName.Agility, UpdateSpeed);
 	}
 
@@ -26,7 +33,13 @@ public class PlayerMovement : MonoBehaviour
 
 	void Update()
 	{
-		if(rb.velocity.magnitude < movementSpeed * 1.05f)
+        bool moving = direction.magnitude > float.Epsilon;
+        animator.SetBool(animatorMovingHashCode, moving);
+        if (moving)
+        {
+            sprite.flipX = rb.velocity.x < 0;
+        }
+        if (rb.velocity.magnitude < movementSpeed * 1.05f)
 		{
 			rb.velocity = direction * movementSpeed;
 		}

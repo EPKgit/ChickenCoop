@@ -16,6 +16,6 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: dbcc47cbefbc6b3449dfc3e2d294e12c, type: 2}
   - {fileID: 11400000, guid: acdfcc02ba445c842b76c920c2ddbc31, type: 2}
-  - {fileID: 11400000, guid: 2ab07791d7a6f044b99b41aa1b0f4e63, type: 2}
+  - {fileID: 11400000, guid: 9c39ee2d36d27b4449087a934a832a9b, type: 2}
   - {fileID: 11400000, guid: 54cfeef6e8dba864c9b3fe5f456c92f8, type: 2}
   passiveEffects: []

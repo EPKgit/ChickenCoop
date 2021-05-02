@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Targeting;
 
 public delegate void CooldownTickDelegate(float currentCooldown, float maxCooldown);
 public delegate void OnCastDelegate(Ability a);
@@ -137,23 +138,23 @@ public class Ability : ScriptableObject
     /// </summary>
     /// <param name="targetPoint">The point at which the ability was targeted</param>
     /// <returns>Returns true if the ability is used succesfully</returns>
-    public virtual bool AttemptUseAbility(Vector2 targetPoint)
+    public virtual bool AttemptUseAbility()
     {
-        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITY, string.Format("{0} ATTEMPT USE AT {1}", name, targetPoint));
+        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITY, string.Format("{0} ATTEMPT USE AT {1}", name, targetingData.inputPoint));
         // if the ability is already ticking or on cooldown
         // should also check cost
         if (!IsCastable())
         {
             return false;
         }
-        UseAbility(targetPoint);
+        UseAbility();
         return true;
     }
 
     /// <summary>
     /// Actually uses the ability if AttemptUseAbility completes
     /// </summary>
-    protected virtual void UseAbility(Vector2 targetPoint)
+    protected virtual void UseAbility()
     {
 
     }
@@ -231,15 +232,44 @@ public class Ability : ScriptableObject
     /// </summary>
     /// <param name="point"></param>
     /// <returns></returns>
-    public Vector2 ClampPointWithinRange(Vector2 point)
+    public Vector2 ClampPointWithinRange(Vector2 point, float range)
     {
         Vector2 direction = point - (Vector2)playerAbilities.transform.position;
         float magnitude = direction.magnitude;
-        if(magnitude > targetingData.range)
+        if(magnitude > range)
         {
-            return direction.normalized * targetingData.range;
+            return direction.normalized * targetingData.range + (Vector2)playerAbilities.transform.position;
         }
-        return direction;
+        return point;
+    }
+
+    public Vector2 ClampPointWithinRange(Vector2 point)
+    {
+        return ClampPointWithinRange(point, targetingData.range);
+    }
+
+    /// <summary>
+    /// Helper method to find an implementer of ITargetable centered on a point, returns the object of highest priority obeying the afilliation flag
+    /// </summary>
+    /// <param name="point">Point to raycast to</param>
+    /// <param name="affiliation">The afilliation mask to search for</param>
+    /// <returns></returns>
+    static public ITargetable FindTargetable(Vector2 point, Affiliation affiliation)
+    {
+        var raycastResults = Physics2D.OverlapPointAll(point);
+        ITargetable target = null;
+        foreach (var i in raycastResults)
+        {
+            ITargetable potential = i.gameObject.GetComponentInParent<ITargetable>();
+            if (potential != null && potential.TargetAffiliation.HasFlag(affiliation))
+            {
+                if (target == null || target.Priority < potential.Priority)
+                {
+                    target = potential;
+                }
+            }
+        }
+        return target;
     }
 
     public new virtual string ToString()

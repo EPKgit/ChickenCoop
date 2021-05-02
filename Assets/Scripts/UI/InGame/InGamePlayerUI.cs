@@ -35,8 +35,8 @@ public class InGamePlayerUI : MonoBehaviour
 		player = g;
 
 		playerHealth = Lib.FindInHierarchy<BaseHealth>(player);
-		currentHealth = playerHealth.GetCurrentHealth();
-		maxHealth = playerHealth.GetMaxHealth();
+		currentHealth = playerHealth.currentHealth;
+		maxHealth = playerHealth.maxHealth;
 		playerHealth.healthValueUpdateEvent += UpdateCachedHealthValues;
 		playerHealth.healthChangeEvent += HealthChange;
 

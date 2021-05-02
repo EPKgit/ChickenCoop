@@ -20,11 +20,13 @@ MonoBehaviour:
   cost: 0
   icon: {fileID: 21300000, guid: b00e4db69fbabf343901ecacc862a577, type: 3}
   targetingData:
+    inputPoint: {x: 0, y: 0}
     targetType: 3
     rangePreviewPrefab: {fileID: 5597262486086814138, guid: c7043fb43aabd854882368336e377dee, type: 3}
     secondaryPreviewPrefab: {fileID: 3952040534788109145, guid: f891729c65d858e45ab6f734f311edbe, type: 3}
-    range: 8
-    previewScale: {x: 1, y: 1, z: 1}
+    range: 9
+    previewScale: {x: 6, y: 6, z: 1}
+    affiliation: 0
   bombPrefab: {fileID: 5689578573568610815, guid: d032277ed8a114b499bec208ae86786f, type: 3}
   arcSteepness: 3
-  arcTime: 2
+  arcTime: 1

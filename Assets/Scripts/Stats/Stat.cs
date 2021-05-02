@@ -51,8 +51,8 @@ public class Stat : ISerializationCallbackReceiver
         }
         set
         {
-            dirty = true;
             _baseValue = value;
+            UpdateCurrentValue();
         }
     }
     [SerializeField, HideInInspector]
@@ -71,12 +71,6 @@ public class Stat : ISerializationCallbackReceiver
     [NonSerialized]
     private List<Tuple<float, int>> additiveModifiers = new List<Tuple<float, int>>();
 
-    /// <summary>
-    /// Flag for when we've updated a value and need to recalculate, optimization to prevent extra recalculations
-    /// </summary>
-    [NonSerialized]
-    private bool dirty = true;
-
 	public Stat(StatName s, float f)
 	{
 		name = s;
@@ -89,10 +83,6 @@ public class Stat : ISerializationCallbackReceiver
 	/// </summary>
     private void UpdateCurrentValue()
     {
-        if(!dirty)
-        {
-            return;
-        }
         float finalResult = BaseValue;
         foreach(Tuple<float, int> t in additiveModifiers)
         {
@@ -103,8 +93,7 @@ public class Stat : ISerializationCallbackReceiver
             finalResult += t.Item1 * BaseValue;
         }
         _value = finalResult;
-        dirty = false;
-		statChangeEvent(Value);
+		statChangeEvent(_value);
     }
 
 	int GetID()
@@ -121,7 +110,7 @@ public class Stat : ISerializationCallbackReceiver
     {
 		int ID = GetID();
         additiveModifiers.Add(new Tuple<float, int>(f, ID));
-        dirty = true;
+        UpdateCurrentValue();
 		return ID;
     }
 
@@ -134,7 +123,7 @@ public class Stat : ISerializationCallbackReceiver
     {
 		int ID = GetID();
         multiplicativeModifiers.Add(new Tuple<float, int>(f, ID));
-        dirty = true;
+        UpdateCurrentValue();
         return ID;
     }
     
@@ -145,7 +134,7 @@ public class Stat : ISerializationCallbackReceiver
     public void RemoveAdditiveModifier(int i)
     {
         additiveModifiers.RemoveAll( (t) => t.Item2 == i );
-        dirty = true;
+        UpdateCurrentValue();
     }
 
 	/// <summary>
@@ -155,7 +144,7 @@ public class Stat : ISerializationCallbackReceiver
     public void RemoveMultiplicativeModifier(int i)
     {
         multiplicativeModifiers.RemoveAll( (t) => t.Item2 == i );
-        dirty = true;
+        UpdateCurrentValue();
     }
 
 	/// <summary>
@@ -165,7 +154,7 @@ public class Stat : ISerializationCallbackReceiver
 	public void RegisterStatChangeCallback(StatChangeDelegate d)
 	{
 		statChangeEvent += d;
-        d(Value);
+        d(_value);
 	}
 
 	/// <summary>
@@ -179,13 +168,7 @@ public class Stat : ISerializationCallbackReceiver
 
     public void OverwriteBaseValueNoUpdate(float f)
     {
-        dirty = true;
         _baseValue = f;
-    }
-
-    public void Dirty()
-    {
-        dirty = true;
     }
 
     public override string ToString()
@@ -201,7 +184,6 @@ public class Stat : ISerializationCallbackReceiver
     {
         multiplicativeModifiers = new List<Tuple<float, int>>();
         additiveModifiers = new List<Tuple<float, int>>();
-        dirty = true;
         statChangeEvent = delegate { };
     }
 }

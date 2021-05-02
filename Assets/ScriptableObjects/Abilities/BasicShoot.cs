@@ -16,9 +16,9 @@ public class BasicShoot : Ability
 		base.Initialize(pa);
 	}
 
-    protected override void UseAbility(Vector2 targetPoint)
+    protected override void UseAbility()
 	{
-        Vector2 direction = GetNormalizedDirectionTowardsTarget(targetPoint);
+        Vector2 direction = GetNormalizedDirectionTowardsTarget(targetingData.inputPoint);
         direction = Lib.DefaultDirectionCheck(direction);
         direction *= moveSpeed;
 		GameObject temp = PoolManager.instance.RequestObject(bulletPrefab);

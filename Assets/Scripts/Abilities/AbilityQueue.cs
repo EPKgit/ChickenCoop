@@ -10,8 +10,6 @@ public class AbilityQueue
         {
             ability = a;
             state = AbilityInputState.WAITING_IN_QUEUE;
-            inputSet = false;
-            cachedTargetingInput = Vector2.zero;
         }
         public Ability ability;
         public enum AbilityInputState
@@ -24,12 +22,10 @@ public class AbilityQueue
             MAX,
         }
         public AbilityInputState state;
-        public Vector2 cachedTargetingInput;
-        public bool inputSet;
 
         public override string ToString()
         {
-            return ability.ToString() + " " + state.ToString() + " " + cachedTargetingInput.ToString();
+            return ability.ToString() + " " + state.ToString();
         }
     }
     private Queue<AbilityInputData> abilityInputQueue = new Queue<AbilityInputData>();
@@ -71,7 +67,7 @@ public class AbilityQueue
                 {
                     //DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} WAITING FOR INPUT", a.name));
                     current.ability.targetingData.PreviewUpdate(a, attached);
-                    if (current.inputSet)
+                    if (current.ability.targetingData.isInputSet)
                     {
                         current.state = AbilityInputData.AbilityInputState.CASTING;
                         goto case AbilityInputData.AbilityInputState.CASTING;
@@ -79,8 +75,8 @@ public class AbilityQueue
                 } break;
                 case AbilityInputData.AbilityInputState.CASTING:
                 {
-                    DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1}", a.name, current.cachedTargetingInput));
-                    if (a.AttemptUseAbility(current.cachedTargetingInput))
+                    DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1} {2}", a.name, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
+                    if (a.AttemptUseAbility())
                     {
                         if (a.tickingAbility)
                         {
@@ -97,6 +93,7 @@ public class AbilityQueue
                 case AbilityInputData.AbilityInputState.FINISHED:
                 {
                     DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} FINISHED", current.ability.name));
+                    a.targetingData.isInputSet = false;
                     a.targetingData.Cleanup(a, attached);
                     abilityInputQueue.Dequeue();
                 } break;
@@ -140,9 +137,15 @@ public class AbilityQueue
         }
         if(aid != null)
         {
+            Targeting.AbilityTargetingData atd = aid.ability.targetingData;
             DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", a.name, targetData));
-            aid.cachedTargetingInput = targetData;
-            aid.inputSet = true;
+            atd.inputPoint = targetData;
+            atd.inputTarget = Ability.FindTargetable(targetData, a.targetingData.affiliation);
+            atd.isInputSet = true;
+            if(!atd.isInputSet)
+            {
+                aid.state = AbilityInputData.AbilityInputState.FINISHED;
+            }
         }
     }
 

@@ -44,11 +44,17 @@ public class BaseArcingProjectile : Poolable
         Resize(new Vector3(1, 1, 1));
     }
 
+    protected virtual void OnEnd()
+    {
+
+    }
+
     protected virtual void Update()
     {
         timer += Time.deltaTime;
         if(timer > arcTime)
         {
+            OnEnd();
             DestroySelf();
         }
         float t = timer / arcTime;

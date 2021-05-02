@@ -2,141 +2,202 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class AbilityTargetingData
+namespace Targeting
 {
-    public enum TargetType
+
+    [System.Serializable]
+    public class AbilityTargetingData
     {
-        NONE,
-        LINE_TARGETED,
-        ENTITY_TARGETED,
-        GROUND_TARGETED,
-        CUSTOM_TARGETING,
-        MAX,
-    }
-    public TargetType targetType;
-
-    /// <summary>
-    /// The circle showing max range prefab
-    /// </summary>
-    public GameObject rangePreviewPrefab;
-
-    /// <summary>
-    /// The secondary casting icon will change based on the targeting type
-    /// </summary>
-    public GameObject secondaryPreviewPrefab;
-
-    private GameObject preview;
-    private GameObject previewSecondary;
-
-    /// <summary>
-    /// The distance from the caster that the targeting is valid at. Also used to scale the preview
-    /// </summary>
-    public float range;
-
-    /// <summary>
-    /// The scale of the preview, this means different things to different targeting types
-    /// </summary>
-    public Vector3 previewScale;
-
-    public void Preview(Ability usedAbility, GameObject user)
-    {
-        if (rangePreviewPrefab != null)
+        public enum TargetType
         {
-            preview = usedAbility.GameObjectManipulation(rangePreviewPrefab, true);
+            NONE,
+            LINE_TARGETED,
+            ENTITY_TARGETED,
+            GROUND_TARGETED,
+            CUSTOM_TARGETING,
+            MAX,
         }
-        switch (targetType)
-        {
-            case TargetType.NONE:
-            {
 
-            } break;
-            case TargetType.LINE_TARGETED:
-            {
-                previewSecondary = usedAbility.GameObjectManipulation(secondaryPreviewPrefab, true);
-                PreviewLine(usedAbility, user);
-            } break;
-            case TargetType.ENTITY_TARGETED:
-            {
-                
-            } break;
-            case TargetType.GROUND_TARGETED:
-            {
-                previewSecondary = usedAbility.GameObjectManipulation(secondaryPreviewPrefab, true);
-                PreviewGround(usedAbility, user);
-            } break;
-            case TargetType.CUSTOM_TARGETING:
-            {
+        public Vector2 inputPoint;
+        public ITargetable inputTarget;
 
-            } break;
-        }
-    }
-
-    public void PreviewUpdate(Ability usedAbility, GameObject user)
-    {
-        if (targetType != TargetType.NONE && rangePreviewPrefab != null)
+        /// <summary>
+        /// Flag that describes if we have recieved input for our ability, this gets reset after every use
+        /// </summary>
+        public bool isInputSet
         {
-            preview.transform.localScale = new Vector3(range, range, 1);
-            preview.transform.position = user.transform.position;
-        }
-        switch (targetType)
-        {
-            case TargetType.LINE_TARGETED:
+            get
             {
-                PreviewLine(usedAbility, user);
+                return _isInputSet && !(targetType == TargetType.ENTITY_TARGETED && inputTarget == null);
             }
-            break;
-            case TargetType.ENTITY_TARGETED:
+            set
             {
+                if(!value)
+                {
+                    inputPoint = Vector2.zero;
+                    inputTarget = null;
+                }
+                _isInputSet = value;
             }
-            break;
-            case TargetType.GROUND_TARGETED:
+        }
+        private bool _isInputSet = false;
+
+        /// <summary>
+        /// The type of targeting this data governs
+        /// </summary>
+        public TargetType targetType;
+
+        /// <summary>
+        /// The circle showing max range prefab
+        /// </summary>
+        public GameObject rangePreviewPrefab;
+
+        /// <summary>
+        /// The secondary casting icon will change based on the targeting type
+        /// </summary>
+        public GameObject secondaryPreviewPrefab;
+
+        private GameObject preview;
+        private GameObject previewSecondary;
+
+        /// <summary>
+        /// The distance from the caster that the targeting is valid at. Also used to scale the preview
+        /// </summary>
+        public float range;
+
+        /// <summary>
+        /// The scale of the preview, this means different things to different targeting types
+        /// </summary>
+        public Vector3 previewScale;
+
+        /// <summary>
+        /// The affiliation of the potential targets for entity targeting
+        /// </summary>
+        public Targeting.Affiliation affiliation;
+
+        public void Preview(Ability usedAbility, GameObject user)
+        {
+            if (rangePreviewPrefab != null)
             {
-                PreviewGround(usedAbility, user);
+                preview = usedAbility.GameObjectManipulation(rangePreviewPrefab, true);
             }
-            break;
-            case TargetType.CUSTOM_TARGETING:
+            switch (targetType)
             {
+                case TargetType.NONE:
+                {
 
+                }
+                break;
+                case TargetType.LINE_TARGETED:
+                {
+                    previewSecondary = usedAbility.GameObjectManipulation(secondaryPreviewPrefab, true);
+                    PreviewLine(usedAbility, user);
+                }
+                break;
+                case TargetType.ENTITY_TARGETED:
+                {
+                    previewSecondary = usedAbility.GameObjectManipulation(secondaryPreviewPrefab, true);
+                    PreviewTargeted(usedAbility, user);
+                }
+                break;
+                case TargetType.GROUND_TARGETED:
+                {
+                    previewSecondary = usedAbility.GameObjectManipulation(secondaryPreviewPrefab, true);
+                    PreviewGround(usedAbility, user);
+                }
+                break;
+                case TargetType.CUSTOM_TARGETING:
+                {
+
+                }
+                break;
             }
-            break;
         }
-    }
 
-    public void Cleanup(Ability usedAbility, GameObject user)
-    {
-        if(preview)
+        public void PreviewUpdate(Ability usedAbility, GameObject user)
         {
-            usedAbility.GameObjectManipulation(preview, false);
-            preview = null;
-        }
-        if(secondaryPreviewPrefab)
-        {
-            usedAbility.GameObjectManipulation(previewSecondary, false);
-            previewSecondary = null;
-        }
-    }
+            if (targetType != TargetType.NONE && rangePreviewPrefab != null)
+            {
+                preview.transform.localScale = new Vector3(range, range, 1);
+                preview.transform.position = user.transform.position;
+            }
+            switch (targetType)
+            {
+                case TargetType.LINE_TARGETED:
+                {
+                    PreviewLine(usedAbility, user);
+                }
+                break;
+                case TargetType.ENTITY_TARGETED:
+                {
+                    PreviewTargeted(usedAbility, user);
+                }
+                break;
+                case TargetType.GROUND_TARGETED:
+                {
+                    PreviewGround(usedAbility, user);
+                }
+                break;
+                case TargetType.CUSTOM_TARGETING:
+                {
 
-    void PreviewLine(Ability usedAbility, GameObject user)
-    {
-        previewSecondary.transform.position = user.transform.position;
-        Vector3 direction = user.GetComponent<PlayerInput>().aimPoint - (Vector2)user.transform.position;
-        bool right = Vector3.Dot(Vector3.right, direction) > 0;
-        if (!right)
-        {
-            previewSecondary.transform.rotation = Quaternion.Euler(0, 0, Vector3.Angle(Vector3.up, direction));
+                }
+                break;
+            }
         }
-        else
-        {
-            previewSecondary.transform.rotation = Quaternion.Euler(0, 0, 360 - Vector3.Angle(Vector3.up, direction));
-        }
-        previewSecondary.transform.localScale = new Vector3(previewScale.x, range, 1);
-    }
 
-    void PreviewGround(Ability usedAbility, GameObject user)
-    {
-        previewSecondary.transform.position = usedAbility.ClampPointWithinRange(user.GetComponent<PlayerInput>().aimPoint);
-        previewSecondary.transform.localScale = new Vector3(previewScale.x, previewScale.y, 1);
+        public void Cleanup(Ability usedAbility, GameObject user)
+        {
+            if (preview)
+            {
+                usedAbility.GameObjectManipulation(preview, false);
+                preview = null;
+            }
+            if (secondaryPreviewPrefab)
+            {
+                usedAbility.GameObjectManipulation(previewSecondary, false);
+                previewSecondary = null;
+            }
+        }
+
+        void PreviewLine(Ability usedAbility, GameObject user)
+        {
+            previewSecondary.transform.position = user.transform.position;
+            Vector3 direction = user.GetComponent<PlayerInput>().aimPoint - (Vector2)user.transform.position;
+            bool right = Vector3.Dot(Vector3.right, direction) > 0;
+            if (!right)
+            {
+                previewSecondary.transform.rotation = Quaternion.Euler(0, 0, Vector3.Angle(Vector3.up, direction));
+            }
+            else
+            {
+                previewSecondary.transform.rotation = Quaternion.Euler(0, 0, 360 - Vector3.Angle(Vector3.up, direction));
+            }
+            previewSecondary.transform.localScale = new Vector3(previewScale.x, range, 1);
+        }
+
+        void PreviewGround(Ability usedAbility, GameObject user)
+        {
+            previewSecondary.transform.position = usedAbility.ClampPointWithinRange(user.GetComponent<PlayerInput>().aimPoint);
+            previewSecondary.transform.localScale = new Vector3(previewScale.x, previewScale.y, 1);
+        }
+
+        void PreviewTargeted(Ability usedAbility, GameObject user)
+        {
+            Vector2 aim = user.GetComponent<PlayerInput>().aimPoint;
+            ITargetable target = Ability.FindTargetable(aim, affiliation);
+            if(target != null)
+            {
+                previewSecondary.GetComponent<SpriteRenderer>().color = Color.green;
+                previewSecondary.transform.position = (Vector3)Lib.FindInHierarchy<Collider2D>(target.Attached)?.bounds.center;// + target.Attached.transform.position;
+            }
+            else
+            {
+                previewSecondary.GetComponent<SpriteRenderer>().color = Color.red;
+                previewSecondary.transform.position = aim;
+            }
+        }
+
     }
 
 }

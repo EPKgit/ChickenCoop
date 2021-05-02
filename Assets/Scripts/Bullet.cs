@@ -24,19 +24,28 @@ public class Bullet : BaseLineTargeted
 
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if(!Lib.HasTagInHierarchy(col.gameObject, "Enemy") && col.gameObject.layer!=13)
-    {
-			return;
-		}
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.COLLISIONS, "trigger");
-		Lib.FindInHierarchy<IDamagable>(col.gameObject)?.Damage(damage, gameObject, creator);
-    	//BulletEffect(transform.position);
-   		DestroySelf();
+        IDamagable damagable = Lib.FindInHierarchy<IDamagable>(col.gameObject);
+        if(damagable == null)
+        {
+            return;
+        }
+
+        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.COLLISIONS, "trigger");
+        damagable.Damage(damage, gameObject, creator);
+        //BulletEffect(transform.position);
+        DestroySelf();
 	}
 
-	void BulletEffect(Vector3 position) {
+	void BulletEffect(Vector3 position)
+    {
 		Quaternion rot = Quaternion.LookRotation(-GetComponent<Rigidbody2D>().velocity);
 		GameObject effect = Instantiate(bulletEffect, position, rot);
 		Destroy(effect, 1f);
 	}
+
+    protected override void Update()
+    {
+        base.Update();
+        transform.Rotate(0, 0, Time.deltaTime * 1080);
+    }
 }

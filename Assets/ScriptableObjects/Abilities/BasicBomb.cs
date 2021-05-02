@@ -11,21 +11,21 @@ public class BasicBomb : Ability
 
 	public override void Initialize(PlayerAbilities pa)
 	{
-		PoolManager.instance.AddPoolSize(bombPrefab, 20, true);
+		PoolManager.instance.AddPoolSize(bombPrefab, 3, true);
 		base.Initialize(pa);
 	}
 
-    protected override void UseAbility(Vector2 targetPoint)
+    protected override void UseAbility()
 	{
-        targetPoint = ClampPointWithinRange(targetPoint);
+        targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint);
 		GameObject temp = PoolManager.instance.RequestObject(bombPrefab);
         Bomb b = temp.GetComponent<Bomb>();
         b.arcSteepness = arcSteepness;
-        b.arcTime = (targetPoint - (Vector2)playerAbilities.transform.position).magnitude / targetingData.range * arcTime; //the arc time decreases the shorter we aim
+        b.arcTime = (targetingData.inputPoint - (Vector2)playerAbilities.transform.position).magnitude / targetingData.range * arcTime; //the arc time decreases the shorter we aim
 		b.Setup
 		(
-			playerAbilities.transform.position, 
-            targetPoint,
+			playerAbilities.transform.position,
+            targetingData.inputPoint,
             playerAbilities.gameObject
 		);
 		temp.GetComponent<Poolable>().Reset();

@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 2289779271569588805}
   - component: {fileID: 6092204417890813551}
   - component: {fileID: 573234897641872933}
+  - component: {fileID: 1822997906994762990}
   - component: {fileID: 863033339}
   m_Layer: 7
   m_Name: Player
@@ -350,8 +351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43dc22961d51b1446bfdba4457ef8a6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testingController: 0
-  testingMouseAndKeyboard: 1
   playerID: -1
 --- !u!114 &3686969000786025118
 MonoBehaviour:
@@ -437,6 +436,20 @@ MonoBehaviour:
   stats:
     _keys: 
     _values: []
+--- !u!114 &1822997906994762990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9148293411782098714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3517712ec28be34a894fb4def169570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetAffiliation: 1
+  _priority: 0
 --- !u!114 &863033339
 MonoBehaviour:
   m_ObjectHideFlags: 0

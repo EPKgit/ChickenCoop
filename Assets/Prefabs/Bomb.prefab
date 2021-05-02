@@ -89,8 +89,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 48c0545f546dca84fb96f9c44e097670, type: 3}
-  m_Color: {r: 0.5754717, g: 0.06266907, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 8759dbbc0620db64885595ab789182d0, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -115,4 +115,5 @@ MonoBehaviour:
   prefab: {fileID: 0}
   arcSteepness: 1
   arcTime: 2
-  damage: 1
+  damage: 3
+  explosionRadius: 3

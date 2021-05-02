@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Targeting;
 
 [CustomEditor(typeof(Ability), true)]
 public class AbilityInspector : Editor
@@ -102,6 +103,12 @@ public class AbilityInspector : Editor
             {
                 LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Target Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
                 LayoutField((a) => { return EditorGUILayout.Vector3Field("Preview Scale", a); }, ref targetingData.previewScale, ref dirty);
+            }
+            break;
+            case AbilityTargetingData.TargetType.ENTITY_TARGETED:
+            {
+                LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Crosshair Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
+                LayoutField((a) => { return (Targeting.Affiliation)EditorGUILayout.EnumFlagsField("Affiliation", a); }, ref targetingData.affiliation, ref dirty);
             }
             break;
         }

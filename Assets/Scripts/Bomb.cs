@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bomb : BaseArcingProjectile
 {
     public float damage;
+    public float explosionRadius;
 
     public override void Reset()
     {
@@ -12,15 +13,20 @@ public class Bomb : BaseArcingProjectile
         GetComponentInChildren<TrailRenderer>()?.Clear();
     }
 
-
-    void OnTriggerEnter2D(Collider2D col)
+    protected override void OnEnd()
     {
-        if (!Lib.HasTagInHierarchy(col.gameObject, "Enemy") && col.gameObject.layer != 13)
+        var collisions = Physics2D.OverlapCircleAll((Vector2)transform.position, explosionRadius);
+        foreach(var col in collisions)
         {
-            return;
+            IDamagable damagable = Lib.FindInHierarchy<IDamagable>(col.gameObject);
+            damagable?.Damage(damage, gameObject, creator);
         }
-        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.COLLISIONS, "trigger");
-        Lib.FindInHierarchy<IDamagable>(col.gameObject)?.Damage(damage, gameObject, creator);
-        DestroySelf();
+    }
+
+
+    protected override void Update()
+    {
+        base.Update();
+        transform.rotation = Quaternion.Euler(0, 0, (Time.frameCount % 10 < 5 ? 1 : -1 * 15));
     }
 }

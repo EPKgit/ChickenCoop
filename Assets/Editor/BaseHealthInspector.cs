@@ -20,7 +20,7 @@ public class BaseHealthInspector : Editor
 	{
 		if(EditorApplication.isPlaying || EditorApplication.isPaused)
 		{
-			EditorGUILayout.LabelField(string.Format("{0}/{1}", baseHealth.GetCurrentHealth(), baseHealth.GetMaxHealth()));
+			EditorGUILayout.LabelField(string.Format("{0}/{1}", baseHealth.currentHealth, baseHealth.maxHealth));
 			if(GUILayout.Button("Take 1 Damage"))
 			{
 				baseHealth.Damage(1, null, null);

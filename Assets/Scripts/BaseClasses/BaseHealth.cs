@@ -11,12 +11,29 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 	public event HealthChangeNotificationDelegate postHealEvent = delegate { };
 	public event HealthChangeNotificationDelegate healthChangeEvent = delegate { };
 	
-	public float maxHealth;
+	public float maxHealth
+    {
+        get
+        {
+            return _maxHealth;
+        }
+        protected set
+        {
+            _maxHealth = value;
+        }
+    }
+    [SerializeField]
+    private float _maxHealth;
 
-	private float currentHealth;
-	private StatBlockComponent stats;
+	public float currentHealth
+    {
+        get;
+        protected set;
+    }
 
-    void Awake()
+    private StatBlockComponent stats;
+
+    protected virtual void Awake()
     {
 		stats = GetComponent<StatBlockComponent>();
 		maxHealth = stats?.GetValue(StatName.Toughness) ?? maxHealth;
@@ -24,7 +41,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		stats?.RegisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
     }
 
-	void OnDisable()
+	protected virtual void OnDisable()
 	{
 		stats?.DeregisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
 	}
@@ -63,7 +80,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		}
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "not cancelled");
 		currentHealth -= data.delta;
-		float aggroValue = overallSource?.GetComponent<StatBlock>()?.GetStat(StatName.AggroPercentage)?.Value ?? 1;
+		float aggroValue = overallSource?.GetComponent<StatBlockComponent>()?.GetStat(StatName.AggroPercentage)?.Value ?? 1;
 		HealthChangeNotificationData notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, data.delta, aggroValue);
 		postDamageEvent(notifData);
 		overallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(notifData);
@@ -86,7 +103,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 			return;
 		}
 		currentHealth += data.delta;
-		float aggroValue = overallSource?.GetComponent<StatBlock>()?.GetStat(StatName.AggroPercentage)?.Value ?? 1;
+		float aggroValue = overallSource?.GetComponent<StatBlockComponent>()?.GetStat(StatName.AggroPercentage)?.Value ?? 1;
 		HealthChangeNotificationData notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, delta, aggroValue);
 		postHealEvent(notifData);
 		healthChangeEvent(notifData);
@@ -102,16 +119,6 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		transform.position = Vector3.zero;
 		currentHealth = maxHealth;
 		healthValueUpdateEvent(currentHealth, maxHealth);
-	}
-
-	public float GetCurrentHealth()
-	{
-		return currentHealth;
-	}
-
-	public float GetMaxHealth()
-	{
-		return maxHealth;
 	}
 }
 
