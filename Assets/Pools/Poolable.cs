@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Poolable : MonoBehaviour
+public class Poolable : MonoBehaviour
 {
     [HideInInspector]
 	public GameObject prefab;

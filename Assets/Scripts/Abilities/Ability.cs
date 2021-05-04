@@ -92,6 +92,16 @@ public class Ability : ScriptableObject
         SetupIDNumber();
     }
 
+
+    /// <summary>
+    /// Called when the ability has left the scope it exists in, should be used to cleanup any pools allocated
+    /// </summary>
+    /// <param name="pa">The player abilites it was included in</param>
+    public virtual void Cleanup(PlayerAbilities pa)
+    {
+
+    }
+
     private static int counter = 0;
     private void SetupIDNumber()
     {

@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class EnemyHealth : BaseHealth
 {
-	public GameObject RedSplodeEffect;
-	public GameObject WhiteSplodeEffect;
-
   	protected override void Die()
 	{
 		Destroy(gameObject);
@@ -15,6 +12,5 @@ public class EnemyHealth : BaseHealth
 
 	private void DieEffect()
     {
-		//GameObject splode = Instantiate(RedSplodeEffect, transform.position, Quaternion.identity);
 	}
 }

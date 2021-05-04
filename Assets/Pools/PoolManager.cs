@@ -166,6 +166,11 @@ public class PoolManager : MonoSingleton<PoolManager>
 	{
 		if(pools.ContainsKey(g))
 		{
+            if (size <= 0)
+            {
+                pools.Remove(g);
+                return true;
+            }
 			pools[g].desiredSize = size;
 			if(init)
 			{
@@ -173,6 +178,10 @@ public class PoolManager : MonoSingleton<PoolManager>
 			}
 			return true;
 		}
+        if(size <= 0)
+        {
+            return false;
+        }
 		pools.Add(g, new PoolData(g));
 		pools[g].desiredSize = size;
 		if(init)
@@ -193,7 +202,7 @@ public class PoolManager : MonoSingleton<PoolManager>
 	/// you can reserve yourself some pool size.
 	/// </summary>
 	/// <param name="g">The gameobject representing the pool</param>
-	/// <param name="size">The size of the pool</param>
+	/// <param name="size">The amount to add to the pool</param>
 	/// <param name="init">If the pool should attempt to fix the pool size all in one frame</param>
 	/// <returns>Returns true if the gameobject pool exists already, false if the pool had to be created</returns>
 	public bool AddPoolSize(GameObject g, int size, bool init = false)
@@ -205,14 +214,30 @@ public class PoolManager : MonoSingleton<PoolManager>
 		return SetPoolSize(g, pools[g].desiredSize + size, init);
 	}
 
-	/// <summary>
-	/// Sets the desired amount of time that the PoolManager will wait before shrinking the size
-	/// of the pool back down to the desiredSize.
+    /// <summary>
+	/// Should be called to return the allocated pool entities that you requested. If the amount removed it greater than the amount
+    /// allocated, the pool will be removed entirely
 	/// </summary>
 	/// <param name="g">The gameobject representing the pool</param>
-	/// <param name="f">The amount of time to wait in seconds</param>
-	/// <returns>Returns true if the gameobject pool exists already, false if the pool had to be created</returns>
-	public bool SetTTL(GameObject g, float f)
+	/// <param name="size">The amount to remove from the pool</param>
+	/// <returns>Returns true if the gameobject pool exists already, false if the pool otherwise</returns>
+	public bool RemovePoolSize(GameObject g, int size)
+    {
+        if (!pools.ContainsKey(g))
+        {
+            return false;
+        }
+        return SetPoolSize(g, pools[g].desiredSize - size, true);
+    }
+
+    /// <summary>
+    /// Sets the desired amount of time that the PoolManager will wait before shrinking the size
+    /// of the pool back down to the desiredSize.
+    /// </summary>
+    /// <param name="g">The gameobject representing the pool</param>
+    /// <param name="f">The amount of time to wait in seconds</param>
+    /// <returns>Returns true if the gameobject pool exists already, false if the pool had to be created</returns>
+    public bool SetTTL(GameObject g, float f)
 	{
 		if(pools.ContainsKey(g))
 		{

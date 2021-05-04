@@ -15,6 +15,12 @@ public class BasicBomb : Ability
 		base.Initialize(pa);
 	}
 
+    public override void Cleanup(PlayerAbilities pa)
+    {
+        PoolManager.instance.RemovePoolSize(bombPrefab, 3);
+        base.Cleanup(pa);
+    }
+
     protected override void UseAbility()
 	{
         targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint);

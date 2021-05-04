@@ -16,6 +16,12 @@ public class BasicShoot : Ability
 		base.Initialize(pa);
 	}
 
+    public override void Cleanup(PlayerAbilities pa)
+    {
+        PoolManager.instance.RemovePoolSize(bulletPrefab, 20);
+        base.Cleanup(pa);
+    }
+
     protected override void UseAbility()
 	{
         Vector2 direction = GetNormalizedDirectionTowardsTarget(targetingData.inputPoint);

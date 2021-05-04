@@ -1,21 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class ShieldEnemy : BaseEnemy
 {
+    public GameObject splashPrefab;
     public GameObject arc;
 	public float blockAngle;
 	public float turnSpeed = 0.05f;
 
-	void OnEnable()
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
+    void OnEnable()
 	{
 		hp.preDamageEvent += CheckIfBlocked;
-	}
-	void OnDisable()
+        PoolManager.instance.AddPoolSize(splashPrefab, 10, true);
+    }
+    void OnDisable()
 	{
 		hp.preDamageEvent -= CheckIfBlocked;
-	}
+        PoolManager.instance.RemovePoolSize(splashPrefab, 10);
+    }
 
 	void CheckIfBlocked(HealthChangeEventData hced)
 	{
@@ -34,8 +43,10 @@ public class ShieldEnemy : BaseEnemy
 	}
 
 	private void ShieldClankEffect(GameObject source) {
-		//GameObject splode = Instantiate(hp.WhiteSplodeEffect, source.transform.position, Quaternion.identity);
-		//splode.transform.localScale *= 0.5f;
+        GameObject g = PoolManager.instance.RequestObject(splashPrefab);
+        g.transform.position = source.transform.position;
+        Poolable p = g.GetComponent<Poolable>();
+        p.Reset();
 	}
 
 	private void DamageEffect(GameObject source) {
@@ -45,14 +56,14 @@ public class ShieldEnemy : BaseEnemy
 
     protected override bool Update()
 	{
-		if(!base.Update())
-		{
-			return false;
-		}
-		//Just walks towards the player
-		Vector2 dir = (chosenPlayer.transform.position - transform.position).normalized;
-		rb.velocity = dir * speed;
-		arc.transform.rotation = Quaternion.Lerp(arc.transform.rotation, Quaternion.AngleAxis(Mathf.Rad2Deg * -Mathf.Atan2(dir.x, dir.y), Vector3.forward), turnSpeed);
-		return true;
+        if (!base.Update())
+        {
+            return false;
+        }
+        //Just walks towards the player
+        Vector2 dir = (chosenPlayer.transform.position - transform.position).normalized;
+        //rb.velocity = dir * speed;
+        //arc.transform.rotation = Quaternion.Lerp(arc.transform.rotation, Quaternion.AngleAxis(Mathf.Rad2Deg * -Mathf.Atan2(dir.x, dir.y), Vector3.forward), turnSpeed);
+        return true;
 	}
 }
