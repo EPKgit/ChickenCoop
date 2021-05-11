@@ -14,6 +14,7 @@ public class BasicTargetHeal : Ability
 
     protected override void UseAbility()
 	{
+        base.UseAbility();
         IHealable healable = Lib.FindInHierarchy<IHealable>(targetingData.inputTarget.Attached);
         if(healable != null)
         {

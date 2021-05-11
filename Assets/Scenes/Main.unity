@@ -507,13 +507,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tags:
-    tags:
-    - _ID: 0
-      _flag: 32
-    - _ID: 0
-      _flag: 273
-    - _ID: 0
-      _flag: 16
+    tags: []
+  blockedTags:
+    tags: []
 --- !u!4 &519308312
 Transform:
   m_ObjectHideFlags: 0

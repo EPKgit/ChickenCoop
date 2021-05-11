@@ -4,25 +4,8 @@ using UnityEngine;
 
 public class GameplayTagComponent : MonoBehaviour
 {
-    [SerializeField]
-    private GameplayTagContainer tags = new GameplayTagContainer();
-    public bool Contains(GameplayTagFlags f)
-    {
-        return tags.Contains(f);
-    }
-
-    public int AddTag(GameplayTagFlags f)
-    {
-        return tags.AddTag(f);
-    }
-
-    private bool RemoveFirstTag(GameplayTagFlags f)
-    {
-        return tags.RemoveFirstTag(f);
-    }
-
-    private bool RemoveTagWithID(int ID)
-    {
-        return tags.RemoveTagWithID(ID);
-    }
+    //[Header("NOTE: THESE TAGS ARE PERMANENT UNLESS REMOVED BY ANOTHER EFFECT")]
+    //[Header("ONLY EDIT THE TAGS ON THE COMPONENT FOR TAGS INTRINSIC TO THE OBJECT")]
+    public GameplayTagContainer tags;
+    public GameplayTagContainer blockedTags;
 }

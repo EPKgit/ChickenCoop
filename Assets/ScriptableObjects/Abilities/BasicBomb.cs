@@ -23,6 +23,7 @@ public class BasicBomb : Ability
 
     protected override void UseAbility()
 	{
+        base.UseAbility();
         targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint);
 		GameObject temp = PoolManager.instance.RequestObject(bombPrefab);
         Bomb b = temp.GetComponent<Bomb>();

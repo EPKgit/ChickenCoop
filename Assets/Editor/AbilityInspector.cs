@@ -19,6 +19,9 @@ public class AbilityInspector : Editor
 	private SerializedProperty cost;
 	private SerializedProperty cooldown;
 	private SerializedProperty icon;
+	private SerializedProperty abilityTags;
+	private SerializedProperty tagsToBlock;
+	private SerializedProperty tagsToApply;
 
     private AbilityTargetingData targetingData;
 
@@ -40,6 +43,9 @@ public class AbilityInspector : Editor
         cooldown = serializedObject.FindProperty("maxCooldown");
         icon = serializedObject.FindProperty("icon");
         passive = serializedObject.FindProperty("isPassive");
+        abilityTags = serializedObject.FindProperty("abilityTags");
+        tagsToBlock = serializedObject.FindProperty("tagsToBlock");
+        tagsToApply = serializedObject.FindProperty("tagsToApply");
         targetingData = ability.targetingData;
     }
 
@@ -67,6 +73,11 @@ public class AbilityInspector : Editor
             DoTargetData();
         }
         --EditorGUI.indentLevel;
+        EditorGUILayout.Space();
+        EditorGUILayout.PrefixLabel("Tags");
+        EditorGUILayout.PropertyField(abilityTags);
+        EditorGUILayout.PropertyField(tagsToBlock);
+        EditorGUILayout.PropertyField(tagsToApply);
         EditorGUILayout.Space();
         EditorGUILayout.PrefixLabel("Unique Ability Fields");
         ++EditorGUI.indentLevel;

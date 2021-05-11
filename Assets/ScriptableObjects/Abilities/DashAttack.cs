@@ -4,38 +4,39 @@ using UnityEngine;
 
 public class DashAttack : Ability
 {
-    public GameObject bulletPrefab;
-    public float moveSpeed;
     public float damage;
-    public float lifetime = 6.0f;
 
+    private Vector2 startPosition;
+    private Vector2 destination;
+    private Vector2 prevPosition;
     public override void Initialize(PlayerAbilities pa)
     {
-        PoolManager.instance.AddPoolSize(bulletPrefab, 20, true);
         base.Initialize(pa);
     }
 
     public override void Cleanup(PlayerAbilities pa)
     {
-        PoolManager.instance.RemovePoolSize(bulletPrefab, 20);
+        destination = Vector2.zero;
         base.Cleanup(pa);
     }
 
     protected override void UseAbility()
     {
+        base.UseAbility();
         Vector2 direction = GetNormalizedDirectionTowardsTarget(targetingData.inputPoint);
-        direction = Lib.DefaultDirectionCheck(direction);
-        direction *= moveSpeed;
-        GameObject temp = PoolManager.instance.RequestObject(bulletPrefab);
-        temp.GetComponent<Bullet>().Setup
-        (
-            playerAbilities.transform.position,
-            direction,
-            playerAbilities.gameObject,
-            damage * playerAbilities.stats.GetValue(StatName.DamagePercentage),
-            lifetime
-        );
-        temp.GetComponent<Poolable>().Reset();
+        destination = (Vector2)playerAbilities.transform.position + (direction * targetingData.range);
+        startPosition = playerAbilities.transform.position;
+    }
+
+    public override bool Tick(float deltaTime)
+    {
+        if(base.Tick(deltaTime))
+        {
+            return true;
+        }
+        prevPosition = playerAbilities.transform.position;
+        playerAbilities.transform.position = Vector2.Lerp(startPosition, destination, 1.0f - (currentDuration / maxDuration));
+        return false;
     }
 }
 

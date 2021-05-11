@@ -24,6 +24,7 @@ public class BasicShoot : Ability
 
     protected override void UseAbility()
 	{
+        base.UseAbility();
         Vector2 direction = GetNormalizedDirectionTowardsTarget(targetingData.inputPoint);
         direction = Lib.DefaultDirectionCheck(direction);
         direction *= moveSpeed;

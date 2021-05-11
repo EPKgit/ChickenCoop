@@ -18,6 +18,7 @@ public class StatBuff : Ability
 
     protected override void UseAbility()
 	{
+        base.UseAbility();
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITY, string.Format("{0}/{1} tick:{2}", currentDuration, maxDuration, tickingAbility));
 		bonusHandle = playerAbilities.stats.GetStat(statToBuff)?.AddAdditiveModifier(buffAmount);
         DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITY, string.Format("Buffing {1} by {0}", buffAmount, statToBuff.ToString()));

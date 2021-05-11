@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
 	private StatBlockComponent stats;
     private Animator animator;
     private SpriteRenderer sprite;
+    private GameplayTagComponent tagComponent;
 
     private int animatorMovingHashCode;
 
@@ -22,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
 		stats = GetComponent<StatBlockComponent>();
 		animator = GetComponentInChildren<Animator>();
 		sprite = GetComponentInChildren<SpriteRenderer>();
+		tagComponent = GetComponentInChildren<GameplayTagComponent>();
         animatorMovingHashCode = Animator.StringToHash("moving");
 		stats?.RegisterStatChangeCallback(StatName.Agility, UpdateSpeed);
 	}
@@ -33,6 +35,11 @@ public class PlayerMovement : MonoBehaviour
 
 	void Update()
 	{
+        if(tagComponent?.tags.Contains(GameplayTagFlags.MOVEMENT_DISABLED) ?? false)
+        {
+            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "MOVEMENT CANCELED FROM TAG");
+            return;
+        }
         bool moving = direction.magnitude > float.Epsilon;
         animator.SetBool(animatorMovingHashCode, moving);
         if (moving)

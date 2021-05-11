@@ -158,6 +158,7 @@ public class GameplayTag
     {
         return _flag.GetHashCode();
     }
+
     public override string ToString()
     {
         return ID.ToString() + ":" + _flag.ToString();
@@ -171,9 +172,21 @@ public class GameplayTagContainer
     [SerializeField]
     private List<GameplayTag> tags;
 
-    public GameplayTagContainer()
+    /// <summary>
+    /// Returns if any of the other containers flags are contained within this container
+    /// </summary>
+    /// <param name="other">Other container to compare to</param>
+    /// <returns>True if we have any of their tags, false otherwise</returns>
+    public bool Matches(GameplayTagContainer other)
     {
-        tags = new List<GameplayTag>() { new GameplayTag(GameplayTagFlags.MOVEMENT_DISABLED, true),  new GameplayTag(GameplayTagFlags.ABILITY_MOVEMENT, true) };
+        foreach(var tag in other.tags)
+        {
+            if(Contains(tag.Flag))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public bool Contains(GameplayTagFlags f)
@@ -230,5 +243,10 @@ public class GameplayTagContainer
             }
         }
         return false;
+    }
+
+    public IList<GameplayTag> GetGameplayTags()
+    {
+        return tags.AsReadOnly();
     }
 }

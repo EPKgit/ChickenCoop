@@ -7,7 +7,7 @@ using UnityEditor;
 [CustomPropertyDrawer(typeof(GameplayTagContainer))]
 public class GameplayTagContainerDrawer : PropertyDrawer
 {
-    private const int EXTRA_LINES = 2;
+    private const int EXTRA_LINES = 5;
 
 
     private float yofs;
@@ -34,7 +34,12 @@ public class GameplayTagContainerDrawer : PropertyDrawer
             return;
         }
         rect = NextLine(position);
+        rect = NextLine(position);
         displayTab = GUI.Toolbar(rect, displayTab, toolbarStrings);
+        rect = NextLine(position);
+        rect.y += (rect.height - 5) / 2.0f;
+        rect.height = 5;
+        EditorGUI.DrawRect(rect, Color.grey);
         switch (displayTab)
         {
             case 0:
@@ -48,6 +53,10 @@ public class GameplayTagContainerDrawer : PropertyDrawer
             }
             break;
         }
+        rect = NextLine(position);
+        rect.y += (rect.height - 5) / 2.0f;
+        rect.height = 5;
+        EditorGUI.DrawRect(rect, Color.grey);
     }
 
     private void DrawActiveTags(Rect position)
@@ -57,10 +66,15 @@ public class GameplayTagContainerDrawer : PropertyDrawer
             return;
         }
         Rect rect;
+        if(tags.Count == 0)
+        {
+            rect = NextLine(position);
+            EditorGUI.LabelField(rect, "NONE");
+        }
         foreach (GameplayTag t in tags)
         {
             rect = NextLine(position);
-            EditorGUI.LabelField(rect, t.ToString());
+            EditorGUI.LabelField(rect, t.Flag.ToString());
         }
     }
 
@@ -233,7 +247,7 @@ public class GameplayTagContainerDrawer : PropertyDrawer
             case 0:
             {
                 tags = FetchGameplayTagListFromProperty(property);
-                return tags.Count + EXTRA_LINES;
+                return (tags.Count == 0 ? 1 : tags.Count) + EXTRA_LINES;
             }
             case 1:
             {

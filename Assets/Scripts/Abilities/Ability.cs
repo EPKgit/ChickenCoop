@@ -16,6 +16,22 @@ public class Ability : ScriptableObject
 {
     public event CooldownTickDelegate cooldownTick = delegate { };
 
+
+    /// <summary>
+    /// Tag set that apply to what this ability is
+    /// </summary>
+    public GameplayTagContainer abilityTags;
+
+    /// <summary>
+    /// Tag set that prevent abilities that have these tags from being cast while the ability is active
+    /// </summary>
+    public GameplayTagContainer tagsToBlock;
+
+    /// <summary>
+    /// Tag set that is applied to the caster while the ability is active
+    /// </summary>
+    public GameplayTagContainer tagsToApply;
+
     /// <summary>
     /// Set true if you want the ability to be passive, meant it is never used, the only methods to be called
     /// will be Initialize, Tick, and FinishAbility. They will be initialized on spawn, ticked until they
@@ -80,8 +96,10 @@ public class Ability : ScriptableObject
     }
 
     protected PlayerAbilities playerAbilities;
+    protected GameplayTagComponent tagComponent;
 
     private int IDNumber;
+    private List<int> appliedTagIDs;
 
     /// <summary>
     /// Called once when the ability is intantiated, should be used to setup references that the ability
@@ -90,6 +108,8 @@ public class Ability : ScriptableObject
     public virtual void Initialize(PlayerAbilities pa)
     {
         playerAbilities = pa;
+        tagComponent = Lib.FindInHierarchy<GameplayTagComponent>(pa.gameObject);
+        appliedTagIDs = new List<int>();
         Reinitialize();
         currentCooldown = 0;
         SetupIDNumber();
@@ -120,6 +140,7 @@ public class Ability : ScriptableObject
     {
         currentDuration = maxDuration;
         currentCooldown = maxCooldown;
+        appliedTagIDs.Clear();
     }
 
     /// <summary>
@@ -142,7 +163,12 @@ public class Ability : ScriptableObject
     /// <returns>Returns true if the ability could be cast, false otherwise</returns>
     public virtual bool IsCastable()
     {
-        return currentCooldown <= 0 && currentDuration == maxDuration;
+        bool castable = currentCooldown <= 0 && currentDuration == maxDuration;
+        if(!castable)
+        {
+            return false;
+        }
+        return !tagComponent.blockedTags.Matches(abilityTags);
     }
 
 
@@ -169,7 +195,14 @@ public class Ability : ScriptableObject
     /// </summary>
     protected virtual void UseAbility()
     {
-
+        foreach(var tag in tagsToApply.GetGameplayTags())
+        {
+            appliedTagIDs.Add(tagComponent.tags.AddTag(tag.Flag));
+        }
+        foreach (var tag in tagsToBlock.GetGameplayTags())
+        {
+            appliedTagIDs.Add(tagComponent.blockedTags.AddTag(tag.Flag));
+        }
     }
 
     /// <summary>
@@ -193,6 +226,11 @@ public class Ability : ScriptableObject
     /// </summary>
     public virtual void FinishAbility()
     {
+        foreach(int i in appliedTagIDs)
+        {
+            tagComponent.blockedTags.RemoveTagWithID(i);
+            tagComponent.tags.RemoveTagWithID(i);
+        }
         Reinitialize();
     }
 
