@@ -28,11 +28,13 @@ public class BasicBomb : Ability
         Bomb b = temp.GetComponent<Bomb>();
         b.arcSteepness = arcSteepness;
         b.arcTime = (targetingData.inputPoint - (Vector2)playerAbilities.transform.position).magnitude / targetingData.range * arcTime; //the arc time decreases the shorter we aim
-		b.Setup
-		(
-			playerAbilities.transform.position,
+        b.arcTime = Mathf.Clamp(b.arcTime, 0.5f, arcTime);
+        b.Setup
+        (
+            playerAbilities.transform.position,
             targetingData.inputPoint,
-            playerAbilities.gameObject
+            playerAbilities.gameObject,
+            Lib.FindInHierarchy<TargetingController>(playerAbilities.gameObject)?.TargetAffiliation ?? Targeting.Affiliation.NONE
 		);
 		temp.GetComponent<Poolable>().Reset();
 	}

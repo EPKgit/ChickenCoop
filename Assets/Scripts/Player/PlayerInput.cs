@@ -69,7 +69,10 @@ public class PlayerInput : MonoBehaviour
 
 	public void OnInteract(InputAction.CallbackContext ctx)
 	{
-		playerInteraction.AttemptPerform();
+        if (ctx.performed)
+        {
+            playerInteraction.AttemptPerform();
+        }
 	}
 
 	#endregion

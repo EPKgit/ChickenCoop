@@ -8,33 +8,44 @@ public class BaseHealthInspector : Editor
 {
 	private BaseHealth baseHealth;
 	private StatBlockComponent statBlock;
-	
+    private IStatBlockInitializer overrider;
 
-	void OnEnable()
+
+    void OnEnable()
 	{
 		baseHealth = target as BaseHealth;
 		statBlock = baseHealth.gameObject.GetComponent<StatBlockComponent>();
-	}
+        overrider = statBlock?.GetComponent<IStatBlockInitializer>();
+    }
 
 	public override void OnInspectorGUI()
 	{
 		if(EditorApplication.isPlaying || EditorApplication.isPaused)
 		{
-			EditorGUILayout.LabelField(string.Format("{0}/{1}", baseHealth.currentHealth, baseHealth.maxHealth));
-			if(GUILayout.Button("Take 1 Damage"))
-			{
-				baseHealth.Damage(1, null, null);
-			}
-			return;
-		}
-		if(statBlock == null || !statBlock.HasStat(StatName.Toughness))
-		{
-			base.OnInspectorGUI();
-		}
-		else
-		{
-			EditorGUILayout.LabelField("Max Health is being set by the StatBlock");
+            InGameDisplay();
+            return;
+        }
+        if (overrider != null && overrider.GetOverridingBlock().HasStat(StatName.Toughness))
+        {
+            EditorGUILayout.LabelField("Max Health is being set by overrider " + overrider);
+            EditorGUILayout.LabelField("Value: " + overrider.GetOverridingBlock().GetValue(StatName.Toughness));
+            return;
+        }
+		if (statBlock != null && statBlock.HasStat(StatName.Toughness))
+        {
+            EditorGUILayout.LabelField("Max Health is being set by the StatBlock");
 			EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.Toughness));
+            return;
 		}
-	}
+        InGameDisplay();
+    }
+
+    void InGameDisplay()
+    {
+        EditorGUILayout.LabelField(string.Format("{0}/{1}", baseHealth.currentHealth, baseHealth.maxHealth));
+        if (GUILayout.Button("Take 1 Damage"))
+        {
+            baseHealth.Damage(1, null, null);
+        }
+    }
 }

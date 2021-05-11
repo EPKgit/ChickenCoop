@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BaseArcingProjectile : Poolable
 {
+    public Targeting.Affiliation affiliation = Targeting.Affiliation.NONE;
     public float arcSteepness = 1;
     public float arcTime = 2.0f;
 
@@ -35,12 +36,13 @@ public class BaseArcingProjectile : Poolable
         timer = 0;
     }
 
-    public virtual void Setup(Vector3 startPosition, Vector3 endPosition, GameObject p)
+    public virtual void Setup(Vector3 startPosition, Vector3 endPosition, GameObject p, Targeting.Affiliation a)
     {
         transform.position = startPosition;
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         creator = p;
+        affiliation = a;
         Resize(new Vector3(1, 1, 1));
     }
 

@@ -8,24 +8,39 @@ public class PlayerMovementInspector : Editor
 {
 	private PlayerMovement playerMovement;
 	private StatBlockComponent statBlock;
+    private IStatBlockInitializer overrider;
 
-	void OnEnable()
+
+    void OnEnable()
 	{
 		playerMovement = target as PlayerMovement;
 		statBlock = playerMovement.gameObject.GetComponent<StatBlockComponent>();
-	}
+        overrider = statBlock.GetComponent<IStatBlockInitializer>();
+    }
 
-	public override void OnInspectorGUI()
+    public override void OnInspectorGUI()
 	{
-		if(statBlock == null || !statBlock.HasStat(StatName.Agility))
-		{
-			base.OnInspectorGUI();
-		}
-		else
-		{
-			EditorGUILayout.LabelField("MoveSpeed is being set by the StatBlock");
-			EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.Agility));
-			EditorGUILayout.LabelField(string.Format("({0},{1})", playerMovement.direction.x, playerMovement.direction.y));
-		}
-	}
+        if (EditorApplication.isPlaying || EditorApplication.isPaused)
+        {
+            InGameDisplay();
+            return;
+        }
+        if (overrider != null && overrider.GetOverridingBlock().HasStat(StatName.Agility))
+        {
+            EditorGUILayout.LabelField("MoveSpeed is being set by overrider " + overrider);
+            EditorGUILayout.LabelField("Value: " + overrider.GetOverridingBlock().GetValue(StatName.Agility));
+            return;
+        }
+        if (statBlock != null && statBlock.HasStat(StatName.Agility))
+        {
+            EditorGUILayout.LabelField("MoveSpeed is being set by the StatBlock");
+            EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.Agility));
+        }
+        InGameDisplay();
+    }
+
+    void InGameDisplay()
+    {
+        base.OnInspectorGUI();
+    }
 }

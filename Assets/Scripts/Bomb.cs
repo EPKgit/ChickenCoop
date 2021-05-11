@@ -19,7 +19,14 @@ public class Bomb : BaseArcingProjectile
         foreach(var col in collisions)
         {
             IDamagable damagable = Lib.FindInHierarchy<IDamagable>(col.gameObject);
-            damagable?.Damage(damage, gameObject, creator);
+            if(damagable !=null)
+            {
+                TargetingController controller = Lib.FindInHierarchy<TargetingController>(col.gameObject);
+                if(controller?.TargetAffiliation != affiliation)
+                {
+                    damagable?.Damage(damage, gameObject, creator);
+                }
+            }
         }
     }
 

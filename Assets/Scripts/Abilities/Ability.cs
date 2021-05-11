@@ -15,6 +15,7 @@ public delegate void OnCastDelegate(Ability a);
 public class Ability : ScriptableObject
 {
     public event CooldownTickDelegate cooldownTick = delegate { };
+
     /// <summary>
     /// Set true if you want the ability to be passive, meant it is never used, the only methods to be called
     /// will be Initialize, Tick, and FinishAbility. They will be initialized on spawn, ticked until they
@@ -22,10 +23,12 @@ public class Ability : ScriptableObject
     /// are added to a list within the AbilitySet of the player.
     /// </summary>
     public bool isPassive;
+
     /// <summary>
     /// Set true if you want the ability's Tick function and FinishAbility functions to get called
     /// </summary>
     public bool tickingAbility;
+
     /// <summary>
     /// Set true if the ability has a duration, if so the parent class's tick can be used to remove the
     /// effect once it's done, otherwise it's up to the ability to return true in Tick when it's finished

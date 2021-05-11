@@ -29,6 +29,8 @@ public class ShieldEnemy : BaseEnemy
 	void CheckIfBlocked(HealthChangeEventData hced)
 	{
 		float angle = Vector3.Angle(arc.transform.up, hced.localSource.transform.position - hced.target.transform.position);
+        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ENEMYHEALTH, "" + arc.transform.up);
+        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ENEMYHEALTH, "" + (hced.localSource.transform.position - hced.target.transform.position));
         DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ENEMYHEALTH, "" + angle);
 		if(angle < blockAngle)
 		{
@@ -42,17 +44,23 @@ public class ShieldEnemy : BaseEnemy
     	}
 	}
 
-	private void ShieldClankEffect(GameObject source) {
+	private void ShieldClankEffect(GameObject source)
+    {
         GameObject g = PoolManager.instance.RequestObject(splashPrefab);
         g.transform.position = source.transform.position;
+        g.GetComponent<VisualEffect>()?.SetBool(Shader.PropertyToID("Red"), false);
         Poolable p = g.GetComponent<Poolable>();
         p.Reset();
 	}
 
-	private void DamageEffect(GameObject source) {
-		//GameObject splode = Instantiate(hp.RedSplodeEffect, source.transform.position, Quaternion.identity);
-		//splode.transform.localScale *= 0.5f;
-	}
+	private void DamageEffect(GameObject source)
+    {
+        GameObject g = PoolManager.instance.RequestObject(splashPrefab);
+        g.transform.position = source.transform.position;
+        g.GetComponent<VisualEffect>()?.SetBool(Shader.PropertyToID("Red"), true);
+        Poolable p = g.GetComponent<Poolable>();
+        p.Reset();
+    }
 
     protected override bool Update()
 	{
@@ -62,8 +70,8 @@ public class ShieldEnemy : BaseEnemy
         }
         //Just walks towards the player
         Vector2 dir = (chosenPlayer.transform.position - transform.position).normalized;
-        //rb.velocity = dir * speed;
-        //arc.transform.rotation = Quaternion.Lerp(arc.transform.rotation, Quaternion.AngleAxis(Mathf.Rad2Deg * -Mathf.Atan2(dir.x, dir.y), Vector3.forward), turnSpeed);
+        rb.velocity = dir * speed;
+        arc.transform.rotation = Quaternion.Lerp(arc.transform.rotation, Quaternion.AngleAxis(Mathf.Rad2Deg * -Mathf.Atan2(dir.x, dir.y), Vector3.forward), turnSpeed);
         return true;
 	}
 }
