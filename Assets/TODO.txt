@@ -1,0 +1,10 @@
+Ability interfaces (idamagable imovement)
+ability xml parser for tooltips
+setup playermovement disabling colisions for dash moves
+setup playermovement for movement delta + movement type callbacks
+setup premade level with colisiosn
+enemy spawn boxes and placements
+
+
+Ideas
+ability upgrades
