@@ -15,6 +15,16 @@ public class UI_AbilityPoolHandler : MonoBehaviour
 
     void Start()
     {
+        for(int x = slots.Count - 1; x >= 0; --x)
+        {
+            Destroy(slots[x]);
+        }
+        slots.Clear();
+        for (int x = abilities.Count - 1; x >= 0; --x)
+        {
+            Destroy(abilities[x]);
+        }
+        abilities.Clear();
         GenerateSlots();
         GenerateAbilities();
     }

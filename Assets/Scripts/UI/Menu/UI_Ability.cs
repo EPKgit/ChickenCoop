@@ -6,23 +6,46 @@ using UnityEngine.UI;
 
 public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler 
 {
+    public Ability ability;
+
+    private const float DROP_TIMER_RESET_COOLDOWN = 0.05f;
+
+    [SerializeField]
     private UI_Slot controllingSlot;
 
     private RectTransform rect;
     private CanvasGroup canvas;
     private Image image;
+    private float dropTimer;
+    private Vector2 startPosition;
+
+    public void Setup(Ability a)
+    {
+        ability = a;
+        image.sprite = ability.icon;
+        image.color = Color.white;
+    }
 
     private void Awake()
     {
         rect = GetComponent<RectTransform>();
         canvas = GetComponent<CanvasGroup>();
         image = GetComponent<Image>();
-        image.color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
+        if(ability == null)
+        {
+            image.color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
+        }
+        image.sprite = ability?.icon;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if(dropTimer != 0.0f)
+        {
+            return;
+        }
         canvas.blocksRaycasts = false;
+        startPosition = rect.anchoredPosition;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -33,23 +56,40 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     public void OnEndDrag(PointerEventData eventData)
     {
         canvas.blocksRaycasts = true;
+        dropTimer = DROP_TIMER_RESET_COOLDOWN;
+    }
+
+    void Update()
+    {
+        if(dropTimer == 0.0f)
+        {
+            return;
+        }
+        dropTimer -= Time.deltaTime;
+        if(dropTimer < 0.0f)
+        {
+            dropTimer = 0.0f;
+            rect.anchoredPosition = startPosition;
+        }
     }
 
     public void SetSlot(GameObject g, bool canSwap)
     {
         SetSlot(g.GetComponent<UI_Slot>(), canSwap);
     }
+
     public void SetSlot(UI_Slot slot, bool canSwap)
     {
         if(slot == null)
         {
             return;
         }
-        if(slot.controlledAbility != null && canSwap) //need to do a swap
+        if(slot.ControlledAbility != null && canSwap) //need to do a swap
         {
-            slot.controlledAbility.SetSlot(controllingSlot, false);
+            slot.ControlledAbility.SetSlot(controllingSlot, false);
         }
-        slot.controlledAbility = this;
+        dropTimer = 0.0f;
+        slot.ControlledAbility = this;
         controllingSlot = slot;
         transform.SetParent(slot.transform, false);
         rect.localPosition = Vector3.zero;

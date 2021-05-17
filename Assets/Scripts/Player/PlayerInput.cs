@@ -29,7 +29,7 @@ public class PlayerInput : MonoBehaviour
 	public void OnMovement(InputAction.CallbackContext ctx)
 	{
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, gameObject.name + " MOVING ");
-        playerMovement.Move(ctx.ReadValue<Vector2>());
+        playerMovement.MoveInput(ctx.ReadValue<Vector2>());
 	}
 
 	#endregion
@@ -76,4 +76,12 @@ public class PlayerInput : MonoBehaviour
 	}
 
 	#endregion
+
+    public void OnInventory(InputAction.CallbackContext ctx)
+    {
+        if(ctx.performed)
+        {
+            playerAbilities.ToggleInventory();
+        }
+    }
 }

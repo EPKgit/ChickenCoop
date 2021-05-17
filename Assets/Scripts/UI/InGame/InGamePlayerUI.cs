@@ -51,6 +51,28 @@ public class InGamePlayerUI : MonoBehaviour
         UpdateHealthUI();
     }
 
+    public void RevokeCallbacks()
+    {
+        if (player == null)
+        {
+            return;
+        }
+        playerHealth.healthValueUpdateEvent -= UpdateCachedHealthValues;
+        playerHealth.healthChangeEvent -= HealthChange;
+        playerAbilities.initializedEvent -= OnAbilityInitialized;
+        playerAbilities.UnregisterAbilityCooldownCallbacks(new CooldownTickDelegate[] { UpdateAttackUI, UpdateAbility1UI, UpdateAbility2UI, UpdateAbility3UI });
+    }
+
+    public void Reinitialize()
+    {
+        if(player == null)
+        {
+            return;
+        }
+        RevokeCallbacks();
+        Initialize(player);
+    }
+
 	public void SetUIIcons()
 	{
         for(int x = 0; x < icons.Length; ++x)

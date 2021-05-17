@@ -13,6 +13,7 @@ public class InGameUIManager : MonoSingleton<InGameUIManager>
 
     protected override void Awake()
     {
+        base.Awake();
         UIObjects = new List<InGamePlayerUI>();
         layoutGroup = GameObject.Find("InGameCanvas").transform.Find("PlayerUI");
         for (int x = 0; x < MAX_PLAYERS; ++x)
@@ -42,6 +43,22 @@ public class InGameUIManager : MonoSingleton<InGameUIManager>
         for (; x < MAX_PLAYERS; ++x)
         {
             UIObjects[x].HideSelf();
+        }
+    }
+
+    public void RevokeCallbacks()
+    {
+        foreach (InGamePlayerUI i in UIObjects)
+        {
+            i.RevokeCallbacks();
+        }
+    }
+
+    public void ReinitializeUI()
+    {
+        foreach(InGamePlayerUI i in UIObjects)
+        {
+            i.Reinitialize();
         }
     }
 }

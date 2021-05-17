@@ -26,6 +26,7 @@ public class DashAttack : Ability
         Vector2 direction = GetNormalizedDirectionTowardsTarget(targetingData.inputPoint);
         destination = (Vector2)playerAbilities.transform.position + (direction * targetingData.range);
         startPosition = playerAbilities.transform.position;
+        
     }
 
     public override bool Tick(float deltaTime)

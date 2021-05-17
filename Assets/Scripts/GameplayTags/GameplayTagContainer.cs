@@ -99,6 +99,10 @@ public class GameplayTag
     /// <returns></returns>
     public static bool operator==(GameplayTag l, GameplayTag r)
     {
+        if (l is null)
+        {
+            return r is null;
+        }
         for (int x = 0; x < GameplayTagConstants.NUM_LAYERS; ++x)
         {
             if ((masks[x] & (UInt32)l._flag) == 0 || (masks[x] & (UInt32)r._flag) == 0)
@@ -121,6 +125,10 @@ public class GameplayTag
 
     public static bool operator ==(GameplayTag l, GameplayTagFlags r)
     {
+        if (l is null)
+        {
+            return false;
+        }
         for (int x = 0; x < GameplayTagConstants.NUM_LAYERS; ++x)
         {
             if ((masks[x] & (UInt32)l._flag) == 0 || (masks[x] & (UInt32)r) == 0)

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class AbilityQueue
 {
+    public event AbilityCastingDelegate preAbilityCastEvent = delegate { };
+    public event AbilityCastingDelegate postAbilityCastEvent = delegate { };
+
     private class AbilityInputData
     {
         public AbilityInputData(Ability a)
@@ -38,6 +41,7 @@ public class AbilityQueue
         {
             if (currentlyTicking[x].Tick(Time.deltaTime))
             {
+                postAbilityCastEvent(new AbilityEventData(currentlyTicking[x]));
                 currentlyTicking[x].FinishAbility();
                 currentlyTicking.RemoveAt(x);
             }
@@ -76,6 +80,7 @@ public class AbilityQueue
                 case AbilityInputData.AbilityInputState.CASTING:
                 {
                     DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1} {2}", a.name, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
+                    preAbilityCastEvent(new AbilityEventData(a));
                     if (a.AttemptUseAbility())
                     {
                         if (a.tickingAbility)
@@ -84,6 +89,7 @@ public class AbilityQueue
                         }
                         else
                         {
+                            postAbilityCastEvent(new AbilityEventData(a));
                             a.FinishAbility();
                         }
                     }
@@ -162,4 +168,13 @@ public class AbilityQueue
         }
         return ret;
     }
+}
+
+public class AbilityEventData
+{
+    public AbilityEventData(Ability a)
+    {
+        ability = a;
+    }
+    public Ability ability;
 }

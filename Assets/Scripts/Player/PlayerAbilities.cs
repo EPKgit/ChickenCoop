@@ -9,6 +9,9 @@ public class PlayerAbilities : MonoBehaviour
     public delegate void AbilityInitializationDelegate(AbilitySetContainer abilities);
     public event AbilityInitializationDelegate initializedEvent = delegate { };
 
+    public event AbilityCastingDelegate preAbilityCastEvent = delegate { };
+    public event AbilityCastingDelegate postAbilityCastEvent = delegate { };
+
     [HideInInspector]
     public Rigidbody2D rb;
     [HideInInspector]
@@ -17,6 +20,10 @@ public class PlayerAbilities : MonoBehaviour
     public StatBlock stats;
     [HideInInspector]
     public BaseHealth hp;
+    [HideInInspector]
+    public GameplayTagComponent tagComponent;
+    [HideInInspector]
+    public PlayerMovement movement;
 
     private AbilitySetAsset abilitySet;
 
@@ -34,6 +41,8 @@ public class PlayerAbilities : MonoBehaviour
 		col = transform.Find("Colliders").GetComponent<CircleCollider2D>();
 		stats = GetComponent<StatBlockComponent>().GetStatBlock();
 		hp = GetComponent<BaseHealth>();
+		tagComponent = GetComponent<GameplayTagComponent>();
+        ToggleInventory();
 	}
 
 	public void Initialize(PlayerClass pc)
@@ -41,9 +50,17 @@ public class PlayerAbilities : MonoBehaviour
 		Initialize(pc.abilities);
 	}
 
-	public void Initialize(AbilitySetAsset abilitySet)
+
+    private void temp1(AbilityEventData aed)
+    {
+        preAbilityCastEvent(aed);
+    }
+
+    public void Initialize(AbilitySetAsset abilitySet)
 	{
         abilityQueue = new AbilityQueue();
+        abilityQueue.preAbilityCastEvent += (data) => { preAbilityCastEvent(data); };
+        abilityQueue.postAbilityCastEvent += (data) => { postAbilityCastEvent(data); };
         passives = new List<Ability>();
 
         abilitySet = Instantiate(abilitySet);
@@ -94,7 +111,23 @@ public class PlayerAbilities : MonoBehaviour
         }
 	}
 
-	public List<string> GetCurrentlyInstantiatedAbilities()
+    /// <summary>
+    /// Unregister cooldown callbacks for all abilities, will be called immediately with the starting values. These values may be 0
+    /// </summary>
+    /// <param name="callbacks">Array of callbacks. Length should be equals to or less than the number of slots</param>
+	public void UnregisterAbilityCooldownCallbacks(CooldownTickDelegate[] callbacks)
+    {
+        if (callbacks.Length > (int)AbilitySlots.MAX)
+        {
+            throw new Exception("ERROR: Cooldown callback size is greater than the number of slots");
+        }
+        for (int x = 0; x < callbacks.Length; ++x)
+        {
+            abilities[x].cooldownTick -= callbacks[x];
+        }
+    }
+
+    public List<string> GetCurrentlyInstantiatedAbilities()
 	{
         if(!initialized)
         {
@@ -181,5 +214,22 @@ public class PlayerAbilities : MonoBehaviour
     public bool IsInitialized()
     {
         return initialized;
+    }
+
+
+    private bool inventoryOpen = true;
+    private GameObject inventoryGO;
+    public void ToggleInventory()
+    {
+        inventoryOpen = !inventoryOpen;
+        if(inventoryGO == null)
+        {
+            inventoryGO = GameObject.Find("AbilityInventory");
+        }
+        if (inventoryOpen)
+        {
+            Lib.FindInHierarchy<UI_PlayerInventory>(inventoryGO).Setup(this);
+        }
+        inventoryGO.SetActive(inventoryOpen);
     }
 }

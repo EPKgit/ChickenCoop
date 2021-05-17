@@ -5,9 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
-	public float movementSpeed;
+    public MovementDeltaEventDelegate movementEvent;
 
-	public Vector2 direction;
+	private float movementSpeed;
+	private Vector2 direction;
+    private Vector2 previousPosition;
 
 	private Rigidbody2D rb;
 	private StatBlockComponent stats;
@@ -66,13 +68,43 @@ public class PlayerMovement : MonoBehaviour
 		}
 	}
 
-	public void Move(Vector2 dir)
+    private void LateUpdate()
+    {
+        MovementDeltaEventData data = new MovementDeltaEventData();
+        data.delta = (Vector2)transform.position - previousPosition;
+        previousPosition = transform.position;
+        data.type = MovementDeltaEventData.MovementType.NORMAL;
+    }
+
+    public void MoveInput(Vector2 dir)
 	{
 		direction = dir;
 	}
+
+    public void DashInput(Vector2 start, Vector2 end, float time)
+    {
+
+    }
 
 	public void UpdateSpeed(float f)
 	{
 		movementSpeed = f;
 	}
+
+}
+
+public delegate bool MovementDeltaEventDelegate(MovementDeltaEventData eventData);
+
+public class MovementDeltaEventData
+{
+    public enum MovementType
+    {
+        NONE,
+        NORMAL,
+        DASH,
+        TELEPORT,
+        MAX,
+    }
+    public MovementType type;
+    public Vector2 delta;
 }

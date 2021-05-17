@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using Targeting;
 
 public delegate void CooldownTickDelegate(float currentCooldown, float maxCooldown);
-public delegate void OnCastDelegate(Ability a);
+public delegate void AbilityCastingDelegate(AbilityEventData data);
 
 /// <summary>
 /// Represents an ability in the game, that's usable by the player. They are instantiated when the player is spawned,
@@ -96,7 +96,6 @@ public class Ability : ScriptableObject
     }
 
     protected PlayerAbilities playerAbilities;
-    protected GameplayTagComponent tagComponent;
 
     private int IDNumber;
     private List<int> appliedTagIDs;
@@ -108,7 +107,6 @@ public class Ability : ScriptableObject
     public virtual void Initialize(PlayerAbilities pa)
     {
         playerAbilities = pa;
-        tagComponent = Lib.FindInHierarchy<GameplayTagComponent>(pa.gameObject);
         appliedTagIDs = new List<int>();
         Reinitialize();
         currentCooldown = 0;
@@ -168,7 +166,7 @@ public class Ability : ScriptableObject
         {
             return false;
         }
-        return !tagComponent.blockedTags.Matches(abilityTags);
+        return !playerAbilities.tagComponent.blockedTags.Matches(abilityTags);
     }
 
 
@@ -197,11 +195,11 @@ public class Ability : ScriptableObject
     {
         foreach(var tag in tagsToApply.GetGameplayTags())
         {
-            appliedTagIDs.Add(tagComponent.tags.AddTag(tag.Flag));
+            appliedTagIDs.Add(playerAbilities.tagComponent.tags.AddTag(tag.Flag));
         }
         foreach (var tag in tagsToBlock.GetGameplayTags())
         {
-            appliedTagIDs.Add(tagComponent.blockedTags.AddTag(tag.Flag));
+            appliedTagIDs.Add(playerAbilities.tagComponent.blockedTags.AddTag(tag.Flag));
         }
     }
 
@@ -213,6 +211,10 @@ public class Ability : ScriptableObject
     /// </returns>
     public virtual bool Tick(float deltaTime)
     {
+        if(isPassive)
+        {
+            return false;
+        }
         currentDuration -= deltaTime;
         if (currentDuration <= 0)
         {
@@ -228,8 +230,8 @@ public class Ability : ScriptableObject
     {
         foreach(int i in appliedTagIDs)
         {
-            tagComponent.blockedTags.RemoveTagWithID(i);
-            tagComponent.tags.RemoveTagWithID(i);
+            playerAbilities.tagComponent.blockedTags.RemoveTagWithID(i);
+            playerAbilities.tagComponent.tags.RemoveTagWithID(i);
         }
         Reinitialize();
     }
@@ -337,6 +339,10 @@ public class Ability : ScriptableObject
 
     public static bool operator ==(Ability lhs, Ability rhs)
     {
+        if(lhs is null)
+        {
+            return rhs is null;
+        }
         return lhs.IDNumber == rhs.IDNumber;
     }
 

@@ -40,7 +40,7 @@ public struct AbilitySetContainer : IEnumerable
 
     public float Length
     {
-        get { return abilities.Length; }
+        get { return abilities?.Length ?? -1; }
     }
 
     public IEnumerator GetEnumerator()
