@@ -3,14 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BasicShoot : Ability
+public class BasicShoot : Ability, IDamagingAbility
 {
 	public GameObject bulletPrefab;
 	public float moveSpeed;
-	public float damage;
 	public float lifetime = 6.0f;
 
-	public override void Initialize(PlayerAbilities pa)
+    float IDamagingAbility.damage
+    {
+        get
+        {
+            return _damage;
+        }
+        set
+        {
+            _damage = value;
+        }
+    }
+    [SerializeField]
+    private float _damage;
+
+    public override void Initialize(PlayerAbilities pa)
 	{
 		PoolManager.instance.AddPoolSize(bulletPrefab, 20, true);
 		base.Initialize(pa);
@@ -34,7 +47,7 @@ public class BasicShoot : Ability
 			playerAbilities.transform.position, 
             direction, 
             playerAbilities.gameObject, 
-			damage * playerAbilities.stats.GetValue(StatName.DamagePercentage),
+			_damage * playerAbilities.stats.GetValue(StatName.DamagePercentage),
             lifetime
 		);
 		temp.GetComponent<Poolable>().Reset();

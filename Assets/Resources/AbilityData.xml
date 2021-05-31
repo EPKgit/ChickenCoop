@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE root SYSTEM "AbilityData.dtd">
+<root>
+    <ability>
+        <ability_ID>1</ability_ID>
+        <ability_name>Egg Toss</ability_name>
+        <tooltip>Shoots an egg in targeted direction dealing {0} damage to the first enemy hit.</tooltip>
+        <var_list>
+            <variable name="IDamagingAbility.damage" type="float" value="1"/>
+            <variable name="maxCooldown" type="float" value="1"/>
+        </var_list>
+    </ability>
+</root>

@@ -29,7 +29,8 @@ public enum GameplayTagFlags : UInt32
 {
     NONE = 0,
     MOVEMENT = (1 << 0 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
-        MOVEMENT_DISABLED = (MOVEMENT) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+        NORMAL_MOVEMENT_DISABLED = (MOVEMENT) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+        MOVEMENT_DASHING = (MOVEMENT) | (1 << 1 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
     INTERACTION  = (1 << 1 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
     ABILITY     = (1 << 2 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
         ABILITY_MOVEMENT = (ABILITY) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,

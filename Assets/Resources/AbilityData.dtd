@@ -1,0 +1,7 @@
+<!ELEMENT ability(ID, name, tooltip, vars?)>
+<!ELEMENT ability_ID (#PCDATA)>
+<!ELEMENT ability_name (#PCDATA)>
+<!ELEMENT tooltip (#PCDATA)>
+<!ELEMENT var_list (variable+)>
+<!ELEMENT variable EMPTY>
+<!ATTLIST variable name #PCDATA #REQUIRED type #PCDATA #REQUIRED value #PCDATA #REQUIRED>

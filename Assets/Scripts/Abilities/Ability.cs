@@ -18,6 +18,22 @@ public class Ability : ScriptableObject
 
 
     /// <summary>
+    /// The ID that this ability uses to identify itself in the xml, multiple instances of the same variant of this ability will share an ID. 
+    /// ID 0 is an invalid ID
+    /// </summary>
+    public uint ID = 0;
+
+    /// <summary>
+    /// The name of this ability 
+    /// </summary>
+    public string abilityName;
+
+    /// <summary>
+    /// The ability tooltip to be displayed when the ability is moused over in a menu
+    /// </summary>
+    public string tooltipDescription;
+
+    /// <summary>
     /// Tag set that apply to what this ability is
     /// </summary>
     public GameplayTagContainer abilityTags;
@@ -97,7 +113,7 @@ public class Ability : ScriptableObject
 
     protected PlayerAbilities playerAbilities;
 
-    private int IDNumber;
+    private int InstanceID;
     private List<int> appliedTagIDs;
 
     /// <summary>
@@ -111,6 +127,7 @@ public class Ability : ScriptableObject
         Reinitialize();
         currentCooldown = 0;
         SetupIDNumber();
+        AbilityDataXMLParser.instance.UpdateAbilityData(this);
     }
 
 
@@ -126,7 +143,7 @@ public class Ability : ScriptableObject
     private static int counter = 0;
     private void SetupIDNumber()
     {
-        IDNumber = counter++;
+        InstanceID = counter++;
     }
 
     /// <summary>
@@ -343,7 +360,7 @@ public class Ability : ScriptableObject
         {
             return rhs is null;
         }
-        return lhs.IDNumber == rhs.IDNumber;
+        return lhs.InstanceID == rhs.InstanceID;
     }
 
     public static bool operator !=(Ability lhs, Ability rhs)
@@ -362,6 +379,6 @@ public class Ability : ScriptableObject
 
     public override int GetHashCode()
     {
-        return IDNumber;
+        return InstanceID;
     }
 }

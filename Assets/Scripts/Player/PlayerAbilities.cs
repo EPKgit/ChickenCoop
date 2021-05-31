@@ -12,6 +12,8 @@ public class PlayerAbilities : MonoBehaviour
     public event AbilityCastingDelegate preAbilityCastEvent = delegate { };
     public event AbilityCastingDelegate postAbilityCastEvent = delegate { };
 
+    public GameObject inventoryUIPrefab;
+
     [HideInInspector]
     public Rigidbody2D rb;
     [HideInInspector]
@@ -42,6 +44,7 @@ public class PlayerAbilities : MonoBehaviour
 		stats = GetComponent<StatBlockComponent>().GetStatBlock();
 		hp = GetComponent<BaseHealth>();
 		tagComponent = GetComponent<GameplayTagComponent>();
+        Instantiate(inventoryUIPrefab, GameObject.FindGameObjectWithTag("PlayerUI").transform);
         ToggleInventory();
 	}
 
@@ -224,7 +227,7 @@ public class PlayerAbilities : MonoBehaviour
         inventoryOpen = !inventoryOpen;
         if(inventoryGO == null)
         {
-            inventoryGO = GameObject.Find("AbilityInventory");
+            inventoryGO = GameObject.FindWithTag("PlayerInventory");
         }
         if (inventoryOpen)
         {

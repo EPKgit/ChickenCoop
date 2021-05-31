@@ -12,6 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26323311485e7ca4694c74f1a96283e5, type: 3}
   m_Name: BasicShoot
   m_EditorClassIdentifier: 
+  ID: 1
+  abilityName: 
+  tooltipDescription: 
+  abilityTags:
+    tags: []
+  tagsToBlock:
+    tags: []
+  tagsToApply:
+    tags: []
   isPassive: 0
   tickingAbility: 0
   hasDuration: 0

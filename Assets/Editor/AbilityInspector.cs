@@ -12,6 +12,7 @@ public class AbilityInspector : Editor
 	private Ability ability;
 	private List<FieldInfo> childFields;
 
+	private SerializedProperty ID;
 	private SerializedProperty passive;
 	private SerializedProperty ticking;
 	private SerializedProperty hasDuration;
@@ -36,6 +37,7 @@ public class AbilityInspector : Editor
                 childFields.RemoveAt(x);
             }
         }
+        ID = serializedObject.FindProperty("ID");
         ticking = serializedObject.FindProperty("tickingAbility");
         hasDuration = serializedObject.FindProperty("hasDuration");
         maxDuration = serializedObject.FindProperty("maxDuration");
@@ -53,6 +55,7 @@ public class AbilityInspector : Editor
 	{
         EditorGUILayout.PrefixLabel("Ability Data");
         ++EditorGUI.indentLevel;
+        EditorGUILayout.PropertyField(ID);
         EditorGUILayout.PropertyField(icon);
         EditorGUILayout.PropertyField(passive);
         if (!ability.isPassive)

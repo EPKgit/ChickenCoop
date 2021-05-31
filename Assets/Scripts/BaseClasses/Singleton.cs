@@ -50,6 +50,13 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
 
 public class Singleton<T> where T : new()
 {
+    public static T Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
     public static T instance
     {
         get
