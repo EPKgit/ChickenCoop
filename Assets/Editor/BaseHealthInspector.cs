@@ -10,12 +10,15 @@ public class BaseHealthInspector : Editor
 	private StatBlockComponent statBlock;
     private IStatBlockInitializer overrider;
 
+    private SerializedProperty maxHealth;
+
 
     void OnEnable()
 	{
 		baseHealth = target as BaseHealth;
 		statBlock = baseHealth.gameObject.GetComponent<StatBlockComponent>();
         overrider = statBlock?.GetComponent<IStatBlockInitializer>();
+        maxHealth = serializedObject.FindProperty("_maxHealth");
     }
 
 	public override void OnInspectorGUI()
@@ -37,7 +40,8 @@ public class BaseHealthInspector : Editor
 			EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.Toughness));
             return;
 		}
-        InGameDisplay();
+        EditorGUILayout.PropertyField(maxHealth);
+        serializedObject.ApplyModifiedProperties();
     }
 
     void InGameDisplay()

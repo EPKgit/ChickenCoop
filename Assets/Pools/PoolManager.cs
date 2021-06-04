@@ -7,6 +7,7 @@ using UnityEngine;
 public class PoolData
 {
 	public GameObject defaultGO;
+    public GameObject transformParent;
 	public List<GameObject> pool;
 	public int desiredSize;
 	public float maxTTL;
@@ -21,6 +22,22 @@ public class PoolData
 		maxTTL = f;
 		loans = 0;
 	}
+}
+
+public class PoolLoanToken
+{
+    private int amount;
+    private GameObject objectToHold;
+    public PoolLoanToken(GameObject g, int i, bool init = false)
+    {
+        objectToHold = g;
+        amount = i;
+        PoolManager.instance.AddPoolSize(objectToHold, amount, init);
+    }
+    ~PoolLoanToken()
+    {
+        PoolManager.instance.RemovePoolSize(objectToHold, amount);
+    }
 }
 
 public class PoolManager : MonoSingleton<PoolManager>
@@ -82,7 +99,7 @@ public class PoolManager : MonoSingleton<PoolManager>
 					abnormalPools.Add(pools[g]);
 				}
 				pools[g].currentTTL = pools[g].maxTTL;
-				ret = Instantiate(g);
+				ret = Instantiate(g, pools[g].transformParent.transform);
 				ret.GetComponent<Poolable>().PoolInit(g);
 				DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "POOL EMPTY, CREATING NEW");
 			}
@@ -95,13 +112,17 @@ public class PoolManager : MonoSingleton<PoolManager>
 		}
 		else
 		{
-			pools.Add(g, new PoolData(g));
+            pools.Add(g, new PoolData(g));
 			abnormalPools.Add(pools[g]);
-			ret = Instantiate(g);
-			ret.GetComponent<Poolable>().PoolInit(g);
+            pools[g].transformParent = new GameObject();
+            pools[g].transformParent.name = "Pool for " + g.name;
+            pools[g].transformParent.tag = "PoolHolder";
+            ret = Instantiate(g, pools[g].transformParent.transform);
+            ret.GetComponent<Poolable>().PoolInit(g);
 			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "POOL DIDN't EXIST");
 		}
 		ret.SetActive(true);
+        ret.GetComponent<Poolable>().Reset();
 		++pools[g].loans;
 		return ret;
 	}
@@ -183,7 +204,10 @@ public class PoolManager : MonoSingleton<PoolManager>
             return false;
         }
 		pools.Add(g, new PoolData(g));
-		pools[g].desiredSize = size;
+        pools[g].transformParent = new GameObject();
+        pools[g].transformParent.name = "Pool for " + g.name;
+        pools[g].transformParent.tag = "PoolHolder";
+        pools[g].desiredSize = size;
 		if(init)
 		{
 			NormalizePool(g);
@@ -231,6 +255,19 @@ public class PoolManager : MonoSingleton<PoolManager>
     }
 
     /// <summary>
+    /// Request a token that represents a certain amount of objects that are added into the pool for you. This token allocates tokens on creation and returns them on deletion, allowing for 
+    /// RAII style resource management for pool request
+    /// </summary>
+    /// <param name="g">The gameobject representing the pool</param>
+	/// <param name="size">The amount to add to the pool</param>
+	/// <param name="init">If the pool should attempt to fix the pool size all in one frame</param>
+    /// <returns>A token that will automatically cleanup the pool at some point after going out of scope</returns>
+    public PoolLoanToken RequestLoan(GameObject g, int size, bool init)
+    {
+        return new PoolLoanToken(g, size, init);
+    }
+
+    /// <summary>
     /// Sets the desired amount of time that the PoolManager will wait before shrinking the size
     /// of the pool back down to the desiredSize.
     /// </summary>
@@ -245,7 +282,10 @@ public class PoolManager : MonoSingleton<PoolManager>
 			return true;
 		}
 		pools.Add(g, new PoolData(g));
-		pools[g].maxTTL = f;
+        pools[g].transformParent = new GameObject();
+        pools[g].transformParent.name = "Pool for " + g.name;
+        pools[g].transformParent.tag = "PoolHolder";
+        pools[g].maxTTL = f;
 		pools[g].currentTTL = 0;
 		return false;
 	}
@@ -265,7 +305,7 @@ public class PoolManager : MonoSingleton<PoolManager>
 		int currentCount = p.pool.Count + p.loans;
 		while(p.pool.Count < p.desiredSize)
 		{
-			GameObject temp = Instantiate(g);
+			GameObject temp = Instantiate(g, p.transformParent.transform);
 			temp.name = g.name + p.pool.Count;
 			temp.SetActive(false);
 			temp.GetComponent<Poolable>().PoolInit(g);
@@ -277,6 +317,31 @@ public class PoolManager : MonoSingleton<PoolManager>
 			p.pool.RemoveAt(0);
 		}
 	}
+
+    /// <summary>
+    /// Changes the transform parent of all of the objects in a pool to a certain gameobject
+    /// </summary>
+    /// <param name="key">The key for the pool to change</param>
+    /// <param name="newParent">The new transform parent</param>
+    /// <returns>Returns true if succesful, false if the pool didn't exist</returns>
+    public bool ChangeParentOfPool(GameObject key, Transform newParent)
+    {
+        if (!pools.ContainsKey(key))
+        {
+            return false;
+        }
+        PoolData pool = pools[key];
+        foreach(GameObject g in pool.pool)
+        {
+            g.transform.SetParent(newParent, false);
+        }
+        if(pool.transformParent.tag == "PoolHolder")
+        {
+            Destroy(pool.transformParent);
+        }
+        pool.transformParent = newParent.gameObject;
+        return true;
+    }
 
 	public List<PoolData> GetPools()
 	{

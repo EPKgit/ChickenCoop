@@ -6,8 +6,18 @@
         <ability_name>Egg Toss</ability_name>
         <tooltip>Shoots an egg in targeted direction dealing {0} damage to the first enemy hit.</tooltip>
         <var_list>
-            <variable name="IDamagingAbility.damage" type="float" value="1"/>
-            <variable name="maxCooldown" type="float" value="1"/>
+            <variable name="dmg" type="float" value="1"/>
+            <variable name="cd" type="float" value="0.02"/>
+        </var_list>
+    </ability>
+    <ability>
+        <ability_ID>2</ability_ID>
+        <ability_name>Bombard</ability_name>
+        <tooltip>Launch an explosive egg towards target area which explodes on landing dealing {0} damage in a {1} unit AOE.</tooltip>
+        <var_list>
+            <variable name="dmg" type="float" value="9"/>
+            <variable name="cd" type="float" value="8"/>
+            <variable name="aoe" type="float" value="3"/>
         </var_list>
     </ability>
 </root>

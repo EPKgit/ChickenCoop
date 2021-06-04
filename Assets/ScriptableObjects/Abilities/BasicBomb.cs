@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BasicBomb : Ability
+public class BasicBomb : Ability, IDamagingAbility
 {
 	public GameObject bombPrefab;
 	public float arcSteepness;
 	public float arcTime;
+    public float aoe;
 
-	public override void Initialize(PlayerAbilities pa)
+    public float damage
+    {
+        get; set;
+    }
+
+    public override void Initialize(PlayerAbilities pa)
 	{
 		PoolManager.instance.AddPoolSize(bombPrefab, 3, true);
 		base.Initialize(pa);
@@ -37,6 +43,7 @@ public class BasicBomb : Ability
             playerAbilities.gameObject,
             Lib.FindInHierarchy<TargetingController>(playerAbilities.gameObject)?.TargetAffiliation ?? Targeting.Affiliation.NONE
 		);
-		temp.GetComponent<Poolable>().Reset();
+        b.damage = damage;
+        b.explosionRadius = aoe;
 	}
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerInventory
   - PlayerUI
+  - PoolHolder
   layers:
   - Default
   - TransparentFX

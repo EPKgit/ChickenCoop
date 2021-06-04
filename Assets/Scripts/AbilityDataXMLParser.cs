@@ -46,12 +46,12 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     const string XMLPath = "AbilityData";
     void ParseXMLData()
     {
-        if(table != null)
+        if (table != null)
         {
             return;
         }
         var file = Resources.Load<TextAsset>(XMLPath);
-        if(file == null)
+        if (file == null)
         {
             Debug.LogAssertion("ERROR: COULD NOT OPEN ABILITY XML");
         }
@@ -65,7 +65,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             string ability_name = ability["ability_name"].InnerText;
             string tooltip = ability["tooltip"].InnerText;
             AbilityXMLDataEntry data = new AbilityXMLDataEntry(ability_ID, ability_name, tooltip);
-            foreach(XmlElement variable in ability["var_list"].ChildNodes)
+            foreach (XmlElement variable in ability["var_list"].ChildNodes)
             {
                 data.vars.Add(new AbilityXMLVariable(variable.GetAttribute("name"), variable.GetAttribute("value"), variable.GetAttribute("type")));
             }
@@ -91,30 +91,64 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         },
     };
 
+    private Dictionary<string, string> commonVariableRenames = new Dictionary<string, string>()
+    {
+        { "cooldown", "maxCooldown" },
+        { "cd", "maxCooldown" },
+        { "dmg", "damage" },
+    };
+
+    private System.Reflection.PropertyInfo GetPropertyInHierarchy(Type t, string name)
+    {
+        var prop = t.GetProperty(name);//, System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+        if(prop != null)
+        {
+            return prop;
+        }
+        foreach(var intf in t.GetInterfaces())
+        {
+            prop = intf.GetProperty(name);//, System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+            if (prop != null)
+            {
+                return prop;
+            }
+        }
+        if(t.BaseType != null)
+        {
+            return GetPropertyInHierarchy(t.BaseType, name);
+        }
+        return null;
+    }
+
     public bool UpdateAbilityData(Ability a)
     {
         AbilityXMLDataEntry entry = null;
         if (a.ID == 0 || !table.TryGetValue(a.ID, out entry))
         {
-            Debug.LogError("ERROR: FAILED TO FIND XML DATA FOR ABILITY:\"" + a.GetType().Name);
+            Debug.LogError("ERROR: FAILED TO FIND XML DATA FOR ABILITY:\"" + a.GetType().Name + "\"");
             return false;
         }
         a.name = entry.name;
         a.tooltipDescription = entry.tooltip;
         foreach(AbilityXMLVariable variable in entry.vars)
         {
+            var name = variable.name;
+            if(commonVariableRenames.ContainsKey(name))
+            {
+                name = commonVariableRenames[name];
+            }
             var type = a.GetType();
-            var property = type.GetProperty(variable.name, System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-            var field = type.GetField(variable.name);
+            var property = GetPropertyInHierarchy(type, name);
+            var field = type.GetField(name);
             if(property == null && field == null)
             {
-                Debug.LogError("ERROR: FAILED TO SET PROPERTY \"" + variable.name + "\" ON ABILITY:\"" + a.GetType().Name + "\"" + " FROM DATA NAMED:\"" + entry.name + "\"");
+                Debug.LogError(string.Format("ERROR: FAILED TO FIND PROPERTY/FIELD ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
                 continue;
             }
             VariableEvaluationMethod evaluator = evaluationMethods[variable.type];
             if(evaluator == null)
             {
-                Debug.Log("ERROR: FAILED TO EVALUATE PROPERTY \"" + variable.name + "\" WITH TYPE \"" + variable.type + "\" ON ABILITY:\"" + a.GetType().Name + "\"" + " FROM DATA NAMED:\"" + entry.name + "\"");
+                Debug.LogError(string.Format("ERROR: FAILED TO EVALUATE PROPERTY ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
                 continue;
             }
             if (property != null)

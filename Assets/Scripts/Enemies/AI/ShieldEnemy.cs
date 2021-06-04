@@ -50,7 +50,6 @@ public class ShieldEnemy : BaseEnemy
         g.transform.position = source.transform.position;
         g.GetComponent<VisualEffect>()?.SetBool(Shader.PropertyToID("Red"), false);
         Poolable p = g.GetComponent<Poolable>();
-        p.Reset();
 	}
 
 	private void DamageEffect(GameObject source)
@@ -59,7 +58,6 @@ public class ShieldEnemy : BaseEnemy
         g.transform.position = source.transform.position;
         g.GetComponent<VisualEffect>()?.SetBool(Shader.PropertyToID("Red"), true);
         Poolable p = g.GetComponent<Poolable>();
-        p.Reset();
     }
 
     protected override bool Update()

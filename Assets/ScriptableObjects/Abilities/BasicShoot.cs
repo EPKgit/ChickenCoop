@@ -9,19 +9,11 @@ public class BasicShoot : Ability, IDamagingAbility
 	public float moveSpeed;
 	public float lifetime = 6.0f;
 
-    float IDamagingAbility.damage
+    public float damage
     {
-        get
-        {
-            return _damage;
-        }
-        set
-        {
-            _damage = value;
-        }
+        get;
+        set;
     }
-    [SerializeField]
-    private float _damage;
 
     public override void Initialize(PlayerAbilities pa)
 	{
@@ -46,10 +38,10 @@ public class BasicShoot : Ability, IDamagingAbility
 		(
 			playerAbilities.transform.position, 
             direction, 
-            playerAbilities.gameObject, 
-			_damage * playerAbilities.stats.GetValue(StatName.DamagePercentage),
+            playerAbilities.gameObject,
+            damage * playerAbilities.stats.GetValue(StatName.DamagePercentage),
             lifetime
 		);
-		temp.GetComponent<Poolable>().Reset();
+        damage = (damage + 1) % 12;
 	}
 }
