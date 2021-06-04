@@ -66,10 +66,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 10
+  m_text: 3.00
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -80,7 +80,7 @@ MonoBehaviour:
   m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
-    topLeft: {r: 0, g: 0.06871343, b: 1, a: 1}
+    topLeft: {r: 1, g: 0.42769682, b: 0, a: 1}
     topRight: {r: 1, g: 0, b: 0.0363636, a: 1}
     bottomLeft: {r: 1, g: 0.27450982, b: 0, a: 1}
     bottomRight: {r: 0, g: 0, b: 0, a: 1}
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 51.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -199,20 +199,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.1
       value: 1
-      inSlope: 5.225259
-      outSlope: 5.225259
+      inSlope: 9.905496
+      outSlope: 9.020088
       tangentMode: 1
       weightedMode: 0
-      inWeight: 0.6548586
-      outWeight: 0.2381056
+      inWeight: 0.1719746
+      outWeight: 0.1783438
     - serializedVersion: 3
-      time: 0.3
+      time: 0.2
       value: 1
-      inSlope: -5.4541774
+      inSlope: -12.416665
       outSlope: 0
       tangentMode: 65
       weightedMode: 0
-      inWeight: 0.17321645
+      inWeight: 0.1528664
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
