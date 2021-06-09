@@ -7,9 +7,12 @@
         <tooltip>Shoots an egg in targeted direction dealing {0} damage to the first enemy hit.</tooltip>
         <var_list>
             <variable name="dmg" type="float" value="1"/>
-            <variable name="cd" type="float" value="0.02"/>
+            <variable name="cd" type="float" value="0"/>
         </var_list>
     </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
     <ability>
         <ability_ID>2</ability_ID>
         <ability_name>Bombard</ability_name>
@@ -17,7 +20,47 @@
         <var_list>
             <variable name="dmg" type="float" value="9"/>
             <variable name="cd" type="float" value="8"/>
-            <variable name="aoe" type="float" value="3"/>
+            <variable name="aoe" type="float" value="5"/>
         </var_list>
     </ability>
+    
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+    <ability>
+        <ability_ID>3</ability_ID>
+        <ability_name>Rooster Slide</ability_name>
+        <tooltip>Dash for {0} units over {1}s in a target direction</tooltip>
+        <var_list>
+            <variable name="cd" type="float" value="5"/>
+            <variable name="movementDuration" type="float" value="0.25"/>
+            <variable name="movementDistance" type="float" value="5"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+    <ability>
+        <ability_ID>4</ability_ID>
+        <ability_name>Hen Heal</ability_name>
+        <tooltip>Heal a targeted unit for {0} health.</tooltip>
+        <var_list>
+            <variable name="cd" type="float" value="10"/>
+            <variable name="amount" type="float" value="5"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+    <ability>
+        <ability_ID>5</ability_ID>
+        <ability_name>Egg Popping</ability_name>
+        <tooltip>Everytime you cast an ability, decrease all cooldowns by {0} seconds.</tooltip>
+        <var_list>
+            <variable name="amount" type="float" value="0.5"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+
 </root>

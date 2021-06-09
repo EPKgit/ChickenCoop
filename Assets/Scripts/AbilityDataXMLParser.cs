@@ -57,6 +57,14 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         }
         XmlDocument doc = new XmlDocument();
         doc.LoadXml(file.text);
+
+
+        XmlNodeList list = doc.SelectNodes("//comment()");
+        foreach (XmlNode node in list)
+        {
+            node.ParentNode.RemoveChild(node);
+        }
+
         table = new Dictionary<uint, AbilityXMLDataEntry>();
         var root = doc["root"];
         foreach (XmlElement ability in root.ChildNodes)

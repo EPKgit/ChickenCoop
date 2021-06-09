@@ -179,7 +179,14 @@ namespace Targeting
         void PreviewGround(Ability usedAbility, GameObject user)
         {
             previewSecondary.transform.position = usedAbility.ClampPointWithinRange(user.GetComponent<PlayerInput>().aimPoint);
-            previewSecondary.transform.localScale = new Vector3(previewScale.x, previewScale.y, 1);
+            Vector2 scale = new Vector2(previewScale.x, previewScale.y);
+            IAOEAbility aoeInterface = (IAOEAbility)usedAbility;
+            if(aoeInterface != null)
+            {
+                scale = new Vector2(aoeInterface.aoe, aoeInterface.aoe);
+            }
+
+            previewSecondary.transform.localScale = new Vector3(scale.x, scale.y, 1);
         }
 
         void PreviewTargeted(Ability usedAbility, GameObject user)

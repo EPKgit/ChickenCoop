@@ -10,7 +10,7 @@ public class DashAttack : Ability, IMovementAbility
     private Vector2 destination;
     private Vector2 prevPosition;
 
-    float IMovementAbility.duration
+    public float movementDuration
     {
         get
         {
@@ -22,7 +22,7 @@ public class DashAttack : Ability, IMovementAbility
         }
     }
 
-    float IMovementAbility.distance
+    public float movementDistance
     {
         get
         {
@@ -32,6 +32,11 @@ public class DashAttack : Ability, IMovementAbility
         {
             targetingData.range = value;
         }
+    }
+
+    public override string GetTooltip()
+    {
+        return string.Format(tooltipDescription, movementDistance, movementDuration);
     }
 
     public override void Initialize(PlayerAbilities pa)

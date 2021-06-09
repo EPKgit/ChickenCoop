@@ -12,7 +12,7 @@ public delegate void AbilityCastingDelegate(AbilityEventData data);
 /// then initialized, and used repeatedly over the lifetime of the player object. The player gets a reference to a
 /// saved asset AbilitySet that hold the abilities it will have, abilities are activated by PlayerAbilities.
 /// </summary>
-public class Ability : ScriptableObject
+public abstract class Ability : ScriptableObject
 {
     public event CooldownTickDelegate cooldownTick = delegate { };
 
@@ -341,6 +341,12 @@ public class Ability : ScriptableObject
         }
         return target;
     }
+
+    /// <summary>
+    /// Returns a tooltip with all of the values plugged in, child classes are expected to override this with a string.format of their own variables setup
+    /// </summary>
+    /// <returns>the tooltip </returns>
+    public abstract string GetTooltip();
 
     public new virtual string ToString()
     {

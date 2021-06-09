@@ -3,11 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BasicTargetHeal : Ability
+public class BasicTargetHeal : Ability, IHealingAbility
 {
-    public float heal;
+    public float amount
+    {
+        get;
+        set;
+    }
 
-	public override void Initialize(PlayerAbilities pa)
+    public override string GetTooltip()
+    {
+        return string.Format(tooltipDescription, amount);
+    }
+
+    public override void Initialize(PlayerAbilities pa)
 	{
 		base.Initialize(pa);
 	}
@@ -18,7 +27,7 @@ public class BasicTargetHeal : Ability
         IHealable healable = Lib.FindInHierarchy<IHealable>(targetingData.inputTarget.Attached);
         if(healable != null)
         {
-            healable.Heal(heal, playerAbilities.gameObject, playerAbilities.gameObject);
+            healable.Heal(amount, playerAbilities.gameObject, playerAbilities.gameObject);
         }
 	}
 }

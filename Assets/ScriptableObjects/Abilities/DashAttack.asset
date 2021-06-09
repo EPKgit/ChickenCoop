@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c39e0b4d025d94985c5f3a314d075a, type: 3}
   m_Name: DashAttack
   m_EditorClassIdentifier: 
+  ID: 3
+  abilityName: 
+  tooltipDescription: 
   abilityTags:
     tags:
     - _ID: 0

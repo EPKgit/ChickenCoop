@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InGamePlayerUI : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class InGamePlayerUI : MonoBehaviour
 	private Slider healthSlider;
 	private Image[] icons = new Image[(int)AbilitySlots.MAX];
 	private Image[] cds = new Image[(int)AbilitySlots.MAX];
-    private Text[] cdTexts = new Text[(int)AbilitySlots.MAX];
+    private TextMeshProUGUI[] cdTexts = new TextMeshProUGUI[(int)AbilitySlots.MAX];
 
     void Awake()
 	{
@@ -27,7 +28,7 @@ public class InGamePlayerUI : MonoBehaviour
         {
             icons[x] = UIActive.transform.Find("Abilities").Find(arr[x]).Find("Icon").GetComponent<Image>();
             cds[x] = UIActive.transform.Find("Abilities").Find(arr[x]).Find("CooldownOverlay").GetComponent<Image>();
-            cdTexts[x] = UIActive.transform.Find("Abilities").Find(arr[x]).Find("Timer").GetComponent<Text>();
+            cdTexts[x] = UIActive.transform.Find("Abilities").Find(arr[x]).Find("Timer").GetComponent<TextMeshProUGUI>();
         }
 	}
 

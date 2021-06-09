@@ -15,6 +15,11 @@ public class BasicShoot : Ability, IDamagingAbility
         set;
     }
 
+    public override string GetTooltip()
+    {
+        return string.Format(tooltipDescription, damage);
+    }
+
     public override void Initialize(PlayerAbilities pa)
 	{
 		PoolManager.instance.AddPoolSize(bulletPrefab, 20, true);
@@ -39,9 +44,9 @@ public class BasicShoot : Ability, IDamagingAbility
 			playerAbilities.transform.position, 
             direction, 
             playerAbilities.gameObject,
-            damage * playerAbilities.stats.GetValue(StatName.DamagePercentage),
+            (damage + 1) * playerAbilities.stats.GetValue(StatName.DamagePercentage),
             lifetime
 		);
-        damage = (damage + 1) % 12;
+        damage = (damage + 1) % 10;
 	}
 }

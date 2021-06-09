@@ -10,7 +10,11 @@ public class StatBuff : Ability
 	
 	private int? bonusHandle;
 
-	public override void Reinitialize()
+    public override string GetTooltip()
+    {
+        return string.Format(tooltipDescription);
+    }
+    public override void Reinitialize()
 	{
 		base.Reinitialize();
 		bonusHandle = null;

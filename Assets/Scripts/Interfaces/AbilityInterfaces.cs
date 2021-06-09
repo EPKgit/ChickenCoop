@@ -6,15 +6,32 @@ public interface IDamagingAbility
         set;
     }
 }
-
-public interface IMovementAbility
+public interface IAOEAbility
 {
-    float duration
+    float aoe
     {
         get;
         set;
     }
-    float distance
+}
+
+public interface IMovementAbility
+{
+    float movementDuration
+    {
+        get;
+        set;
+    }
+    float movementDistance
+    {
+        get;
+        set;
+    }
+}
+
+public interface IHealingAbility
+{
+    float amount
     {
         get;
         set;

@@ -5,6 +5,11 @@ using UnityEngine;
 public class CooldownOnAbilityCast : Ability
 {
     public float amount = 0.5f;
+
+    public override string GetTooltip()
+    {
+        return string.Format(tooltipDescription, amount);
+    }
     public override void Initialize(PlayerAbilities pa)
     {
         base.Initialize(pa);

@@ -11,7 +11,11 @@ public class PassiveRegen : Ability
 	private IHealable hp;
 	private GameObject owner;
 
-	public override void Initialize(PlayerAbilities pa)
+    public override string GetTooltip()
+    {
+        return string.Format(tooltipDescription);
+    }
+    public override void Initialize(PlayerAbilities pa)
 	{
 		hp = Lib.FindInHierarchy<IHealable>(pa.gameObject);
 		owner = pa.gameObject;

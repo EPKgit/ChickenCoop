@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa67731350efbd5448c14187f4270c84, type: 3}
   m_Name: CooldownOnAbilityCast
   m_EditorClassIdentifier: 
+  ID: 5
+  abilityName: 
+  tooltipDescription: 
   abilityTags:
     tags: []
   tagsToBlock:
