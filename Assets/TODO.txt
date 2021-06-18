@@ -1,4 +1,6 @@
 setup playermovement disabling colisions for dash moves
+setup the ability to cancel abilities when starting
+setup a custom targeting that follows the player TARGETTING_SELF?
 setup premade level with colisiosn
 enemy spawn boxes and placements
 setup abilities to get constant ticks even while no active (split tick)

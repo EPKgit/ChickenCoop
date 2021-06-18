@@ -62,5 +62,18 @@
 
     <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
+    <ability>
+        <ability_ID>6</ability_ID>
+        <ability_name>Cooped Up</ability_name>
+        <tooltip>Destroy all enemy projectiles in an {0} unit AOE for the next {1} seconds.</tooltip>
+        <var_list>
+            <variable name="cd" type="float" value="2"/>
+            <variable name="aoe" type="float" value="3"/>
+            <variable name="duration" type="float" value="2"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
 
 </root>

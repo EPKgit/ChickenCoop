@@ -26,6 +26,8 @@ public class PlayerAbilities : MonoBehaviour
     public GameplayTagComponent tagComponent;
     [HideInInspector]
     public PlayerMovement movement;
+    [HideInInspector]
+    public PlayerCollision collision;
 
     private AbilitySetAsset abilitySet;
 
@@ -44,6 +46,8 @@ public class PlayerAbilities : MonoBehaviour
 		stats = GetComponent<StatBlockComponent>().GetStatBlock();
 		hp = GetComponent<BaseHealth>();
 		tagComponent = GetComponent<GameplayTagComponent>();
+		movement = GetComponent<PlayerMovement>();
+        collision = GetComponent<PlayerCollision>();
         Instantiate(inventoryUIPrefab, GameObject.FindGameObjectWithTag("PlayerUI").transform);
         ToggleInventory();
 	}

@@ -104,6 +104,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         { "cooldown", "maxCooldown" },
         { "cd", "maxCooldown" },
         { "dmg", "damage" },
+        { "duration", "maxDuration:currentDuration" },
     };
 
     private System.Reflection.PropertyInfo GetPropertyInHierarchy(Type t, string name)
@@ -138,37 +139,46 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         }
         a.name = entry.name;
         a.tooltipDescription = entry.tooltip;
-        foreach(AbilityXMLVariable variable in entry.vars)
+        foreach (AbilityXMLVariable variable in entry.vars)
         {
             var name = variable.name;
-            if(commonVariableRenames.ContainsKey(name))
+            if (commonVariableRenames.ContainsKey(name))
             {
                 name = commonVariableRenames[name];
             }
-            var type = a.GetType();
-            var property = GetPropertyInHierarchy(type, name);
-            var field = type.GetField(name);
-            if(property == null && field == null)
+            var nameArray = name.Split(':');
+            foreach (var s in nameArray)
             {
-                Debug.LogError(string.Format("ERROR: FAILED TO FIND PROPERTY/FIELD ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
-                continue;
+                DoField(a, s, variable, entry);
             }
-            VariableEvaluationMethod evaluator = evaluationMethods[variable.type];
-            if(evaluator == null)
-            {
-                Debug.LogError(string.Format("ERROR: FAILED TO EVALUATE PROPERTY ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
-                continue;
-            }
-            if (property != null)
-            {
-                property.SetValue(a, evaluator(variable.value));
-            }
-            if (field != null)
-            {
-                field.SetValue(a, evaluator(variable.value));
-            }
-
         }
+
         return true;
+    }
+
+    private void DoField(Ability a, string name, AbilityXMLVariable variable, AbilityXMLDataEntry entry)
+    {
+        var type = a.GetType();
+        var property = GetPropertyInHierarchy(type, name);
+        var field = type.GetField(name);
+        if (property == null && field == null)
+        {
+            Debug.LogError(string.Format("ERROR: FAILED TO FIND PROPERTY/FIELD ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
+            return;
+        }
+        VariableEvaluationMethod evaluator = evaluationMethods[variable.type];
+        if (evaluator == null)
+        {
+            Debug.LogError(string.Format("ERROR: FAILED TO EVALUATE PROPERTY ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
+            return;
+        }
+        if (property != null)
+        {
+            property.SetValue(a, evaluator(variable.value));
+        }
+        if (field != null)
+        {
+            field.SetValue(a, evaluator(variable.value));
+        }
     }
 }

@@ -25,14 +25,11 @@ public class Bullet : BaseLineTargeted
 	void OnTriggerEnter2D(Collider2D col)
 	{
         IDamagable damagable = Lib.FindInHierarchy<IDamagable>(col.gameObject);
-        if(damagable == null)
+        if(damagable != null)
         {
-            return;
+            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.COLLISIONS, "trigger");
+            damagable.Damage(damage, gameObject, creator);
         }
-
-        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.COLLISIONS, "trigger");
-        damagable.Damage(damage, gameObject, creator);
-        //BulletEffect(transform.position);
         DestroySelf();
 	}
 

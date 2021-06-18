@@ -49,7 +49,6 @@ public class ShieldEnemy : BaseEnemy
         GameObject g = PoolManager.instance.RequestObject(splashPrefab);
         g.transform.position = source.transform.position;
         g.GetComponent<VisualEffect>()?.SetBool(Shader.PropertyToID("Red"), false);
-        Poolable p = g.GetComponent<Poolable>();
 	}
 
 	private void DamageEffect(GameObject source)
@@ -57,7 +56,6 @@ public class ShieldEnemy : BaseEnemy
         GameObject g = PoolManager.instance.RequestObject(splashPrefab);
         g.transform.position = source.transform.position;
         g.GetComponent<VisualEffect>()?.SetBool(Shader.PropertyToID("Red"), true);
-        Poolable p = g.GetComponent<Poolable>();
     }
 
     protected override bool Update()
