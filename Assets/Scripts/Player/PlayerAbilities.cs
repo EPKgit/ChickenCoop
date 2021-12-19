@@ -13,6 +13,7 @@ public class PlayerAbilities : MonoBehaviour
     public event AbilityCastingDelegate postAbilityCastEvent = delegate { };
 
     public GameObject inventoryUIPrefab;
+    private GameObject inventoryGO;
 
     [HideInInspector]
     public Rigidbody2D rb;
@@ -48,7 +49,7 @@ public class PlayerAbilities : MonoBehaviour
 		tagComponent = GetComponent<GameplayTagComponent>();
 		movement = GetComponent<PlayerMovement>();
         collision = GetComponent<PlayerCollision>();
-        Instantiate(inventoryUIPrefab, GameObject.FindGameObjectWithTag("PlayerUI").transform);
+        inventoryGO = Instantiate(inventoryUIPrefab, GameObject.FindGameObjectWithTag("PlayerUI").transform);
         ToggleInventory();
 	}
 
@@ -225,7 +226,7 @@ public class PlayerAbilities : MonoBehaviour
 
 
     private bool inventoryOpen = true;
-    private GameObject inventoryGO;
+    
     public void ToggleInventory()
     {
         inventoryOpen = !inventoryOpen;
@@ -235,7 +236,13 @@ public class PlayerAbilities : MonoBehaviour
         }
         if (inventoryOpen)
         {
-            Lib.FindInHierarchy<UI_PlayerInventory>(inventoryGO).Setup(this);
+            var cols = Physics2D.OverlapCircleAll(transform.position, 3, LayerMask.GetMask("GroundAbilities"));
+            List<GameObject> groundAbilities = new List<GameObject>();
+            foreach (var c in cols)
+            {
+                groundAbilities.Add(c.gameObject);
+            }
+            Lib.FindInHierarchy<UI_PlayerInventory>(inventoryGO).Setup(this, groundAbilities);
         }
         inventoryGO.SetActive(inventoryOpen);
     }

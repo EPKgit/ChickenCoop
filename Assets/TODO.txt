@@ -1,10 +1,14 @@
+PROTOTYPE SHIT
+setup abilities to drop on the ground and be pickup
 setup playermovement disabling colisions for dash moves
+setup premade level with terrain
+
+figure out respawning
+enemies drop abilities?
 setup the ability to cancel abilities when starting
 setup a custom targeting that follows the player TARGETTING_SELF?
-setup premade level with colisiosn
 enemy spawn boxes and placements
-setup abilities to get constant ticks even while no active (split tick)
-setup abilities to drop on the ground and be pickup
+setup abilities to get constant ticks even while not active (split tick)
 
 Ideas
 ability upgrades

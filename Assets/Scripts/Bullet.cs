@@ -29,9 +29,14 @@ public class Bullet : BaseLineTargeted
         {
             DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.COLLISIONS, "trigger");
             damagable.Damage(damage, gameObject, creator);
+            DestroySelf();
+
         }
-        DestroySelf();
-	}
+        if (col.gameObject.layer == LayerMask.NameToLayer("Terrain"))
+        {
+            DestroySelf();
+        }
+    }
 
 	void BulletEffect(Vector3 position)
     {

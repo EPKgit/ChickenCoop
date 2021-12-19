@@ -64,12 +64,16 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         {
             node.ParentNode.RemoveChild(node);
         }
-
+        var uniqueAbilityIDTable = new Dictionary<uint, bool>();
         table = new Dictionary<uint, AbilityXMLDataEntry>();
         var root = doc["root"];
         foreach (XmlElement ability in root.ChildNodes)
         {
             uint ability_ID = Convert.ToUInt32(ability["ability_ID"].InnerText);
+            if(uniqueAbilityIDTable.ContainsKey(ability_ID))
+            {
+
+            }
             string ability_name = ability["ability_name"].InnerText;
             string tooltip = ability["tooltip"].InnerText;
             AbilityXMLDataEntry data = new AbilityXMLDataEntry(ability_ID, ability_name, tooltip);

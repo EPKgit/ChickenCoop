@@ -21,7 +21,7 @@ TagManager:
   - Targeting
   - Terrain
   - EnemyProjectiles
-  - 
+  - GroundAbilities
   - 
   - 
   - 
@@ -42,8 +42,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 3601880525
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 541012489
     locked: 0
   - name: UI_Abilities
     uniqueID: 4249852097

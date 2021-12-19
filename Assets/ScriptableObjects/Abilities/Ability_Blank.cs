@@ -59,7 +59,6 @@ public class Ability_Blank : Ability, IAOEAbility
             {
                 Destroy(collider.gameObject);
             }
-            
         }
     }
 
@@ -68,6 +67,7 @@ public class Ability_Blank : Ability, IAOEAbility
         if (collisionHandle.HasValue)
 		{
             playerAbilities.collision.RemoveCallback(collisionHandle.Value);
+            collisionHandle = null;
 		}
         base.FinishAbility();
     }

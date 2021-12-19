@@ -15,6 +15,7 @@ public class PlayerCollision : MonoBehaviour
         public float range = -1;
     }
 
+    private Collider2D playerMovementCollision;
     private List<CollisionCallbackData> callbacks;
     private float cachedMaxDistance;
 

@@ -69,7 +69,7 @@
         <var_list>
             <variable name="cd" type="float" value="2"/>
             <variable name="aoe" type="float" value="3"/>
-            <variable name="duration" type="float" value="2"/>
+            <variable name="duration" type="float" value="0.15"/>
         </var_list>
     </ability>
 

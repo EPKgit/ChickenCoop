@@ -24,6 +24,7 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     private Image image;
     private float dropTimer;
     private Vector2 startPosition;
+    private bool droppedOutsideUI;
 
     public void Setup(Ability a)
     {
@@ -89,6 +90,7 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
         }
         canvas.blocksRaycasts = false;
         startPosition = rect.anchoredPosition;
+        droppedOutsideUI = true;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -100,9 +102,18 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     {
         canvas.blocksRaycasts = true;
         dropTimer = DROP_TIMER_RESET_COOLDOWN;
+        if(droppedOutsideUI)
+        {
+            Debug.Log("Empty Drop");
+        }
     }
 
     #endregion
+
+    public void ConfirmDrop()
+    {
+        droppedOutsideUI = false;
+    }
 
     public void SetSlot(GameObject g, bool canSwap)
     {
@@ -124,5 +135,6 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
         controllingSlot = slot;
         transform.SetParent(slot.transform, false);
         rect.localPosition = Vector3.zero;
+        ConfirmDrop();
     }
 }
