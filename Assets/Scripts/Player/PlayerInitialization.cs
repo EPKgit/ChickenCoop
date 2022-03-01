@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerInitialization : MonoBehaviour, IStatBlockInitializer
 {
+    public static PlayerInitialization LocalPlayer = null;
     public static List<PlayerInitialization> all = new List<PlayerInitialization>();
 
     public delegate void PlayerNumberChangedDelegate();
@@ -27,6 +28,10 @@ public class PlayerInitialization : MonoBehaviour, IStatBlockInitializer
         stats = GetComponent<StatBlockComponent>();
         input = GetComponent<PlayerInput>();
         abilities = GetComponent<PlayerAbilities>();
+        if (/*Placeholder in case of multiplayer*/ true)
+        {
+            LocalPlayer = this;
+        }
         all.Add(this);
         OnPlayerNumberChanged.Invoke();
     }

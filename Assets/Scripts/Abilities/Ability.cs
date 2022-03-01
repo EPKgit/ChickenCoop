@@ -362,9 +362,9 @@ public abstract class Ability : ScriptableObject
 
     public static bool operator ==(Ability lhs, Ability rhs)
     {
-        if(lhs is null)
+        if(lhs is null || rhs is null)
         {
-            return rhs is null;
+            return lhs is null && rhs is null;
         }
         return lhs.InstanceID == rhs.InstanceID;
     }

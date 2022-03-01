@@ -80,7 +80,16 @@ public class InGamePlayerUI : MonoBehaviour
 	{
         for(int x = 0; x < icons.Length; ++x)
         {
-            icons[x].sprite = playerAbilities.GetIcon(x);
+            var icon = playerAbilities.GetIcon(x);
+            if (icon != null)
+            {
+                icons[x].sprite = icon;
+                icons[x].enabled = true;
+            }
+            else
+            {
+                icons[x].enabled = false;
+            }
         }
 	}
 

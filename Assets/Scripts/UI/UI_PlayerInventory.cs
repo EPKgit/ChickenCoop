@@ -12,6 +12,7 @@ public class UI_PlayerInventory : MonoBehaviour
 
     private List<GameObject> slots = new List<GameObject>();
     private List<GameObject> playerAbilityObjects = new List<GameObject>();
+    private List<GameObject> groundAbilityObjects = new List<GameObject>();
 
     private PlayerAbilities playerAbilities;
 
@@ -29,8 +30,10 @@ public class UI_PlayerInventory : MonoBehaviour
         {
             playerInventoryGameObject.gameObject.SetActive(false);
         }
+        groundInventoryGameObject = transform.parent.GetChild(1).gameObject;
         gridGroup = GetComponent<GridLayoutGroup>();
         rectTransform = GetComponent<RectTransform>();
+        
         cachedX = cachedY = -1;
     }
     public void Setup(PlayerAbilities pa, List<GameObject> groundAbilities)
@@ -46,8 +49,9 @@ public class UI_PlayerInventory : MonoBehaviour
             Destroy(playerAbilityObjects[x]);
         }
         playerAbilityObjects.Clear();
+        groundAbilityObjects.Clear();
         GenerateSlots(groundAbilities);
-        GenerateAbilities();
+        GenerateAbilities(groundAbilities);
     }
 
     private void Update()
@@ -64,10 +68,10 @@ public class UI_PlayerInventory : MonoBehaviour
     void GenerateSlots(List<GameObject> groundAbilities)
     {
         int x = 0;
-        for (x = 0; x < playerAbilities.abilities.Length; ++x)
+        for (x = 0; x < AbilitySlots.MAX.AsInt(); ++x)
         {
             UI_Slot temp = Instantiate(slotPrefab).GetComponent<UI_Slot>();
-            temp.index = x;
+            temp.abilitySlotIndex = (AbilitySlots)x;
             temp.onAbilityDropped += OnDropAbility;
             slots.Add(temp.gameObject);
             temp.transform.SetParent(transform, false);
@@ -77,7 +81,7 @@ public class UI_PlayerInventory : MonoBehaviour
         for (x = 0; x < groundAbilities.Count; ++x)
         {
             UI_Slot temp = Instantiate(slotPrefab).GetComponent<UI_Slot>();
-            temp.index = x + offset;
+            temp.abilitySlotIndex = AbilitySlots.DROPPED_ABILITY;
             temp.onAbilityDropped += OnDropAbility;
             slots.Add(temp.gameObject);
             temp.transform.SetParent(groundInventoryGameObject.transform, false);
@@ -88,7 +92,6 @@ public class UI_PlayerInventory : MonoBehaviour
 
     private void GridSizing()
     {
-        Debug.Log("sizing");
         Rect rect = rectTransform.rect;
         if (playerAbilities == null)
             return;
@@ -106,23 +109,52 @@ public class UI_PlayerInventory : MonoBehaviour
         transform.hasChanged = false;
     }
 
-    void OnDropAbility(int index, Ability previousAbility, Ability newAbility)
-    {
-        InGameUIManager.instance.RevokeCallbacks();
-        AbilitySetContainer set = playerAbilities.abilities;
-        set[index] = newAbility;
-        InGameUIManager.instance.ReinitializeUI();
-    }
-
-    void GenerateAbilities()
+    void GenerateAbilities(List<GameObject> groundAbilities)
     {
         for (int x = 0; x < playerAbilities.abilities.Length; ++x)
         {
             UI_Ability temp = Instantiate(abilityPrefab).GetComponent<UI_Ability>();
-            temp.Setup(playerAbilities.abilities[x]);
+            temp.Setup(playerAbilities.abilities[x], null);
             playerAbilityObjects.Add(temp.gameObject);
             temp.SetSlot(slots[x], false);
             temp.name = "ABILITY " + x;
         }
+        int OFFSET = AbilitySlots.MAX.AsInt();
+        for (int x = 0; x < groundAbilities.Count; ++x)
+        {
+            UI_Ability temp = Instantiate(abilityPrefab).GetComponent<UI_Ability>();
+            DroppedAbility da = groundAbilities[x].GetComponent<DroppedAbility>();
+            temp.Setup(da.ability, groundAbilities[x]);
+            groundAbilityObjects.Add(temp.gameObject);
+            temp.SetSlot(slots[x + OFFSET], false);
+            temp.name = "ABILITY " + (x + OFFSET);
+        }
+    }
+
+    void OnDropAbility(AbilitySlots abilitySlot, UI_Ability previousAbility, UI_Ability newAbility)
+    {
+        if (newAbility?.ability == null)
+        {
+            Debug.LogError("Attempted to drop null ability in slot");
+            return;
+        }
+        if (abilitySlot == AbilitySlots.INVALID)
+        {
+            Debug.LogError("Attempted to drop ability into invalid slot");
+            return;
+        }
+        if(abilitySlot == AbilitySlots.DROPPED_ABILITY)
+        {
+            newAbility.CreateDroppedAbilityObject(null, true);
+            return;
+        }
+        InGameUIManager.instance.RevokeCallbacks();
+        playerAbilities.abilities.SetSlot(abilitySlot, newAbility?.ability);
+        if(newAbility != null && newAbility.droppedAbilityObject != null)
+        {
+            Destroy(newAbility.droppedAbilityObject);
+            newAbility.droppedAbilityObject = null;
+        }
+        InGameUIManager.instance.ReinitializeUI();
     }
 }

@@ -339,6 +339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltipObject: {fileID: 4786087705940033483}
   tooltipText: {fileID: 1574730129135428351}
+  droppedAbilityPrefab: {fileID: 3226570667654189279, guid: 229407b3e0e50e244afdbe9a4c4a15f0, type: 3}
   ability: {fileID: 0}
   controllingSlot: {fileID: 0}
 --- !u!225 &8232152517597317496

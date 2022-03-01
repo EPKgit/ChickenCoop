@@ -13,6 +13,9 @@ public class PlayerAbilities : MonoBehaviour
     public event AbilityCastingDelegate postAbilityCastEvent = delegate { };
 
     public GameObject inventoryUIPrefab;
+
+    public float interactRadius = 3.0f;
+
     private GameObject inventoryGO;
 
     [HideInInspector]
@@ -32,7 +35,9 @@ public class PlayerAbilities : MonoBehaviour
 
     private AbilitySetAsset abilitySet;
 
-    public AbilitySetContainer abilities { get; private set; }
+    public AbilitySetContainer abilities { get { return _abilities; } }
+
+    private AbilitySetContainer _abilities;
 
     private List<Ability> passives = new List<Ability>();
 
@@ -66,7 +71,7 @@ public class PlayerAbilities : MonoBehaviour
 
     public void Initialize(AbilitySetAsset abilitySet)
 	{
-        abilityQueue = new AbilityQueue();
+        abilityQueue = new AbilityQueue(this);
         abilityQueue.preAbilityCastEvent += (data) => { preAbilityCastEvent(data); };
         abilityQueue.postAbilityCastEvent += (data) => { postAbilityCastEvent(data); };
         passives = new List<Ability>();
@@ -76,7 +81,7 @@ public class PlayerAbilities : MonoBehaviour
         {
             abilitySet.abilities[x] = ScriptableObject.Instantiate(abilitySet.abilities[x]);
         }
-        abilities = new AbilitySetContainer(abilitySet.abilities);
+        _abilities = new AbilitySetContainer(abilitySet.abilities);
 		foreach(Ability a in abilitySet.passiveEffects)
 		{
 			if(a.isPassive)
@@ -114,6 +119,10 @@ public class PlayerAbilities : MonoBehaviour
         }
         for(int x = 0; x < callbacks.Length; ++x)
         {
+            if(callbacks[x] == null || abilities[x] == null)
+            {
+                continue;
+            }
             abilities[x].cooldownTick += callbacks[x];
             callbacks[x](abilities[x].currentCooldown, abilities[x].maxCooldown);
         }
@@ -131,6 +140,10 @@ public class PlayerAbilities : MonoBehaviour
         }
         for (int x = 0; x < callbacks.Length; ++x)
         {
+            if(abilities[x] == null)
+            {
+                continue;
+            }
             abilities[x].cooldownTick -= callbacks[x];
         }
     }
@@ -171,7 +184,7 @@ public class PlayerAbilities : MonoBehaviour
 
 	public Sprite GetIcon(int index)
 	{
-		if(index >= (int)AbilitySlots.MAX)
+		if(index >= (int)AbilitySlots.MAX || abilities[index] == null)
         {
             return null;
         }
@@ -197,7 +210,7 @@ public class PlayerAbilities : MonoBehaviour
     /// <param name="point">The mouse position</param>
     public void AbilityInput(Ability a, InputAction.CallbackContext ctx, Vector2 point)
     {
-        if (!initialized)
+        if (!initialized || a == null)
         {
             return;
         }
@@ -224,6 +237,75 @@ public class PlayerAbilities : MonoBehaviour
         return initialized;
     }
 
+    /// <summary>
+    /// Remove an ability from the set properly updating
+    /// </summary>
+    /// <param name="index">The slot</param>
+    /// <returns>True if the slot wasn't empty and an ability was removed, and false otherwise</returns>
+    public bool RemoveAbility(AbilitySlots index)
+    {
+        if(!index.ValidSlot() || abilities[index] == null)
+        {
+            return false;
+        }
+        _abilities[index] = null;
+        initializedEvent(abilities);
+        return true;
+    }
+
+    /// <summary>
+    /// Remove an ability from the set properly updating
+    /// </summary>
+    /// <param name="a">The abilitiy to remove</param>
+    /// <returns>True if the ability was found and removed, false if it wasn't found</returns>
+    public bool RemoveAbility(Ability a)
+    {
+        for(int x = 0; x < abilities.Length; ++x)
+        {
+            if(abilities[x] == a)
+            {
+                _abilities[x] = null;
+                initializedEvent(abilities);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Add an ability to the set, preserving the ability already there if 
+    /// </summary>
+    /// <param name="index">Which slot to try to add to</param>
+    /// <param name="a">The abiltiy to be added</param>
+    /// <returns></returns>
+    public bool AddAbility(AbilitySlots index, Ability a)
+    {
+        if(!index.ValidSlot() || abilities[index] != null)
+        {
+            return false;
+        }
+        _abilities[index] = a;
+        initializedEvent(abilities);
+        return true;
+    }
+
+    /// <summary>
+    /// Overrides a slot regardless of what it already in the slot
+    /// </summary>
+    /// <param name="index">Which slot to try to override</param>
+    /// <param name="a">The abiltiy to be added</param>
+    /// <returns>False if the slot is invalid, true otherwise</returns>
+    public bool OverrideAbility(AbilitySlots index, Ability a)
+    {
+        if(!index.ValidSlot())
+        {
+            return false;
+        }
+        _abilities[index] = a;
+        initializedEvent(abilities);
+        return true;
+    }
+
 
     private bool inventoryOpen = true;
     
@@ -236,7 +318,7 @@ public class PlayerAbilities : MonoBehaviour
         }
         if (inventoryOpen)
         {
-            var cols = Physics2D.OverlapCircleAll(transform.position, 3, LayerMask.GetMask("GroundAbilities"));
+            var cols = Physics2D.OverlapCircleAll(transform.position, interactRadius, LayerMask.GetMask("GroundAbilities"));
             List<GameObject> groundAbilities = new List<GameObject>();
             foreach (var c in cols)
             {
@@ -245,5 +327,10 @@ public class PlayerAbilities : MonoBehaviour
             Lib.FindInHierarchy<UI_PlayerInventory>(inventoryGO).Setup(this, groundAbilities);
         }
         inventoryGO.SetActive(inventoryOpen);
+    }
+
+    public bool InventoryOpen()
+    {
+        return inventoryOpen;
     }
 }

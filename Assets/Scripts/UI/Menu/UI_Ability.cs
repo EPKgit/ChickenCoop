@@ -10,9 +10,12 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
 {
     public GameObject tooltipObject;
     public TextMeshProUGUI tooltipText;
+    public GameObject droppedAbilityPrefab;
 
     [HideInInspector]
-    public Ability ability;
+    public Ability ability = null;
+    [HideInInspector]
+    public GameObject droppedAbilityObject = null;
 
     private const float DROP_TIMER_RESET_COOLDOWN = 0.05f;
 
@@ -26,11 +29,12 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     private Vector2 startPosition;
     private bool droppedOutsideUI;
 
-    public void Setup(Ability a)
+    public void Setup(Ability a, GameObject g)
     {
         ability = a;
-        image.sprite = ability.icon;
+        image.sprite = ability?.icon;
         image.color = Color.white;
+        droppedAbilityObject = g;
     }
 
     #region MONOBEHAVIOUR_CALLBACKS
@@ -70,6 +74,10 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     #region POINTER_CALLBACKS
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if(ability == null)
+        {
+            return;
+        }
         tooltipText.text = ability.GetTooltip();
         tooltipObject.SetActive(true);
     }
@@ -104,7 +112,25 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
         dropTimer = DROP_TIMER_RESET_COOLDOWN;
         if(droppedOutsideUI)
         {
-            Debug.Log("Empty Drop");
+            CreateDroppedAbilityObject(ability, true);
+        }
+    }
+
+    public void CreateDroppedAbilityObject(Ability a, bool removeFromPlayerAbilities = false)
+    {
+        a = a ?? ability;
+        GameObject temp = Instantiate(droppedAbilityPrefab);
+        DroppedAbility d = temp.GetComponent<DroppedAbility>();
+        PlayerAbilities pa = PlayerInitialization.LocalPlayer.GetComponent<PlayerAbilities>();
+        if (d != null && pa != null)
+        {
+            d.ability = a;
+            temp.transform.position = pa.gameObject.transform.position;
+            Destroy(gameObject);
+            if(removeFromPlayerAbilities)
+            {
+                pa.RemoveAbility(a);
+            }
         }
     }
 
@@ -131,7 +157,7 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
             slot.ControlledAbility.SetSlot(controllingSlot, false);
         }
         dropTimer = 0.0f;
-        slot.ControlledAbility = this;
+        slot.Initialize(this);
         controllingSlot = slot;
         transform.SetParent(slot.transform, false);
         rect.localPosition = Vector3.zero;

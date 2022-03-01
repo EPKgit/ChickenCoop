@@ -5,7 +5,7 @@ public class DEBUGFLAGS
     {
         MENU = 0,
         MOVEMENT = 0,
-        LIB = 1,
+        LIB = 0,
         COLLISIONS = 0,
         HEALTH = 0,
         ENEMYHEALTH = 1,

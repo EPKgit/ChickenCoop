@@ -35,6 +35,13 @@ public class AbilityQueue
 
     private List<Ability> currentlyTicking = new List<Ability>();
 
+    private PlayerAbilities playerAbilities;
+
+    public AbilityQueue(PlayerAbilities pa)
+    {
+        playerAbilities = pa;
+    }
+
     public void Update(GameObject attached)
     {
         for (int x = currentlyTicking.Count - 1; x >= 0; --x)
@@ -114,7 +121,7 @@ public class AbilityQueue
             currentlyTicking.Add(a);
             return;
         }
-        if(!a.IsCastable())
+        if(!a.IsCastable() || playerAbilities.InventoryOpen())
         {
             return;
         }

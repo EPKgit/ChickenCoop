@@ -1862,6 +1862,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GroundAbility
       objectReference: {fileID: 0}
+    - target: {fileID: 3226570667654189279, guid: 229407b3e0e50e244afdbe9a4c4a15f0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8472653675983794452, guid: 229407b3e0e50e244afdbe9a4c4a15f0, type: 3}
       propertyPath: m_IsTrigger
       value: 1
