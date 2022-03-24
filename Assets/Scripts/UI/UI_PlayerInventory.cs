@@ -15,6 +15,8 @@ public class UI_PlayerInventory : MonoBehaviour
     private List<GameObject> groundAbilityObjects = new List<GameObject>();
 
     private PlayerAbilities playerAbilities;
+    private List<GameObject> groundAbilities;
+    private float interactRadius;
 
     private RectTransform rectTransform;
     private GridLayoutGroup gridGroup;
@@ -36,9 +38,21 @@ public class UI_PlayerInventory : MonoBehaviour
         
         cachedX = cachedY = -1;
     }
-    public void Setup(PlayerAbilities pa, List<GameObject> groundAbilities)
+    public void Setup(PlayerAbilities pa, float ir)
     {
         playerAbilities = pa;
+        interactRadius = ir;
+        Recalculate();
+    }
+
+    public void Recalculate()
+    {
+        var cols = Physics2D.OverlapCircleAll(transform.position, interactRadius, LayerMask.GetMask("GroundAbilities"));
+        List<GameObject> groundAbilities = new List<GameObject>();
+        foreach (var c in cols)
+        {
+            groundAbilities.Add(c.gameObject);
+        }
         for (int x = slots.Count - 1; x >= 0; --x)
         {
             Destroy(slots[x]);

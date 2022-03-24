@@ -318,13 +318,7 @@ public class PlayerAbilities : MonoBehaviour
         }
         if (inventoryOpen)
         {
-            var cols = Physics2D.OverlapCircleAll(transform.position, interactRadius, LayerMask.GetMask("GroundAbilities"));
-            List<GameObject> groundAbilities = new List<GameObject>();
-            foreach (var c in cols)
-            {
-                groundAbilities.Add(c.gameObject);
-            }
-            Lib.FindInHierarchy<UI_PlayerInventory>(inventoryGO).Setup(this, groundAbilities);
+            Lib.FindInHierarchy<UI_PlayerInventory>(inventoryGO).Setup(this, interactRadius);
         }
         inventoryGO.SetActive(inventoryOpen);
     }
