@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30c39e0b4d025d94985c5f3a314d075a, type: 3}
-  m_Name: DashAttack
+  m_Name: DashDodge
   m_EditorClassIdentifier: 
   ID: 3
   abilityName: 
@@ -25,6 +25,8 @@ MonoBehaviour:
       _flag: 273
   tagsToApply:
     tags:
+    - _ID: 0
+      _flag: 289
     - _ID: 0
       _flag: 261
   isPassive: 0
@@ -42,4 +44,3 @@ MonoBehaviour:
     range: 3
     previewScale: {x: 1, y: 0, z: 0}
     affiliation: 0
-  damage: 1

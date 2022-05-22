@@ -35,6 +35,7 @@ public enum GameplayTagFlags : UInt32
     ABILITY     = (1 << 2 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
         ABILITY_MOVEMENT = (ABILITY) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
     STATUS      = (1 << 3 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
+        INVULNERABLE = (STATUS) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
 }
 
 [System.Serializable]

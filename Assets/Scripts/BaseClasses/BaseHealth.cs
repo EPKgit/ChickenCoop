@@ -32,10 +32,12 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
     }
 
     private StatBlockComponent stats;
+	private GameplayTagComponent tagComponent;
 
     protected virtual void Awake()
     {
 		stats = GetComponent<StatBlockComponent>();
+		tagComponent = GetComponent<GameplayTagComponent>();
 		maxHealth = stats?.GetValue(StatName.Toughness) ?? maxHealth;
 		currentHealth = maxHealth;
 		stats?.RegisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
@@ -69,6 +71,11 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 
 	public void Damage(float delta, GameObject localSource, GameObject overallSource = null)
 	{
+		if(tagComponent?.tags.Contains(GameplayTagFlags.INVULNERABLE) ?? false)
+		{
+			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "DAMAGE CANCELED FROM INVULN");
+			return;
+		}
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "taking damage");
 		HealthChangeEventData data = new HealthChangeEventData(overallSource, localSource, gameObject, delta);
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "pre damage");

@@ -1,5 +1,4 @@
 PROTOTYPE SHIT
-setup playermovement disabling colisions for dash moves
 setup premade level with terrain
 
 show player stats
@@ -12,6 +11,10 @@ setup the ability to cancel abilities when starting
 setup a custom targeting that follows the player TARGETTING_SELF?
 enemy spawn boxes and placements
 setup abilities to get constant ticks even while not active (split tick)
+
+TECH DEBT
+figure out dashing and movement types
+figure out invul
 
 Ideas
 ability upgrades

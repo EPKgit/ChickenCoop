@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DashAttack : Ability, IMovementAbility
+public class DashDodge : Ability, IMovementAbility
 {
-    public float damage;
-
     private Vector2 startPosition;
     private Vector2 destination;
     private Vector2 prevPosition;
