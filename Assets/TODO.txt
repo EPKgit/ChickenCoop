@@ -1,8 +1,11 @@
 PROTOTYPE SHIT
-setup abilities to drop on the ground and be pickup
 setup playermovement disabling colisions for dash moves
 setup premade level with terrain
 
+show player stats
+allow stat upgrades
+xp + feed
+level ups?
 figure out respawning
 enemies drop abilities?
 setup the ability to cancel abilities when starting

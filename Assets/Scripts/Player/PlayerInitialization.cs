@@ -20,7 +20,7 @@ public class PlayerInitialization : MonoBehaviour, IStatBlockInitializer
 
     public StatBlock GetOverridingBlock()
     {
-        return playerClass.stats;
+        return playerClass?.stats;
     }
 
     void Awake()

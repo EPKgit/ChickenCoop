@@ -36,4 +36,4 @@ MonoBehaviour:
     range: 0
     previewScale: {x: 0, y: 0, z: 0}
     affiliation: 0
-  splashPrefab: {fileID: 4823460740939773342, guid: 31b3d374d35fe494c8827d13b9305af4, type: 3}
+  splashPrefab: {fileID: 6118872342496518369, guid: 0b47863bcc231b24cbdb91afec452a60, type: 3}

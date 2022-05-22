@@ -6,6 +6,8 @@ using UnityEngine.VFX;
 public class ShieldEnemy : BaseEnemy
 {
     public GameObject splashPrefab;
+    public Gradient redSplashGradient;
+    public Gradient whiteSplashGradient;
     public GameObject arc;
 	public float blockAngle;
 	public float turnSpeed = 0.05f;
@@ -48,14 +50,14 @@ public class ShieldEnemy : BaseEnemy
     {
         GameObject g = PoolManager.instance.RequestObject(splashPrefab);
         g.transform.position = source.transform.position;
-        g.GetComponent<VisualEffect>()?.SetBool(Shader.PropertyToID("Red"), false);
+        g.GetComponent<VisualEffect>()?.SetGradient(Shader.PropertyToID("ColorOverLife"), whiteSplashGradient);
 	}
 
 	private void DamageEffect(GameObject source)
     {
         GameObject g = PoolManager.instance.RequestObject(splashPrefab);
         g.transform.position = source.transform.position;
-        g.GetComponent<VisualEffect>()?.SetBool(Shader.PropertyToID("Red"), true);
+        g.GetComponent<VisualEffect>()?.SetGradient(Shader.PropertyToID("ColorOverLife"), redSplashGradient);
     }
 
     protected override bool Update()

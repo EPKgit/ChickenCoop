@@ -171,6 +171,7 @@ GameObject:
   - component: {fileID: 863033339}
   - component: {fileID: 288553149823017606}
   - component: {fileID: 8226156152404720924}
+  - component: {fileID: 8929027772924074797}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -391,6 +392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryUIPrefab: {fileID: 3971932206135975564, guid: 45454edd31afc5746bb5255242b310c0, type: 3}
+  interactRadius: 3
   rb: {fileID: 0}
   col: {fileID: 0}
   stats:
@@ -520,5 +522,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbc244fbbab833142ad9146a7c1fbbce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8929027772924074797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9148293411782098714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 751282c412edf4d42870f9ea437715b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

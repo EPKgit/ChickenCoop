@@ -5,13 +5,15 @@ using UnityEngine.EventSystems;
 
 public class UI_Slot : MonoBehaviour, IDropHandler
 {
-    public delegate void OnDropAbility(AbilitySlots abilitySlot, UI_Ability previousAbility, UI_Ability newAbility);
+    public delegate void OnDropAbility(AbilitySlots newAbilitySlot, AbilitySlots oldAbilitySlot, UI_Ability previousAbility, UI_Ability newAbility);
     public event OnDropAbility onAbilityDropped = delegate { };
 
     /// <summary>
     /// Which slot does this ability represent in the UI for the player ability set
     /// </summary>
     public AbilitySlots abilitySlotIndex = AbilitySlots.INVALID;
+
+    public UI_PlayerInventory controller;
 
     public UI_Ability ControlledAbility
     {
@@ -21,7 +23,7 @@ public class UI_Slot : MonoBehaviour, IDropHandler
         }
         set
         {
-            onAbilityDropped(abilitySlotIndex, _controlledAbility, value);
+            onAbilityDropped(abilitySlotIndex, AbilitySlots.INVALID, _controlledAbility, value);
             _controlledAbility = value;
         }
     }
@@ -30,9 +32,9 @@ public class UI_Slot : MonoBehaviour, IDropHandler
     public void OnDrop(PointerEventData data)
     {
         UI_Ability ability = data.pointerDrag?.GetComponent<UI_Ability>();
-        if (ability != null)
+        if (ability != null)    
         {
-            onAbilityDropped(abilitySlotIndex, _controlledAbility, ability);
+            onAbilityDropped(abilitySlotIndex, ability.currentSlotIndex, _controlledAbility, ability);
             ability.SetSlot(this, true);
         }
     }

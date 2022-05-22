@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Bomb : BaseArcingProjectile
 {
     public float damage;
     public float explosionRadius;
+
+    public GameObject explosionPrefab;
 
     public override void Reset()
     {
@@ -28,12 +31,19 @@ public class Bomb : BaseArcingProjectile
                 }
             }
         }
+        GameObject g = PoolManager.instance.RequestObject(explosionPrefab);
+        g.transform.position = transform.position;
     }
-
 
     protected override void Update()
     {
         base.Update();
         transform.rotation = Quaternion.Euler(0, 0, (Time.frameCount % 10 < 5 ? 1 : -1 * 15));
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }

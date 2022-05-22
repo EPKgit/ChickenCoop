@@ -113,7 +113,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 0}
+  affiliation: 8
   arcSteepness: 1
   arcTime: 2
   damage: 3
-  explosionRadius: 3
+  explosionRadius: 2
+  explosionPrefab: {fileID: 1706665330344778267, guid: 01607886e32d1d142993301b7b07836d, type: 3}

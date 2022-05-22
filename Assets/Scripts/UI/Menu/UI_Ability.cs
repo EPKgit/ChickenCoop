@@ -16,6 +16,8 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     public Ability ability = null;
     [HideInInspector]
     public GameObject droppedAbilityObject = null;
+    [HideInInspector]
+    public AbilitySlots currentSlotIndex;
 
     private const float DROP_TIMER_RESET_COOLDOWN = 0.05f;
 
@@ -91,6 +93,7 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     #region DRAG_CALLBACKS
     public void OnBeginDrag(PointerEventData eventData)
     {
+        currentSlotIndex = controllingSlot.abilitySlotIndex;
         tooltipObject.SetActive(false);
         if (dropTimer != 0.0f)
         {
@@ -126,11 +129,12 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
         {
             d.ability = a;
             temp.transform.position = pa.gameObject.transform.position;
-            Destroy(gameObject);
             if(removeFromPlayerAbilities)
             {
                 pa.RemoveAbility(a);
             }
+            controllingSlot.controller.RecalculateDelayed();           
+            Destroy(gameObject);
         }
     }
 

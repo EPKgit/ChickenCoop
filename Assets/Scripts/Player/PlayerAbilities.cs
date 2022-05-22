@@ -14,7 +14,7 @@ public class PlayerAbilities : MonoBehaviour
 
     public GameObject inventoryUIPrefab;
 
-    public float interactRadius = 3.0f;
+    public float pickupRadius = 3.0f;
 
     private GameObject inventoryGO;
 
@@ -318,7 +318,7 @@ public class PlayerAbilities : MonoBehaviour
         }
         if (inventoryOpen)
         {
-            Lib.FindInHierarchy<UI_PlayerInventory>(inventoryGO).Setup(this, interactRadius);
+            Lib.FindInHierarchy<UI_PlayerInventory>(inventoryGO).Setup(this, pickupRadius);
         }
         inventoryGO.SetActive(inventoryOpen);
     }
