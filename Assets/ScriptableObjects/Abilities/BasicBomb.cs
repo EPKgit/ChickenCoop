@@ -50,7 +50,7 @@ public class BasicBomb : Ability, IDamagingAbility, IAOEAbility
             playerAbilities.transform.position,
             targetingData.inputPoint,
             playerAbilities.gameObject,
-            Lib.FindInHierarchy<TargetingController>(playerAbilities.gameObject)?.TargetAffiliation ?? Targeting.Affiliation.NONE
+            Lib.FindUpwardsInTree<TargetingController>(playerAbilities.gameObject)?.TargetAffiliation ?? Targeting.Affiliation.NONE
 		);
         b.damage = damage;
         b.explosionRadius = aoe;

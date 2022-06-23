@@ -3,6 +3,7 @@ using UnityEngine.VFX;
 
 public class VFXPoolable : Poolable
 {
+    public bool looping = false;
     private VisualEffect effect;
     private bool active = false;
     private bool initialized = false;
@@ -17,6 +18,19 @@ public class VFXPoolable : Poolable
         active = true;
         initialized = false;
         effect.Play();
+    }
+
+    public void StopParticlePlaying()
+    {
+        effect.Stop();
+        if(!looping)
+        {
+            Cleanup();
+        }
+        else
+        {
+            initialized = true;
+        }
     }
 
     void Update()
@@ -36,12 +50,17 @@ public class VFXPoolable : Poolable
         {
             if (initialized)
             {
-                active = false;
-                initialized = false;
-                effect.Stop();
-                DestroySelf();
+                Cleanup();
             }
         }
         
+    }
+
+    private void Cleanup()
+    {
+        active = false;
+        initialized = false;
+        effect.Stop();
+        DestroySelf();
     }
 }

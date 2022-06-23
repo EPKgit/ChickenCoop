@@ -23,6 +23,7 @@ public static class Lib
     }
 
     /// <summary>
+    /// VERY DANGEROUS: THIS WILL FIND A COMPONENT OF THE TYPE YOU'RE LOOKING FOR BUT IT MIGHT NOT BE THE ONE YOU WANT
     /// Finds the closest gameobject with the component, starting with checking the gameobjects, then a downwards search starting with the children then moving upwards starting with siblings
     /// then parents etc.
     /// </summary>
@@ -60,11 +61,39 @@ public static class Lib
     /// <typeparam name="T">The component to search for</typeparam>
     /// <param name="start">The gameobject to start with</param>
     /// <returns>Thec closest component following the search rules</returns>
-    public static T FindInDownTree<T>(GameObject start) where T : class
+    public static T FindDownwardsInTree<T>(GameObject start) where T : class
     {
         return Lib.LibGetComponentDownTree<T>(start);
     }
 
+    /// <summary>
+    /// Finds the closest component of type T upwards from a gameobject
+    /// </summary>
+    /// <typeparam name="T">The type of the component</typeparam>
+    /// <param name="start">The gameobject to start searching from</param>
+    /// <returns>Returns the first found component if there is one, null otherwise</returns>
+    public static T FindUpwardsInTree<T>(GameObject start) where T : class
+    {
+        Transform curr = start.transform;
+        while(curr != null)
+        {
+            T temp = curr.GetComponent<T>();
+            if (IsNotNull<T>(temp))
+            {
+                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "returning " + temp);
+                return temp;
+            }
+			curr = curr.parent;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Conglomorated null check for reference types and unity components which have a strange tendency to break
+    /// </summary>
+    /// <typeparam name="T">The type to check the nullness of</typeparam>
+    /// <param name="toCheck">The object to check if it's null</param>
+    /// <returns>True if the object is truly not null</returns>
     internal static bool IsNotNull<T>(T toCheck)
     {
         if (typeof(T).IsSubclassOf(typeof(Component)))
@@ -98,6 +127,13 @@ public static class Lib
         return null;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="check"></param>
+    /// <param name="excludedChild"></param>
+    /// <returns></returns>
     internal static T LibGetComponentInChildren<T>(GameObject check, Transform excludedChild = null) where T : class
     {
         DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "checking " + check.name);
@@ -125,6 +161,12 @@ public static class Lib
         return null;
     }
 
+    /// <summary>
+    /// Check a gameobject for a given component
+    /// </summary>
+    /// <typeparam name="T">The type of the gameobject to look for</typeparam>
+    /// <param name="check">The gameobject to search</param>
+    /// <returns>The component of type T if present, null otherwise</returns>
     internal static T LibGetComponent<T>(GameObject check) where T : class
     {
         T temp = check.GetComponent<T>();
@@ -136,16 +178,22 @@ public static class Lib
         return null;
     }
 
-
-    public static bool HasTagInHierarchy(GameObject start, string tag)
+    public static bool HasTagInParents(GameObject start, string tag)
 	{
-		GameObject top = start;
-		while(top.transform.parent != null)
+		Transform curr = start?.transform;
+        bool found = false;
+        while(curr != null)
 		{
-			top = top.transform.parent.gameObject;
-		}
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "Starting search on " + start.name + " for " + tag);
-		return Lib.TagRecursiveHelper(top, tag);
+    		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "Checking for tag " + tag + " on " + curr.name );
+            found = curr.CompareTag(tag);
+            if(found)
+            {
+                break;
+            }
+			curr = curr.parent;
+        }
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.LIB, "Ending search for tag " + tag + " with result " + found);
+		return found;
 	}
 
     public static bool HasTagInHierarchyDownward(GameObject start, string tag)

@@ -20,7 +20,7 @@ public abstract class BaseInteractable : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		PlayerInteraction pi = Lib.FindInHierarchy<PlayerInteraction>(col.gameObject);
+		PlayerInteraction pi = Lib.FindUpwardsInTree<PlayerInteraction>(col.gameObject);
 		if(pi == null)
 		{
 			return;
@@ -31,7 +31,7 @@ public abstract class BaseInteractable : MonoBehaviour
 
 	void OnTriggerExit2D(Collider2D col)
 	{
-		PlayerInteraction pi = Lib.FindInHierarchy<PlayerInteraction>(col.gameObject);
+		PlayerInteraction pi = Lib.FindUpwardsInTree<PlayerInteraction>(col.gameObject);
 		if(pi == null)
 		{
 			return;

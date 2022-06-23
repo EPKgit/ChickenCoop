@@ -48,7 +48,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
     }
 }
 
-public class Singleton<T> where T : new()
+public class Singleton<T> : ISingletonUpdate where T : new()
 {
     public static T Instance
     {
@@ -70,10 +70,22 @@ public class Singleton<T> where T : new()
     }
     private static T _instance;
     protected virtual void Awake() { }
+
+    public void Update(float dt) 
+    { 
+        InternalUpdate(dt);
+    }
+
+    protected virtual void InternalUpdate(float dt) { }
     protected Singleton()
     {
         Awake();
     }
+}
+
+public interface ISingletonUpdate
+{
+    public abstract void Update(float dt);
 }
 
 public static class SingletonHelpers

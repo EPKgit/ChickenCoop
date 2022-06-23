@@ -20,3 +20,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 82877778eca9322498834dbf3e7a4cd5, type: 2}
   passiveEffects:
   - {fileID: 11400000, guid: be7b90bbfd8df86408764db0f9c23bf5, type: 2}
+  - {fileID: 11400000, guid: 2ab07791d7a6f044b99b41aa1b0f4e63, type: 2}

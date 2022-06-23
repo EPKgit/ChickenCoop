@@ -8,6 +8,11 @@ public abstract class BaseEnemy : MonoBehaviour
   	public float speed = 1f;
 
 	/// <summary>
+    /// Describes whether the enemy has 
+    /// </summary>
+	protected bool enemyEnabled = true;
+
+	/// <summary>
 	/// The player that the AI will use to plan its pathing, up to the AI
 	/// to use this value
 	/// </summary>
@@ -17,8 +22,9 @@ public abstract class BaseEnemy : MonoBehaviour
 	/// A sorted set of all aggrodata that the enemy has recieved from damage events. 
 	/// </summary>
 	protected PriorityQueue<AggroData> aggro;
-	
-	protected Rigidbody2D rb;
+
+    protected Collider2D col;
+    protected Rigidbody2D rb;
 	protected StatBlockComponent stats;
 	protected EnemyHealth hp;
 
@@ -27,6 +33,7 @@ public abstract class BaseEnemy : MonoBehaviour
 		rb = GetComponent<Rigidbody2D>();
 		stats = GetComponent<StatBlockComponent>();
 		hp = GetComponent<EnemyHealth>();
+		col = GetComponent<Collider2D>();
 		aggro = new PriorityQueue<AggroData>(PlayerInitialization.all.Count, new MaxAggroComparator());
 		
 		hp.postDamageEvent += AddAggroEvent;
@@ -36,6 +43,12 @@ public abstract class BaseEnemy : MonoBehaviour
 	{
 		UpdateChosenPlayer();
 	}
+
+	public virtual void SetEnemyEnabled(bool enabled)
+	{
+        enemyEnabled = enabled;
+        col.enabled = enabled;
+    }
 
 	protected virtual void AddAggroEvent(HealthChangeNotificationData hcnd)
 	{
@@ -69,8 +82,13 @@ public abstract class BaseEnemy : MonoBehaviour
 
 	//Not that performant, can be updated if we need to
 	//Should add an aggro range 
+	// returns false if we shouldn't do anything
 	protected virtual bool Update()
 	{
+		if(!enemyEnabled)
+		{
+            return false;
+        }
 		if(chosenPlayer == null)
 		{
 			return UpdateChosenPlayer();

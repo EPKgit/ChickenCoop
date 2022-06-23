@@ -80,8 +80,8 @@ public class PoolManager : MonoSingleton<PoolManager>
 
 	/// <summary>
 	/// Requests an object from the PoolManager. If the object was not already being pooled, the
-	/// object will be instantiated and registered for pooling. The object MUST be reinitialized
-	/// with its Reset() method BY YOU, so all changes made in the course of its lifetime should be reset
+	/// object will be instantiated and registered for pooling. The object will be reinitialized
+	/// with its Reset() method, so all changes made in the course of its lifetime should be reset
 	/// within that method.
 	/// </summary>
 	/// <param name="g">The gameobject that should be instantiated</param>

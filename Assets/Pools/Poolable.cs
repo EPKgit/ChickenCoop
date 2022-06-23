@@ -17,7 +17,7 @@ public class Poolable : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Should be called when the poolable object is fetched from the PoolManager. Implemented
+	/// Called when the poolable object is fetched from the PoolManager. Implemented
 	/// to reset the object back to it's prefab state.
 	/// </summary>
 	public virtual void Reset()

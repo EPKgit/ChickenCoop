@@ -48,7 +48,6 @@ public class Ability_Blank : Ability, IAOEAbility
         {
             GameObject g = PoolManager.instance.RequestObject(splashPrefab);
             g.transform.position = collider.transform.position;
-            g.GetComponent<VisualEffect>()?.SetBool(Shader.PropertyToID("Red"), true);
 
             Poolable p = collider.gameObject.GetComponent<Poolable>();
             if(p != null)

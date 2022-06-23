@@ -12,6 +12,6 @@ public class DamageStation : BaseInteractable
 	protected override void ToDo(GameObject user)
 	{
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "DamageStation");
-		Lib.FindInHierarchy<IDamagable>(user)?.Damage(1, gameObject, gameObject);
+		Lib.FindUpwardsInTree<IDamagable>(user)?.Damage(1, gameObject, gameObject);
 	}
 }

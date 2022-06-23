@@ -37,13 +37,13 @@ public class InGamePlayerUI : MonoBehaviour
 		UIActive.SetActive(true);
 		player = g;
 
-		playerHealth = Lib.FindInHierarchy<BaseHealth>(player);
+		playerHealth = Lib.FindUpwardsInTree<BaseHealth>(player);
 		currentHealth = playerHealth.currentHealth;
 		maxHealth = playerHealth.maxHealth;
 		playerHealth.healthValueUpdateEvent += UpdateCachedHealthValues;
 		playerHealth.healthChangeEvent += HealthChange;
 
-		playerAbilities = Lib.FindInHierarchy<PlayerAbilities>(player);
+		playerAbilities = Lib.FindUpwardsInTree<PlayerAbilities>(player);
         playerAbilities.initializedEvent += OnAbilityInitialized;
         if(playerAbilities.IsInitialized())
         {
@@ -157,6 +157,6 @@ public class InGamePlayerUI : MonoBehaviour
 	
 	public void HideSelf()
 	{
-		UIActive.SetActive(false);
+		UIActive?.SetActive(false);
 	}
 }

@@ -24,7 +24,7 @@ public class Bullet : BaseLineTargeted
 
 	void OnTriggerEnter2D(Collider2D col)
 	{
-        IDamagable damagable = Lib.FindInHierarchy<IDamagable>(col.gameObject);
+        IDamagable damagable = Lib.FindUpwardsInTree<IDamagable>(col.gameObject);
         if(damagable != null)
         {
             DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.COLLISIONS, "trigger");

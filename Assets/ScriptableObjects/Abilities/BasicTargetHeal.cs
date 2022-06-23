@@ -24,7 +24,7 @@ public class BasicTargetHeal : Ability, IHealingAbility
     protected override void UseAbility()
 	{
         base.UseAbility();
-        IHealable healable = Lib.FindInHierarchy<IHealable>(targetingData.inputTarget.Attached);
+        IHealable healable = Lib.FindUpwardsInTree<IHealable>(targetingData.inputTarget.Attached);
         if(healable != null)
         {
             healable.Heal(amount, playerAbilities.gameObject, playerAbilities.gameObject);

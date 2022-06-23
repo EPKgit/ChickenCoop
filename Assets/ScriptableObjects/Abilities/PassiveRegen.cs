@@ -17,7 +17,7 @@ public class PassiveRegen : Ability
     }
     public override void Initialize(PlayerAbilities pa)
 	{
-		hp = Lib.FindInHierarchy<IHealable>(pa.gameObject);
+		hp = Lib.FindUpwardsInTree<IHealable>(pa.gameObject);
 		owner = pa.gameObject;
 		healInterval = 1f / hpPerSecond;
 	}

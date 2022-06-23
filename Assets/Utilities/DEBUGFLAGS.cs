@@ -7,7 +7,7 @@ public class DEBUGFLAGS
         MOVEMENT = 0,
         LIB = 0,
         COLLISIONS = 0,
-        HEALTH = 1,
+        HEALTH = 0,
         ENEMYHEALTH = 0,
         STATS = 0,
         ABILITY = 0,

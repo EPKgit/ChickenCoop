@@ -1,6 +1,21 @@
-PROTOTYPE SHIT
-setup premade level with terrain
+CURRENT
+enemy spawning disable ai while spawning
 
+MVP/PROTOTYPE SHIT
+setup premade level with terrain
+Enemy spawning with anim
+more abilities
+statuses?
+    - Figure out how the ui for that works
+
+NICE STUFF
+hot reloading the ability xml
+ability stacks
+    - cooldown while stacks remain?
+    - stack cooldown vs ability cooldown
+    - Display?
+ability recasting
+    -cooldown while other hasn't been cast?
 show player stats
 allow stat upgrades
 xp + feed

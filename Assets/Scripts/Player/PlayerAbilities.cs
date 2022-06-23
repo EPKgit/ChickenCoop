@@ -318,6 +318,7 @@ public class PlayerAbilities : MonoBehaviour
         }
         if (inventoryOpen)
         {
+            //TODO: clean  this shit up (individual UIs per player?)
             Lib.FindInHierarchy<UI_PlayerInventory>(inventoryGO).Setup(this, pickupRadius);
         }
         inventoryGO.SetActive(inventoryOpen);

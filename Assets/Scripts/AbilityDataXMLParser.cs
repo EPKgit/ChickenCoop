@@ -39,7 +39,13 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     protected override void Awake()
     {
         base.Awake();
+        SingletonBootstrap.instance.AddToUpdateList(this);
         ParseXMLData();
+    }
+
+    protected override void InternalUpdate(float dt)
+    {
+        // hot reload file?
     }
 
     Dictionary<uint, AbilityXMLDataEntry> table;

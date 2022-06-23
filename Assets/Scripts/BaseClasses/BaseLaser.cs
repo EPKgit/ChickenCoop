@@ -47,7 +47,7 @@ public class BaseLaser : Poolable
         {
             endPoint = hit.point;
             distance = hit.distance;
-            if (Lib.HasTagInHierarchy(hit.transform.gameObject, "Mirror"))
+            if (Lib.HasTagInParents(hit.transform.gameObject, "Mirror"))
             {
                 copy = GameObject.Instantiate(this.gameObject);
                 copy.GetComponent<BaseLaser>().Setup(hit.point + Vector2.Reflect(direction, hit.normal) * .1f, Vector2.Reflect(direction, hit.normal), null, totalLength - distance);
@@ -98,15 +98,16 @@ public class BaseLaser : Poolable
 
     protected virtual void OnTick(BaseHealth target)
     {
-        if (Lib.HasTagInHierarchy(target.gameObject, "Player"))
+        if (Lib.HasTagInParents(target.gameObject, "Player"))
+        {
             return;
-
+        }
         target.Damage(1, creator, target.gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        BaseHealth i = Lib.FindInHierarchy<BaseHealth>(col.gameObject);
+        BaseHealth i = Lib.FindUpwardsInTree<BaseHealth>(col.gameObject);
         if (i == null)
         {
             return;
@@ -120,7 +121,7 @@ public class BaseLaser : Poolable
 
     void OnTriggerExit2D(Collider2D col)
     {
-        BaseHealth i = Lib.FindInHierarchy<BaseHealth>(col.gameObject);
+        BaseHealth i = Lib.FindUpwardsInTree<BaseHealth>(col.gameObject);
         if (i == null)
         {
             return;
@@ -131,6 +132,8 @@ public class BaseLaser : Poolable
     void OnDestroy()
     {
         if (copy != null)
+        {
             GameObject.Destroy(copy);
+        }
     }
 }

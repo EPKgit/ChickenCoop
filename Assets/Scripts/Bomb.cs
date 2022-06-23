@@ -21,10 +21,10 @@ public class Bomb : BaseArcingProjectile
         var collisions = Physics2D.OverlapCircleAll((Vector2)transform.position, explosionRadius);
         foreach(var col in collisions)
         {
-            IDamagable damagable = Lib.FindInHierarchy<IDamagable>(col.gameObject);
+            IDamagable damagable = Lib.FindUpwardsInTree<IDamagable>(col.gameObject);
             if(damagable !=null)
             {
-                TargetingController controller = Lib.FindInHierarchy<TargetingController>(col.gameObject);
+                TargetingController controller = Lib.FindUpwardsInTree<TargetingController>(col.gameObject);
                 if(controller?.TargetAffiliation != affiliation)
                 {
                     damagable?.Damage(damage, gameObject, creator);

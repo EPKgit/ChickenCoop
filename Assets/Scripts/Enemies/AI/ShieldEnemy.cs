@@ -60,10 +60,19 @@ public class ShieldEnemy : BaseEnemy
         g.GetComponent<VisualEffect>()?.SetGradient(Shader.PropertyToID("ColorOverLife"), redSplashGradient);
     }
 
+    public override void SetEnemyEnabled(bool enabled)
+    {
+        base.SetEnemyEnabled(enabled);
+        arc.SetActive(enabled);
+        rb.velocity = Vector2.zero;
+
+    }
+
     protected override bool Update()
 	{
         if (!base.Update())
         {
+            rb.velocity = Vector2.zero;
             return false;
         }
         //Just walks towards the player
