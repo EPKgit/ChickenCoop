@@ -938,10 +938,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1220587189, guid: bc75516689a4ffb4fa1f13754fa02cc7, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 781dadaa9a7da5043a36f02b70aae420, type: 2}
     - target: {fileID: 2105565787798211784, guid: bc75516689a4ffb4fa1f13754fa02cc7, type: 3}
       propertyPath: m_Name
       value: ShieldEnemy
