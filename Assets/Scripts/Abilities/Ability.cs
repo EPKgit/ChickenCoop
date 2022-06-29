@@ -114,7 +114,7 @@ public abstract class Ability : ScriptableObject
     protected PlayerAbilities playerAbilities;
 
     private int InstanceID;
-    private List<int> appliedTagIDs;
+    private List<uint> appliedTagIDs;
 
     /// <summary>
     /// Called once when the ability is intantiated, should be used to setup references that the ability
@@ -123,7 +123,7 @@ public abstract class Ability : ScriptableObject
     public virtual void Initialize(PlayerAbilities pa)
     {
         playerAbilities = pa;
-        appliedTagIDs = new List<int>();
+        appliedTagIDs = new List<uint>();
         Reinitialize();
         currentCooldown = 0;
         SetupIDNumber();
@@ -154,8 +154,15 @@ public abstract class Ability : ScriptableObject
     public virtual void Reinitialize()
     {
         currentDuration = maxDuration;
+#if UNITY_EDITOR
+        if(playerAbilities.DEBUG_LOW_COOLDOWN)
+        {
+            currentCooldown = Mathf.Min(0.1f, maxCooldown);
+        }
+#else
         currentCooldown = maxCooldown;
-        appliedTagIDs.Clear();
+#endif
+            appliedTagIDs.Clear();
     }
 
     /// <summary>
@@ -245,7 +252,7 @@ public abstract class Ability : ScriptableObject
     /// </summary>
     public virtual void FinishAbility()
     {
-        foreach(int i in appliedTagIDs)
+        foreach(uint i in appliedTagIDs)
         {
             playerAbilities.tagComponent.blockedTags.RemoveTagWithID(i);
             playerAbilities.tagComponent.tags.RemoveTagWithID(i);
@@ -326,7 +333,7 @@ public abstract class Ability : ScriptableObject
     /// <returns></returns>
     static public ITargetable FindTargetable(Vector2 point, Affiliation affiliation)
     {
-        var raycastResults = Physics2D.OverlapPointAll(point);
+        var raycastResults = Physics2D.OverlapPointAll(point, LayerMask.GetMask("Targeting"));
         ITargetable target = null;
         foreach (var i in raycastResults)
         {

@@ -12,7 +12,7 @@ public class DebugEnemy : BaseEnemy
 
     protected override bool Update()
 	{
-        if (!base.Update())
+        if (!base.Update() || !CanMove())
         {
             return false;
         }

@@ -39,7 +39,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     protected override void Awake()
     {
         base.Awake();
-        SingletonBootstrap.instance.AddToUpdateList(this);
+        // SingletonBootstrap.instance.AddToUpdateList(this);
         ParseXMLData();
     }
 
@@ -50,12 +50,16 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 
     Dictionary<uint, AbilityXMLDataEntry> table;
     const string XMLPath = "AbilityData";
+    bool loadedTable = false;
+    
+    //TODO MAKE THREAD SAFE
     void ParseXMLData()
     {
-        if (table != null)
+        if (loadedTable)
         {
             return;
         }
+        loadedTable = false;
         var file = Resources.Load<TextAsset>(XMLPath);
         if (file == null)
         {
@@ -89,6 +93,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             }
             table.Add(ability_ID, data);
         }
+        loadedTable = true;
     }
 
     private delegate object VariableEvaluationMethod(string s);
@@ -137,6 +142,53 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             return GetPropertyInHierarchy(t.BaseType, name);
         }
         return null;
+    }
+
+    /// <summary>
+    /// Helper method to check if we have already setup our table
+    /// </summary>
+    /// <returns>True if the table is loaded, false otherwise</returns>
+    public bool XMLLoaded()
+    {
+        return loadedTable;
+    }
+
+    /// <summary>
+    /// Helper method to determine if we have this ability in the XML at all
+    /// </summary>
+    /// <param name="ID">The ID of the method (0 is never a valid ID)</param>
+    /// <returns>True if the XML is loaded and we have a valid ID</returns>
+    public bool HasEntryFor(uint ID)
+    {
+        return loadedTable ? table.ContainsKey(ID) : false;
+    }
+
+
+    /// <summary>
+    /// Helper method to determine if we have something in the xml that will be overriding the given field
+    /// </summary>
+    /// <param name="ID">The ID of the ability to check</param>
+    /// <param name="fieldName">The string name of the field</param>
+    /// <returns>True if we found a valid ability with that field override, false otherwise</returns>
+    public bool HasFieldInEntry(uint ID, string fieldName)
+    {
+        AbilityXMLDataEntry entry = null;
+        if (ID == 0 || !loadedTable || !table.TryGetValue(ID, out entry))
+        {
+            return false;
+        }
+        foreach(var e in entry.vars)
+        {
+            if(e.name == fieldName)
+            {
+                return true;
+            }
+            if (commonVariableRenames.ContainsKey(e.name) && commonVariableRenames[e.name] == fieldName)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public bool UpdateAbilityData(Ability a)

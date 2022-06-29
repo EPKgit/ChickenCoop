@@ -30,18 +30,32 @@ public enum GameplayTagFlags : UInt32
     NONE = 0,
     MOVEMENT = (1 << 0 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
         NORMAL_MOVEMENT_DISABLED = (MOVEMENT) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
-        MOVEMENT_DASHING = (MOVEMENT) | (1 << 1 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+        MOVEMENT_DASHING         = (MOVEMENT) | (1 << 1 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
     INTERACTION  = (1 << 1 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
-    ABILITY     = (1 << 2 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
-        ABILITY_MOVEMENT = (ABILITY) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+    ABILITY      = (1 << 2 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
+        ABILITY_MOVEMENT    = (ABILITY) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+        ABILITY_CC          = (ABILITY) | (1 << 1 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
     STATUS      = (1 << 3 + GameplayTagConstants.LAYER_1_BIT_OFFSET) | GameplayTagConstants.LAYER_1,
-        INVULNERABLE = (STATUS) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+        INVULNERABLE        = (STATUS) | (1 << 0 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+        MOVEMENT_EFFECTED   = (STATUS) | (1 << 1 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+            MOVEMENT_DISABLED = (MOVEMENT_EFFECTED) | (1 << 0 + GameplayTagConstants.LAYER_3_BIT_OFFSET) | GameplayTagConstants.LAYER_3,
+        CASTING_EFFECTED    = (STATUS) | (1 << 2 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+            CASTING_DISABLED = (CASTING_EFFECTED) | (1 << 0 + GameplayTagConstants.LAYER_3_BIT_OFFSET) | GameplayTagConstants.LAYER_3,
+        ATTACKING_EFFECTED = (STATUS) | (1 << 3 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
+            ATTACKING_DISABLED = (ATTACKING_EFFECTED) | (1 << 0 + GameplayTagConstants.LAYER_3_BIT_OFFSET) | GameplayTagConstants.LAYER_3,
+        STUN = CASTING_DISABLED | MOVEMENT_DISABLED | ATTACKING_DISABLED | CASTING_EFFECTED | MOVEMENT_EFFECTED | ATTACKING_EFFECTED,
+        ROOT = MOVEMENT_DISABLED | MOVEMENT_EFFECTED,
+        SILENCE = CASTING_DISABLED | CASTING_DISABLED,
+        BLIND = ATTACKING_DISABLED | ATTACKING_EFFECTED, 
+        SLOW = MOVEMENT_EFFECTED,
+        FEAR = MOVEMENT_EFFECTED,
+
 }
 
 [System.Serializable]
 public class GameplayTag
 {
-    public int ID
+    public uint ID
     {
         get
         {
@@ -49,7 +63,7 @@ public class GameplayTag
         }
     }
     [SerializeField]
-    private int _ID = -1;
+    private uint _ID = uint.MaxValue;
 
     public GameplayTagFlags Flag
     {
@@ -87,8 +101,8 @@ public class GameplayTag
     {
     }
 
-    static int counter = 0;
-    private int GenerateIDNumber()
+    static uint counter = 0;
+    private uint GenerateIDNumber()
     {
         return counter++;
     }
@@ -111,7 +125,7 @@ public class GameplayTag
             {
                 break;
             }
-            if ((masks[x] & (UInt32)l._flag) != (masks[x] & (UInt32)r._flag))
+            if (((masks[x] & (UInt32)l._flag) & (masks[x] & (UInt32)r._flag)) == 0)
             {
                 return false;
             }
@@ -137,7 +151,7 @@ public class GameplayTag
             {
                 break;
             }
-            if ((masks[x] & (UInt32)l._flag) != (masks[x] & (UInt32)r))
+            if (((masks[x] & (UInt32)l._flag) & (masks[x] & (UInt32)r)) == 0)
             {
                 return false;
             }
@@ -223,7 +237,7 @@ public class GameplayTagContainer
         return false;
     }
 
-    public int AddTag(GameplayTagFlags f)
+    public uint AddTag(GameplayTagFlags f)
     {
         var tag = new GameplayTag(f);
         tags.Add(tag);
@@ -243,7 +257,7 @@ public class GameplayTagContainer
         return false;
     }
 
-    public bool RemoveTagWithID(int ID)
+    public bool RemoveTagWithID(uint ID)
     {
         foreach (var t in tags)
         {

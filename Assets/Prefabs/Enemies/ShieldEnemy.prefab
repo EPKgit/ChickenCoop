@@ -210,6 +210,7 @@ GameObject:
   - component: {fileID: 2105565787798211765}
   - component: {fileID: 2105565787798211767}
   - component: {fileID: 2105565787798211764}
+  - component: {fileID: 286705340829513149}
   m_Layer: 0
   m_Name: ShieldEnemy
   m_TagString: Untagged
@@ -295,6 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2615072fd49a5bb4c8d48ef3b9134129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 2
   speed: 1
   splashPrefab: {fileID: 6118872342496518369, guid: 0b47863bcc231b24cbdb91afec452a60, type: 3}
   redSplashGradient:
@@ -358,3 +360,17 @@ MonoBehaviour:
   arc: {fileID: 2105565787450646243}
   blockAngle: 45
   turnSpeed: 0.01
+--- !u!114 &286705340829513149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105565787798211784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3517712ec28be34a894fb4def169570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetAffiliation: 2
+  _priority: 0

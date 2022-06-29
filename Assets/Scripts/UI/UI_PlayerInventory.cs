@@ -112,7 +112,7 @@ public class UI_PlayerInventory : MonoBehaviour
         {
             UI_Slot temp = Instantiate(slotPrefab).GetComponent<UI_Slot>();
             temp.abilitySlotIndex = (AbilitySlots)x;
-            temp.onAbilityDropped += OnDropAbility;
+            temp.OnAbilityDropped += OnDropAbility;
             slots.Add(temp.gameObject);
             temp.transform.SetParent(transform, false);
             temp.name = "SLOT " + x;
@@ -123,7 +123,7 @@ public class UI_PlayerInventory : MonoBehaviour
         {
             UI_Slot temp = Instantiate(slotPrefab).GetComponent<UI_Slot>();
             temp.abilitySlotIndex = AbilitySlots.DROPPED_ABILITY;
-            temp.onAbilityDropped += OnDropAbility;
+            temp.OnAbilityDropped += OnDropAbility;
             slots.Add(temp.gameObject);
             temp.transform.SetParent(groundInventoryGameObject.transform, false);
             temp.name = "GROUND SLOT " + x;

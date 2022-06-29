@@ -157,6 +157,9 @@ public class InGamePlayerUI : MonoBehaviour
 	
 	public void HideSelf()
 	{
-		UIActive?.SetActive(false);
-	}
+        if (UIActive != null)
+        {
+            UIActive.SetActive(false);
+        }
+    }
 }

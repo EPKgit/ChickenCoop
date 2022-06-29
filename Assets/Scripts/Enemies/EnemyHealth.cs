@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyHealth : BaseHealth
 {
-
     protected override void Awake()
     {
         base.Awake();
@@ -16,13 +15,14 @@ public class EnemyHealth : BaseHealth
         DamageNumbersManager.instance.CreateNumber(hcnd.value, hcnd.localSource.transform.position);
     }
 
-    protected override void Die()
+    protected override void Die(GameObject killer = null)
 	{
-		Destroy(gameObject);
-    	DieEffect();
+        base.Die();
+        Destroy(gameObject);
+    	DeathEffect();
 	}
 
-	private void DieEffect()
+	private void DeathEffect()
     {
 	}
 }

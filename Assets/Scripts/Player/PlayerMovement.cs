@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public event MovementDeltaEventDelegate movementEvent = delegate { };
 
 	private float movementSpeed;
-	private Vector2 direction;
+	private Vector2 movementInputAxis;
     private Vector2 previousPosition;
 
 	private Rigidbody2D rb;
@@ -28,7 +28,8 @@ public class PlayerMovement : MonoBehaviour
 		tagComponent = GetComponentInChildren<GameplayTagComponent>();
         animatorMovingHashCode = Animator.StringToHash("moving");
 		stats?.RegisterStatChangeCallback(StatName.Agility, UpdateSpeed);
-	}
+        previousPosition = transform.position;
+    }
 
 	void OnDisable()
 	{
@@ -37,79 +38,65 @@ public class PlayerMovement : MonoBehaviour
 
 	void Update()
 	{
+        if(tagComponent?.tags.Contains(GameplayTagFlags.MOVEMENT_DISABLED) ?? false)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
         CheckDashInput();
         if(tagComponent?.tags.Contains(GameplayTagFlags.NORMAL_MOVEMENT_DISABLED) ?? false)
         {
             DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "MOVEMENT CANCELED FROM TAG");
             return;
         }
-        bool moving = direction.magnitude > float.Epsilon;
-        animator.SetBool(animatorMovingHashCode, moving);
-        if (moving)
-        {
-            sprite.flipX = rb.velocity.x < 0;
-        }
         UseMoveInput();
-    }
-    void CheckDashInput()
-    {
-        if (dashDuration != 0)
-        {
-            Vector2 prevPosition = transform.position;
-            float t = (Time.time - dashStartTime) / dashDuration;
-            if (t > 1)
-            {
-                transform.position = dashEnd;
-                dashDuration = 0;
-                tagComponent.tags.RemoveTagWithID(dashTagID);
-            }
-            else
-            {
-                transform.position = Vector2.Lerp(dashStart, dashEnd, t);
-            }
-            movementEvent(new MovementDeltaEventData(prevPosition - (Vector2)transform.position, MovementDeltaEventData.MovementType.DASH));
-
-            return;
-        }
     }
 
     void UseMoveInput()
     {
         if (rb.velocity.magnitude < movementSpeed * 1.05f)
         {
-            rb.velocity = direction * movementSpeed;
+            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "SETTING SPEED FROM INPUT");
+            rb.velocity = movementInputAxis.normalized * movementSpeed;
         }
         else
         {
-            float degrees = Vector2.Angle(rb.velocity, direction);
+            float degrees = Vector2.Angle(rb.velocity, movementInputAxis);
             if (150 > degrees)
             {
-                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "adding to force");
-                rb.AddForce(direction * movementSpeed * 0.4f);
+                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "ADDING TO OVER MOVEMENT FORCE");
+                rb.AddForce(movementInputAxis * movementSpeed * 0.4f);
             }
             else
             {
-                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "opossing");
-                rb.AddForce(direction * movementSpeed * 1.5f);
+                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "OPPOSING OVER MOVEMENT FORCE");
+                rb.AddForce(movementInputAxis * movementSpeed * 1.5f);
             }
+        }
+        bool moving = movementInputAxis.magnitude > float.Epsilon;
+        animator.SetBool(animatorMovingHashCode, moving);
+        if (moving)
+        {
+            sprite.flipX = rb.velocity.x < 0;
         }
     }
 
     private void LateUpdate()
     {
-        movementEvent(new MovementDeltaEventData((Vector2)transform.position - previousPosition, MovementDeltaEventData.MovementType.TELEPORT));
+        movementEvent(new MovementDeltaEventData((Vector2)transform.position - previousPosition, MovementDeltaEventData.MovementType.END_OF_FRAME_DELTA));
         previousPosition = transform.position;
     }
 
     public void MoveInput(Vector2 dir)
 	{
-		direction = dir;
+		movementInputAxis = dir;
 	}
 
 
-    int dashTagID = -1;
+    uint dashTagID = uint.MaxValue;
     Vector3 dashStart;
     Vector3 dashEnd;
+    Vector3 dashDelta;
     float dashDuration;
     float dashStartTime;
     public void DashInput(Vector2 start, Vector2 end, float time)
@@ -118,8 +105,34 @@ public class PlayerMovement : MonoBehaviour
         dashStartTime = Time.time;
         dashStart = start;
         dashEnd = end;
+        dashDelta = dashEnd - dashStart;
         dashDuration = time;
-        rb.velocity = Vector2.zero;
+        rb.velocity = dashDelta / dashDuration;
+        rb.drag = 0;
+    }
+
+    void CheckDashInput()
+    {
+        if (dashDuration != 0)
+        {
+            Vector2 prevPosition = transform.position;
+            float t = (Time.time - dashStartTime) / dashDuration;
+            if (t > 1)
+            {
+                rb.velocity = Vector2.zero;
+                sprite.transform.rotation = Quaternion.identity;
+                dashDuration = 0;
+                tagComponent.tags.RemoveTagWithID(dashTagID);
+            }
+            else
+            {
+                sprite.transform.rotation = Quaternion.AngleAxis(t * 360 * Mathf.Floor(dashDuration / 0.25f), (dashEnd - dashStart).x < 0 ? Vector3.forward : Vector3.back);
+            }
+            movementEvent(new MovementDeltaEventData(prevPosition - (Vector2)transform.position, MovementDeltaEventData.MovementType.DASH));
+
+            animator.SetBool(animatorMovingHashCode, false);
+            sprite.flipX = dashDelta.x < 0;
+        }
     }
 
     public void TeleportInput(Vector2 end)
@@ -146,6 +159,7 @@ public class MovementDeltaEventData
         NORMAL,
         DASH,
         TELEPORT,
+        END_OF_FRAME_DELTA,
         MAX,
     }
     public MovementType type;

@@ -17,6 +17,7 @@ public class DashDodge : Ability, IMovementAbility
         set
         {
             maxDuration = value;
+            currentDuration = value;
         }
     }
 

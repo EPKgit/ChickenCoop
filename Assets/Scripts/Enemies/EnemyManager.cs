@@ -6,6 +6,7 @@ using UnityEngine;
 public enum EnemyType
 {
     DEBUG,
+    NORMAL,
     SHIELD,
     MAX,
 }
@@ -34,6 +35,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
         spawnedEnemies = new List<EnemySpawnData>();
 
         enemySpawnData[(int)EnemyType.DEBUG].spawningRoutine = SpawnDiggingEnemy;
+        enemySpawnData[(int)EnemyType.NORMAL].spawningRoutine = SpawnDiggingEnemy;
         enemySpawnData[(int)EnemyType.SHIELD].spawningRoutine = SpawnDiggingEnemy;
 
         loanTokens = new List<PoolLoanToken>();

@@ -7,7 +7,7 @@ using UnityEditor;
 [CustomPropertyDrawer(typeof(GameplayTagContainer))]
 public class GameplayTagContainerDrawer : PropertyDrawer
 {
-    private const int EXTRA_LINES = 5;
+    private const int EXTRA_LINES = 4;
 
 
     private float yofs;
@@ -24,6 +24,7 @@ public class GameplayTagContainerDrawer : PropertyDrawer
     private static readonly string[] toolbarStrings = new string[] { "Current Tags", "Tag Editor" };
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
+        // EditorGUI.DrawRect(position, Color.red);
         yofs = position.y;
         yinc = position.height / GetNumLines(property);
         Rect rect = NextLine(position);
@@ -33,7 +34,6 @@ public class GameplayTagContainerDrawer : PropertyDrawer
             foldout = temp;
             return;
         }
-        rect = NextLine(position);
         rect = NextLine(position);
         displayTab = GUI.Toolbar(rect, displayTab, toolbarStrings);
         rect = NextLine(position);
@@ -100,8 +100,15 @@ public class GameplayTagContainerDrawer : PropertyDrawer
             rect.width -= 30;
             EditorGUI.LabelField(rect, enumNames[x]);
             rect.x = rect.width;
-            rect.width = 30;
+            rect.width = 50;
             enumChecked[x] = EditorGUI.Toggle(rect, enumChecked[x]);
+
+            if (x != enumNames.Length - 1)
+            {
+                yofs += 1;
+                rect = new Rect(position.x, yofs, position.width, 1);
+                EditorGUI.DrawRect(rect, Color.grey);
+            }
         }
         EditorGUI.indentLevel = indentLevel;
         if (EditorGUI.EndChangeCheck())
@@ -233,7 +240,12 @@ public class GameplayTagContainerDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        return base.GetPropertyHeight(property, label) * GetNumLines(property);
+        int extra = 0;
+        if(foldout && displayTab == 1)
+        {
+            extra = enumNames.Length - 1;
+        }
+        return base.GetPropertyHeight(property, label) * GetNumLines(property) + extra;
     }
 
     private float GetNumLines(SerializedProperty property)

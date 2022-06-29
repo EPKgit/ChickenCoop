@@ -66,36 +66,55 @@ public class AbilityInspector : Editor
                 EditorGUILayout.PropertyField(hasDuration);
                 if (ability.hasDuration)
                 {
-                    EditorGUILayout.PropertyField(maxDuration);
+                    PotentiallyOverrideProperty(ID.intValue, maxDuration);
                 }
             }
             EditorGUILayout.PropertyField(cost);
-            EditorGUILayout.PropertyField(cooldown);
+            PotentiallyOverrideProperty(ID.intValue, cooldown);
+            
             --EditorGUI.indentLevel;
 
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             DoTargetData();
         }
         --EditorGUI.indentLevel;
-        EditorGUILayout.Space();
-        EditorGUILayout.PrefixLabel("Tags");
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PropertyField(abilityTags);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PropertyField(tagsToBlock);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PropertyField(tagsToApply);
-        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PrefixLabel("Unique Ability Fields");
+
         ++EditorGUI.indentLevel;
         foreach (FieldInfo temp in childFields)
 		{
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(temp.Name));
+            PotentiallyOverrideProperty(ID.intValue, serializedObject.FindProperty(temp.Name));
 		}
         --EditorGUI.indentLevel;
         serializedObject.ApplyModifiedProperties();
 	}
 
+    void PotentiallyOverrideProperty(int ID, SerializedProperty prop)
+    {
+        PotentiallyOverrideProperty((uint)ID, prop);
+    }
+    void PotentiallyOverrideProperty(uint ID, SerializedProperty prop)
+    {
+        if (AbilityDataXMLParser.instance.HasFieldInEntry(ID, prop.propertyPath))
+        {
+            EditorGUILayout.LabelField(string.Format("{0} is overriden in XML", prop.propertyPath));
+        }
+        else
+        {
+            EditorGUILayout.PropertyField(prop);
+        }
+    }
+
     void DoTargetData()
     {
         bool dirty = false;
-        EditorGUILayout.Space();
         EditorGUILayout.PrefixLabel("Targeting Data");
         ++EditorGUI.indentLevel;
         LayoutField((a) => { return (AbilityTargetingData.TargetType)EditorGUILayout.EnumPopup(a); }, ref targetingData.targetType, ref dirty);

@@ -2,33 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyEncounter
-{
-    public class Wave
-    {
-        
-    }
-
-    public enum SpawnType
-    {
-        RANDOM,
-        MAX,
-    }
-    public class EncounterSpawnData
-    {
-        public EnemyType type;
-        public int amount;
-    }
-}
-
 [RequireComponent(typeof(Collider2D))]
 public class LockedArenaEncounter : MonoBehaviour
 {
     public Vector2[] spawnPoints;
 
-    public EnemyEncounter encounterData;
+    [SerializeField]
+    public EncounterData encounterData;
 
-    public GameObject door;
+    public GameObject entryDoor;
+    public GameObject exitDoor;
 
     void OnTriggerEnter2D(Collider2D other) 
     {
@@ -40,8 +23,37 @@ public class LockedArenaEncounter : MonoBehaviour
 
     void TriggerEncounter()
     {
+        if (entryDoor != null)
+        {
+            entryDoor.SetActive(true);
+        }
+        if (exitDoor != null)
+        {
+            exitDoor.SetActive(true);
+        }
+        EncounterManager.instance.OnEncounterStateChange += OnEncounterStateChange;
+        EncounterManager.instance.StartEncounter(encounterData, new List<Vector2>(spawnPoints), transform.position);
+    }
 
+    void EndEncounter()
+    {
+        if (entryDoor != null)
+        {
+            entryDoor.SetActive(false);
+        }
+        if (exitDoor != null)
+        {
+            exitDoor.SetActive(false);
+        }
+        EncounterManager.instance.OnEncounterStateChange -= OnEncounterStateChange;
         Destroy(gameObject);
+    }
+    public void OnEncounterStateChange(EncounterState oldState, EncounterState newState)
+    {
+        if(newState == EncounterState.ENCOUNTER_ENDED)
+        {
+            EndEncounter();
+        }
     }
 
     void OnDrawGizmosSelected()

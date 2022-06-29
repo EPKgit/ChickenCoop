@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8448847093921120771}
   - component: {fileID: 8448847093921120770}
   - component: {fileID: 8448847093921120769}
+  - component: {fileID: 396800620}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -90,5 +91,28 @@ MonoBehaviour:
   enemySpawnData:
   - prefab: {fileID: 8904934775474808004, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
     spawningEffect: {fileID: 6187125037231300774, guid: d720295e61e68dd4683b35658ae53ac9, type: 3}
+  - prefab: {fileID: 8322231918494372702, guid: 69030f54bb1d17840b97084b68bf4d4b, type: 3}
+    spawningEffect: {fileID: 6187125037231300774, guid: d720295e61e68dd4683b35658ae53ac9, type: 3}
   - prefab: {fileID: 2105565787798211784, guid: bc75516689a4ffb4fa1f13754fa02cc7, type: 3}
     spawningEffect: {fileID: 6187125037231300774, guid: d720295e61e68dd4683b35658ae53ac9, type: 3}
+--- !u!114 &396800620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8448847093921120782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521683c472d8d5c4182f3ba3ad48935b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectBarPrefab: {fileID: 1468872562951632356, guid: ad3791e431644fc4186e442069c9435c, type: 3}
+  effectPopupPrefab: {fileID: 8291693686039335391, guid: 15927a20f75351544a42778e1010971d, type: 3}
+  effectSprites:
+  - {fileID: 21300000, guid: 632558d597d7ff3438649e11ae0a7e5b, type: 3}
+  - {fileID: 21300000, guid: d286c7bd3e6cd4e45b0fd69d6ddff717, type: 3}
+  - {fileID: 21300000, guid: 2f6a5ce2b479b6844aee597800d6c6eb, type: 3}
+  - {fileID: 21300000, guid: eda31b814e40ee6418ed11d9d1f8fa4e, type: 3}
+  - {fileID: 21300000, guid: 1516139bcf87f114186e242b96084bfe, type: 3}
+  - {fileID: 21300000, guid: 56b738fcc595c414b8e40c7b1b806ae3, type: 3}

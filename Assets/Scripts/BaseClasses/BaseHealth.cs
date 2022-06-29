@@ -96,7 +96,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		
 		if(currentHealth <= 0)
 		{
-			Die();
+			Die(overallSource);			
 		}
 	}
 
@@ -121,17 +121,18 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		}
 	}
 
-	protected virtual void Die()
+	protected virtual void Die(GameObject killer = null)
 	{
-		transform.position = Vector3.zero;
 		currentHealth = maxHealth;
 		healthValueUpdateEvent(currentHealth, maxHealth);
+		killer?.GetComponent<IHealthCallbacks>()?.KillCallback(gameObject);
 	}
 }
 
 public delegate void HealthValueSetDelegate(float newCurrent, float newMax);
 public delegate void MutableHealthChangeDelegate(HealthChangeEventData hced);
 public delegate void HealthChangeNotificationDelegate(HealthChangeNotificationData hcnd);
+public delegate void KilledCharacterDelegate(GameObject killed);
 
 public class HealthChangeEventData
 {

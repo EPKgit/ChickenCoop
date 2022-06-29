@@ -1,16 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public interface IHealthCallbacks
 {
-	event HealthChangeNotificationDelegate onDealDamage;
-	event HealthChangeNotificationDelegate onHealDamage;
-
-	void RegisterDealDamageDelegate(HealthChangeNotificationDelegate hcnd);
-	void RegisterHealDamageDelegate(HealthChangeNotificationDelegate hcnd);
-	void DeregisterDealDamageDelegate(HealthChangeNotificationDelegate hcnd);
-	void DeregisterHealDamageDelegate(HealthChangeNotificationDelegate hcnd);
+	event HealthChangeNotificationDelegate OnDealDamage;
+	event HealthChangeNotificationDelegate OnHealDamage;
+    event KilledCharacterDelegate OnKill;
     void DamageDealtCallback(HealthChangeNotificationData hcnd);
 	void DamageHealedCallback(HealthChangeNotificationData hcnd);
+
+    void KillCallback(GameObject killed);
 }

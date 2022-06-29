@@ -75,5 +75,17 @@
 
     <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
+    <ability>
+        <ability_ID>7</ability_ID>
+        <ability_name>Bonk</ability_name>
+        <tooltip>Stun targeted enemy for {1} seconds.</tooltip>
+        <var_list>
+            <variable name="cd" type="float" value="1"/>
+            <variable name="stunDuration" type="float" value="2.0"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
 
 </root>

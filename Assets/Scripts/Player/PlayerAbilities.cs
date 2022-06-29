@@ -12,6 +12,9 @@ public class PlayerAbilities : MonoBehaviour
     public event AbilityCastingDelegate preAbilityCastEvent = delegate { };
     public event AbilityCastingDelegate postAbilityCastEvent = delegate { };
 
+#if UNITY_EDITOR
+    public bool DEBUG_LOW_COOLDOWN = false;
+#endif
     public GameObject inventoryUIPrefab;
 
     public float pickupRadius = 3.0f;

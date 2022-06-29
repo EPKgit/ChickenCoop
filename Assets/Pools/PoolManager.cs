@@ -51,12 +51,16 @@ public class PoolManager : MonoSingleton<PoolManager>
 	/// </summary>
 	private List<PoolData> abnormalPools;
 
-	protected override void Awake()
+    private GameObject poolParent;
+
+    protected override void Awake()
 	{
 		base.Awake();
 		pools = new Dictionary<GameObject, PoolData>();
 		abnormalPools = new List<PoolData>();
-	}
+        poolParent = new GameObject();
+        poolParent.name = "Pool Parent";
+    }
 
 
 	/// <summary>
@@ -117,6 +121,7 @@ public class PoolManager : MonoSingleton<PoolManager>
             pools[g].transformParent = new GameObject();
             pools[g].transformParent.name = "Pool for " + g.name;
             pools[g].transformParent.tag = "PoolHolder";
+            pools[g].transformParent.transform.SetParent(poolParent.transform);
             ret = Instantiate(g, pools[g].transformParent.transform);
             ret.GetComponent<Poolable>().PoolInit(g);
 			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.POOLMANAGER, "POOL DIDN't EXIST");
@@ -208,6 +213,7 @@ public class PoolManager : MonoSingleton<PoolManager>
         pools[g].transformParent.name = "Pool for " + g.name;
         pools[g].transformParent.tag = "PoolHolder";
         pools[g].desiredSize = size;
+        pools[g].transformParent.transform.SetParent(poolParent.transform);
 		if(init)
 		{
 			NormalizePool(g);

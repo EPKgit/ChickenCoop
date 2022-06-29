@@ -9,14 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e76062a6b7f03e4b91593a5be15ea4b, type: 3}
-  m_Name: BasicBomb
+  m_Script: {fileID: 11500000, guid: 6f77359c14048c84e9650d00e8732129, type: 3}
+  m_Name: BasicTargetStun
   m_EditorClassIdentifier: 
-  ID: 2
+  ID: 7
   abilityName: 
   tooltipDescription: 
   abilityTags:
-    tags: []
+    tags:
+    - _ID: 0
+      _flag: 529
   tagsToBlock:
     tags: []
   tagsToApply:
@@ -25,17 +27,15 @@ MonoBehaviour:
   tickingAbility: 0
   hasDuration: 0
   maxDuration: 0
-  maxCooldown: 3
+  maxCooldown: 5
   cost: 0
-  icon: {fileID: 21300000, guid: 53452ccb32dc17045bc0e0d679634e04, type: 3}
+  icon: {fileID: 21300000, guid: 21107b0280eefc24fbab7179e730cbf0, type: 3}
   targetingData:
     inputPoint: {x: 0, y: 0}
-    targetType: 3
+    targetType: 2
     rangePreviewPrefab: {fileID: 5597262486086814138, guid: c7043fb43aabd854882368336e377dee, type: 3}
-    secondaryPreviewPrefab: {fileID: 3952040534788109145, guid: f891729c65d858e45ab6f734f311edbe, type: 3}
-    range: 9
-    previewScale: {x: 6, y: 6, z: 1}
-    affiliation: 0
-  bombPrefab: {fileID: 5689578573568610815, guid: d032277ed8a114b499bec208ae86786f, type: 3}
-  arcSteepness: 3
-  arcTime: 1
+    secondaryPreviewPrefab: {fileID: 8982056952706804813, guid: 8e41527adda36784b9eb015148a6dbff, type: 3}
+    range: 5
+    previewScale: {x: 0, y: 0, z: 0}
+    affiliation: 2
+  stunDuration: 2

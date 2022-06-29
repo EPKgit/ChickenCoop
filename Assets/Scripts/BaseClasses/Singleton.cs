@@ -19,10 +19,14 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
             {
                 if (SingletonHelpers.managerObject == null)
                 {
-                    SingletonHelpers.managerObject = new GameObject();
-                    DontDestroyOnLoad(SingletonHelpers.managerObject);
-                    SingletonHelpers.managerObject.name = "Managers";
+                    SingletonHelpers.managerObject = GameObject.Find(SingletonHelpers.managerObjectName);
                 }
+                if (SingletonHelpers.managerObject == null)
+                {
+                    SingletonHelpers.managerObject = new GameObject();
+                }
+                DontDestroyOnLoad(SingletonHelpers.managerObject);
+                SingletonHelpers.managerObject.name = SingletonHelpers.managerObjectName;
                 _instance = SingletonHelpers.managerObject.AddComponent(typeof(T)) as T;
                 _instance.OnCreation();
             }
@@ -39,9 +43,15 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
 
     protected void OverwriteSingleton(T inst)
     {
+        if (SingletonHelpers.managerObject == null)
+        {
+            SingletonHelpers.managerObject = gameObject;
+            DontDestroyOnLoad(gameObject);
+            gameObject.name = SingletonHelpers.managerObjectName;
+        }
         if (_instance != null)
         {
-            Destroy(gameObject);
+            Destroy(this);
         }
         _instance = inst;
         OnCreation();
@@ -91,4 +101,5 @@ public interface ISingletonUpdate
 public static class SingletonHelpers
 {
     public static GameObject managerObject = null;
+    public static string managerObjectName = "Managers";
 }

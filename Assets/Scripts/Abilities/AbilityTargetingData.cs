@@ -196,7 +196,7 @@ namespace Targeting
             if(target != null)
             {
                 previewSecondary.GetComponent<SpriteRenderer>().color = Color.green;
-                previewSecondary.transform.position = (Vector3)Lib.FindUpwardsInTree<Collider2D>(target.Attached)?.bounds.center;// + target.Attached.transform.position;
+                previewSecondary.transform.position = (Vector3)Lib.FindDownwardsInTree<Collider2D>(target.Attached)?.bounds.center;// + target.Attached.transform.position;
             }
             else
             {

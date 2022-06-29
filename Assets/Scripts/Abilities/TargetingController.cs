@@ -59,7 +59,9 @@ public class TargetingController : MonoBehaviour, Targeting.ITargetable
             child.layer = layer;
             child.name = "TargetingCollider";
             collider = child.AddComponent<CircleCollider2D>();
+            collider.isTrigger = true;
             child.transform.SetParent(transform, true);
+            child.transform.localPosition = Vector3.zero;
         }
     }
 }

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyHealth), typeof(Rigidbody2D))]
+[RequireComponent(typeof(EnemyHealth), typeof(Rigidbody2D), typeof(GameplayTagComponent))]
 public abstract class BaseEnemy : MonoBehaviour
 {
-  	public float speed = 1f;
+    public EnemyType type = EnemyType.MAX;
+    public float speed = 1f;
 
 	/// <summary>
     /// Describes whether the enemy has 
@@ -27,14 +28,17 @@ public abstract class BaseEnemy : MonoBehaviour
     protected Rigidbody2D rb;
 	protected StatBlockComponent stats;
 	protected EnemyHealth hp;
+    protected GameplayTagComponent tagComponent;
 
-	protected virtual void Awake()
+
+    protected virtual void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
 		stats = GetComponent<StatBlockComponent>();
 		hp = GetComponent<EnemyHealth>();
 		col = GetComponent<Collider2D>();
-		aggro = new PriorityQueue<AggroData>(PlayerInitialization.all.Count, new MaxAggroComparator());
+		tagComponent = GetComponentInChildren<GameplayTagComponent>();
+        aggro = new PriorityQueue<AggroData>(PlayerInitialization.all.Count, new MaxAggroComparator());
 		
 		hp.postDamageEvent += AddAggroEvent;
 	}
@@ -95,6 +99,15 @@ public abstract class BaseEnemy : MonoBehaviour
 		}
 		return true;
 	}
+
+	protected virtual bool CanMove()
+	{
+		if(tagComponent?.tags.Contains(GameplayTagFlags.MOVEMENT_DISABLED) ?? false)
+		{
+            return false;
+        }
+        return true;
+    }
 
 	public AggroData[] GetAggroDataArray()
 	{

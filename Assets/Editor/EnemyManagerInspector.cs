@@ -24,7 +24,7 @@ public class EnemyManagerInspector : Editor
 		foldouts = new bool[enemyTypeNames.Length];
 		for(int x = 0; x < foldouts.Length; ++x)
 		{
-			foldouts[x] = true;
+			foldouts[x] = false;
 		}
         enemySpawnDataProp = serializedObject.FindProperty("enemySpawnData");
 		if(enemySpawnDataProp.arraySize != (int)EnemyType.MAX)

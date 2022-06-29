@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 8929027772924074797}
   m_Layer: 7
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -358,7 +358,19 @@ MonoBehaviour:
     m_ActionId: 07ebc293-7729-4fef-b77a-44b6738ebd9c
     m_ActionName: Gameplay/AimDirection[/Mouse/position]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 9148293411782098716}
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
+        m_MethodName: OnInventory
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: ae944a57-c78c-4a12-a929-fb1572c4eab5
     m_ActionName: Gameplay/Inventory[/Keyboard/tab]
   m_NeverAutoSwitchControlSchemes: 0
@@ -392,7 +404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryUIPrefab: {fileID: 3971932206135975564, guid: 45454edd31afc5746bb5255242b310c0, type: 3}
-  interactRadius: 3
+  pickupRadius: 3
   rb: {fileID: 0}
   col: {fileID: 0}
   stats:
@@ -482,6 +494,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetAffiliation: 1
   _priority: 0
+  colliderOffset: {x: 0, y: 0}
 --- !u!114 &863033339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,7 +507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4d44e9e06c2d846b14615397a61d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerClass: {fileID: 0}
+  playerClass: {fileID: 11400000, guid: 1a28d8544e2d4b64aa01358adbc8f486, type: 2}
   playerID: 0
 --- !u!114 &288553149823017606
 MonoBehaviour:
@@ -536,3 +549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 751282c412edf4d42870f9ea437715b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  feedCount: 0
+  xpAmount: 0
+  playerLevel: 0

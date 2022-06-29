@@ -1,14 +1,29 @@
+TODO:TODO:TODO
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CURRENT
-enemy spawning disable ai while spawning
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+status actually applies negative effects to enemies
+disable targeting collider on spawning enemies
+add playerhealth that inherits from basehealth so we can do respawning (vector3.zero for now)
+move range indicator prefabs into a central alternate
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MVP/PROTOTYPE SHIT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 setup premade level with terrain
-Enemy spawning with anim
 more abilities
-statuses?
-    - Figure out how the ui for that works
 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 NICE STUFF
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+add more granularity for how encounters can get built
+    - seperate enemy types in a single wave
+    - alternate wave finish conditions (percentage, time, switch)
+    - delayed spawns, (initial spawn plus trickle in)
+    - seperate spawn points per enemy type
+    - randomness????
 hot reloading the ability xml
 ability stacks
     - cooldown while stacks remain?
@@ -16,6 +31,9 @@ ability stacks
     - Display?
 ability recasting
     -cooldown while other hasn't been cast?
+ability cast times
+    -channels?
+range overrideable in xml
 show player stats
 allow stat upgrades
 xp + feed
@@ -23,14 +41,23 @@ level ups?
 figure out respawning
 enemies drop abilities?
 setup the ability to cancel abilities when starting
-setup a custom targeting that follows the player TARGETTING_SELF?
+setup a custom targeting that follows the player TARGETING_SELF?
 enemy spawn boxes and placements
 setup abilities to get constant ticks even while not active (split tick)
 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TECH DEBT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 figure out dashing and movement types
 figure out invul
+encounter manager
+    - figure out callbacks when enemies are killed
 
-Ideas
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+IDEAS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ability upgrades
 ramping abilities

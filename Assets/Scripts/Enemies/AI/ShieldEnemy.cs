@@ -70,7 +70,7 @@ public class ShieldEnemy : BaseEnemy
 
     protected override bool Update()
 	{
-        if (!base.Update())
+        if (!base.Update() || !CanMove())
         {
             rb.velocity = Vector2.zero;
             return false;
