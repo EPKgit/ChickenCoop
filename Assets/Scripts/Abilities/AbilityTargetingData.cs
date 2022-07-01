@@ -77,10 +77,7 @@ namespace Targeting
 
         public void Preview(Ability usedAbility, GameObject user)
         {
-            if (rangePreviewPrefab != null)
-            {
-                preview = usedAbility.GameObjectManipulation(rangePreviewPrefab, true);
-            }
+            preview = usedAbility.GameObjectManipulation(rangePreviewPrefab.Equals(null) ? InGameUIManager.instance.rangeIndicatorPrefab : rangePreviewPrefab, true);
             switch (targetType)
             {
                 case TargetType.NONE:
@@ -90,19 +87,31 @@ namespace Targeting
                 break;
                 case TargetType.LINE_TARGETED:
                 {
-                    previewSecondary = usedAbility.GameObjectManipulation(secondaryPreviewPrefab, true);
+                    previewSecondary = usedAbility.GameObjectManipulation
+                    (
+                        secondaryPreviewPrefab.Equals(null) ? InGameUIManager.instance.arrowIndicatorPrefab : secondaryPreviewPrefab, 
+                        true
+                    );
                     PreviewLine(usedAbility, user);
                 }
                 break;
                 case TargetType.ENTITY_TARGETED:
                 {
-                    previewSecondary = usedAbility.GameObjectManipulation(secondaryPreviewPrefab, true);
+                    previewSecondary = usedAbility.GameObjectManipulation
+                    (
+                        secondaryPreviewPrefab.Equals(null) ? InGameUIManager.instance.crosshairIndicatorPrefab : secondaryPreviewPrefab,
+                        true
+                    );
                     PreviewTargeted(usedAbility, user);
                 }
                 break;
                 case TargetType.GROUND_TARGETED:
                 {
-                    previewSecondary = usedAbility.GameObjectManipulation(secondaryPreviewPrefab, true);
+                    previewSecondary = usedAbility.GameObjectManipulation
+                    (
+                        secondaryPreviewPrefab.Equals(null) ? InGameUIManager.instance.circleIndicatorPrefab : secondaryPreviewPrefab, 
+                        true
+                    );
                     PreviewGround(usedAbility, user);
                 }
                 break;
@@ -116,7 +125,7 @@ namespace Targeting
 
         public void PreviewUpdate(Ability usedAbility, GameObject user)
         {
-            if (targetType != TargetType.NONE && rangePreviewPrefab != null)
+            if (targetType != TargetType.NONE)
             {
                 preview.transform.localScale = new Vector3(range, range, 1);
                 preview.transform.position = user.transform.position;
@@ -153,7 +162,7 @@ namespace Targeting
                 usedAbility.GameObjectManipulation(preview, false);
                 preview = null;
             }
-            if (secondaryPreviewPrefab)
+            if (previewSecondary)
             {
                 usedAbility.GameObjectManipulation(previewSecondary, false);
                 previewSecondary = null;

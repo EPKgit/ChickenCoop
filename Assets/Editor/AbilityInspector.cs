@@ -112,6 +112,8 @@ public class AbilityInspector : Editor
         }
     }
 
+    private static bool customTargetingPrefabs = false;
+
     void DoTargetData()
     {
         bool dirty = false;
@@ -119,28 +121,30 @@ public class AbilityInspector : Editor
         ++EditorGUI.indentLevel;
         LayoutField((a) => { return (AbilityTargetingData.TargetType)EditorGUILayout.EnumPopup(a); }, ref targetingData.targetType, ref dirty);
 
+        customTargetingPrefabs = EditorGUILayout.Toggle("Custom Prefab Targeting", customTargetingPrefabs);
+
         if (targetingData.targetType != AbilityTargetingData.TargetType.NONE)
         {
-            LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Range Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.rangePreviewPrefab, ref dirty);
+            if(customTargetingPrefabs) LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Range Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.rangePreviewPrefab, ref dirty);
             LayoutField((a) => { return EditorGUILayout.DelayedFloatField("Range", a); }, ref targetingData.range, ref dirty);
         }
         switch(targetingData.targetType)
         {
             case AbilityTargetingData.TargetType.LINE_TARGETED:
             {
-                LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Line Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
+                if (customTargetingPrefabs) LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Line Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
                 LayoutField((a) => { return EditorGUILayout.DelayedFloatField("Perpindicular Scale", a); }, ref targetingData.previewScale.x, ref dirty);
             }
             break;
             case AbilityTargetingData.TargetType.GROUND_TARGETED:
             {
-                LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Target Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
+                if (customTargetingPrefabs) LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Target Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
                 LayoutField((a) => { return EditorGUILayout.Vector3Field("Preview Scale", a); }, ref targetingData.previewScale, ref dirty);
             }
             break;
             case AbilityTargetingData.TargetType.ENTITY_TARGETED:
             {
-                LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Crosshair Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
+                if (customTargetingPrefabs) LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Crosshair Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
                 LayoutField((a) => { return (Targeting.Affiliation)EditorGUILayout.EnumFlagsField("Affiliation", a); }, ref targetingData.affiliation, ref dirty);
             }
             break;
@@ -155,7 +159,14 @@ public class AbilityInspector : Editor
     void LayoutField<T>(Func<T, T> action, ref T dataToChange, ref bool dirty)
     {
         T temp = (T)action(dataToChange);
-        dirty |= !temp.Equals(dataToChange);
+        if(temp != null)
+        {
+            dirty |= !temp.Equals(dataToChange);
+        }
+        else
+        {
+            dirty = dataToChange != null;
+        }
         dataToChange = temp;
     }
 }

@@ -20,12 +20,7 @@ public class BasicTargetStun : Ability
     protected override void UseAbility()
 	{
         base.UseAbility();
-        // StatusEffectManager.instance.ApplyEffect(playerAbilities.gameObject, StatusEffectType.STUN, stunDuration);
         StatusEffectManager.instance.ApplyEffect(targetingData.inputTarget.Attached, StatusEffectType.STUN, stunDuration);
-        StatusEffectManager.instance.ApplyEffect(targetingData.inputTarget.Attached, StatusEffectType.ROOT, stunDuration);
-        StatusEffectManager.instance.ApplyEffect(targetingData.inputTarget.Attached, StatusEffectType.BLIND, stunDuration);
-        StatusEffectManager.instance.ApplyEffect(targetingData.inputTarget.Attached, StatusEffectType.SILENCE, stunDuration);
-        // StatusEffectManager.instance.ApplyEffect(targetingData.inputTarget.Attached, StatusEffectType.FEAR, stunDuration / 2.0f);
         stunDuration += 1.0f;
     }
 }

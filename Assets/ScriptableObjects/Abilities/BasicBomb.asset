@@ -31,8 +31,8 @@ MonoBehaviour:
   targetingData:
     inputPoint: {x: 0, y: 0}
     targetType: 3
-    rangePreviewPrefab: {fileID: 5597262486086814138, guid: c7043fb43aabd854882368336e377dee, type: 3}
-    secondaryPreviewPrefab: {fileID: 3952040534788109145, guid: f891729c65d858e45ab6f734f311edbe, type: 3}
+    rangePreviewPrefab: {fileID: 0}
+    secondaryPreviewPrefab: {fileID: 0}
     range: 9
     previewScale: {x: 6, y: 6, z: 1}
     affiliation: 0

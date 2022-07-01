@@ -9,10 +9,12 @@ public class AnimationEvents : MonoBehaviour
         GetComponent<SpriteRenderer>().material.SetFloat("SpawnPercent", 1.0f);
         EnemyManager.instance.FinishSpawnRoutine(transform.parent.gameObject);        
         Lib.FindUpwardsInTree<BaseEnemy>(gameObject)?.SetEnemyEnabled(true);
+        Lib.FindUpwardsInTree<TargetingController>(gameObject)?.SetTargetingEnabled(true);
     }
 
     public void StartSpawning()
     {
         Lib.FindUpwardsInTree<BaseEnemy>(gameObject)?.SetEnemyEnabled(false);
+        Lib.FindUpwardsInTree<TargetingController>(gameObject)?.SetTargetingEnabled(false);
     }
 }

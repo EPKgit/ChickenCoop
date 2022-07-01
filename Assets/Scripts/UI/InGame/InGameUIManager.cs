@@ -6,6 +6,11 @@ public class InGameUIManager : MonoSingleton<InGameUIManager>
 {
     public GameObject playerUIPrefab;
 
+    public GameObject rangeIndicatorPrefab;
+    public GameObject arrowIndicatorPrefab;
+    public GameObject circleIndicatorPrefab;
+    public GameObject crosshairIndicatorPrefab;
+
     private List<InGamePlayerUI> UIObjects;
     private Transform layoutGroup;
 

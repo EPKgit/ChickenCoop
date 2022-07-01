@@ -48,6 +48,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerUIPrefab: {fileID: 8564876881577561736, guid: 076636c2ee7d0894daf4e65be1b1bd0b, type: 3}
+  rangeIndicatorPrefab: {fileID: 5597262486086814138, guid: c7043fb43aabd854882368336e377dee, type: 3}
+  arrowIndicatorPrefab: {fileID: 5927306085603650659, guid: a60985986de8ac14c91279ee3c01c05c, type: 3}
+  circleIndicatorPrefab: {fileID: 3952040534788109145, guid: f891729c65d858e45ab6f734f311edbe, type: 3}
+  crosshairIndicatorPrefab: {fileID: 8982056952706804813, guid: 8e41527adda36784b9eb015148a6dbff, type: 3}
 --- !u!114 &8448847093921120771
 MonoBehaviour:
   m_ObjectHideFlags: 0

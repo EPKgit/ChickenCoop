@@ -2,10 +2,8 @@ TODO:TODO:TODO
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CURRENT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-status actually applies negative effects to enemies
-disable targeting collider on spawning enemies
-add playerhealth that inherits from basehealth so we can do respawning (vector3.zero for now)
-move range indicator prefabs into a central alternate
+allow ability recasts
+- new ability - teleport with recast to return (Leblanc w)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MVP/PROTOTYPE SHIT

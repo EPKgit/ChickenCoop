@@ -64,4 +64,9 @@ public class TargetingController : MonoBehaviour, Targeting.ITargetable
             child.transform.localPosition = Vector3.zero;
         }
     }
+
+    public void SetTargetingEnabled(bool enabled)
+    {
+        collider.enabled = enabled;
+    }
 }
