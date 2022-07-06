@@ -4,38 +4,15 @@ using UnityEngine;
 
 public class DashDodge : Ability, IMovementAbility
 {
+    public MovementType type => MovementType.DASH;
+
     private Vector2 startPosition;
     private Vector2 destination;
     private Vector2 prevPosition;
 
-    public float movementDuration
-    {
-        get
-        {
-            return maxDuration;
-        }
-        set
-        {
-            maxDuration = value;
-            currentDuration = value;
-        }
-    }
-
-    public float movementDistance
-    {
-        get
-        {
-            return targetingData.range;
-        }
-        set
-        {
-            targetingData.range = value;
-        }
-    }
-
     public override string GetTooltip()
     {
-        return string.Format(tooltipDescription, movementDistance, movementDuration);
+        return string.Format(tooltipDescription, targetingData.range, maxDuration);
     }
 
     public override void Initialize(PlayerAbilities pa)
@@ -54,7 +31,7 @@ public class DashDodge : Ability, IMovementAbility
         Vector2 direction = GetNormalizedDirectionTowardsTarget(targetingData.inputPoint);
         destination = (Vector2)playerAbilities.transform.position + (direction * targetingData.range);
         startPosition = playerAbilities.transform.position;
-        playerAbilities.GetComponent<PlayerMovement>()?.DashInput(startPosition, destination, maxDuration);
+        playerAbilities.movement.DashInput(startPosition, destination, maxDuration);
     }
 }
 

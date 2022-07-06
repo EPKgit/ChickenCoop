@@ -2,6 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MovementType
+{
+    NONE,
+    NORMAL,
+    DASH,
+    TELEPORT,
+    END_OF_FRAME_DELTA,
+    MAX,
+}
+
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
@@ -83,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        movementEvent(new MovementDeltaEventData((Vector2)transform.position - previousPosition, MovementDeltaEventData.MovementType.END_OF_FRAME_DELTA));
+        movementEvent(new MovementDeltaEventData((Vector2)transform.position - previousPosition, MovementType.END_OF_FRAME_DELTA));
         previousPosition = transform.position;
     }
 
@@ -128,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 sprite.transform.rotation = Quaternion.AngleAxis(t * 360 * Mathf.Floor(dashDuration / 0.25f), (dashEnd - dashStart).x < 0 ? Vector3.forward : Vector3.back);
             }
-            movementEvent(new MovementDeltaEventData(prevPosition - (Vector2)transform.position, MovementDeltaEventData.MovementType.DASH));
+            movementEvent(new MovementDeltaEventData(prevPosition - (Vector2)transform.position, MovementType.DASH));
 
             animator.SetBool(animatorMovingHashCode, false);
             sprite.flipX = dashDelta.x < 0;
@@ -139,7 +149,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 curr = transform.position;
         transform.position = end;
-        movementEvent(new MovementDeltaEventData(curr - end, MovementDeltaEventData.MovementType.TELEPORT));
+        movementEvent(new MovementDeltaEventData(curr - end, MovementType.TELEPORT));
     }
 
 	public void UpdateSpeed(float f)
@@ -153,15 +163,6 @@ public delegate void MovementDeltaEventDelegate(MovementDeltaEventData eventData
 
 public class MovementDeltaEventData
 {
-    public enum MovementType
-    {
-        NONE,
-        NORMAL,
-        DASH,
-        TELEPORT,
-        END_OF_FRAME_DELTA,
-        MAX,
-    }
     public MovementType type;
     public Vector2 delta;
     public MovementDeltaEventData(Vector2 d, MovementType m)

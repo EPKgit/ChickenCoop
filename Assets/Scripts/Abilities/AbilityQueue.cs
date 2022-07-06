@@ -107,7 +107,7 @@ public class AbilityQueue
                 {
                     DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} FINISHED", current.ability.name));
                     a.targetingData.isInputSet = false;
-                    a.targetingData.Cleanup(a, attached);
+                    a.CleanupAllTargeting(attached);
                     abilityInputQueue.Dequeue();
                 } break;
             }

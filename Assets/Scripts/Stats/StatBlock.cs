@@ -3,7 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum StatName { Strength, Agility, Toughness, AggroPercentage, DamagePercentage, HealingPercentage }
+public enum StatName 
+{ 
+    Strength, 
+    Agility, 
+    Toughness, 
+    AggroPercentage, 
+    DamagePercentage, 
+    HealingPercentage, 
+    CooldownReduction, 
+}
 
 [System.Serializable]
 public class StatBlock : ISerializationCallbackReceiver

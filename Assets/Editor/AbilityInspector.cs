@@ -19,12 +19,15 @@ public class AbilityInspector : Editor
 	private SerializedProperty maxDuration;
 	private SerializedProperty cost;
 	private SerializedProperty cooldown;
+	private SerializedProperty numberTimesRecastable;
+	private SerializedProperty recastWindow;
 	private SerializedProperty icon;
 	private SerializedProperty abilityTags;
 	private SerializedProperty tagsToBlock;
 	private SerializedProperty tagsToApply;
+	private SerializedProperty targetingDataArray;
 
-    private AbilityTargetingData targetingData;
+    private const float LABEL_RATIO = 0.4f;
 
     void OnEnable()
     {
@@ -48,13 +51,17 @@ public class AbilityInspector : Editor
         abilityTags = serializedObject.FindProperty("abilityTags");
         tagsToBlock = serializedObject.FindProperty("tagsToBlock");
         tagsToApply = serializedObject.FindProperty("tagsToApply");
-        targetingData = ability.targetingData;
+        numberTimesRecastable = serializedObject.FindProperty("numberTimesRecastable");
+        recastWindow = serializedObject.FindProperty("recastWindow");
+        targetingDataArray = serializedObject.FindProperty("_targetingData");
     }
 
     public override void OnInspectorGUI()
 	{
         EditorGUILayout.PrefixLabel("Ability Data");
         ++EditorGUI.indentLevel;
+        var prevLabelWidth = EditorGUIUtility.labelWidth;
+        EditorGUIUtility.labelWidth = EditorGUIUtility.currentViewWidth * LABEL_RATIO;
         EditorGUILayout.PropertyField(ID);
         EditorGUILayout.PropertyField(icon);
         EditorGUILayout.PropertyField(passive);
@@ -66,18 +73,22 @@ public class AbilityInspector : Editor
                 EditorGUILayout.PropertyField(hasDuration);
                 if (ability.hasDuration)
                 {
-                    PotentiallyOverrideProperty(ID.intValue, maxDuration);
+                    PotentiallyOverrideProperty(maxDuration);
                 }
             }
             EditorGUILayout.PropertyField(cost);
-            PotentiallyOverrideProperty(ID.intValue, cooldown);
-            
-            --EditorGUI.indentLevel;
+            PotentiallyOverrideProperty(cooldown);
 
-            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            PotentiallyOverrideProperty(numberTimesRecastable);
+            if (numberTimesRecastable.intValue != 0)
+            {
+                PotentiallyOverrideProperty(recastWindow);
+            }
             DoTargetData();
         }
+        EditorGUIUtility.labelWidth = prevLabelWidth;
         --EditorGUI.indentLevel;
+
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PropertyField(abilityTags);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
@@ -90,83 +101,54 @@ public class AbilityInspector : Editor
         ++EditorGUI.indentLevel;
         foreach (FieldInfo temp in childFields)
 		{
-            PotentiallyOverrideProperty(ID.intValue, serializedObject.FindProperty(temp.Name));
+            PotentiallyOverrideProperty(serializedObject.FindProperty(temp.Name));
 		}
         --EditorGUI.indentLevel;
         serializedObject.ApplyModifiedProperties();
 	}
 
-    void PotentiallyOverrideProperty(int ID, SerializedProperty prop)
+    void PotentiallyOverrideProperty(SerializedProperty prop)
     {
-        PotentiallyOverrideProperty((uint)ID, prop);
-    }
-    void PotentiallyOverrideProperty(uint ID, SerializedProperty prop)
-    {
-        if (AbilityDataXMLParser.instance.HasFieldInEntry(ID, prop.propertyPath))
+        string entry = AbilityDataXMLParser.instance.HasFieldInEntry((uint)ID.intValue, prop.propertyPath);
+        if (entry != "")
         {
-            EditorGUILayout.LabelField(string.Format("{0} is overriden in XML", prop.propertyPath));
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(string.Format("{0}", prop.displayName), GUILayout.Width(EditorGUIUtility.currentViewWidth * LABEL_RATIO - (EditorGUI.indentLevel * 15)));
+            EditorGUILayout.LabelField(string.Format("{0}", entry));
+            GUILayout.EndHorizontal();
         }
         else
         {
             EditorGUILayout.PropertyField(prop);
         }
     }
-
-    private static bool customTargetingPrefabs = false;
+    static int delIndex = 0;
 
     void DoTargetData()
     {
-        bool dirty = false;
+        --EditorGUI.indentLevel;
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PrefixLabel("Targeting Data");
+        EditorGUILayout.BeginHorizontal();
+        int n = targetingDataArray.arraySize;
+        delIndex = EditorGUILayout.DelayedIntField(delIndex);
+        if(GUILayout.Button("-") && delIndex < n)
+        {
+            targetingDataArray.DeleteArrayElementAtIndex(delIndex);
+            return;
+        }
+        if (GUILayout.Button("+"))
+        {
+            targetingDataArray.InsertArrayElementAtIndex(n);
+        }
+        EditorGUILayout.EndHorizontal();
         ++EditorGUI.indentLevel;
-        LayoutField((a) => { return (AbilityTargetingData.TargetType)EditorGUILayout.EnumPopup(a); }, ref targetingData.targetType, ref dirty);
-
-        customTargetingPrefabs = EditorGUILayout.Toggle("Custom Prefab Targeting", customTargetingPrefabs);
-
-        if (targetingData.targetType != AbilityTargetingData.TargetType.NONE)
+        for (int x = 0; x < n; ++x)
         {
-            if(customTargetingPrefabs) LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Range Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.rangePreviewPrefab, ref dirty);
-            LayoutField((a) => { return EditorGUILayout.DelayedFloatField("Range", a); }, ref targetingData.range, ref dirty);
+            EditorGUILayout.PropertyField(targetingDataArray.GetArrayElementAtIndex(x), new GUIContent("Targeting Data " + x));
         }
-        switch(targetingData.targetType)
-        {
-            case AbilityTargetingData.TargetType.LINE_TARGETED:
-            {
-                if (customTargetingPrefabs) LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Line Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
-                LayoutField((a) => { return EditorGUILayout.DelayedFloatField("Perpindicular Scale", a); }, ref targetingData.previewScale.x, ref dirty);
-            }
-            break;
-            case AbilityTargetingData.TargetType.GROUND_TARGETED:
-            {
-                if (customTargetingPrefabs) LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Target Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
-                LayoutField((a) => { return EditorGUILayout.Vector3Field("Preview Scale", a); }, ref targetingData.previewScale, ref dirty);
-            }
-            break;
-            case AbilityTargetingData.TargetType.ENTITY_TARGETED:
-            {
-                if (customTargetingPrefabs) LayoutField((a) => { return (GameObject)EditorGUILayout.ObjectField("Crosshair Preview Prefab", a, typeof(GameObject), false); }, ref targetingData.secondaryPreviewPrefab, ref dirty);
-                LayoutField((a) => { return (Targeting.Affiliation)EditorGUILayout.EnumFlagsField("Affiliation", a); }, ref targetingData.affiliation, ref dirty);
-            }
-            break;
-        }
-
-        if (dirty)
-        {
-            EditorUtility.SetDirty(target);
-        }
+        --EditorGUI.indentLevel;
+        ++EditorGUI.indentLevel;
     }
 
-    void LayoutField<T>(Func<T, T> action, ref T dataToChange, ref bool dirty)
-    {
-        T temp = (T)action(dataToChange);
-        if(temp != null)
-        {
-            dirty |= !temp.Equals(dataToChange);
-        }
-        else
-        {
-            dirty = dataToChange != null;
-        }
-        dataToChange = temp;
-    }
 }

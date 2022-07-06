@@ -119,40 +119,54 @@ public class InGamePlayerUI : MonoBehaviour
 		healthSlider.value = currentHealth / maxHealth;
 	}
 
-	void UpdateAttackUI(float currentCD, float maxCD)
+	void UpdateAttackUI(CooldownTickData data)
 	{
-        UpdateAbilityUI(AbilitySlots.SLOT_ATTACK, currentCD, maxCD);
+        UpdateAbilityUI(AbilitySlots.SLOT_ATTACK, data);
     }
 
-    void UpdateAbility1UI(float currentCD, float maxCD)
+    void UpdateAbility1UI(CooldownTickData data)
 	{
-        UpdateAbilityUI(AbilitySlots.SLOT_1, currentCD, maxCD);
+        UpdateAbilityUI(AbilitySlots.SLOT_1, data);
     }
 
-    void UpdateAbility2UI(float currentCD, float maxCD)
+    void UpdateAbility2UI(CooldownTickData data)
 	{
-        UpdateAbilityUI(AbilitySlots.SLOT_2, currentCD, maxCD);
+        UpdateAbilityUI(AbilitySlots.SLOT_2, data);
     }
 
-	void UpdateAbility3UI(float currentCD, float maxCD)
+	void UpdateAbility3UI(CooldownTickData data)
 	{
-        UpdateAbilityUI(AbilitySlots.SLOT_3, currentCD, maxCD);
+        UpdateAbilityUI(AbilitySlots.SLOT_3, data);
     }
 
-    private void UpdateAbilityUI(AbilitySlots index, float currentCD, float maxCD)
+    private void UpdateAbilityUI(AbilitySlots index, CooldownTickData data)
     {
-        UpdateAbilityUI((int)index, currentCD, maxCD);
+        UpdateAbilityUI((int)index, data);
     }
 
-    private void UpdateAbilityUI(int index, float currentCD, float maxCD)
+    private void UpdateAbilityUI(int index, CooldownTickData data)
     {
-        if (maxCD == 0)
+        float t = 0;
+        float text = 0;
+        if (data.maxCooldown == 0)
         {
-            maxCD = 1;
-            currentCD = 0;
+            t = 0;
         }
-        cds[index].fillAmount = currentCD / maxCD;
-        cdTexts[index].text = currentCD <= 0 ? "" : string.Format("{0,0:F1}", currentCD);
+        else if(data.currentRecast > 0)
+        {
+            t = data.currentRecast / data.maxRecast;
+            cds[index].color = new Color(1.0f, 0, 0, cds[index].color.a);
+            text = data.currentRecast;
+        }
+        else
+        {
+            t = data.currentCooldown / data.maxCooldown;
+            cds[index].color = new Color(0, 0, 0, cds[index].color.a);
+            text = data.currentCooldown;
+        }
+        t = Mathf.Clamp(t, 0, 1);
+        cds[index].fillAmount = t;
+        cdTexts[index].text = text <= 0 ? "" : string.Format("{0,0:F1}", text);
     }
 	
 	public void HideSelf()

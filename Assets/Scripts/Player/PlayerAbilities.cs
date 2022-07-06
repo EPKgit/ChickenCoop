@@ -21,20 +21,13 @@ public class PlayerAbilities : MonoBehaviour
 
     private GameObject inventoryGO;
 
-    [HideInInspector]
-    public Rigidbody2D rb;
-    [HideInInspector]
-    public CircleCollider2D col;
-    [HideInInspector]
-    public StatBlock stats;
-    [HideInInspector]
-    public BaseHealth hp;
-    [HideInInspector]
-    public GameplayTagComponent tagComponent;
-    [HideInInspector]
-    public PlayerMovement movement;
-    [HideInInspector]
-    public PlayerCollision collision;
+    [HideInInspector] public Rigidbody2D rb;
+    [HideInInspector] public CircleCollider2D col;
+    [HideInInspector] public StatBlock stats;
+    [HideInInspector] public PlayerHealth hp;
+    [HideInInspector] public GameplayTagComponent tagComponent;
+    [HideInInspector] public PlayerMovement movement;
+    [HideInInspector] public PlayerCollision collision;
 
     private AbilitySetAsset abilitySet;
 
@@ -53,7 +46,7 @@ public class PlayerAbilities : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 		col = transform.Find("Colliders").GetComponent<CircleCollider2D>();
 		stats = GetComponent<StatBlockComponent>().GetStatBlock();
-		hp = GetComponent<BaseHealth>();
+		hp = GetComponent<PlayerHealth>();
 		tagComponent = GetComponent<GameplayTagComponent>();
 		movement = GetComponent<PlayerMovement>();
         collision = GetComponent<PlayerCollision>();
@@ -127,7 +120,7 @@ public class PlayerAbilities : MonoBehaviour
                 continue;
             }
             abilities[x].cooldownTick += callbacks[x];
-            callbacks[x](abilities[x].currentCooldown, abilities[x].maxCooldown);
+            callbacks[x](new CooldownTickData(abilities[x].currentCooldownTimer, abilities[x].maxCooldown, abilities[x].currentRecastTimer, abilities[x].recastWindow));
         }
 	}
 

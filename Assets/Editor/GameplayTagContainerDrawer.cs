@@ -1,84 +1,64 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using UnityEngine;
 using UnityEditor;
 
 [CustomPropertyDrawer(typeof(GameplayTagContainer))]
-public class GameplayTagContainerDrawer : PropertyDrawer
+public class GameplayTagContainerDrawer : CustomPropertyDrawerBase
 {
+    //these 4 lines are the toolbar 2 lines and 
     private const int EXTRA_LINES = 4;
-
-
-    private float yofs;
-    private float yinc;
     private List<GameplayTag> tags;
     private string[] enumNames;
     private GameplayTagFlags[] enumValues;
     private bool[] enumChecked;
 
-    private TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-
-    private bool foldout = false;
     private int displayTab = 0;
     private static readonly string[] toolbarStrings = new string[] { "Current Tags", "Tag Editor" };
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        // EditorGUI.DrawRect(position, Color.red);
-        yofs = position.y;
-        yinc = position.height / GetNumLines(property);
-        Rect rect = NextLine(position);
-        bool temp = EditorGUI.Foldout(rect, foldout, textInfo.ToTitleCase(property.name));
-        if(foldout != temp || !foldout)
+        if(StartOnGUI(position, property, label))
         {
-            foldout = temp;
             return;
         }
-        rect = NextLine(position);
+        NextLine();
         displayTab = GUI.Toolbar(rect, displayTab, toolbarStrings);
-        rect = NextLine(position);
-        rect.y += (rect.height - 5) / 2.0f;
-        rect.height = 5;
-        EditorGUI.DrawRect(rect, Color.grey);
+        DrawHorizontalLine(5);
         switch (displayTab)
         {
             case 0:
             {
-                DrawActiveTags(position);
+                DrawActiveTags();
             }
             break;
             case 1:
             {
-                DrawFullTags(position, property);
+                DrawFullTags(property);
             }
             break;
         }
-        rect = NextLine(position);
-        rect.y += (rect.height - 5) / 2.0f;
-        rect.height = 5;
-        EditorGUI.DrawRect(rect, Color.grey);
+        DrawHorizontalLine(5);
     }
 
-    private void DrawActiveTags(Rect position)
+    private void DrawActiveTags()
     {
         if (tags == null)
         {
             return;
         }
-        Rect rect;
         if(tags.Count == 0)
         {
-            rect = NextLine(position);
+            NextLine();
             EditorGUI.LabelField(rect, "NONE");
         }
         foreach (GameplayTag t in tags)
         {
-            rect = NextLine(position);
+            NextLine();
             EditorGUI.LabelField(rect, t.Flag.ToString());
         }
     }
 
-    private void DrawFullTags(Rect position, SerializedProperty serializedProperty)
+    private void DrawFullTags(SerializedProperty serializedProperty)
     {
         if(!SetupEnumValues())
         {
@@ -86,7 +66,6 @@ public class GameplayTagContainerDrawer : PropertyDrawer
         }
         UpdateCheckboxes();
 
-        Rect rect;
         int indentLevel = EditorGUI.indentLevel;
         EditorGUI.BeginChangeCheck();
         for (int x = 0; x < enumNames.Length; ++x)
@@ -95,7 +74,7 @@ public class GameplayTagContainerDrawer : PropertyDrawer
             {
                 continue;
             }
-            rect = NextLine(position);
+            NextLine();
             rect.x += ((int)enumValues[x] & GameplayTagConstants.LAYER_MASK) * 15;
             rect.width -= 30;
             EditorGUI.LabelField(rect, enumNames[x]);
@@ -106,7 +85,7 @@ public class GameplayTagContainerDrawer : PropertyDrawer
             if (x != enumNames.Length - 1)
             {
                 yofs += 1;
-                rect = new Rect(position.x, yofs, position.width, 1);
+                rect = new Rect(startRect.x, yofs, startRect.width, 1);
                 EditorGUI.DrawRect(rect, Color.grey);
             }
         }
@@ -117,12 +96,7 @@ public class GameplayTagContainerDrawer : PropertyDrawer
         }
     }
 
-    private Rect NextLine(Rect position)
-    {
-        Rect rect = new Rect(position.x, yofs, position.width, yinc);
-        yofs += yinc;
-        return rect;
-    }
+    
 
     private List<GameplayTag> FetchGameplayTagListFromProperty(SerializedProperty serializedProperty)
     {
@@ -241,16 +215,17 @@ public class GameplayTagContainerDrawer : PropertyDrawer
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         int extra = 0;
-        if(foldout && displayTab == 1)
+        if(property.isExpanded && displayTab == 1)
         {
-            extra = enumNames.Length - 1;
+            //these extra are the lines in between different tags
+            extra += enumNames.Length - 1;
         }
         return base.GetPropertyHeight(property, label) * GetNumLines(property) + extra;
     }
 
-    private float GetNumLines(SerializedProperty property)
+    protected override float GetNumLines(SerializedProperty property)
     {
-        if(!foldout)
+        if(!property.isExpanded)
         {
             return 1;
         }
@@ -265,7 +240,7 @@ public class GameplayTagContainerDrawer : PropertyDrawer
             {
                 if (SetupEnumValues())
                 {
-                    return enumNames.Length + EXTRA_LINES - 1; //-1 for removing NONE
+                    return enumNames.Length - 1 + EXTRA_LINES; //-1 for removing NONE
                 }
             } break;
         }

@@ -1,10 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.InputSystem;
 using Targeting;
 
-public delegate void CooldownTickDelegate(float currentCooldown, float maxCooldown);
+public class CooldownTickData
+{
+    public float currentCooldown;
+    public float maxCooldown;
+    public float currentRecast;
+    public float maxRecast;
+    public CooldownTickData(float currentCooldown, float maxCooldown, float currentRecast, float maxRecast)
+    {
+        this.currentCooldown = currentCooldown;
+        this.maxCooldown = maxCooldown;
+        this.currentRecast = currentRecast;
+        this.maxRecast = maxRecast;
+    }
+}
+public delegate void CooldownTickDelegate(CooldownTickData data);
 public delegate void AbilityCastingDelegate(AbilityEventData data);
 
 /// <summary>
@@ -85,12 +100,27 @@ public abstract class Ability : ScriptableObject
     /// <summary>
     /// The icon of the sprite for the UI
     /// </summary>
-    public Sprite icon;
+    public Sprite icon; 
 
     /// <summary>
     /// The targeting information e.g. range type
     /// </summary>
-    public AbilityTargetingData targetingData;
+    public AbilityTargetingData targetingData
+    {
+        get
+        {
+            return _targetingData[currentTargetingType];
+        }
+    }
+
+    [SerializeField]
+    private AbilityTargetingData[] _targetingData;
+
+    /// <summary>
+    /// The index of what type of targeting we want to use on our ability. We can have a wide variety of targeting over a single
+    /// abilities lifetime, we just need to switch it before previews start
+    /// </summary>
+    public int currentTargetingType = 0;
 
     /// <summary>
     /// Represents the current duration of the ticking ability while it is running.
@@ -105,7 +135,33 @@ public abstract class Ability : ScriptableObject
     /// <summary>
     /// Rerpresents the amount of time remaining while the ablity is cooling down.
     /// </summary>
-    public float currentCooldown
+    public float currentCooldownTimer
+    {
+        get;
+        protected set;
+    }
+
+
+    /// <summary>
+    /// The number of times the ability is able to be recasted
+    /// </summary>
+    public int numberTimesRecastable = 0;
+
+    public int currentRecastAmount
+    {
+        get;
+        protected set;
+    }
+
+    /// <summary>
+    /// The amount of time after casting that the ability can be recasted in
+    /// </summary>
+    public float recastWindow = 0;
+
+    /// <summary>
+    /// The amount of time we have remaining in the recast window
+    /// </summary>
+    public float currentRecastTimer
     {
         get;
         protected set;
@@ -125,7 +181,9 @@ public abstract class Ability : ScriptableObject
         playerAbilities = pa;
         appliedTagIDs = new List<uint>();
         Reinitialize();
-        currentCooldown = 0;
+        currentCooldownTimer    = 0;
+        currentRecastTimer      = 0;
+        currentRecastAmount     = 0;
         SetupIDNumber();
         AbilityDataXMLParser.instance.UpdateAbilityData(this);
     }
@@ -154,15 +212,7 @@ public abstract class Ability : ScriptableObject
     public virtual void Reinitialize()
     {
         currentDuration = maxDuration;
-#if UNITY_EDITOR
-        if(playerAbilities.DEBUG_LOW_COOLDOWN)
-        {
-            currentCooldown = Mathf.Min(0.1f, maxCooldown);
-        }
-#else
-        currentCooldown = maxCooldown;
-#endif
-            appliedTagIDs.Clear();
+        appliedTagIDs.Clear();
     }
 
     /// <summary>
@@ -171,12 +221,31 @@ public abstract class Ability : ScriptableObject
     /// <param name="deltaTime">The time since the last cooldown tick</param>
     public virtual void Cooldown(float deltaTime)
     {
-        if (currentCooldown <= 0)
+        bool ticked = false;
+        if (currentCooldownTimer > 0)
         {
-            return;
+            ticked = true;
+            currentCooldownTimer -= deltaTime;
+            if(currentCooldownTimer <= 0)
+            {
+                currentCooldownTimer = 0;
+            }
         }
-        currentCooldown -= deltaTime;
-        cooldownTick(currentCooldown, maxCooldown);
+        if(currentRecastTimer > 0)
+        {
+            ticked = true;
+            currentRecastTimer -= deltaTime;
+            if(currentRecastTimer <= 0)
+            {
+                currentRecastTimer = 0;
+                currentRecastAmount = 0;
+                GoOnCooldown();
+            }
+        }
+        if (ticked)
+        {
+            cooldownTick(new CooldownTickData(currentCooldownTimer, maxCooldown, currentRecastTimer, recastWindow));
+        }
     }
 
     /// <summary>
@@ -185,12 +254,27 @@ public abstract class Ability : ScriptableObject
     /// <returns>Returns true if the ability could be cast, false otherwise</returns>
     public virtual bool IsCastable()
     {
-        bool castable = currentCooldown <= 0 && currentDuration == maxDuration;
+        bool castable = IsDurationFinished() && (IsOffCooldown() || IsRecastable());
         if(!castable)
         {
             return false;
         }
         return !playerAbilities.tagComponent.blockedTags.Matches(abilityTags);
+    }
+
+    public bool IsDurationFinished()
+    {
+        return currentDuration == maxDuration;
+    }
+
+    public bool IsOffCooldown()
+    {
+        return currentCooldownTimer <= 0;
+    }
+
+    public bool IsRecastable()
+    {
+        return numberTimesRecastable != 0 && (currentRecastAmount != 0 && currentRecastTimer > 0);
     }
 
 
@@ -208,7 +292,14 @@ public abstract class Ability : ScriptableObject
         {
             return false;
         }
-        UseAbility();
+        if(currentRecastAmount != 0)
+        {
+            ReuseAbility(numberTimesRecastable - currentRecastAmount);
+        }
+        else
+        {
+            UseAbility();
+        }
         return true;
     }
 
@@ -225,6 +316,16 @@ public abstract class Ability : ScriptableObject
         {
             appliedTagIDs.Add(playerAbilities.tagComponent.blockedTags.AddTag(tag.Flag));
         }
+    }
+
+    /// <summary>
+    /// Called on recast when AttemptUseAbility completes. Should be override if reusing the ability has a different effect
+    /// that just normally casting the ability
+    /// </summary>
+    /// <param name="recastNumber">The number of times the ability has been recast, starting at 0 for the first recast</param>
+    protected virtual void ReuseAbility(int recastNumber)
+    {
+        UseAbility();
     }
 
     /// <summary>
@@ -258,13 +359,76 @@ public abstract class Ability : ScriptableObject
             playerAbilities.tagComponent.tags.RemoveTagWithID(i);
         }
         Reinitialize();
+        if (CheckRecastConditions())
+        {
+            return;
+        }
+        GoOnCooldown();
+    }
+    
+    protected bool CheckRecastConditions()
+    {
+        if (numberTimesRecastable != 0)
+        {
+            if (currentRecastAmount == 0) //this is the initial cast
+            {
+                currentRecastAmount = numberTimesRecastable;
+            }
+            else if (currentRecastAmount - 1 <= 0) //this is final recast allowed
+            {
+                currentRecastAmount = 0;
+                return false;
+            }            
+            else //this is one of (multiple) recasts
+            {
+                --currentRecastAmount;
+            }
+            currentRecastTimer = Mathf.Max(recastWindow, float.Epsilon);
+            return true;
+        }
+        return false;
+    }
+    protected void GoOnCooldown()
+    {
+        currentRecastTimer = 0;
+        currentRecastAmount = 0;
+        float cdrPercent = playerAbilities.stats.GetStat(StatName.CooldownReduction)?.Value ?? 1.0f;
+        currentCooldownTimer = maxCooldown * cdrPercent;
+#if UNITY_EDITOR
+        if (playerAbilities.DEBUG_LOW_COOLDOWN)
+        {
+            currentCooldownTimer = Mathf.Min(0.1f, maxCooldown);
+        }
+#endif
+    }
+
+    protected void SwitchTargetingType(int newIndex)
+    {
+        if(newIndex < 0 || newIndex >= _targetingData.Length)
+        {
+            Debug.LogError("ERROR: ATTEMPTING TO SWITCH TO TARGETING DATA OUT OF BOUNDS" + newIndex);
+            throw new System.Exception();
+        }
+        currentTargetingType = newIndex;
+    }
+
+    protected void IncrementTargetingType()
+    {
+        currentTargetingType = (++currentTargetingType + _targetingData.Length) % _targetingData.Length;
+    }
+
+    protected void DecrementTargetingType()
+    {
+        currentTargetingType = (--currentTargetingType + _targetingData.Length) % _targetingData.Length;
     }
 
     public float GetCooldownPercent()
     {
-        return currentCooldown / maxCooldown;
+        return currentCooldownTimer / maxCooldown;
     }
 
+
+#region ABILITY_HELPERS
     /// <summary>
     /// Helper for the targetting data to be a non-monobehaviour but still instantiate
     /// </summary>
@@ -349,6 +513,17 @@ public abstract class Ability : ScriptableObject
         return target;
     }
 
+    public void CleanupAllTargeting(GameObject user)
+    {
+        foreach(AbilityTargetingData atd in _targetingData)
+        {
+            atd.Cleanup(this, user);
+        }
+    }
+#endregion
+
+
+#region OPERATORS
     /// <summary>
     /// Returns a tooltip with all of the values plugged in, child classes are expected to override this with a string.format of their own variables setup
     /// </summary>
@@ -394,4 +569,5 @@ public abstract class Ability : ScriptableObject
     {
         return InstanceID;
     }
+#endregion
 }

@@ -17,15 +17,9 @@ public interface IAOEAbility
 
 public interface IMovementAbility
 {
-    float movementDuration
+    MovementType type
     {
         get;
-        set;
-    }
-    float movementDistance
-    {
-        get;
-        set;
     }
 }
 

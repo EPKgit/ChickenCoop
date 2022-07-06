@@ -97,6 +97,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     }
 
     private delegate object VariableEvaluationMethod(string s);
+
     private Dictionary<string, VariableEvaluationMethod> evaluationMethods = new Dictionary<string, VariableEvaluationMethod>()
     {
         {
@@ -120,6 +121,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         { "cd", "maxCooldown" },
         { "dmg", "damage" },
         { "duration", "maxDuration:currentDuration" },
+        { "recasts", "numberTimesRecastable" },
     };
 
     private System.Reflection.PropertyInfo GetPropertyInHierarchy(Type t, string name)
@@ -170,25 +172,32 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     /// <param name="ID">The ID of the ability to check</param>
     /// <param name="fieldName">The string name of the field</param>
     /// <returns>True if we found a valid ability with that field override, false otherwise</returns>
-    public bool HasFieldInEntry(uint ID, string fieldName)
+    public string HasFieldInEntry(uint ID, string fieldName)
     {
         AbilityXMLDataEntry entry = null;
         if (ID == 0 || !loadedTable || !table.TryGetValue(ID, out entry))
         {
-            return false;
+            return "";
         }
         foreach(var e in entry.vars)
         {
             if(e.name == fieldName)
             {
-                return true;
+                return e.value;
             }
-            if (commonVariableRenames.ContainsKey(e.name) && commonVariableRenames[e.name] == fieldName)
+            if (commonVariableRenames.ContainsKey(e.name))
             {
-                return true;
+                var nameArray = commonVariableRenames[e.name].Split(':');
+                foreach (var s in nameArray)
+                {
+                    if(s == fieldName)
+                    {
+                        return e.value;
+                    }
+                }
             }
         }
-        return false;
+        return "";
     }
 
     public bool UpdateAbilityData(Ability a)

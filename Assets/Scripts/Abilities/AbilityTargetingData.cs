@@ -14,7 +14,7 @@ namespace Targeting
             LINE_TARGETED,
             ENTITY_TARGETED,
             GROUND_TARGETED,
-            CUSTOM_TARGETING,
+            // CUSTOM_TARGETING,
             MAX,
         }
 
@@ -77,14 +77,13 @@ namespace Targeting
 
         public void Preview(Ability usedAbility, GameObject user)
         {
-            preview = usedAbility.GameObjectManipulation(rangePreviewPrefab.Equals(null) ? InGameUIManager.instance.rangeIndicatorPrefab : rangePreviewPrefab, true);
+            if (targetType != TargetType.NONE)
+            {
+                preview = usedAbility.GameObjectManipulation(rangePreviewPrefab.Equals(null) ? InGameUIManager.instance.rangeIndicatorPrefab : rangePreviewPrefab, true);
+            }
             switch (targetType)
             {
-                case TargetType.NONE:
-                {
-
-                }
-                break;
+                
                 case TargetType.LINE_TARGETED:
                 {
                     previewSecondary = usedAbility.GameObjectManipulation
@@ -115,11 +114,11 @@ namespace Targeting
                     PreviewGround(usedAbility, user);
                 }
                 break;
-                case TargetType.CUSTOM_TARGETING:
-                {
+                // case TargetType.CUSTOM_TARGETING:
+                // {
 
-                }
-                break;
+                // }
+                // break;
             }
         }
 
@@ -147,11 +146,11 @@ namespace Targeting
                     PreviewGround(usedAbility, user);
                 }
                 break;
-                case TargetType.CUSTOM_TARGETING:
-                {
+                // case TargetType.CUSTOM_TARGETING:
+                // {
 
-                }
-                break;
+                // }
+                // break;
             }
         }
 
@@ -189,7 +188,7 @@ namespace Targeting
         {
             previewSecondary.transform.position = usedAbility.ClampPointWithinRange(user.GetComponent<PlayerInput>().aimPoint);
             Vector2 scale = new Vector2(previewScale.x, previewScale.y);
-            IAOEAbility aoeInterface = (IAOEAbility)usedAbility;
+            IAOEAbility aoeInterface = usedAbility as IAOEAbility;
             if(aoeInterface != null)
             {
                 scale = new Vector2(aoeInterface.aoe, aoeInterface.aoe);

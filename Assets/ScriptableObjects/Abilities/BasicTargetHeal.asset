@@ -25,14 +25,17 @@ MonoBehaviour:
   tickingAbility: 0
   hasDuration: 0
   maxDuration: 0
-  maxCooldown: 2
-  cost: 0
-  icon: {fileID: 21300000, guid: a3cdf85432c04fc44a18f8fa39e2cc72, type: 3}
-  targetingData:
-    inputPoint: {x: 0, y: 0}
+  maxCooldown: 0
+  cost: 1
+  icon: {fileID: 21300000, guid: 63f64599d54605e47bea5de4c39c7bb5, type: 3}
+  _targetingData:
+  - inputPoint: {x: 0, y: 0}
     targetType: 2
     rangePreviewPrefab: {fileID: 0}
     secondaryPreviewPrefab: {fileID: 0}
-    range: 5
+    range: 6
     previewScale: {x: 0, y: 0, z: 0}
     affiliation: 1
+  currentTargetingType: 0
+  numberTimesRecastable: 0
+  recastWindow: 0
