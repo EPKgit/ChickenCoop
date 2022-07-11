@@ -249,23 +249,27 @@ public static class Lib
     //       return worldSpacePosition - from.transform.position;
     //   }
 
-    public static Vector2 GetAimPoint(InputAction.CallbackContext ctx, GameObject user)
+    public static Vector2 GetAimPoint(InputAction.CallbackContext ctx)
     {
         switch(ctx.control.device.description.deviceClass)
         {
             case "Mouse":
             {
-                Vector2 val = ctx.ReadValue<Vector2>();
-                Ray cameraRay = Camera.main.ScreenPointToRay(val);
-                Plane groundPlane = new Plane(Vector3.forward, Vector3.zero);
-                float rayLength;
-                groundPlane.Raycast(cameraRay, out rayLength);
-                Vector3 worldSpacePosition = cameraRay.GetPoint(rayLength);
-                return worldSpacePosition;
+                return GetAimPoint(ctx.ReadValue<Vector2>());
             }
         }
 
         return Vector2.zero;
+    }
+
+    public static Vector2 GetAimPoint(Vector2 val)
+    {
+        Ray cameraRay = Camera.main.ScreenPointToRay(val);
+        Plane groundPlane = new Plane(Vector3.forward, Vector3.zero);
+        float rayLength;
+        groundPlane.Raycast(cameraRay, out rayLength);
+        Vector3 worldSpacePosition = cameraRay.GetPoint(rayLength);
+        return worldSpacePosition;
     }
 
     public static Vector2 DefaultDirectionCheck(Vector2 dir)

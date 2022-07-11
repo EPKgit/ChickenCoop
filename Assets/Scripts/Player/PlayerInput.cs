@@ -29,16 +29,39 @@ public class PlayerInput : MonoBehaviour
 	private PlayerAbilities playerAbilities;
 	private PlayerInteraction playerInteraction;
 
-  	public Vector2 aimPoint { get; private set; }
+    private Vector2 aimPointInput;
+    public Vector2 aimPoint 
+    { 
+        get
+        {
+            if(aimDirty)
+            {
+                RecalcAimPoint();
+            }
+            return _aimPoint;
+        }
+        private set
+        {
+            _aimPoint = value;
+            aimDirty = false;
+        } 
+    }
+    private Vector2 _aimPoint;
+    private bool aimDirty = false;
 
-	#region INIT
+    #region MONOCALLBACKS
 
-	void Awake()
+    void Awake()
 	{
 		playerMovement = GetComponent<PlayerMovement>();
 		playerAbilities = GetComponent<PlayerAbilities>();
 		playerInteraction = GetComponent<PlayerInteraction>();
 	}
+
+    void LateUpdate()
+    {
+        aimDirty = true;
+    }
 
 	#endregion
 
@@ -62,7 +85,13 @@ public class PlayerInput : MonoBehaviour
 	public void OnAimPoint(InputAction.CallbackContext ctx)
 	{
         DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AIMING, gameObject.name + " AIMING AT " + aimPoint);
-        aimPoint = Lib.GetAimPoint(ctx, gameObject);
+        aimPointInput = ctx.ReadValue<Vector2>();
+        RecalcAimPoint();
+    }
+
+    public void RecalcAimPoint()
+    {
+        aimPoint = Lib.GetAimPoint(aimPointInput);
         OnAimPointEvent.Invoke(new InputEventData<Vector2>(aimPoint));
     }
 

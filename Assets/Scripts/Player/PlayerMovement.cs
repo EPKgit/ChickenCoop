@@ -136,7 +136,9 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                sprite.transform.rotation = Quaternion.AngleAxis(t * 360 * Mathf.Floor(dashDuration / 0.25f), (dashEnd - dashStart).x < 0 ? Vector3.forward : Vector3.back);
+                float angle = t * 360 * Mathf.Max(Mathf.Floor(dashDuration / 0.25f), 1);
+                Vector3 axis = (dashEnd - dashStart).x < 0 ? Vector3.forward : Vector3.back;
+                sprite.transform.rotation = Quaternion.AngleAxis(angle, axis);
             }
             movementEvent(new MovementDeltaEventData(prevPosition - (Vector2)transform.position, MovementType.DASH));
 
