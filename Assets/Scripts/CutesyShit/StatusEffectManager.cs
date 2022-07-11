@@ -45,7 +45,7 @@ public class StatusEffectManager : MonoSingleton<StatusEffectManager>
         base.Awake();
         barToken = PoolManager.instance.RequestLoan(effectBarPrefab, 40, true);
         popupToken = PoolManager.instance.RequestLoan(effectPopupPrefab, 20, true);
-        UIRoot = GameObject.Find("WorldSpaceCanvas");
+        UIRoot = GameObject.Find("ScreenToWorldCanvas");
         PoolManager.instance.ChangeParentOfPool(effectPopupPrefab, UIRoot.transform);
         PoolManager.instance.ChangeParentOfPool(effectBarPrefab, UIRoot.transform);
         appliedStatuses = new Dictionary<GameObject, StatusBarData>();
@@ -64,7 +64,7 @@ public class StatusEffectManager : MonoSingleton<StatusEffectManager>
             KeyValuePair<GameObject, StatusBarData> pair = appliedStatuses.ElementAt(x);
             GameObject applied = pair.Key;
             StatusBarData barData = pair.Value;
-            barData.barObject.transform.position = applied.transform.position + barData.offset;
+            barData.barObject.transform.position = Camera.main.WorldToScreenPoint(applied.transform.position + barData.offset);
             for (int y = barData.appliedStatuses.Count - 1; y >= 0; --y)
             {
                 AppliedStatusData appliedData = barData.appliedStatuses[y];
@@ -170,8 +170,8 @@ public class StatusEffectManager : MonoSingleton<StatusEffectManager>
     {
         StatusBarData barData = new StatusBarData();
         barData.barObject = PoolManager.instance.RequestObject(effectBarPrefab);
-        barData.offset = Vector3.up * (Lib.FindDownwardsInTree<SpriteRenderer>(toApply)?.bounds.extents.y ?? 0);
-        barData.barObject.transform.position = toApply.transform.position + barData.offset;
+        barData.offset = Vector3.up * (Lib.FindDownwardsInTree<SpriteRenderer>(toApply)?.bounds.extents.y ?? 0) * toApply.transform.localScale.y;
+        barData.barObject.transform.position = Camera.main.WorldToScreenPoint(toApply.transform.position + barData.offset);
         barData.appliedStatuses = new List<AppliedStatusData>();
         appliedStatuses.Add(toApply, barData);
         return barData;

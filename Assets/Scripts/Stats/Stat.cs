@@ -27,6 +27,13 @@ public class Stat : ISerializationCallbackReceiver
             _value = value;
         }
     }
+    public int IntValue
+    {
+        get
+        {
+            return (int)Value;
+        }
+    }
     private float _value;
 
     /// <summary>

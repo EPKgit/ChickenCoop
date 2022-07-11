@@ -13,8 +13,7 @@ public class DamageNumberPopup : Poolable
     public AnimationCurve scaleCurve;
 
     private RectTransform rectTransform;
-
-
+    private Vector3 startPosition;
     private float currentTime;
 
     private void Awake()
@@ -42,7 +41,8 @@ public class DamageNumberPopup : Poolable
         Color high = DamageNumbersManager.instance.highDamageColor;
         tmp.colorGradient = new VertexGradient(Color.Lerp(low, high, t), Color.Lerp(low, high, t + COLOR_RANGE / 2), Color.Lerp(low, high, t + COLOR_RANGE / 2), Color.Lerp(low, high, t + COLOR_RANGE)); //3 = bottom right
         rectTransform.localPosition = Vector3.zero;
-        transform.position = position;
+        startPosition = position;
+        transform.position = Camera.main.WorldToScreenPoint(startPosition);
     }
 
     private void Update()
@@ -53,10 +53,10 @@ public class DamageNumberPopup : Poolable
             DestroySelf();
         }
         tmp.color = new Color(tmp.color.r, tmp.color.g, tmp.color.b, alphaCurve.Evaluate(currentTime / fadeOutTime));
-        rectTransform.localScale = Vector3.one * scaleCurve.Evaluate(currentTime / fadeOutTime);
-        transform.position += Vector3.up * Time.deltaTime * risingSpeed;
+        rectTransform.localScale = Vector3.one * scaleCurve.Evaluate(currentTime / fadeOutTime) * DamageNumbersManager.instance.sizeModifier;
+        startPosition += Vector3.up * Time.deltaTime * risingSpeed;
+        transform.position = Camera.main.WorldToScreenPoint(startPosition);
 
-        //AnimateVertices();
     }
 
     //void OnEnable()

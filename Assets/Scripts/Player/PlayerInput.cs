@@ -1,11 +1,29 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
-	public int playerID = -1;
+	public class InputEventData<T>
+	{
+        public bool handled = false;
+        public T data;
+		public InputEventData(T d)
+		{
+            data = d;
+        }
+    }
+    public event Action<InputEventData<Vector2>> OnMoveEvent = delegate { };
+    public event Action<InputEventData<Vector2>> OnAimPointEvent = delegate { };
+
+    public event Action<InputEventData<bool>> OnInteractEvent = delegate { };
+    public event Action<InputEventData<bool>> OnInventoryEvent = delegate { };
+
+
+
+    public int playerID = -1;
 
 	private PlayerMovement playerMovement;
 	private PlayerAbilities playerAbilities;
@@ -29,8 +47,12 @@ public class PlayerInput : MonoBehaviour
 	public void OnMovement(InputAction.CallbackContext ctx)
 	{
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, gameObject.name + " MOVING ");
-        playerMovement.MoveInput(ctx.ReadValue<Vector2>());
-	}
+        Vector2 value = ctx.ReadValue<Vector2>();
+        if (!TestOverride(OnMoveEvent, value))
+        {
+            playerMovement.MoveInput(value);
+        }
+    }
 
 	#endregion
 
@@ -39,8 +61,9 @@ public class PlayerInput : MonoBehaviour
 
 	public void OnAimPoint(InputAction.CallbackContext ctx)
 	{
-        aimPoint = Lib.GetAimPoint(ctx, gameObject);
         DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AIMING, gameObject.name + " AIMING AT " + aimPoint);
+        aimPoint = Lib.GetAimPoint(ctx, gameObject);
+        OnAimPointEvent.Invoke(new InputEventData<Vector2>(aimPoint));
     }
 
     #endregion
@@ -69,19 +92,26 @@ public class PlayerInput : MonoBehaviour
 
 	public void OnInteract(InputAction.CallbackContext ctx)
 	{
-        if (ctx.performed)
+        if (ctx.performed && !TestOverride(OnInteractEvent, ctx.performed))
         {
             playerInteraction.AttemptPerform();
         }
-	}
+    }
 
 	#endregion
 
     public void OnInventory(InputAction.CallbackContext ctx)
     {
-        if(ctx.performed)
+        if(ctx.performed && !TestOverride(OnInventoryEvent, ctx.performed))
         {
             playerAbilities.ToggleInventory();
         }
+    }
+
+	private bool TestOverride<T>(Action<InputEventData<T>> action, T d)
+	{
+        InputEventData<T> data = new InputEventData<T>(d);
+        action.Invoke(data);
+        return data.handled;
     }
 }

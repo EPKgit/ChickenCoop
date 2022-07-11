@@ -12,6 +12,7 @@ public enum StatName
     DamagePercentage, 
     HealingPercentage, 
     CooldownReduction, 
+    PuzzleSolving, 
 }
 
 [System.Serializable]
@@ -20,6 +21,18 @@ public class StatBlock : ISerializationCallbackReceiver
     private List<Tuple<StatName, StatChangeDelegate>> queuedCallbacksToRegister = new List<Tuple<StatName, StatChangeDelegate>>();
 
     private Dictionary<StatName, Stat> stats = new Dictionary<StatName, Stat>();
+
+    private Dictionary<StatName, float> defaultValues = new Dictionary<StatName, float>()
+    {
+        { StatName.AggroPercentage,     1.0f },
+        { StatName.Agility,             1.0f },
+        { StatName.CooldownReduction,   1.0f },
+        { StatName.DamagePercentage,    1.0f },
+        { StatName.HealingPercentage,   1.0f },
+        { StatName.PuzzleSolving,       0.0f },
+        { StatName.Strength,            1.0f },
+        { StatName.Toughness,           1.0f },
+    };
 
     public void Initialize(StatBlock other)
     {
@@ -39,13 +52,14 @@ public class StatBlock : ISerializationCallbackReceiver
             }
             else //otherwise if it's not defined by the other block
             {
+                float defaultValue = defaultValues[key];
                 if (HasStat(key)) //make sure we are reset to default
                 {
-                    stats[key].BaseValue = 1.0f;
+                    stats[key].BaseValue = defaultValue;
                 }
                 else //add it with default value
                 {
-                    stats.Add(key, new Stat(key, 1.0f));
+                    stats.Add(key, new Stat(key, defaultValue));
                 }
             }
         }
@@ -57,7 +71,8 @@ public class StatBlock : ISerializationCallbackReceiver
         {
             if (!HasStat(key))
             {
-                stats.Add(key, new Stat(key, 1));
+                float defaultValue = defaultValues[key];
+                stats.Add(key, new Stat(key, defaultValue));
             }
         }
         FlushInitializationQueue();

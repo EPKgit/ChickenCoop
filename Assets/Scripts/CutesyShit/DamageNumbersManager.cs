@@ -9,28 +9,18 @@ public class DamageNumbersManager : MonoSingleton<DamageNumbersManager>
     public Color lowDamageColor;
     public Color highDamageColor;
     public float highEndDamage = 10;
+    public float sizeModifier = 0.75f;
 
     private PoolLoanToken token;
     private GameObject UIRoot;
-
-    //private List<IDamagable> registeredCallbacks;
-    //private int numGameObjectsOnLastCache;
 
     protected override void Awake()
     {
         base.Awake();
         token = PoolManager.instance.RequestLoan(textPrefab, 30, true);
-        UIRoot = GameObject.Find("WorldSpaceCanvas");
+        UIRoot = GameObject.Find("ScreenToWorldCanvas");
         PoolManager.instance.ChangeParentOfPool(textPrefab, UIRoot.transform);
-        //registeredCallbacks = new List<IDamagable>();
-        //numGameObjectsOnLastCache = 0;
     }
-
-    //private void Update()
-    //{
-    //    var allGameObjects = SceneManager.GetActiveScene().GetRootGameObjects();
-    //    if(num)
-    //}
 
     public void CreateNumber(float i, Vector3 position)
     {
