@@ -14,6 +14,7 @@ public enum StatusEffectType
     BLIND,
     SLOW,
     FEAR,
+    // KNOCKBACK,
     MAX,
 }
 public enum StatusEffectStackingType
@@ -21,6 +22,7 @@ public enum StatusEffectStackingType
     OVERRIDE_MAX,
     ADD_DURATION,
     MULTIPLE_INSTANCES,
+    NONE,
     MAX,
 }
 }
@@ -97,6 +99,8 @@ public abstract class StatusEffectBase
                 return new Silence_StatusEffect(){ duration = duration };
             case StatusEffectType.BLIND:
                 return new Blind_StatusEffect(){ duration = duration };
+            // case StatusEffectType.KNOCKBACK:
+            //     return new Knockback_StatusEffect() { duration = duration };
             default:
                 Debug.LogError("ERROR: Attempt to apply status that hasn't been implemented yet " + type);
                 throw new System.Exception();

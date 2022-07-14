@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class NormalEnemy : BaseEnemy
 {
+    public override EnemyType type => EnemyType.NORMAL;
+
     protected override void Awake()
     {
         base.Awake();

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyHealth), typeof(Rigidbody2D), typeof(GameplayTagComponent))]
-public abstract class BaseEnemy : MonoBehaviour
+public abstract class BaseEnemy : BaseMovement
 {
-    public EnemyType type = EnemyType.MAX;
+    public abstract EnemyType type { get; }
     public float speed = 1f;
 
 	/// <summary>
@@ -32,20 +32,15 @@ public abstract class BaseEnemy : MonoBehaviour
 	protected PriorityQueue<AggroData> aggro;
 
     protected Collider2D col;
-    protected Rigidbody2D rb;
-	protected StatBlockComponent stats;
 	protected EnemyHealth hp;
-    protected GameplayTagComponent tagComponent;
     protected TargetingController targetingController;
 
 
-    protected virtual void Awake()
+    protected override void Awake()
 	{
-		rb = GetComponent<Rigidbody2D>();
-		stats = GetComponent<StatBlockComponent>();
+        base.Awake();
 		hp = GetComponent<EnemyHealth>();
 		col = GetComponent<Collider2D>();
-		tagComponent = GetComponentInChildren<GameplayTagComponent>();
         aggro = new PriorityQueue<AggroData>(PlayerInitialization.all.Count, new MaxAggroComparator());
         targetingController = Lib.FindUpwardsInTree<TargetingController>(gameObject);
 
@@ -106,17 +101,9 @@ public abstract class BaseEnemy : MonoBehaviour
 		{
 			return UpdateChosenPlayer();
 		}
-		return true;
-	}
-
-	protected virtual bool CanMove()
-	{
-		if(tagComponent?.tags.Contains(GameplayTagFlags.MOVEMENT_DISABLED) ?? false)
-		{
-            return false;
-        }
+        CheckKnockbackInput();
         return true;
-    }
+	}
 
 	private void OnCollisionEnter2D(Collision2D other) 
 	{
@@ -128,7 +115,7 @@ public abstract class BaseEnemy : MonoBehaviour
                 IDamagable damagable = Lib.FindDownThenUpwardsInTree<IDamagable>(other.gameObject);
 				if(damagable != null)
 				{
-                    damagable.Damage(1, gameObject, gameObject);
+                    damagable.Damage(1, gameObject, gameObject, PresetKnockbackData.GetKnockbackPreset(KnockbackPreset.MEDIUM));
                 }
 			}
 		}

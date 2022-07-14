@@ -5,12 +5,15 @@ using UnityEngine.VFX;
 
 public class ShieldEnemy : BaseEnemy
 {
+    public override EnemyType type => EnemyType.SHIELD;
+
     public GameObject splashPrefab;
     public Gradient redSplashGradient;
     public Gradient whiteSplashGradient;
     public GameObject arc;
 	public float blockAngle;
 	public float turnSpeed = 0.05f;
+
 
     protected override void Awake()
     {

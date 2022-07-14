@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(GameplayTagComponent))]
 public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 {
-	public event HealthValueSetDelegate healthValueUpdateEvent = delegate { };
+    public event HealthValueSetDelegate healthValueUpdateEvent = delegate { };
 	public event MutableHealthChangeDelegate preDamageEvent = delegate { };
 	public event MutableHealthChangeDelegate preHealEvent = delegate { };
 	public event HealthChangeNotificationDelegate postDamageEvent = delegate { };
@@ -35,6 +35,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 
     private StatBlockComponent stats;
 	private GameplayTagComponent tagComponent;
+    private IKnockbackHandler knockbackHandler;
 
     protected virtual void Awake()
     {
@@ -43,6 +44,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		maxHealth = stats?.GetValue(StatName.Toughness) ?? maxHealth;
 		currentHealth = maxHealth;
 		stats?.RegisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
+        knockbackHandler = Lib.FindDownThenUpwardsInTree<IKnockbackHandler>(gameObject);
     }
 
 	protected virtual void OnDisable()
@@ -71,7 +73,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		healthValueUpdateEvent(currentHealth, maxHealth);
 	}
 
-	public void Damage(float delta, GameObject localSource, GameObject overallSource = null)
+	public void Damage(float delta, GameObject localSource, GameObject overallSource = null, KnockbackData knockbackData = null)
 	{
 		if(tagComponent?.tags.Contains(GameplayTagFlags.INVULNERABLE) ?? false)
 		{
@@ -90,7 +92,15 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "not cancelled");
 		currentHealth -= data.delta;
 		float aggroValue = overallSource?.GetComponent<StatBlockComponent>()?.GetStat(StatName.AggroPercentage)?.Value ?? 1;
-		HealthChangeNotificationData notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, data.delta, aggroValue);
+        if (knockbackData != null && knockbackHandler != null)
+        {
+			if(knockbackData.direction == Vector2.zero)
+			{
+                knockbackData.direction = (knockbackHandler.position - localSource.transform.position).normalized;
+            }
+            knockbackHandler.DoKnockback(knockbackData);
+        }
+        HealthChangeNotificationData notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, data.delta, aggroValue);
 		postDamageEvent(notifData);
 		overallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(notifData);
 		notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, -data.delta, aggroValue);
@@ -128,59 +138,5 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		currentHealth = maxHealth;
 		healthValueUpdateEvent(currentHealth, maxHealth);
 		killer?.GetComponent<IHealthCallbacks>()?.KillCallback(gameObject);
-	}
-}
-
-public delegate void HealthValueSetDelegate(float newCurrent, float newMax);
-public delegate void MutableHealthChangeDelegate(HealthChangeEventData hced);
-public delegate void HealthChangeNotificationDelegate(HealthChangeNotificationData hcnd);
-public delegate void KilledCharacterDelegate(GameObject killed);
-
-public class HealthChangeEventData
-{
-	public GameObject overallSource;
-	public GameObject localSource;
-	public GameObject target;
-	public float delta;
-	public bool cancelled;
-	/// <summary>
-	/// Constructor for a HealthChangeEventData. Represents one instance of taking or healing damage.
-	/// </summary>
-	/// <param name="o">The overall source</param>
-	/// <param name="l">The local source</param>
-	/// <param name="t">The targeted GameObject</param>
-	/// <param name="d">The damage or healing delta</param>
-	public HealthChangeEventData(GameObject o, GameObject l, GameObject t, float d)
-	{
-		overallSource = o;
-		localSource = l;
-		target = t;
-		delta = d;
-		cancelled = false;
-	}
-}
-
-public class HealthChangeNotificationData
-{
-	public readonly GameObject overallSource;
-	public readonly GameObject localSource;
-	public readonly GameObject target;
-	public readonly float value;
-	public readonly float aggroPercentage;
-
-	/// <summary>
-	/// Constructor for a HealthChangeNotificaitonData. Represent on instance of taking or healing damage.
-	/// </summary>
-	/// <param name="o">The overall source</param>
-	/// <param name="l">The local source</param>
-	/// <param name="v">The amount of healing or damage done. Will be negative for damage, positive for healing.</param>
-	/// <param name="a">The aggropercentage, defaulted to 1</param>
-	public HealthChangeNotificationData(GameObject o, GameObject l, GameObject t, float v, float a = 1)
-	{
-		overallSource = o;
-		localSource = l;
-		target = t;
-		value = v;
-		aggroPercentage = a;
 	}
 }

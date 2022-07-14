@@ -2,59 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MovementType
-{
-    NONE,
-    NORMAL,
-    DASH,
-    TELEPORT,
-    END_OF_FRAME_DELTA,
-    MAX,
-}
-
 [RequireComponent(typeof(Rigidbody2D))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : BaseMovement
 {
-    public event MovementDeltaEventDelegate movementEvent = delegate { };
-
-	private float movementSpeed;
 	private Vector2 movementInputAxis;
-    private Vector2 previousPosition;
 
-	private Rigidbody2D rb;
-	private StatBlockComponent stats;
-    private Animator animator;
-    private SpriteRenderer sprite;
-    private GameplayTagComponent tagComponent;
-
-    private int animatorMovingHashCode;
-
-	void Awake()
+	protected override void Awake()
 	{
-		rb = GetComponent<Rigidbody2D>();
-		stats = GetComponent<StatBlockComponent>();
-		animator = GetComponentInChildren<Animator>();
-		sprite = GetComponentInChildren<SpriteRenderer>();
-		tagComponent = GetComponentInChildren<GameplayTagComponent>();
-        animatorMovingHashCode = Animator.StringToHash("moving");
-		stats?.RegisterStatChangeCallback(StatName.Agility, UpdateSpeed);
-        previousPosition = transform.position;
+        base.Awake();
+        stats?.RegisterStatChangeCallback(StatName.Agility, UpdateSpeed);
     }
-
-	void OnDisable()
-	{
-		stats?.DeregisterStatChangeCallback(StatName.Agility, UpdateSpeed);
-	}
 
 	void Update()
 	{
-        if(tagComponent?.tags.Contains(GameplayTagFlags.MOVEMENT_DISABLED) ?? false)
+        if(!CanMove())
         {
             rb.velocity = Vector2.zero;
             return;
         }
+        CheckKnockbackInput();
+        if(tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK))
+        {
+            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "MOVEMENT CANCELED FROM KNOCKBAC");
+            return;
+        }
         CheckDashInput();
-        if(tagComponent?.tags.Contains(GameplayTagFlags.NORMAL_MOVEMENT_DISABLED) ?? false)
+        if(tagComponent.tags.Contains(GameplayTagFlags.NORMAL_MOVEMENT_DISABLED))
         {
             DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "MOVEMENT CANCELED FROM TAG");
             return;
@@ -91,85 +64,8 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void LateUpdate()
-    {
-        movementEvent(new MovementDeltaEventData((Vector2)transform.position - previousPosition, MovementType.END_OF_FRAME_DELTA));
-        previousPosition = transform.position;
-    }
-
     public void MoveInput(Vector2 dir)
 	{
 		movementInputAxis = dir;
 	}
-
-
-    uint dashTagID = uint.MaxValue;
-    Vector3 dashStart;
-    Vector3 dashEnd;
-    Vector3 dashDelta;
-    float dashDuration;
-    float dashStartTime;
-    public void DashInput(Vector2 start, Vector2 end, float time)
-    {
-        dashTagID = tagComponent.tags.AddTag(GameplayTagFlags.MOVEMENT_DASHING);
-        dashStartTime = Time.time;
-        dashStart = start;
-        dashEnd = end;
-        dashDelta = dashEnd - dashStart;
-        dashDuration = time;
-        rb.velocity = dashDelta / dashDuration;
-        rb.drag = 0;
-    }
-
-    void CheckDashInput()
-    {
-        if (dashDuration != 0)
-        {
-            Vector2 prevPosition = transform.position;
-            float t = (Time.time - dashStartTime) / dashDuration;
-            if (t > 1)
-            {
-                rb.velocity = Vector2.zero;
-                sprite.transform.rotation = Quaternion.identity;
-                dashDuration = 0;
-                tagComponent.tags.RemoveTagWithID(dashTagID);
-            }
-            else
-            {
-                float angle = t * 360 * Mathf.Max(Mathf.Floor(dashDuration / 0.25f), 1);
-                Vector3 axis = (dashEnd - dashStart).x < 0 ? Vector3.forward : Vector3.back;
-                sprite.transform.rotation = Quaternion.AngleAxis(angle, axis);
-            }
-            movementEvent(new MovementDeltaEventData(prevPosition - (Vector2)transform.position, MovementType.DASH));
-
-            animator.SetBool(animatorMovingHashCode, false);
-            sprite.flipX = dashDelta.x < 0;
-        }
-    }
-
-    public void TeleportInput(Vector2 end)
-    {
-        Vector2 curr = transform.position;
-        transform.position = end;
-        movementEvent(new MovementDeltaEventData(curr - end, MovementType.TELEPORT));
-    }
-
-	public void UpdateSpeed(float f)
-	{
-		movementSpeed = f;
-	}
-
-}
-
-public delegate void MovementDeltaEventDelegate(MovementDeltaEventData eventData);
-
-public class MovementDeltaEventData
-{
-    public MovementType type;
-    public Vector2 delta;
-    public MovementDeltaEventData(Vector2 d, MovementType m)
-    {
-        type = m;
-        delta = d;
-    }
 }

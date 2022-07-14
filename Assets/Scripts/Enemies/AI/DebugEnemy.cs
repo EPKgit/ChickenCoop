@@ -5,6 +5,8 @@ using UnityEngine.VFX;
 
 public class DebugEnemy : BaseEnemy
 {
+    public override EnemyType type => EnemyType.DEBUG;
+
     protected override void Awake()
     {
         base.Awake();

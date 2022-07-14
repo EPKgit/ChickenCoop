@@ -28,7 +28,7 @@ public class Bullet : BaseLineTargeted
         if(damagable != null)
         {
             DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.COLLISIONS, "trigger");
-            damagable.Damage(damage, gameObject, creator);
+            damagable.Damage(damage, gameObject, creator, PresetKnockbackData.GetKnockbackPreset(KnockbackPreset.TINY));
             DestroySelf();
 
         }

@@ -46,3 +46,15 @@ public class Blind_StatusEffect : StatusEffectBase
         GameplayTagFlags.ATTACKING_EFFECTED,
     };
 }
+
+// public class Knockback_StatusEffect : StatusEffectBase
+// {
+//     public override StatusEffectType type => StatusEffectType.KNOCKBACK;
+
+//     public override GameplayTagFlags[] flags => new GameplayTagFlags[]
+//     {
+//         GameplayTagFlags.MOVEMENT_EFFECTED,
+//         GameplayTagFlags.NORMAL_MOVEMENT_DISABLED,
+//         GameplayTagFlags.KNOCKBACK,
+//     };
+// }
