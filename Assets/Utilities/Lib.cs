@@ -55,6 +55,16 @@ public static class Lib
         return null;
     }
 
+    public static T FindDownThenUpwardsInTree<T>(GameObject start) where T : class
+    {
+        T temp = FindDownwardsInTree<T>(start);
+        if(temp == null)
+        {
+            temp = FindUpwardsInTree<T>(start);
+        }
+        return temp;
+    }
+
     /// <summary>
     /// Finds the closest gameobject with the component, only searching downwards in the tree starting with direct children, then searching their children etc
     /// </summary>

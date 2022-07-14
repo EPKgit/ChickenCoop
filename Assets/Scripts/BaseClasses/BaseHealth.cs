@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(GameplayTagComponent))]
 public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 {
 	public event HealthValueSetDelegate healthValueUpdateEvent = delegate { };

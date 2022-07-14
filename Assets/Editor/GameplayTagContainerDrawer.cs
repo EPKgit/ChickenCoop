@@ -9,8 +9,7 @@ public class GameplayTagContainerDrawer : CustomPropertyDrawerBase
     //these 4 lines are the toolbar 2 lines and 
     private const int EXTRA_LINES = 4;
     private List<GameplayTag> tags;
-    private string[] enumNames;
-    private GameplayTagFlags[] enumValues;
+    private Tuple<string, GameplayTagFlags>[] enumValues;
     private bool[] enumChecked;
 
     private int displayTab = 0;
@@ -68,21 +67,21 @@ public class GameplayTagContainerDrawer : CustomPropertyDrawerBase
 
         int indentLevel = EditorGUI.indentLevel;
         EditorGUI.BeginChangeCheck();
-        for (int x = 0; x < enumNames.Length; ++x)
+        for (int x = 0; x < enumValues.Length; ++x)
         {
-            if(enumValues[x] == 0)
+            if(enumValues[x].Item2 == 0)
             {
                 continue;
             }
             NextLine();
-            rect.x += ((int)enumValues[x] & GameplayTagConstants.LAYER_MASK) * 15;
+            rect.x += ((int)enumValues[x].Item2 & GameplayTagConstants.LAYER_MASK) * 15;
             rect.width -= 30;
-            EditorGUI.LabelField(rect, enumNames[x]);
+            EditorGUI.LabelField(rect, enumValues[x].Item1);
             rect.x = rect.width;
             rect.width = 50;
             enumChecked[x] = EditorGUI.Toggle(rect, enumChecked[x]);
 
-            if (x != enumNames.Length - 1)
+            if (x != enumValues.Length - 1)
             {
                 yofs += 1;
                 rect = new Rect(startRect.x, yofs, startRect.width, 1);
@@ -138,8 +137,8 @@ public class GameplayTagContainerDrawer : CustomPropertyDrawerBase
                     sp.InsertArrayElementAtIndex(0);
                     SerializedProperty curr = sp.GetArrayElementAtIndex(0);
                     SerializedProperty flag = curr.FindPropertyRelative("_flag"); //we need to drill one level deeper
-                    flag.intValue = (int)enumValues[x];
-                    tags.Add(new GameplayTag((int)enumValues[x], true));
+                    flag.intValue = (int)enumValues[x].Item2;
+                    tags.Add(new GameplayTag((int)enumValues[x].Item2, true));
                 }
             }
             serializedProperty.serializedObject.ApplyModifiedProperties();
@@ -152,43 +151,38 @@ public class GameplayTagContainerDrawer : CustomPropertyDrawerBase
         {
             return true;
         }
-        Array arr = Enum.GetValues(typeof(GameplayTagFlags));
-        enumValues = new GameplayTagFlags[arr.Length];
-        for (int x = 0; x < arr.Length; ++x)
+        string[] names = Enum.GetNames(typeof(GameplayTagFlags));
+        Array values = Enum.GetValues(typeof(GameplayTagFlags));
+        enumValues = new Tuple<string, GameplayTagFlags>[names.Length];
+        for (int x = 0; x < names.Length; ++x)
         {
-            enumValues[x] = (GameplayTagFlags)arr.GetValue(x);
+            enumValues[x] = new Tuple<string, GameplayTagFlags>(names[x], (GameplayTagFlags)Enum.Parse(typeof(GameplayTagFlags), names[x]));
         }
         Array.Sort(enumValues, (i1, i2) =>
         {
-            UInt32 layer1_1 = (UInt32)i1 & GameplayTagConstants.LAYER_1_BIT_MASK;
-            UInt32 layer1_2 = (UInt32)i2 & GameplayTagConstants.LAYER_1_BIT_MASK;
+            UInt32 layer1_1 = (UInt32)i1.Item2 & GameplayTagConstants.LAYER_1_BIT_MASK;
+            UInt32 layer1_2 = (UInt32)i2.Item2 & GameplayTagConstants.LAYER_1_BIT_MASK;
             if (layer1_1 != layer1_2)
             {
                 return layer1_1.CompareTo(layer1_2);
             }
-            UInt32 layer2_1 = (UInt32)i1 & GameplayTagConstants.LAYER_2_BIT_MASK;
-            UInt32 layer2_2 = (UInt32)i2 & GameplayTagConstants.LAYER_2_BIT_MASK;
+            UInt32 layer2_1 = (UInt32)i1.Item2 & GameplayTagConstants.LAYER_2_BIT_MASK;
+            UInt32 layer2_2 = (UInt32)i2.Item2 & GameplayTagConstants.LAYER_2_BIT_MASK;
             if (layer2_1 != layer2_2)
             {
                 return layer2_1.CompareTo(layer2_2);
             }
-            UInt32 layer3_1 = (UInt32)i1 & GameplayTagConstants.LAYER_3_BIT_MASK;
-            UInt32 layer3_2 = (UInt32)i2 & GameplayTagConstants.LAYER_3_BIT_MASK;
+            UInt32 layer3_1 = (UInt32)i1.Item2 & GameplayTagConstants.LAYER_3_BIT_MASK;
+            UInt32 layer3_2 = (UInt32)i2.Item2 & GameplayTagConstants.LAYER_3_BIT_MASK;
             if (layer3_1 != layer3_2)
             {
                 return layer3_1.CompareTo(layer3_2);
             }
-            UInt32 layer4_1 = (UInt32)i1 & GameplayTagConstants.LAYER_4_BIT_MASK;
-            UInt32 layer4_2 = (UInt32)i2 & GameplayTagConstants.LAYER_4_BIT_MASK;
+            UInt32 layer4_1 = (UInt32)i1.Item2 & GameplayTagConstants.LAYER_4_BIT_MASK;
+            UInt32 layer4_2 = (UInt32)i2.Item2 & GameplayTagConstants.LAYER_4_BIT_MASK;
             return layer4_1.CompareTo(layer4_2);
 
         });
-        enumNames = new string[enumValues.Length];
-        int index = 0;
-        foreach(var val in enumValues)
-        {
-            enumNames[index++] = Enum.GetName(typeof(GameplayTagFlags), val);
-        }
         enumChecked = new bool[enumValues.Length];
         return true;
     }
@@ -203,7 +197,7 @@ public class GameplayTagContainerDrawer : CustomPropertyDrawerBase
         {
             for (int y = 0; y < enumValues.Length; ++y)
             {
-                if (tags[x].Flag == enumValues[y])
+                if (tags[x].Flag == enumValues[y].Item2)
                 {
                     enumChecked[y] = true;
                     break;
@@ -218,7 +212,7 @@ public class GameplayTagContainerDrawer : CustomPropertyDrawerBase
         if(property.isExpanded && displayTab == 1)
         {
             //these extra are the lines in between different tags
-            extra += enumNames.Length - 1;
+            extra += enumValues.Length - 1;
         }
         return base.GetPropertyHeight(property, label) * GetNumLines(property) + extra;
     }
@@ -240,7 +234,7 @@ public class GameplayTagContainerDrawer : CustomPropertyDrawerBase
             {
                 if (SetupEnumValues())
                 {
-                    return enumNames.Length - 1 + EXTRA_LINES; //-1 for removing NONE
+                    return enumValues.Length - 1 + EXTRA_LINES; //-1 for removing NONE
                 }
             } break;
         }

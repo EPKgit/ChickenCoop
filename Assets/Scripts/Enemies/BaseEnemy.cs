@@ -9,9 +9,16 @@ public abstract class BaseEnemy : MonoBehaviour
     public float speed = 1f;
 
 	/// <summary>
-    /// Describes whether the enemy has 
+    /// Setting to true will enable default 
     /// </summary>
-	protected bool enemyEnabled = true;
+    public bool doesContactDamage = true;
+
+
+    /// <summary>
+    /// Describes whether the enemy has been disabled for any reason or another. This will en/disable colliders
+    /// and the update method
+    /// </summary>
+    protected bool enemyEnabled = true;
 
 	/// <summary>
 	/// The player that the AI will use to plan its pathing, up to the AI
@@ -29,6 +36,7 @@ public abstract class BaseEnemy : MonoBehaviour
 	protected StatBlockComponent stats;
 	protected EnemyHealth hp;
     protected GameplayTagComponent tagComponent;
+    protected TargetingController targetingController;
 
 
     protected virtual void Awake()
@@ -39,8 +47,9 @@ public abstract class BaseEnemy : MonoBehaviour
 		col = GetComponent<Collider2D>();
 		tagComponent = GetComponentInChildren<GameplayTagComponent>();
         aggro = new PriorityQueue<AggroData>(PlayerInitialization.all.Count, new MaxAggroComparator());
-		
-		hp.postDamageEvent += AddAggroEvent;
+        targetingController = Lib.FindUpwardsInTree<TargetingController>(gameObject);
+
+        hp.postDamageEvent += AddAggroEvent;
 	}
 
 	protected virtual void Start()
@@ -108,6 +117,22 @@ public abstract class BaseEnemy : MonoBehaviour
         }
         return true;
     }
+
+	private void OnCollisionEnter2D(Collision2D other) 
+	{
+        TargetingController controller = Lib.FindUpwardsInTree<TargetingController>(other.gameObject);
+		if(controller != null)
+		{
+			if((controller.TargetAffiliation & targetingController.TargetAffiliation) == 0)
+			{
+                IDamagable damagable = Lib.FindDownThenUpwardsInTree<IDamagable>(other.gameObject);
+				if(damagable != null)
+				{
+                    damagable.Damage(1, gameObject, gameObject);
+                }
+			}
+		}
+	}
 
 	public AggroData[] GetAggroDataArray()
 	{

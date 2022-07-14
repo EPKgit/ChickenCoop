@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Statuses;
 
 [CustomEditor(typeof(StatusEffectManager))]
 public class StatusEffectManagerInspector : Editor

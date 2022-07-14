@@ -20,7 +20,7 @@ public class BasicTargetStun : Ability
     protected override void UseAbility()
 	{
         base.UseAbility();
-        StatusEffectManager.instance.ApplyEffect(targetingData.inputTarget.Attached, StatusEffectType.STUN, stunDuration);
+        StatusEffectManager.instance.ApplyEffect(targetingData.inputTarget.Attached, Statuses.StatusEffectType.STUN, stunDuration);
         stunDuration += 1.0f;
     }
 }
