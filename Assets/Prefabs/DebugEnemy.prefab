@@ -129,6 +129,8 @@ GameObject:
   - component: {fileID: 8904934775474807995}
   - component: {fileID: 7684663736420313718}
   - component: {fileID: 1388209950}
+  - component: {fileID: 3142385264362527721}
+  - component: {fileID: 7013321912956941123}
   m_Layer: 0
   m_Name: DebugEnemy
   m_TagString: Untagged
@@ -213,8 +215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc14639435b0f1344aa50abbfacab0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
   speed: 1
+  doesContactDamage: 1
 --- !u!114 &1388209950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,3 +231,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetAffiliation: 2
   _priority: 0
+--- !u!114 &3142385264362527721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8904934775474808004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 062ac1e1ab4c55c4089c00db3c5acd78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats:
+    _keys: 02000000
+    _values:
+    - name: 2
+      _baseValue: 999999
+--- !u!114 &7013321912956941123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8904934775474808004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcc236baeaa9cf44c899c32490939d41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tags:
+    tags: []
+  blockedTags:
+    tags: []

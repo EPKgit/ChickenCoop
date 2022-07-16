@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyHealth), typeof(Rigidbody2D), typeof(GameplayTagComponent))]
+[RequireComponent(typeof(EnemyHealth), typeof(Rigidbody2D))]
 public abstract class BaseEnemy : BaseMovement
 {
     public abstract EnemyType type { get; }
@@ -107,18 +107,28 @@ public abstract class BaseEnemy : BaseMovement
 
 	private void OnCollisionEnter2D(Collision2D other) 
 	{
-        TargetingController controller = Lib.FindUpwardsInTree<TargetingController>(other.gameObject);
-		if(controller != null)
-		{
-			if((controller.TargetAffiliation & targetingController.TargetAffiliation) == 0)
-			{
-                IDamagable damagable = Lib.FindDownThenUpwardsInTree<IDamagable>(other.gameObject);
-				if(damagable != null)
-				{
+        Attack(other.gameObject);
+    }
+
+	private void OnCollisionStay2D(Collision2D other) 
+	{
+        Attack(other.gameObject);
+    }
+
+	void Attack(GameObject g)
+	{
+		TargetingController controller = Lib.FindUpwardsInTree<TargetingController>(g);
+        if (controller != null)
+        {
+            if ((controller.TargetAffiliation & targetingController.TargetAffiliation) == 0)
+            {
+                IDamagable damagable = Lib.FindDownThenUpwardsInTree<IDamagable>(g);
+                if (damagable != null)
+                {
                     damagable.Damage(1, gameObject, gameObject, PresetKnockbackData.GetKnockbackPreset(KnockbackPreset.MEDIUM));
                 }
-			}
-		}
+            }
+        }
 	}
 
 	public AggroData[] GetAggroDataArray()

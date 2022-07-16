@@ -20,17 +20,17 @@ public class StatBlockInspector : Editor
 
 	public override void OnInspectorGUI()
 	{
-        Dictionary<StatName, Stat> stats = statBlock.GetStatBlock().GetStats();
         if(overrider != null && !EditorApplication.isPlaying && !EditorApplication.isPaused)
         {
             EditorGUILayout.LabelField("Is being overriden by " + overrider.GetType().Name);
-            stats = overrider.GetOverridingBlock().GetStats();
-            foreach (var pair in stats)
+            var overridenStats = overrider.GetOverridingBlock().GetStats();
+            foreach (var pair in overridenStats)
             {
                 EditorGUILayout.LabelField(string.Format("{0}:{1}", pair.Key.ToString(), pair.Value.Value));
             }
             return;
         }
+        Dictionary<StatName, Stat> stats = statBlock.GetStatBlock().GetStats();
         if (EditorApplication.isPlaying || EditorApplication.isPaused)
 		{
             foreach (var pair in stats)
@@ -39,25 +39,27 @@ public class StatBlockInspector : Editor
 			}
             return;
 		}
+        serializedObject.Update();
 
         bool dirty = false;
         List<StatName> _keys = new List<StatName>(stats.Keys);
         foreach (var key in _keys)
         {
-            float baseValue = stats[key].BaseValue;
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(key.ToString());
-            float f = EditorGUILayout.DelayedFloatField(baseValue);
 
-            if (GUILayout.Button("-"))
+            EditorGUILayout.LabelField(key.ToString());
+            EditorGUI.BeginChangeCheck();
+            float f = EditorGUILayout.DelayedFloatField(stats[key].BaseValue);
+            if(EditorGUI.EndChangeCheck())
             {
-                stats.Remove(key);
+                Undo.RecordObject(target, "changed base value");
+                stats[key].OverwriteBaseValueNoUpdate(f);
                 dirty = true;
             }
-
-            if (f != baseValue)
+            if (GUILayout.Button("-"))
             {
-                stats[key].OverwriteBaseValueNoUpdate(f);
+                Undo.RecordObject(target, "removed key");
+                stats.Remove(key);
                 dirty = true;
             }
 
@@ -68,6 +70,7 @@ public class StatBlockInspector : Editor
         newKey = (StatName)EditorGUILayout.EnumPopup(newKey);
         if (!stats.ContainsKey(newKey) && GUILayout.Button("+"))
         {
+            Undo.RecordObject(target, "added key");
             stats.Add(newKey, new Stat(newKey, 1));
             dirty = true;
         }

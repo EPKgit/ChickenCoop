@@ -107,7 +107,7 @@ public class StatBlock : ISerializationCallbackReceiver
     public float GetValue(StatName name)
     {
         Stat temp = null;
-        stats?.TryGetValue(name, out temp);
+        stats.TryGetValue(name, out temp);
         return temp == null ? -1f : temp.Value;
     }
 
@@ -119,7 +119,7 @@ public class StatBlock : ISerializationCallbackReceiver
     public Stat GetStat(StatName name)
     {
         Stat temp = null;
-        stats?.TryGetValue(name, out temp);
+        stats.TryGetValue(name, out temp);
         return temp;
     }
 
@@ -149,29 +149,30 @@ public class StatBlock : ISerializationCallbackReceiver
     }
 
     [SerializeField, HideInInspector]
-    private List<StatName> _keys = new List<StatName>();
+    private StatName[] _keys;
     [SerializeField, HideInInspector]
-    private List<Stat> _values = new List<Stat>();
+    private Stat[] _values;
 
     /// <summary>
     /// We have to do manual serialization because unity doesn't support dictionary serialization
     /// </summary>
     public void OnBeforeSerialize()
     {
-        _keys.Clear();
-        _values.Clear();
+        _keys = new StatName[stats.Count];
+        _values = new Stat[stats.Count];
 
+        int x = 0;
         foreach (var kvp in stats)
         {
-            _keys.Add(kvp.Key);
-            _values.Add(kvp.Value);
+            _keys[x] = kvp.Key;
+            _values[x++] = kvp.Value;
         }
     }
 
     public void OnAfterDeserialize()
     {
-        stats.Clear();
-        for (int x = 0; x < Math.Min(_keys.Count, _values.Count); ++x)
+        stats = new Dictionary<StatName, Stat>();
+        for (int x = 0; x < Math.Min(_keys.Length, _values.Length); ++x)
         {
             stats.Add(_keys[x], _values[x]);
         }

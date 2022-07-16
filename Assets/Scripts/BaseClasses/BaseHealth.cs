@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[RequireComponent(typeof(GameplayTagComponent))]
+[RequireComponent(typeof(GameplayTagComponent), typeof(StatBlockComponent))]
 public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 {
     public event HealthValueSetDelegate healthValueUpdateEvent = delegate { };
@@ -41,15 +41,19 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
     {
 		stats = GetComponent<StatBlockComponent>();
 		tagComponent = GetComponent<GameplayTagComponent>();
-		maxHealth = stats?.GetValue(StatName.Toughness) ?? maxHealth;
-		currentHealth = maxHealth;
-		stats?.RegisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
+        maxHealth = stats.GetValue(StatName.Toughness);
+        currentHealth = maxHealth;
         knockbackHandler = Lib.FindDownThenUpwardsInTree<IKnockbackHandler>(gameObject);
+    }
+
+	protected virtual void OnEnable()
+	{
+        stats.RegisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
     }
 
 	protected virtual void OnDisable()
 	{
-		stats?.DeregisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
+		stats.DeregisterStatChangeCallback(StatName.Toughness, UpdateMaxHealth);
 	}
 
 	public void UpdateMaxHealth(float value)

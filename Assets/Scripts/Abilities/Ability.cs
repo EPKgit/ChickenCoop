@@ -406,8 +406,7 @@ public abstract class Ability : ScriptableObject
     {
         if(newIndex < 0 || newIndex >= _targetingData.Length)
         {
-            Debug.LogError("ERROR: ATTEMPTING TO SWITCH TO TARGETING DATA OUT OF BOUNDS" + newIndex);
-            throw new System.Exception();
+            throw new System.Exception("ERROR: ATTEMPTING TO SWITCH TO TARGETING DATA OUT OF BOUNDS" + newIndex);
         }
         currentTargetingType = newIndex;
     }

@@ -47,14 +47,22 @@ public class Blind_StatusEffect : StatusEffectBase
     };
 }
 
-// public class Knockback_StatusEffect : StatusEffectBase
-// {
-//     public override StatusEffectType type => StatusEffectType.KNOCKBACK;
+public class KnockbackImmunity_StatusEffect : StatusEffectBase
+{
+    public override StatusEffectType type => StatusEffectType.KNOCKBACK_IMMUNITY;
 
-//     public override GameplayTagFlags[] flags => new GameplayTagFlags[]
-//     {
-//         GameplayTagFlags.MOVEMENT_EFFECTED,
-//         GameplayTagFlags.NORMAL_MOVEMENT_DISABLED,
-//         GameplayTagFlags.KNOCKBACK,
-//     };
-// }
+    public override GameplayTagFlags[] flags => new GameplayTagFlags[]
+    {
+        GameplayTagFlags.KNOCKBACK_IMMUNITY,
+    };
+}
+
+public class Invulnerability_StatusEffect : StatusEffectBase
+{
+    public override StatusEffectType type => StatusEffectType.INVULERNABILITY;
+
+    public override GameplayTagFlags[] flags => new GameplayTagFlags[]
+    {
+        GameplayTagFlags.INVULNERABLE,
+    };
+}

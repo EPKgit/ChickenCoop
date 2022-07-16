@@ -134,6 +134,10 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
     protected uint knockbackTagID = uint.MaxValue;
     public virtual void DoKnockback(KnockbackData data)
     {
+        if (tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK) || tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK_IMMUNITY))
+        {
+            return;
+        }
         knockbackTagID = tagComponent.tags.AddTag(GameplayTagFlags.KNOCKBACK);
         knockbackStartTime = Time.time;
         knockbackDuration = data.duration;
@@ -149,6 +153,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
             if (t > 1)
             {
                 rb.velocity = Vector2.zero;
+                StatusEffectManager.instance.ApplyEffect(gameObject, Statuses.StatusEffectType.KNOCKBACK_IMMUNITY, 0.5f - knockbackDuration);
                 knockbackDuration = 0;
                 tagComponent.tags.RemoveTagWithID(knockbackTagID);
             }

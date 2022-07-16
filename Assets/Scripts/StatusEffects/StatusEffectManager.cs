@@ -35,8 +35,7 @@ public class StatusEffectManager : MonoSingleton<StatusEffectManager>
 
         if(effectSprites.Length != (int)StatusEffectType.MAX)
         {
-            Debug.Log("ERROR: STATUS EFFECT ICONS NOT SET");
-            throw new System.Exception();
+            throw new System.Exception("ERROR: STATUS EFFECT ICONS NOT SET");
         }
     }
 
@@ -84,6 +83,10 @@ public class StatusEffectManager : MonoSingleton<StatusEffectManager>
         bar.container.AddStatus(effect, out newStatusCreated);
         if (newStatusCreated)
         {
+            if(effectSprites[(int)type] == null)
+            {
+                return;
+            }
             var popup = PoolManager.instance.RequestObject(effectPopupPrefab).GetComponent<StatusEffectPopup>();
             popup.gameObject.transform.SetParent(bar.barObject.transform);
             popup.Setup(effectSprites[(int)type], effect);

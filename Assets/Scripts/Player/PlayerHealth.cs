@@ -14,4 +14,21 @@ public class PlayerHealth : BaseHealth
         base.Die();
         gameObject.transform.position = Vector3.zero;
     }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        postDamageEvent += OnDamageTaken;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        postDamageEvent -= OnDamageTaken;
+    }
+
+    void OnDamageTaken(HealthChangeNotificationData hcnd)
+    {
+        StatusEffectManager.instance.ApplyEffect(gameObject, Statuses.StatusEffectType.INVULERNABILITY, 0.5f);
+    }
 }

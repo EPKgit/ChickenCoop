@@ -211,6 +211,8 @@ GameObject:
   - component: {fileID: 2105565787798211767}
   - component: {fileID: 2105565787798211764}
   - component: {fileID: 286705340829513149}
+  - component: {fileID: 7906473401518384266}
+  - component: {fileID: 7341611183803319822}
   m_Layer: 0
   m_Name: ShieldEnemy
   m_TagString: Untagged
@@ -296,8 +298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2615072fd49a5bb4c8d48ef3b9134129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
   speed: 1
+  doesContactDamage: 1
   splashPrefab: {fileID: 6118872342496518369, guid: 0b47863bcc231b24cbdb91afec452a60, type: 3}
   redSplashGradient:
     serializedVersion: 2
@@ -374,3 +376,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetAffiliation: 2
   _priority: 0
+--- !u!114 &7906473401518384266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105565787798211784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 062ac1e1ab4c55c4089c00db3c5acd78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats:
+    _keys: 
+    _values: []
+--- !u!114 &7341611183803319822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105565787798211784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcc236baeaa9cf44c899c32490939d41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tags:
+    tags: []
+  blockedTags:
+    tags: []

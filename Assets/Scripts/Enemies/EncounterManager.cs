@@ -83,8 +83,7 @@ public class EncounterManager : MonoSingleton<EncounterManager>
         WaveData currentWave = currentEncounter.encounterData.waves[currentEncounter.waveIndex];
         if(currentWave.maxAmount == 0)
         {
-            Debug.LogError("ERROR: 0 ENEMIES IN WAVE");
-            throw new System.Exception();
+            throw new System.Exception("ERROR: 0 ENEMIES IN WAVE");
         }
         for (int x = 0; x < currentWave.maxAmount; ++x)
         {
@@ -162,8 +161,7 @@ public class EncounterManager : MonoSingleton<EncounterManager>
     {
         if(currentEncounter != null)
         {
-            Debug.LogError("ERROR: ATTEMPT TO START ENCOUNTER WHEN ONE IS ALREADY STARTED");
-            throw new System.Exception();
+            throw new System.Exception("ERROR: ATTEMPT TO START ENCOUNTER WHEN ONE IS ALREADY STARTED");
         }
         currentEncounter = new ActiveEncounterData(encounter, spawnPositions);
         SetEncounterState(EncounterState.ENCOUNTER_STARTED);

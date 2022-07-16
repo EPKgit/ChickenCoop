@@ -31,7 +31,9 @@ public class StatusEffectManagerInspector : Editor
         if (effectSprites.arraySize != (int)StatusEffectType.MAX)
         {
             Debug.LogError("ERROR STATUS EFFECT ICON ARRAY SIZES OUT OF SYNC");
-            Array.Resize(ref effectManager.effectSprites, (int)StatusEffectType.MAX);
+            serializedObject.Update();
+            effectSprites.arraySize = (int)StatusEffectType.MAX;
+            serializedObject.ApplyModifiedProperties();
         }
     }
 

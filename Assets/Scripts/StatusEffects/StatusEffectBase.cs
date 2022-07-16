@@ -14,7 +14,8 @@ public enum StatusEffectType
     BLIND,
     SLOW,
     FEAR,
-    // KNOCKBACK,
+    KNOCKBACK_IMMUNITY,
+    INVULERNABILITY,
     MAX,
 }
 public enum StatusEffectStackingType
@@ -99,11 +100,12 @@ public abstract class StatusEffectBase
                 return new Silence_StatusEffect(){ duration = duration };
             case StatusEffectType.BLIND:
                 return new Blind_StatusEffect(){ duration = duration };
-            // case StatusEffectType.KNOCKBACK:
-            //     return new Knockback_StatusEffect() { duration = duration };
+            case StatusEffectType.KNOCKBACK_IMMUNITY:
+                return new KnockbackImmunity_StatusEffect() { duration = duration };
+            case StatusEffectType.INVULERNABILITY:
+                return new Invulnerability_StatusEffect() { duration = duration };
             default:
-                Debug.LogError("ERROR: Attempt to apply status that hasn't been implemented yet " + type);
-                throw new System.Exception();
+                throw new System.Exception("ERROR: Attempt to apply status that hasn't been implemented yet " + type);
         }
     }
 }
