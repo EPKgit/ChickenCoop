@@ -32,7 +32,8 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
 
     public event MovementDeltaEventDelegate movementEvent = delegate { };
 
-    protected float movementSpeed;
+    public float movementSpeed;
+    public bool getsKnockbackInvuln = false;
     protected Vector2 previousPosition;
 
     protected Rigidbody2D rb;
@@ -153,7 +154,10 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
             if (t > 1)
             {
                 rb.velocity = Vector2.zero;
-                StatusEffectManager.instance.ApplyEffect(gameObject, Statuses.StatusEffectType.KNOCKBACK_IMMUNITY, 0.5f - knockbackDuration);
+                if (getsKnockbackInvuln)
+                {
+                    StatusEffectManager.instance.ApplyEffect(gameObject, Statuses.StatusEffectType.KNOCKBACK_IMMUNITY, 0.5f - knockbackDuration);
+                }
                 knockbackDuration = 0;
                 tagComponent.tags.RemoveTagWithID(knockbackTagID);
             }

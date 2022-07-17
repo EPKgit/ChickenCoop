@@ -10,12 +10,15 @@ public class PlayerMovementInspector : Editor
 	private StatBlockComponent statBlock;
     private IStatBlockInitializer overrider;
 
+    private SerializedProperty getsKnockbackInvuln;
 
     void OnEnable()
 	{
 		playerMovement = target as PlayerMovement;
 		statBlock = playerMovement.gameObject.GetComponent<StatBlockComponent>();
         overrider = statBlock.GetComponent<IStatBlockInitializer>();
+
+        getsKnockbackInvuln = serializedObject.FindProperty("getsKnockbackInvuln");
     }
 
     public override void OnInspectorGUI()
@@ -29,14 +32,15 @@ public class PlayerMovementInspector : Editor
         {
             EditorGUILayout.LabelField("MoveSpeed is being set by overrider " + overrider);
             EditorGUILayout.LabelField("Value: " + overrider.GetOverridingBlock().GetValue(StatName.Agility));
-            return;
         }
-        if (statBlock != null && statBlock.HasStat(StatName.Agility))
+        else if (statBlock != null && statBlock.HasStat(StatName.Agility))
         {
             EditorGUILayout.LabelField("MoveSpeed is being set by the StatBlock");
             EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.Agility));
         }
-        InGameDisplay();
+        serializedObject.Update();
+        EditorGUILayout.PropertyField(getsKnockbackInvuln);
+        serializedObject.ApplyModifiedProperties();
     }
 
     void InGameDisplay()
