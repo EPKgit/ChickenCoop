@@ -2,11 +2,13 @@ TODO:TODO:TODO
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CURRENT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-knockback
-    -invuln afterwards
+sfx
+    -movement
+    -taking damage
+    -using abilities
+    -enemies spawning
 
-taking damage feedback
-    -sfx
+- make some mvp ability sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MVP/PROTOTYPE SHIT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
