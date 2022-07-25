@@ -64,4 +64,9 @@ public interface IDamagable
     /// <param name="overallSource"> The source of the damage overall. For example a projectiles local source may be the projectile itself, while the overall source would be the player that spawned it.</param>
     /// <param name="knockbackData"> The knockback to apply, leave null if no knockback is desired
     void Damage(float delta, GameObject localSource, GameObject overallSource = null, KnockbackData knockbackData = null);
+
+    public GameObject attached
+    {
+        get;
+    }
 }

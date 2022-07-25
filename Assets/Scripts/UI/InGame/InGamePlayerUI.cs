@@ -26,9 +26,9 @@ public class InGamePlayerUI : MonoBehaviour
         string[] arr = new string[] { "Attack", "Ability1", "Ability2", "Ability3" };
         for (int x = 0; x < arr.Length; ++x)
         {
-            icons[x] = UIActive.transform.Find("Abilities").Find(arr[x]).Find("Icon").GetComponent<Image>();
-            cds[x] = UIActive.transform.Find("Abilities").Find(arr[x]).Find("CooldownOverlay").GetComponent<Image>();
-            cdTexts[x] = UIActive.transform.Find("Abilities").Find(arr[x]).Find("Timer").GetComponent<TextMeshProUGUI>();
+            icons[x] = UIActive.transform.Find("Abilities").Find("Square").Find(arr[x]).Find("Icon").GetComponent<Image>();
+            cds[x] = UIActive.transform.Find("Abilities").Find("Square").Find(arr[x]).Find("CooldownOverlay").GetComponent<Image>();
+            cdTexts[x] = UIActive.transform.Find("Abilities").Find("Square").Find(arr[x]).Find("Timer").GetComponent<TextMeshProUGUI>();
         }
 	}
 

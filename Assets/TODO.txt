@@ -9,6 +9,9 @@ sfx
     -enemies spawning
 
 - make some mvp ability sets
+    -shockwave ability
+        -damge and stun in aoe
+        - shockwaves shader/prefab (maybe not a vfx)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MVP/PROTOTYPE SHIT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,8 +34,6 @@ ability stacks
     - cooldown while stacks remain?
     - stack cooldown vs ability cooldown
     - Display?
-ability recasting
-    -cooldown while other hasn't been cast?
 ability cast times
     -channels?
 range overrideable in xml
@@ -43,8 +44,10 @@ level ups?
 figure out respawning
 enemies drop abilities?
 setup the ability to cancel abilities when starting
-setup a custom targeting that follows the player TARGETING_SELF?
-enemy spawn boxes and placements
+New targeting systems + UI for them
+    - TARGETING_SELF - follows
+    - TARGETING_VECTOR_GROUND - ground targeted vector
+    - TARGETING_VECTOR_ENTITY - entity targeted vector
 setup abilities to get constant ticks even while not active (split tick)
 
 

@@ -167,6 +167,11 @@ public abstract class Ability : ScriptableObject
         protected set;
     }
 
+    /// <summary>
+    /// The size of the ability aoe
+    /// </summary>
+    public float aoe = -1;
+
     protected PlayerAbilities playerAbilities;
 
     private int InstanceID;

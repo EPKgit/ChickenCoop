@@ -4,12 +4,8 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.InputSystem;
 
-public class Ability_Blank : Ability, IAOEAbility
+public class Ability_Blank : Ability
 {
-    public float aoe
-    {
-        get; set;
-    }
 	private int? collisionHandle;
     public GameObject splashPrefab;
 

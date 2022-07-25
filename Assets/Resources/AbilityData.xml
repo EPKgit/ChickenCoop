@@ -101,12 +101,26 @@
     <ability>
         <ability_ID>9</ability_ID>
         <ability_name>Repeatable Dash</ability_name>
-        <tooltip>Teleports to target location, recast to return to your original position</tooltip>
+        <tooltip>Dash in a target direction, recastable 2 more times</tooltip>
         <var_list>
             <variable name="recasts" type="int" value="3"/>
             <variable name="cd" type="float" value="10"/>
             <variable name="duration" type="float" value="0.1"/>
             <variable name="recastWindow" type="float" value="3"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+    <ability>
+        <ability_ID>10</ability_ID>
+        <ability_name>Shockwave</ability_name>
+        <tooltip>Unleash a shockwave, dealing {0} damage and stunning nearby enemies for {1} seconds</tooltip>
+        <var_list>
+            <variable name="cd" type="float" value="20"/>
+            <variable name="stunDuration" type="float" value="1.5"/>
+            <variable name="damage" type="float" value="20"/>
+            <variable name="aoe" type="float" value="10"/>
         </var_list>
     </ability>
 

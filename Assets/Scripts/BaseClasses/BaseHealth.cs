@@ -32,6 +32,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
         get;
         protected set;
     }
+    public GameObject attached { get => gameObject; }
 
     private StatBlockComponent stats;
 	private GameplayTagComponent tagComponent;

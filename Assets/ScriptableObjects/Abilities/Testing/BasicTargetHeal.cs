@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BasicTargetHeal : Ability, IHealingAbility
+public class BasicTargetHeal : Ability
 {
     public float amount
     {

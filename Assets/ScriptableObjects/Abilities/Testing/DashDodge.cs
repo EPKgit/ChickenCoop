@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DashDodge : Ability, IMovementAbility
+public class DashDodge : Ability
 {
     public MovementType type => MovementType.DASH;
 

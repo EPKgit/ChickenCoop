@@ -32,7 +32,7 @@ public class AbilityInspector : Editor
     void OnEnable()
     {
         ability = target as Ability;
-        childFields = new List<FieldInfo>(ability.GetType().GetFields());
+        childFields = new List<FieldInfo>(ability.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public));
         for (int x = childFields.Count - 1; x >= 0; --x)
         {
             if (childFields[x].DeclaringType == typeof(Ability))
@@ -101,11 +101,22 @@ public class AbilityInspector : Editor
         ++EditorGUI.indentLevel;
         foreach (FieldInfo temp in childFields)
 		{
-            PotentiallyOverrideProperty(serializedObject.FindProperty(temp.Name));
+            PotentiallyOverrideProperty(temp.Name);
 		}
         --EditorGUI.indentLevel;
         serializedObject.ApplyModifiedProperties();
 	}
+
+    void PotentiallyOverrideProperty(string name)
+    {
+        var serializedProperty = serializedObject.FindProperty(name);
+        if(serializedProperty == null)
+        {
+            Debug.LogError(string.Format("ERROR: SERIALIZED PROPERTY \"{0}\" COULD NOT BE FOUND FOR ABILITY", name));
+            return;
+        }
+        PotentiallyOverrideProperty(serializedProperty);
+    }
 
     void PotentiallyOverrideProperty(SerializedProperty prop)
     {

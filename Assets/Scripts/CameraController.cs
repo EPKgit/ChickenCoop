@@ -9,10 +9,6 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        if(offset == Vector3.zero)
-        {
-            offset = transform.position - player.transform.position;
-        }
     }
 
     private void LateUpdate()

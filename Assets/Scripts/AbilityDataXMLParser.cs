@@ -179,6 +179,15 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         {
             return "";
         }
+        if(fieldName.StartsWith("_"))
+        {
+            fieldName = fieldName.Substring(1);
+        }
+        if(fieldName.EndsWith("k__BackingField"))
+        {
+            fieldName = fieldName.Replace("k__BackingField", "");
+            fieldName = fieldName.Substring(1, fieldName.Length - 2); //cuts of the starting and trailing angle brackets
+        }
         foreach(var e in entry.vars)
         {
             if(e.name == fieldName)

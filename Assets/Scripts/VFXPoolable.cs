@@ -4,10 +4,10 @@ using UnityEngine.VFX;
 public class VFXPoolable : Poolable
 {
     public bool looping = false;
-    private VisualEffect effect;
-    private bool active = false;
-    private bool initialized = false;
-    void Awake()
+    protected VisualEffect effect;
+    protected bool active = false;
+    protected bool initialized = false;
+    protected virtual void Awake()
     {
         effect = GetComponent<VisualEffect>();
     }
@@ -33,7 +33,7 @@ public class VFXPoolable : Poolable
         }
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if(!active)
         {
@@ -53,10 +53,9 @@ public class VFXPoolable : Poolable
                 Cleanup();
             }
         }
-        
     }
 
-    private void Cleanup()
+    protected virtual void Cleanup()
     {
         active = false;
         initialized = false;

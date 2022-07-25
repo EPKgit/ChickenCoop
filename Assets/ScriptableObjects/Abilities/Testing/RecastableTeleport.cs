@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class RecastableTeleport : Ability, IMovementAbility
+public class RecastableTeleport : Ability
 {   
 	private Vector3 startingPosition;
 

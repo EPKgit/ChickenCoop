@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BasicShoot : Ability, IDamagingAbility
+public class BasicShoot : Ability
 {
 	public GameObject bulletPrefab;
 	public float moveSpeed;
 	public float lifetime = 6.0f;
 
+
+    [field: SerializeField]
     public float damage
     {
         get;

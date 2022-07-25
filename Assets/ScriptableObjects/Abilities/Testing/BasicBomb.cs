@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BasicBomb : Ability, IDamagingAbility, IAOEAbility
+public class BasicBomb : Ability
 {
 	public GameObject bombPrefab;
 	public float arcSteepness;
 	public float arcTime;
 
     public float damage
-    {
-        get; set;
-    }
-
-    public float aoe
     {
         get; set;
     }
