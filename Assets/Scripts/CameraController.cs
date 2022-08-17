@@ -9,6 +9,10 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
+        if(player == null)
+        {
+            this.enabled = false;
+        }
     }
 
     private void LateUpdate()

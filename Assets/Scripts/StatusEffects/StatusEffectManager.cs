@@ -46,6 +46,12 @@ public class StatusEffectManager : MonoSingleton<StatusEffectManager>
             KeyValuePair<GameObject, StatusBarData> pair = activeStatuses.ElementAt(x);
             GameObject applied = pair.Key;
             StatusBarData barData = pair.Value;
+            if(applied == null)
+            {
+                barData.barObject.GetComponent<Poolable>().DestroySelf();
+                activeStatuses.Remove(applied);
+                continue;
+            }
             barData.barObject.transform.position = Camera.main.WorldToScreenPoint(applied.transform.position + barData.offset);
             for (int y = barData.popups.Count - 1; y >= 0; --y)
             {

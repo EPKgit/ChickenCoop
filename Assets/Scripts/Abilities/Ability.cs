@@ -397,7 +397,7 @@ public abstract class Ability : ScriptableObject
     {
         currentRecastTimer = 0;
         currentRecastAmount = 0;
-        float cdrPercent = playerAbilities.stats.GetStat(StatName.CooldownReduction)?.Value ?? 1.0f;
+        float cdrPercent = playerAbilities.stats.GetValueOrDefault(StatName.CooldownReduction);
         currentCooldownTimer = maxCooldown * cdrPercent;
 #if UNITY_EDITOR
         if (playerAbilities.DEBUG_LOW_COOLDOWN)

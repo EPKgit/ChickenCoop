@@ -10,7 +10,10 @@ public class StatBlockComponent : MonoBehaviour
 
     void Awake()
     {
-        Initialize();
+		if(Lib.LibGetComponentDownTree<IStatBlockInitializer>(gameObject) == null)
+		{
+            Initialize();
+        }
     }
 
     public void Initialize(StatBlock other)
@@ -48,6 +51,21 @@ public class StatBlockComponent : MonoBehaviour
 		return stats.GetValue(name);
 	}
 
+	public float GetValueOrDefault(StatName name)
+	{
+        return stats.GetValueOrDefault(name);
+    }
+
+	public int GetIntValue(StatName name)
+	{
+        return stats.GetIntValue(name);
+    }
+
+	public int GetIntValueOrDefault(StatName name)
+	{
+        return stats.GetIntValueOrDefault(name);
+    }
+
 	/// <summary>
 	/// Gives us access to a certain stat. Useful for registering callbacks on a stat, or adding bonuses
 	/// </summary>
@@ -58,18 +76,23 @@ public class StatBlockComponent : MonoBehaviour
         return stats.GetStat(name);
 	}
 
+	public Stat AddStat(StatName name, float value)
+	{
+        return stats.AddStat(name, value);
+    }
+	
     public StatBlock GetStatBlock()
     {
         return stats;
     }
 
-    public void RegisterStatChangeCallback(StatName stat, StatChangeDelegate d)
+    public bool RegisterStatChangeCallback(StatName stat, StatChangeDelegate d)
 	{
-        stats.RegisterStatChangeCallback(stat, d);
+        return stats.RegisterStatChangeCallback(stat, d);
 	}
 
-	public void DeregisterStatChangeCallback(StatName stat, StatChangeDelegate d)
+	public bool DeregisterStatChangeCallback(StatName stat, StatChangeDelegate d)
 	{
-        stats.DeregisterStatChangeCallback(stat, d);
+        return stats.DeregisterStatChangeCallback(stat, d);
 	}
 }

@@ -7,12 +7,6 @@ public class PlayerMovement : BaseMovement
 {
 	private Vector2 movementInputAxis;
 
-	protected override void Awake()
-	{
-        base.Awake();
-        stats?.RegisterStatChangeCallback(StatName.Agility, UpdateSpeed);
-    }
-
 	void Update()
 	{
         if(!CanMove())

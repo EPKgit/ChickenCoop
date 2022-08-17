@@ -28,16 +28,16 @@ public class BaseHealthInspector : Editor
             InGameDisplay();
             return;
         }
-        if (overrider != null && overrider.GetOverridingBlock().HasStat(StatName.Toughness))
+        if (overrider != null && overrider.GetOverridingBlock().HasStat(StatName.MaxHealth))
         {
             EditorGUILayout.LabelField("Max Health is being set by overrider " + overrider);
-            EditorGUILayout.LabelField("Value: " + overrider.GetOverridingBlock().GetValue(StatName.Toughness));
+            EditorGUILayout.LabelField("Value: " + overrider.GetOverridingBlock().GetValue(StatName.MaxHealth));
             return;
         }
-		if (statBlock != null && statBlock.HasStat(StatName.Toughness))
+		if (statBlock != null && statBlock.HasStat(StatName.MaxHealth))
         {
             EditorGUILayout.LabelField("Max Health is being set by the StatBlock");
-			EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.Toughness));
+			EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.MaxHealth));
             return;
 		}
         EditorGUILayout.PropertyField(maxHealth);
@@ -49,7 +49,7 @@ public class BaseHealthInspector : Editor
         EditorGUILayout.LabelField(string.Format("{0}/{1}", baseHealth.currentHealth, baseHealth.maxHealth));
         if (GUILayout.Button("Take 1 Damage"))
         {
-            baseHealth.Damage(1, null, null);
+            baseHealth.Damage(1, SingletonHelpers.managerObject);
         }
     }
 }

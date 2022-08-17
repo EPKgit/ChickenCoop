@@ -5,14 +5,15 @@ using UnityEngine;
 
 public enum StatName 
 { 
-    Strength, 
-    Agility, 
-    Toughness, 
-    AggroPercentage, 
-    DamagePercentage, 
-    HealingPercentage, 
-    CooldownReduction, 
-    PuzzleSolving, 
+    MovementSpeed       = 0, 
+    MaxHealth           = 1, 
+    AggroPercentage     = 2, 
+    DamagePercentage    = 3,
+    FlatDamage          = 4,
+    HealingPercentage   = 5, 
+    FlatHealing         = 6, 
+    CooldownReduction   = 7, 
+    PuzzleSolving       = 8, 
 }
 
 [System.Serializable]
@@ -20,61 +21,72 @@ public class StatBlock : ISerializationCallbackReceiver
 {
     private List<Tuple<StatName, StatChangeDelegate>> queuedCallbacksToRegister = new List<Tuple<StatName, StatChangeDelegate>>();
 
-    private Dictionary<StatName, Stat> stats = new Dictionary<StatName, Stat>();
+    private Dictionary<StatName, Stat> statDict = new Dictionary<StatName, Stat>();
 
-    private Dictionary<StatName, float> defaultValues = new Dictionary<StatName, float>()
+    public static Dictionary<StatName, float> defaultValues = new Dictionary<StatName, float>()
     {
-        { StatName.AggroPercentage,     1.0f },
-        { StatName.Agility,             1.0f },
-        { StatName.CooldownReduction,   1.0f },
-        { StatName.DamagePercentage,    1.0f },
-        { StatName.HealingPercentage,   1.0f },
-        { StatName.PuzzleSolving,       0.0f },
-        { StatName.Strength,            1.0f },
-        { StatName.Toughness,           1.0f },
+
+        { StatName.MovementSpeed,			1.0f },
+        { StatName.MaxHealth,			    1.0f },
+        { StatName.AggroPercentage,			1.0f },
+        { StatName.DamagePercentage,		1.0f },
+        { StatName.FlatDamage,			    0.0f },
+        { StatName.HealingPercentage,		1.0f },
+        { StatName.FlatHealing,			    0.0f },
+        { StatName.CooldownReduction,		1.0f },
+        { StatName.PuzzleSolving,			0.0f },
     };
+
+    public StatBlock()
+    {
+        // foreach (StatName key in Enum.GetValues(typeof(StatName)))
+        // {
+        //     float defaultValue = defaultValues[key];
+        //     statDict.Add(key, new Stat(key, defaultValue));
+        // }
+    }
 
     public void Initialize(StatBlock other)
     {
-        var otherStats = other.stats;
+        var otherStats = other.statDict;
         foreach (StatName key in Enum.GetValues(typeof(StatName)))
         {
             if (otherStats.ContainsKey(key)) //if the other stats have a definition for it
             {
                 if (HasStat(key)) //override our local value with the other stats value
                 {
-                    stats[key].BaseValue = otherStats[key].BaseValue;
+                    statDict[key].BaseValue = otherStats[key].BaseValue;
                 }
                 else //otherwise add it to our dictionary
                 {
-                    stats.Add(key, new Stat(key, otherStats[key].BaseValue));
+                    statDict.Add(key, new Stat(key, otherStats[key].BaseValue));
                 }
             }
-            else //otherwise if it's not defined by the other block
-            {
-                float defaultValue = defaultValues[key];
-                if (HasStat(key)) //make sure we are reset to default
-                {
-                    stats[key].BaseValue = defaultValue;
-                }
-                else //add it with default value
-                {
-                    stats.Add(key, new Stat(key, defaultValue));
-                }
-            }
+            // else //otherwise if it's not defined by the other block
+            // {
+            //     float defaultValue = defaultValues[key];
+            //     if (HasStat(key)) //make sure we are reset to default
+            //     {
+            //         statDict[key].BaseValue = defaultValue;
+            //     }
+            //     else //add it with default value
+            //     {
+            //         statDict.Add(key, new Stat(key, defaultValue));
+            //     }
+            // }
         }
         FlushInitializationQueue();
     }
     public void Initialize()
     {
-        foreach (StatName key in Enum.GetValues(typeof(StatName)))
-        {
-            if (!HasStat(key))
-            {
-                float defaultValue = defaultValues[key];
-                stats.Add(key, new Stat(key, defaultValue));
-            }
-        }
+        // foreach (StatName key in Enum.GetValues(typeof(StatName)))
+        // {
+        //     if (!HasStat(key))
+        //     {
+        //         float defaultValue = defaultValues[key];
+        //         statDict.Add(key, new Stat(key, defaultValue));
+        //     }
+        // }
         FlushInitializationQueue();
     }
 
@@ -85,7 +97,7 @@ public class StatBlock : ISerializationCallbackReceiver
     {
         foreach(var pair in queuedCallbacksToRegister)
         {
-            stats[pair.Item1].RegisterStatChangeCallback(pair.Item2);
+            statDict[pair.Item1].RegisterStatChangeCallback(pair.Item2);
         }
     }
 
@@ -96,7 +108,7 @@ public class StatBlock : ISerializationCallbackReceiver
     /// <returns>Returns true if the stat is in the block, false if not</returns>
     public bool HasStat(StatName name)
     {
-        return stats.ContainsKey(name);
+        return statDict.ContainsKey(name);
     }
 
     /// <summary>
@@ -107,8 +119,29 @@ public class StatBlock : ISerializationCallbackReceiver
     public float GetValue(StatName name)
     {
         Stat temp = null;
-        stats.TryGetValue(name, out temp);
+        statDict.TryGetValue(name, out temp);
         return temp == null ? -1f : temp.Value;
+    }
+
+    public float GetValueOrDefault(StatName name)
+    {
+        Stat temp = null;
+        statDict.TryGetValue(name, out temp);
+        return temp == null ? StatBlock.defaultValues[name] : temp.Value;
+    }
+
+    public int GetIntValue(StatName name)
+    {
+        Stat temp = null;
+        statDict.TryGetValue(name, out temp);
+        return temp == null ? -1 : temp.IntValue;
+    }
+
+    public int GetIntValueOrDefault(StatName name)
+    {
+        Stat temp = null;
+        statDict.TryGetValue(name, out temp);
+        return temp == null ? (int)StatBlock.defaultValues[name] : temp.IntValue;
     }
 
     /// <summary>
@@ -119,50 +152,75 @@ public class StatBlock : ISerializationCallbackReceiver
     public Stat GetStat(StatName name)
     {
         Stat temp = null;
-        stats.TryGetValue(name, out temp);
+        statDict.TryGetValue(name, out temp);
         return temp;
+    }
+
+    public Stat AddStat(StatName stat, float value)
+    {
+        if(statDict.ContainsKey(stat))
+        {
+            return null;
+        }
+        Stat newStat = new Stat(stat, value);
+        statDict.Add(stat, newStat);
+        return newStat;
     }
 
     public Dictionary<StatName, Stat> GetStats()
     {
-        return stats;
+        return statDict;
     }
 
-    public void RegisterStatChangeCallback(StatName stat, StatChangeDelegate d)
+    public bool RegisterStatChangeCallback(StatName stat, StatChangeDelegate d)
     {
-        if (stats.ContainsKey(stat))
+        if (statDict.ContainsKey(stat))
         {
-            stats[stat].RegisterStatChangeCallback(d);
+            statDict[stat].RegisterStatChangeCallback(d);
+            return true;
         }
         else
         {
             queuedCallbacksToRegister.Add(new Tuple<StatName, StatChangeDelegate>(stat, d));
+            return false;
         }
     }
 
-    public void DeregisterStatChangeCallback(StatName stat, StatChangeDelegate d)
+    public bool DeregisterStatChangeCallback(StatName stat, StatChangeDelegate d)
     {
-        if (stats.ContainsKey(stat))
+        if (statDict.ContainsKey(stat))
         {
-            stats[stat].DeregisterStatChangeCallback(d);
+            statDict[stat].DeregisterStatChangeCallback(d);
+            return true;
         }
+        return false;
     }
 
     [SerializeField, HideInInspector]
     private StatName[] _keys;
     [SerializeField, HideInInspector]
     private Stat[] _values;
+    [SerializeField, HideInInspector]
+    private bool serializationOverriden = false;
 
     /// <summary>
     /// We have to do manual serialization because unity doesn't support dictionary serialization
     /// </summary>
     public void OnBeforeSerialize()
     {
-        _keys = new StatName[stats.Count];
-        _values = new Stat[stats.Count];
+        if(serializationOverriden)
+        {
+            serializationOverriden = false;
+            OnAfterDeserialize();
+        }
+        else
+        {
+            _keys = new StatName[statDict.Count];
+            _values = new Stat[statDict.Count];
+        }
 
         int x = 0;
-        foreach (var kvp in stats)
+        foreach (var kvp in statDict)
         {
             _keys[x] = kvp.Key;
             _values[x++] = kvp.Value;
@@ -171,17 +229,17 @@ public class StatBlock : ISerializationCallbackReceiver
 
     public void OnAfterDeserialize()
     {
-        stats = new Dictionary<StatName, Stat>();
+        statDict = new Dictionary<StatName, Stat>();
         for (int x = 0; x < Math.Min(_keys.Length, _values.Length); ++x)
         {
-            stats.Add(_keys[x], _values[x]);
+            statDict.Add(_keys[x], _values[x]);
         }
     }
 
     public override string ToString()
     {
         string s = "";
-        foreach (var pair in stats)
+        foreach (var pair in statDict)
         {
             s += string.Format("{0}:{1}\n", pair.Key.ToString(), pair.Value.Value);
         }

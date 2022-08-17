@@ -59,7 +59,7 @@ public class Stat : ISerializationCallbackReceiver
         set
         {
             _baseValue = value;
-            UpdateCurrentValue();
+            UpdateCurrentValue(true);
         }
     }
     [SerializeField, HideInInspector]
@@ -88,7 +88,7 @@ public class Stat : ISerializationCallbackReceiver
 	/// Calculates the final value, adding all additiveModifiers, then adding our multiplicativeModifiers
 	/// multiplied by the baseValue. Also calls the statChangeEvent
 	/// </summary>
-    private void UpdateCurrentValue()
+    private void UpdateCurrentValue(bool forceUpdate = false)
     {
         float finalResult = BaseValue;
         foreach(Tuple<float, int> t in additiveModifiers)
@@ -99,8 +99,12 @@ public class Stat : ISerializationCallbackReceiver
         {
             finalResult += t.Item1 * BaseValue;
         }
+        bool changed = _value != finalResult;
         _value = finalResult;
-		statChangeEvent(_value);
+        if (changed || forceUpdate)
+        {
+            statChangeEvent(_value);
+        }
     }
 
 	int GetID()

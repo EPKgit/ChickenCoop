@@ -8,10 +8,17 @@ sfx
     -using abilities
     -enemies spawning
 
+update idamageable
+    - convert the damage method to take a datastructure
+    - figure out how to use the damage stats
+
+
+finish the stat block property drawer (adding and removing)
+    - reconfigure code to be able to accept a null from the statblock
+    - flush all old serializations in prefabs
+
+
 - make some mvp ability sets
-    -shockwave ability
-        -damge and stun in aoe
-        - shockwaves shader/prefab (maybe not a vfx)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MVP/PROTOTYPE SHIT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

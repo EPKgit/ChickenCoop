@@ -28,15 +28,15 @@ public class PlayerMovementInspector : Editor
             InGameDisplay();
             return;
         }
-        if (overrider != null && overrider.GetOverridingBlock().HasStat(StatName.Agility))
+        if (overrider != null && overrider.GetOverridingBlock().HasStat(StatName.MovementSpeed))
         {
             EditorGUILayout.LabelField("MoveSpeed is being set by overrider " + overrider);
-            EditorGUILayout.LabelField("Value: " + overrider.GetOverridingBlock().GetValue(StatName.Agility));
+            EditorGUILayout.LabelField("Value: " + overrider.GetOverridingBlock().GetValue(StatName.MovementSpeed));
         }
-        else if (statBlock != null && statBlock.HasStat(StatName.Agility))
+        else if (statBlock != null && statBlock.HasStat(StatName.MovementSpeed))
         {
             EditorGUILayout.LabelField("MoveSpeed is being set by the StatBlock");
-            EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.Agility));
+            EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.MovementSpeed));
         }
         serializedObject.Update();
         EditorGUILayout.PropertyField(getsKnockbackInvuln);
@@ -45,6 +45,17 @@ public class PlayerMovementInspector : Editor
 
     void InGameDisplay()
     {
-        base.OnInspectorGUI();
+        if(statBlock != null && statBlock.HasStat(StatName.MovementSpeed))
+        {
+            EditorGUILayout.LabelField("MoveSpeed is being set by the StatBlock");
+            EditorGUILayout.LabelField("Value: " + statBlock.GetValue(StatName.MovementSpeed));
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(getsKnockbackInvuln);
+            serializedObject.ApplyModifiedProperties();
+        }
+        else
+        {
+            base.OnInspectorGUI();
+        }
     }
 }

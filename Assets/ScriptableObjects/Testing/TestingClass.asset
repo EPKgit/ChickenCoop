@@ -16,9 +16,10 @@ MonoBehaviour:
   abilities: {fileID: 11400000, guid: 83bfd890b50cdf14db895b40d5f91ca5, type: 2}
   playerModelPrefab: {fileID: 3835468119574595567, guid: ce07186f8d3f118409561a1f700bc9fb, type: 3}
   stats:
-    _keys: 0100000002000000
+    _keys: 0000000001000000
     _values:
-    - name: 1
-      _baseValue: 3
-    - name: 2
+    - name: 0
+      _baseValue: 5
+    - name: 0
       _baseValue: 10
+    serializationOverriden: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using UnityEngine;
 using UnityEditor;
@@ -10,6 +11,7 @@ public class CustomPropertyDrawerBase : PropertyDrawer
     protected TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
     protected Rect rect = new Rect();
     protected Rect startRect = new Rect();
+    protected Rect topRect = new Rect();
 
     protected Rect NextLine()
     {
@@ -30,13 +32,31 @@ public class CustomPropertyDrawerBase : PropertyDrawer
         startRect = position;
         yofs = position.y;
         yinc = position.height / GetNumLines(property);
-        rect = NextLine();
+        topRect = rect = NextLine();
         property.isExpanded = EditorGUI.Foldout(rect, property.isExpanded, textInfo.ToTitleCase(label.text));
         if (!property.isExpanded)
         {
             return true;
         }
         return false;
+    }
+
+    protected void EndOnGUI(SerializedProperty property)
+    {
+        Rect clickArea = topRect;
+
+        Event current = Event.current;
+
+        if (clickArea.Contains(current.mousePosition) && current.type == EventType.ContextClick)
+        {
+            CustomRightClickMenu(property);
+            current.Use();
+        }
+    }
+
+    protected virtual void CustomRightClickMenu(SerializedProperty property)
+    {
+
     }
 
     protected virtual float GetNumLines(SerializedProperty property)

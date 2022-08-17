@@ -46,7 +46,7 @@ public class BasicShoot : Ability
 			playerAbilities.transform.position, 
             direction, 
             playerAbilities.gameObject,
-            (damage + 1) * playerAbilities.stats.GetValue(StatName.DamagePercentage),
+            (damage + 1),
             lifetime
 		);
         damage = (damage + 1) % 10;

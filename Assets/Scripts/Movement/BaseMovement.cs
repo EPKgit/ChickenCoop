@@ -25,14 +25,14 @@ public class MovementDeltaEventData
     }
 }
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(StatBlockComponent))]
 public class BaseMovement : MonoBehaviour, IKnockbackHandler
 {
     public Vector3 position => transform.position;
 
     public event MovementDeltaEventDelegate movementEvent = delegate { };
 
-    public float movementSpeed;
+    public float movementSpeed = 1;
     public bool getsKnockbackInvuln = false;
     protected Vector2 previousPosition;
 
@@ -47,6 +47,10 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
     {
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<StatBlockComponent>();
+        if(stats.HasStat(StatName.MovementSpeed))
+        {
+            stats.AddStat(StatName.MovementSpeed, movementSpeed);
+        }
         tagComponent = GetComponentInChildren<GameplayTagComponent>();
 		sprite = GetComponentInChildren<SpriteRenderer>();
         previousPosition = transform.position;
@@ -54,9 +58,14 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
         animatorMovingHashCode = Animator.StringToHash("moving");
     }
 
+    void OnEnable()
+    {
+        stats.RegisterStatChangeCallback(StatName.MovementSpeed, UpdateSpeed);
+    }
+
     void OnDisable()
     {
-        stats?.DeregisterStatChangeCallback(StatName.Agility, UpdateSpeed);
+        stats.DeregisterStatChangeCallback(StatName.MovementSpeed, UpdateSpeed);
     }
 
 

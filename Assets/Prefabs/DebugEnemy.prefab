@@ -215,6 +215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc14639435b0f1344aa50abbfacab0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementSpeed: 0
+  getsKnockbackInvuln: 0
   speed: 1
   doesContactDamage: 1
 --- !u!114 &1388209950
@@ -244,10 +246,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
-    _keys: 02000000
+    _keys: 0000000001000000
     _values:
-    - name: 2
-      _baseValue: 999999
+    - name: 0
+      _baseValue: 1
+    - name: 0
+      _baseValue: 9999
+    serializationOverriden: 0
 --- !u!114 &7013321912956941123
 MonoBehaviour:
   m_ObjectHideFlags: 0

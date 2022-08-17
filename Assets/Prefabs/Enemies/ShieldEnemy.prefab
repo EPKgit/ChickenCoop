@@ -298,6 +298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2615072fd49a5bb4c8d48ef3b9134129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementSpeed: 1
+  getsKnockbackInvuln: 0
   speed: 1
   doesContactDamage: 1
   splashPrefab: {fileID: 6118872342496518369, guid: 0b47863bcc231b24cbdb91afec452a60, type: 3}
@@ -389,8 +391,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
-    _keys: 
-    _values: []
+    _keys: 0000000001000000
+    _values:
+    - name: 0
+      _baseValue: 1
+    - name: 0
+      _baseValue: 50
+    serializationOverriden: 0
 --- !u!114 &7341611183803319822
 MonoBehaviour:
   m_ObjectHideFlags: 0
