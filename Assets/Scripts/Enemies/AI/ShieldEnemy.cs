@@ -31,21 +31,21 @@ public class ShieldEnemy : BaseEnemy
         PoolManager.instance.RemovePoolSize(splashPrefab, 10);
     }
 
-	void CheckIfBlocked(HealthChangeEventData hced)
+	void CheckIfBlocked(MutableHealthChangeEventData mhced)
 	{
-		float angle = Vector3.Angle(arc.transform.up, hced.localSource.transform.position - hced.target.transform.position);
+		float angle = Vector3.Angle(arc.transform.up, mhced.data.localSource.transform.position - mhced.data.target.transform.position);
         DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ENEMYHEALTH, "" + arc.transform.up);
-        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ENEMYHEALTH, "" + (hced.localSource.transform.position - hced.target.transform.position));
+        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ENEMYHEALTH, "" + (mhced.data.localSource.transform.position - mhced.data.target.transform.position));
         DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ENEMYHEALTH, "" + angle);
 		if(angle < blockAngle)
 		{
             DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ENEMYHEALTH, "cancelling");
-			hced.cancelled = true;
-			ShieldClankEffect(hced.localSource);
+			mhced.cancelled = true;
+			ShieldClankEffect(mhced.data.localSource);
 		}
         else
         {
-			DamageEffect(hced.localSource);
+			DamageEffect(mhced.data.localSource);
     	}
 	}
 

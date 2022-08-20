@@ -33,7 +33,8 @@ public class Shockwave_Ability : Ability
 	{
         base.UseAbility();
 		GameObject temp = PoolManager.instance.RequestObject(shockwavePrefab);
-		temp.GetComponent<Shockwave>().Setup
+        Shockwave shockwave = temp.GetComponent<Shockwave>();
+        shockwave.Setup
 		(
 			playerAbilities.transform.position,
             lifetime,
@@ -42,7 +43,17 @@ public class Shockwave_Ability : Ability
             playerAbilities.gameObject,
             (IDamagable i) =>
             {
-                i.Damage(damage, temp, playerAbilities.gameObject, PresetKnockbackData.GetKnockbackPreset(KnockbackPreset.BIG));
+                i.Damage
+                (
+                    HealthChangeData.GetBuilder()
+                        .KnockbackData(KnockbackPreset.BIG)
+                        .Damage(damage)
+                        .LocalSource(temp)
+                        .OverallSource(playerAbilities.gameObject)
+                        .Target(i)
+                        .LocationFunction(() => { return shockwave.GetIntersectLocation(); })
+                        .Finalize()
+                );
                 StatusEffectManager.instance.ApplyEffect(i.attached, Statuses.StatusEffectType.STUN, stunDuration);
             }
 		);

@@ -60,7 +60,7 @@ public class UI_DamageFeedbackOverlay : MonoBehaviour
         }
     }
 
-    void OnDamageTaken(HealthChangeNotificationData hcnd)
+    void OnDamageTaken(HealthChangeData hcd)
     {
         intensityDirty = true;
         currentIntensity = new Vector4(0.4f, 0.4f, 0, 0);

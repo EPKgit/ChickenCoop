@@ -27,7 +27,7 @@ public class PlayerHealth : BaseHealth
         postDamageEvent -= OnDamageTaken;
     }
 
-    void OnDamageTaken(HealthChangeNotificationData hcnd)
+    void OnDamageTaken(HealthChangeData hcd)
     {
         StatusEffectManager.instance.ApplyEffect(gameObject, Statuses.StatusEffectType.INVULERNABILITY, 0.5f);
     }

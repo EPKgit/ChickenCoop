@@ -27,7 +27,16 @@ public class Bomb : BaseArcingProjectile
                 TargetingController controller = Lib.FindUpwardsInTree<TargetingController>(col.gameObject);
                 if(controller?.TargetAffiliation != affiliation)
                 {
-                    damagable?.Damage(damage, gameObject, creator, PresetKnockbackData.GetKnockbackPreset(KnockbackPreset.BIG));
+                    damagable.Damage
+                    (
+                        HealthChangeData.GetBuilder()
+                            .Damage(damage)
+                            .LocalSource(gameObject)
+                            .OverallSource(creator)
+                            .KnockbackData(KnockbackPreset.BIG)
+                            .Target(damagable)
+                            .Finalize()
+                    );
                 }
             }
         }

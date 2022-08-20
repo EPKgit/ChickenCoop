@@ -14,10 +14,11 @@ public class AggroData : IEquatable<AggroData>
 		value = f;
 	}
 
-	public AggroData(HealthChangeNotificationData hcnd)
+	public AggroData(HealthChangeData hcd)
 	{
-		source = hcnd.overallSource;
-		value = hcnd.value * hcnd.aggroPercentage;
+		source = hcd.overallSource;
+        float aggroValue = StatBlockComponent.GetValueOrDefault(source, StatName.AggroPercentage);
+		value = -hcd.delta * aggroValue;
 	}
 
 	public bool Equals(AggroData other)

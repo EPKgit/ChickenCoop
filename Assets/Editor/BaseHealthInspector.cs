@@ -49,7 +49,14 @@ public class BaseHealthInspector : Editor
         EditorGUILayout.LabelField(string.Format("{0}/{1}", baseHealth.currentHealth, baseHealth.maxHealth));
         if (GUILayout.Button("Take 1 Damage"))
         {
-            baseHealth.Damage(1, SingletonHelpers.managerObject);
+            baseHealth.Damage
+            (
+                HealthChangeData.GetBuilder()
+                    .Damage(1)
+                    .BothSources(SingletonHelpers.managerObject)
+                    .Target(baseHealth.gameObject)
+                    .Finalize()
+            );
         }
     }
 }

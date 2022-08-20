@@ -102,7 +102,15 @@ public class BaseLaser : Poolable
         {
             return;
         }
-        target.Damage(1, creator, target.gameObject);
+        target.Damage
+        (
+            HealthChangeData.GetBuilder()
+                .Damage(1)
+                .LocalSource(gameObject)
+                .OverallSource(creator)
+                .Target(target.gameObject)
+                .Finalize()
+        );
     }
 
     void OnTriggerEnter2D(Collider2D col)

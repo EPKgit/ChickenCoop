@@ -15,6 +15,7 @@ public class Shockwave : VFXPoolable
     private float startTime = float.MinValue;
     private List<TargetingController> alreadyEffected;
     private Targeting.Affiliation affiliation;
+    private Vector3 intersection;
 
 
     public override void Reset()
@@ -51,9 +52,11 @@ public class Shockwave : VFXPoolable
             return;
         }
         float t = (Time.time - startTime) / lifetime;
-        var collisions = Physics2D.OverlapCircleAll((Vector2)transform.position, scale * t * 0.5f);
-        foreach (var col in collisions)
+        // var collisions = Physics2D.OverlapCircleAll((Vector2)transform.position, scale * t * 0.5f);
+        var collisions = Physics2D.CircleCastAll((Vector2)transform.position, scale * t * 0.5f, Vector2.zero, 0.0f);
+        foreach (var raycastHit in collisions)
         {
+            var col = raycastHit.collider;
             var dist = (col.gameObject.transform.position - transform.position).magnitude;
             if(dist / (t * scale) < thickness) //not on the edge, we clamp the edge to the thickness
             {
@@ -66,10 +69,16 @@ public class Shockwave : VFXPoolable
                 if (!alreadyEffected.Contains(controller) && controller?.TargetAffiliation != affiliation)
                 {
                     alreadyEffected.Add(controller);
+                    intersection = raycastHit.point;
                     onIntersectFunc(damagable);
                 }
             }
         }
+    }
+
+    public Vector3 GetIntersectLocation()
+    {
+        return intersection;
     }
 
     void OnDrawGizmos()

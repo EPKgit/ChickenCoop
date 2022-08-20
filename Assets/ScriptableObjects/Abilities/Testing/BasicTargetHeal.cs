@@ -27,7 +27,14 @@ public class BasicTargetHeal : Ability
         IHealable healable = Lib.FindUpwardsInTree<IHealable>(targetingData.inputTarget.Attached);
         if(healable != null)
         {
-            healable.Heal(amount, playerAbilities.gameObject, playerAbilities.gameObject);
+            healable.Heal
+            (
+                HealthChangeData.GetBuilder()
+                    .Healing(amount)
+                    .BothSources(playerAbilities.gameObject)
+                    .Target(healable)
+                    .Finalize()
+            );
         }
 	}
 }

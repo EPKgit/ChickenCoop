@@ -12,6 +12,13 @@ public class DamageStation : BaseInteractable
 	protected override void ToDo(GameObject user)
 	{
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "DamageStation");
-		Lib.FindUpwardsInTree<IDamagable>(user)?.Damage(1, gameObject, gameObject);
+		Lib.FindUpwardsInTree<IDamagable>(user)?.Damage
+		(
+			HealthChangeData.GetBuilder()
+				.Damage(1)
+				.BothSources(gameObject)
+				.Target(user)
+                .Finalize()
+		);
 	}
 }

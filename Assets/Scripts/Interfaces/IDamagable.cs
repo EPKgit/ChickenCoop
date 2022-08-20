@@ -1,56 +1,139 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public delegate void HealthValueSetDelegate(float newCurrent, float newMax);
-public delegate void MutableHealthChangeDelegate(HealthChangeEventData hced);
-public delegate void HealthChangeNotificationDelegate(HealthChangeNotificationData hcnd);
+public delegate void MutableHealthChangeDelegate(MutableHealthChangeEventData hced);
+public delegate void HealthChangeNotificationDelegate(HealthChangeData hcnd);
 public delegate void KilledCharacterDelegate(GameObject killed);
 
-public class HealthChangeEventData
+public class MutableHealthChangeEventData
 {
-    public GameObject overallSource;
-    public GameObject localSource;
-    public GameObject target;
+    public HealthChangeData data;
     public float delta;
     public bool cancelled;
-    /// <summary>
-    /// Constructor for a HealthChangeEventData. Represents one instance of taking or healing damage.
-    /// </summary>
-    /// <param name="o">The overall source</param>
-    /// <param name="l">The local source</param>
-    /// <param name="t">The targeted GameObject</param>
-    /// <param name="d">The damage or healing delta</param>
-    public HealthChangeEventData(GameObject o, GameObject l, GameObject t, float d)
+
+    public MutableHealthChangeEventData(HealthChangeData data)
     {
-        overallSource = o;
-        localSource = l;
-        target = t;
-        delta = d;
-        cancelled = false;
+        this.data = data;
+        this.delta = data.delta;
+        this.cancelled = false;
     }
 }
 
-public class HealthChangeNotificationData
+public class HealthChangeData
 {
-    public readonly GameObject overallSource;
-    public readonly GameObject localSource;
-    public readonly GameObject target;
-    public readonly float value;
-    public readonly float aggroPercentage;
-
-    /// <summary>
-    /// Constructor for a HealthChangeNotificaitonData. Represent on instance of taking or healing damage.
-    /// </summary>
-    /// <param name="o">The overall source</param>
-    /// <param name="l">The local source</param>
-    /// <param name="v">The amount of healing or damage done. Will be negative for damage, positive for healing.</param>
-    /// <param name="a">The aggropercentage, defaulted to 1</param>
-    public HealthChangeNotificationData(GameObject o, GameObject l, GameObject t, float v, float a = 1)
+    public GameObject overallSource { get; private set; }
+    public GameObject localSource { get; private set; }
+    public GameObject target { get; private set; }
+    public float delta { get; private set; }
+    public KnockbackData knockbackData { get; private set; }
+    public Func<Vector3> damageLocation { get; private set; }
+    public class HealthChangeDataBuilder
     {
-        overallSource = o;
-        localSource = l;
-        target = t;
-        value = v;
-        aggroPercentage = a;
+        public HealthChangeData data;
+        public HealthChangeDataBuilder(HealthChangeData data)
+        {
+            this.data = data;
+        }
+
+        public HealthChangeDataBuilder OverallSource(GameObject g)
+        {
+            data.overallSource = g;
+            return this;
+        }
+
+        public HealthChangeDataBuilder LocalSource(GameObject g)
+        {
+            data.localSource = g;
+            return this;
+        }
+
+        public HealthChangeDataBuilder BothSources(GameObject g)
+        {
+            data.localSource = g;
+            data.overallSource = g;
+            return this;
+        }
+
+        public HealthChangeDataBuilder Target(GameObject g)
+        {
+            data.target = g;
+            return this;
+        }
+
+        public HealthChangeDataBuilder Target(IDamagable i)
+        {
+            data.target = i.attached;
+            return this;
+        }
+
+        public HealthChangeDataBuilder Target(IHealable i)
+        {
+            data.target = i.attached;
+            return this;
+        }
+
+        public HealthChangeDataBuilder Value(float f)
+        {
+            data.delta = f;
+            return this;
+        }
+
+        public HealthChangeDataBuilder Damage(float f)
+        {
+            data.delta = -f;
+            return this;
+        }
+
+        public HealthChangeDataBuilder Healing(float f)
+        {
+            return Value(f);
+        }
+
+        public HealthChangeDataBuilder KnockbackData(KnockbackData kbd)
+        {
+            data.knockbackData = kbd;
+            return this;
+        }
+
+        public HealthChangeDataBuilder KnockbackData(KnockbackPreset preset)
+        {
+            data.knockbackData = PresetKnockbackData.GetKnockbackPreset(preset);
+            return this;
+        }
+
+        public HealthChangeDataBuilder LocationFunction(Func<Vector3> f)
+        {
+            data.damageLocation = f;
+            return this;
+        }
+
+        private bool Valid()
+        {
+            if(data.overallSource == null)
+            {
+                return false;
+            }
+            if(data.target == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public HealthChangeData Finalize()
+        {
+            if (!Valid())
+            {
+                throw new Exception();
+            }
+            return data;
+        }
+    }
+
+    public static HealthChangeDataBuilder GetBuilder()
+    {
+        return new HealthChangeDataBuilder(new HealthChangeData());
     }
 }
 
@@ -59,11 +142,9 @@ public interface IDamagable
     /// <summary>
     /// Damage the object. Implements on a per object basis
     /// </summary>
-    /// <param name="delta">The amount of damage</param>
-    /// <param name="localSource">The actual gameobject that is applying damage. May be equal to the overallSource</param>
-    /// <param name="overallSource"> The source of the damage overall. For example a projectiles local source may be the projectile itself, while the overall source would be the player that spawned it.</param>
-    /// <param name="knockbackData"> The knockback to apply, leave null if no knockback is desired
-    void Damage(float delta, GameObject localSource, GameObject overallSource = null, KnockbackData knockbackData = null);
+    /// <param name="data"> A conglomerate of all the parameters that could be relevant to an implementation of taking damage.
+    ///                     Recommended to use the HealthChangeDataBuilder for readability </param>
+    void Damage(HealthChangeData data);
 
     public GameObject attached
     {

@@ -106,10 +106,10 @@ public class InGamePlayerUI : MonoBehaviour
 		UpdateHealthUI();
 	}
 
-	public void HealthChange(HealthChangeNotificationData hcnd)
+	public void HealthChange(HealthChangeData hcd)
 	{
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INGAMEUI, "UI has registered a heal/damage event for " + hcnd.value);
-		currentHealth += hcnd.value;
+		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INGAMEUI, "UI has registered a heal/damage event for " + hcd.delta);
+		currentHealth += hcd.delta;
 		currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 		UpdateHealthUI();
 	}

@@ -58,18 +58,19 @@ public abstract class BaseEnemy : BaseMovement
         col.enabled = enabled;
     }
 
-	protected virtual void AddAggroEvent(HealthChangeNotificationData hcnd)
+	protected virtual void AddAggroEvent(HealthChangeData hcd)
 	{
-		AggroData temp = aggro.GetValue( (t) => t.source == hcnd.overallSource);
+		AggroData temp = aggro.GetValue( (t) => t.source == hcd.overallSource);
 		if(temp == null)
 		{
 			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AGGRO, "new aggro");
-			aggro.Push(new AggroData(hcnd));
+			aggro.Push(new AggroData(hcd));
 			UpdateChosenPlayer();
 			return;
 		}
-        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AGGRO, string.Format("update aggro from {0} to {1}", temp.value, temp.value + hcnd.value * hcnd.aggroPercentage));
-		temp.value += hcnd.value * hcnd.aggroPercentage;
+        float aggroValue = StatBlockComponent.GetValueOrDefault(hcd.overallSource, StatName.AggroPercentage);
+        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AGGRO, string.Format("update aggro from {0} to {1}", temp.value, temp.value + -hcd.delta * aggroValue));
+		temp.value += -hcd.delta * aggroValue;
 		UpdateChosenPlayer();
 	}
 
@@ -125,7 +126,15 @@ public abstract class BaseEnemy : BaseMovement
                 IDamagable damagable = Lib.FindDownThenUpwardsInTree<IDamagable>(g);
                 if (damagable != null)
                 {
-                    damagable.Damage(1, gameObject, gameObject, PresetKnockbackData.GetKnockbackPreset(KnockbackPreset.MEDIUM));
+                    damagable.Damage
+					(
+                        HealthChangeData.GetBuilder()
+                            .Damage(1)
+                            .BothSources(gameObject)
+                            .KnockbackData(KnockbackPreset.MEDIUM)
+                    		.Target(damagable)
+                            .Finalize()
+                    );
                 }
             }
         }

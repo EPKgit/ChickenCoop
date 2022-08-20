@@ -35,7 +35,7 @@ public class Dummy : MonoBehaviour
     private float shakeStrength = 0;
     private float shakeTime = -1;
     private bool returningToRest = false;
-    void Shake(HealthChangeNotificationData hcnd)
+    void Shake(HealthChangeData hcd)
     {
         shakeStrength += shakeStrength != 0 ? intensityAddedWhenAlreadyMoving : intensityAdded;
     }

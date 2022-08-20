@@ -27,8 +27,15 @@ public class PassiveRegen : Ability
 		timeSinceLastHeal += deltaTime;
 		if(timeSinceLastHeal >= healInterval)
 		{
-			hp.Heal(1, owner);
-			timeSinceLastHeal = 0;
+            hp.Heal
+            (
+                HealthChangeData.GetBuilder()
+                    .Healing(1)
+                    .Target(hp)
+                    .BothSources(owner)
+                    .Finalize()
+            );
+            timeSinceLastHeal = 0;
 		}
 		return false;
 	}   

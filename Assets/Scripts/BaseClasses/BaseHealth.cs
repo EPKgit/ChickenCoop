@@ -91,7 +91,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		healthValueUpdateEvent(currentHealth, maxHealth);
 	}
 
-	public void Damage(float delta, GameObject localSource, GameObject overallSource = null, KnockbackData knockbackData = null)
+	public void Damage(HealthChangeData data)
 	{
 		if(tagComponent?.tags.Contains(GameplayTagFlags.INVULNERABLE) ?? false)
 		{
@@ -99,52 +99,49 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 			return;
 		}
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "taking damage");
-		HealthChangeEventData data = new HealthChangeEventData(overallSource, localSource, gameObject, delta);
+		MutableHealthChangeEventData mutableEventData = new MutableHealthChangeEventData(data);
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "pre damage");
-		preDamageEvent(data);
-		if(data.cancelled)
+		preDamageEvent(mutableEventData);
+		if(mutableEventData.cancelled)
 		{
 			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "cancelled");
 			return;
 		}
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "not cancelled");
-		currentHealth -= data.delta;
-		float aggroValue = overallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
-        if (knockbackData != null && knockbackHandler != null)
+		currentHealth += mutableEventData.delta;
+		float aggroValue = data.overallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
+        if (data.knockbackData != null && knockbackHandler != null)
         {
-			if(knockbackData.direction == Vector2.zero)
+			if(data.knockbackData.direction == Vector2.zero)
 			{
-                knockbackData.direction = (knockbackHandler.position - localSource.transform.position).normalized;
+                data.knockbackData.direction = (knockbackHandler.position - data.localSource.transform.position).normalized;
             }
-            knockbackHandler.DoKnockback(knockbackData);
+            knockbackHandler.DoKnockback(data.knockbackData);
         }
-        HealthChangeNotificationData notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, data.delta, aggroValue);
-		postDamageEvent(notifData);
-		overallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(notifData);
-		notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, -data.delta, aggroValue);
-		healthChangeEvent(notifData);
+		postDamageEvent(data);
+		data.overallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(data);
+		healthChangeEvent(data);
 		
 		if(currentHealth <= 0)
 		{
-			Die(overallSource);			
+			Die(data.overallSource);			
 		}
 	}
 
-	public void Heal(float delta, GameObject localSource, GameObject overallSource = null)
+	public void Heal(HealthChangeData data)
 	{
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "healing");
-		HealthChangeEventData data = new HealthChangeEventData(overallSource, localSource, gameObject, delta);
-		preHealEvent(data);
-		if(data.cancelled)
+		MutableHealthChangeEventData mutableEventData = new MutableHealthChangeEventData(data);
+		preHealEvent(mutableEventData);
+		if(mutableEventData.cancelled)
 		{
 			return;
 		}
-		currentHealth += data.delta;
-		float aggroValue = overallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
-		HealthChangeNotificationData notifData = new HealthChangeNotificationData(overallSource, localSource, gameObject, delta, aggroValue);
-		postHealEvent(notifData);
-		healthChangeEvent(notifData);
-		overallSource?.GetComponent<IHealthCallbacks>()?.DamageHealedCallback(notifData);
+		currentHealth += mutableEventData.delta;
+		float aggroValue = data.overallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
+		postHealEvent(data);
+		healthChangeEvent(data);
+		data.overallSource?.GetComponent<IHealthCallbacks>()?.DamageHealedCallback(data);
 		if(currentHealth > maxHealth)
 		{
 			currentHealth = maxHealth;

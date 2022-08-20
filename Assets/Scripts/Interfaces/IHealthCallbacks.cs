@@ -8,8 +8,8 @@ public interface IHealthCallbacks
 	event HealthChangeNotificationDelegate OnDealDamage;
 	event HealthChangeNotificationDelegate OnHealDamage;
     event KilledCharacterDelegate OnKill;
-    void DamageDealtCallback(HealthChangeNotificationData hcnd);
-	void DamageHealedCallback(HealthChangeNotificationData hcnd);
+    void DamageDealtCallback(HealthChangeData hcnd);
+	void DamageHealedCallback(HealthChangeData hcnd);
 
     void KillCallback(GameObject killed);
 }

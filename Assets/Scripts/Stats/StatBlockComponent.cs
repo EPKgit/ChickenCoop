@@ -10,7 +10,7 @@ public class StatBlockComponent : MonoBehaviour
 
     void Awake()
     {
-		if(Lib.LibGetComponentDownTree<IStatBlockInitializer>(gameObject) == null)
+		if(Lib.FindDownwardsInTree<IStatBlockInitializer>(gameObject) == null)
 		{
             Initialize();
         }
@@ -54,6 +54,16 @@ public class StatBlockComponent : MonoBehaviour
 	public float GetValueOrDefault(StatName name)
 	{
         return stats.GetValueOrDefault(name);
+    }
+
+	public static float GetValueOrDefault(GameObject g, StatName name)
+	{
+        StatBlockComponent comp = Lib.FindDownwardsInTree<StatBlockComponent>(g);
+		if(comp != null)
+		{
+            return comp.GetValueOrDefault(name);
+        }
+        return StatBlock.defaultValues[name];
     }
 
 	public int GetIntValue(StatName name)

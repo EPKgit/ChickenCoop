@@ -10,9 +10,23 @@ public class EnemyHealth : BaseHealth
         postDamageEvent += OnDamage;
     }
 
-    void OnDamage(HealthChangeNotificationData hcnd)
+    void OnDamage(HealthChangeData hcd)
     {
-        DamageNumbersManager.instance.CreateNumber(hcnd.value, hcnd.localSource.transform.position);
+        Vector3 location;
+        if (hcd.damageLocation != null)
+        {
+            location = hcd.damageLocation();
+        }
+        else if (hcd.localSource != null)
+        {
+            location = hcd.localSource.transform.position;
+        }
+        else
+        {
+            Debug.LogError("ERROR: Trying to spawn damage numbers without proper location setup");
+            location = transform.position;
+        }
+        DamageNumbersManager.instance.CreateNumber(-hcd.delta, location);
     }
 
     protected override void Die(GameObject killer = null)
