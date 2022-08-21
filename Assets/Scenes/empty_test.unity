@@ -385,6 +385,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3142385264362527721, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
+      propertyPath: stats._keys.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142385264362527721, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
+      propertyPath: stats._values.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142385264362527721, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
+      propertyPath: stats._keys.Array.data[2]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142385264362527721, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
+      propertyPath: stats._keys.Array.data[3]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142385264362527721, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
+      propertyPath: stats._values.Array.data[2]._baseValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142385264362527721, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
+      propertyPath: stats._values.Array.data[3]._baseValue
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8904934775474808004, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
       propertyPath: m_Name
       value: DebugEnemy

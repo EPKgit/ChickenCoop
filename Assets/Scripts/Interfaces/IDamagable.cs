@@ -26,8 +26,13 @@ public class HealthChangeData
     public GameObject localSource { get; private set; }
     public GameObject target { get; private set; }
     public float delta { get; private set; }
+    public float unmodifiedDelta { get;  private set; }
     public KnockbackData knockbackData { get; private set; }
     public Func<Vector3> damageLocation { get; private set; }
+    public StatName flatStat { get => _flatStat; private set => _flatStat = value; }
+    private StatName _flatStat = StatName.MAX;
+    public StatName percentageStat { get => _percentageStat; private set => _percentageStat = value; }
+    private StatName _percentageStat = StatName.MAX;
     public class HealthChangeDataBuilder
     {
         public HealthChangeData data;
@@ -75,18 +80,22 @@ public class HealthChangeData
 
         public HealthChangeDataBuilder Value(float f)
         {
-            data.delta = f;
+            data.unmodifiedDelta = f;
             return this;
         }
 
         public HealthChangeDataBuilder Damage(float f)
         {
-            data.delta = -f;
+            data.unmodifiedDelta = -f;
+            data.percentageStat = StatName.DamagePercentage;
+            data.flatStat = StatName.FlatDamage;
             return this;
         }
 
         public HealthChangeDataBuilder Healing(float f)
         {
+            data.percentageStat = StatName.HealingPercentage;
+            data.flatStat = StatName.FlatHealing;
             return Value(f);
         }
 
@@ -126,6 +135,25 @@ public class HealthChangeData
             if (!Valid())
             {
                 throw new Exception();
+            }
+            StatBlockComponent stats = Lib.FindDownwardsInTree<StatBlockComponent>(data.overallSource);
+            if (stats == null)
+            {
+                data.delta = data.unmodifiedDelta;
+            }
+            else
+            {
+                bool negative = data.unmodifiedDelta < 0;
+                float flatIncrease = stats.GetValueOrDefault(data.flatStat);
+                float percentIncrease = stats.GetValueOrDefault(data.percentageStat);
+                if(negative)
+                {
+                    data.delta = (data.unmodifiedDelta - flatIncrease) * percentIncrease;
+                }
+                else
+                {
+                    data.delta = (data.unmodifiedDelta + flatIncrease) * percentIncrease;
+                }
             }
             return data;
         }

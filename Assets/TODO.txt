@@ -8,9 +8,6 @@ sfx
     -using abilities
     -enemies spawning
 
-update idamageable
-    - figure out how to use the damage stats
-
 - make some mvp ability sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MVP/PROTOTYPE SHIT

@@ -18,8 +18,6 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
     private SerializedProperty statVals;
     private SerializedProperty serializationOverriden;
 
-    private bool customTargetingPrefabs;
-
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // EditorGUI.DrawRect(position, Color.red);
@@ -90,7 +88,27 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
         Rect fullRect = NextLine();
         Rect halfRect = fullRect;
         halfRect.width *= 0.5f;
-        newKey = (StatName)EditorGUI.EnumPopup(halfRect, new GUIContent(), newKey, Discriminator, true);
+        var names = new List<String>(Enum.GetNames(typeof(StatName)));
+        int index = 0;
+        for (int x = names.Count - 1; x >= 0; --x)
+        {
+            if(!Discriminator((StatName)x))
+            {
+                names.RemoveAt(x);
+            }
+        }
+        for (int x = 0; x < names.Count; ++x)
+        {
+            if(newKey == (StatName)Enum.Parse(typeof(StatName), names[x]))
+            {
+                index = x;
+            }
+        }
+        int i = EditorGUI.Popup(halfRect, index, names.ToArray());
+        if (i < names.Count)
+        {
+            newKey = (StatName)Enum.Parse(typeof(StatName), names[i]);
+        }
         halfRect.x += halfRect.width;
         if(GUI.Button(halfRect, new GUIContent("Add Stat")) && Discriminator(newKey))
         {
@@ -119,6 +137,10 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
             return false;
         }
         StatName stat = (StatName)e;
+        if(stat == StatName.MAX)
+        {
+            return false;
+        }
         for (var iter = statKeys.GetEnumerator(); iter.MoveNext();)
         {
             SerializedProperty prop = iter.Current as SerializedProperty;

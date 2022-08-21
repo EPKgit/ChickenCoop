@@ -14,6 +14,7 @@ public enum StatName
     FlatHealing         = 6, 
     CooldownReduction   = 7, 
     PuzzleSolving       = 8, 
+    MAX = 9
 }
 
 [System.Serializable]
