@@ -99,22 +99,22 @@ public class PlayerInput : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext ctx)
 	{
-        playerAbilities.AbilityInput(AbilitySlots.SLOT_ATTACK, ctx, aimPoint);
+        playerAbilities.AbilityInput(AbilitySlot.SLOT_ATTACK, ctx, aimPoint);
     }
 
 	public void OnAbility1(InputAction.CallbackContext ctx)
 	{
-        playerAbilities.AbilityInput(AbilitySlots.SLOT_1, ctx, aimPoint);
+        playerAbilities.AbilityInput(AbilitySlot.SLOT_1, ctx, aimPoint);
     }
 
     public void OnAbility2(InputAction.CallbackContext ctx)
 	{
-        playerAbilities.AbilityInput(AbilitySlots.SLOT_2, ctx, aimPoint);
+        playerAbilities.AbilityInput(AbilitySlot.SLOT_2, ctx, aimPoint);
 	}
 
 	public void OnAbility3(InputAction.CallbackContext ctx)
 	{
-		playerAbilities.AbilityInput(AbilitySlots.SLOT_3, ctx, aimPoint);
+		playerAbilities.AbilityInput(AbilitySlot.SLOT_3, ctx, aimPoint);
 	}
 
 	#region INTERACTION

@@ -71,12 +71,12 @@ public class Stat : ISerializationCallbackReceiver
 	/// to ensure that they remove the same bonus they added. 
 	/// </summary>
     [NonSerialized]
-	private int currentID = 0;
+	private uint currentID = 0;
 
     [NonSerialized]
-    private List<Tuple<float, int>> multiplicativeModifiers = new List<Tuple<float, int>>();
+    private List<Tuple<uint, float>> multiplicativeModifiers = new List<Tuple<uint, float>>();
     [NonSerialized]
-    private List<Tuple<float, int>> additiveModifiers = new List<Tuple<float, int>>();
+    private List<Tuple<uint, float>> additiveModifiers = new List<Tuple<uint, float>>();
 
 	public Stat(StatName s, float f)
 	{
@@ -91,13 +91,13 @@ public class Stat : ISerializationCallbackReceiver
     private void UpdateCurrentValue(bool forceUpdate = false)
     {
         float finalResult = BaseValue;
-        foreach(Tuple<float, int> t in additiveModifiers)
+        foreach(Tuple<uint, float> t in additiveModifiers)
         {
             finalResult += t.Item1;
         }
-        foreach(Tuple<float, int> t in multiplicativeModifiers)
+        foreach(Tuple<uint, float> t in multiplicativeModifiers)
         {
-            finalResult += t.Item1 * BaseValue;
+            finalResult *= t.Item2;
         }
         bool changed = _value != finalResult;
         _value = finalResult;
@@ -107,7 +107,7 @@ public class Stat : ISerializationCallbackReceiver
         }
     }
 
-	int GetID()
+	uint GetID()
 	{
 		return currentID++;
 	}
@@ -117,10 +117,10 @@ public class Stat : ISerializationCallbackReceiver
 	/// </summary>
 	/// <param name="f">The bonus amount</param>
 	/// <returns>Returns the ID handle of the bonus added</returns>
-    public int AddAdditiveModifier(float f)
+    public uint AddAdditiveModifier(float f)
     {
-		int ID = GetID();
-        additiveModifiers.Add(new Tuple<float, int>(f, ID));
+		uint ID = GetID();
+        additiveModifiers.Add(new Tuple<uint, float>(ID, f));
         UpdateCurrentValue();
 		return ID;
     }
@@ -130,10 +130,10 @@ public class Stat : ISerializationCallbackReceiver
 	/// </summary>
 	/// <param name="f">The bonus amount</param>
 	/// <returns>Returns the ID handle of the bonus added</returns>
-    public int AddMultiplicativeModifier(float f)
+    public uint AddMultiplicativeModifier(float f)
     {
-		int ID = GetID();
-        multiplicativeModifiers.Add(new Tuple<float, int>(f, ID));
+		uint ID = GetID();
+        multiplicativeModifiers.Add(new Tuple<uint, float>(ID, f));
         UpdateCurrentValue();
         return ID;
     }
@@ -142,9 +142,9 @@ public class Stat : ISerializationCallbackReceiver
 	/// Removes a bonus by it's ID handle
 	/// </summary>
 	/// <param name="i">The ID of the bonus to remove</param>
-    public void RemoveAdditiveModifier(int i)
+    public void RemoveAdditiveModifier(uint i)
     {
-        additiveModifiers.RemoveAll( (t) => t.Item2 == i );
+        additiveModifiers.RemoveAll( (t) => t.Item1 == i );
         UpdateCurrentValue();
     }
 
@@ -152,9 +152,9 @@ public class Stat : ISerializationCallbackReceiver
 	/// Removes a bonus by it's ID handle
 	/// </summary>
 	/// <param name="i">The ID of the bonus to remove</param>
-    public void RemoveMultiplicativeModifier(int i)
+    public void RemoveMultiplicativeModifier(uint i)
     {
-        multiplicativeModifiers.RemoveAll( (t) => t.Item2 == i );
+        multiplicativeModifiers.RemoveAll( (t) => t.Item1 == i );
         UpdateCurrentValue();
     }
 
@@ -193,8 +193,8 @@ public class Stat : ISerializationCallbackReceiver
 
     public void OnAfterDeserialize()
     {
-        multiplicativeModifiers = new List<Tuple<float, int>>();
-        additiveModifiers = new List<Tuple<float, int>>();
+        multiplicativeModifiers = new List<Tuple<uint, float>>();
+        additiveModifiers = new List<Tuple<uint, float>>();
         statChangeEvent = delegate { };
     }
 }

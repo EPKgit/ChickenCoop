@@ -8,7 +8,7 @@ public class StatBuff : Ability
 	public float buffAmount;
 	public StatName statToBuff;
 	
-	private int? bonusHandle;
+	private uint? bonusHandle;
 
     public override string GetTooltip()
     {

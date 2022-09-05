@@ -7,7 +7,7 @@
         <tooltip>Shoots an egg in targeted direction dealing {0} damage to the first enemy hit</tooltip>
         <var_list>
             <variable name="dmg" type="float" value="1"/>
-            <variable name="cd" type="float" value="0"/>
+            <variable name="cd" type="float" value="2"/>
         </var_list>
     </ability>
 
@@ -121,6 +121,31 @@
             <variable name="stunDuration" type="float" value="1.5"/>
             <variable name="damage" type="float" value="20"/>
             <variable name="aoe" type="float" value="10"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+    <ability>
+        <ability_ID>11</ability_ID>
+        <ability_name>Tick Cluck</ability_name>
+        <tooltip>Every {0} abilities causes the next ability cooldown to be set to {1} seconds.</tooltip>
+        <var_list>
+            <variable name="SetCDTo" type="float" value="0.5"/>
+            <variable name="NumAbilitiesBeforeReset" type="int" value="5"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+    <ability>
+        <ability_ID>12</ability_ID>
+        <ability_name>Topsy Turvey</ability_name>
+        <tooltip>Every {0} secondds swap between increasing your cooldowns at a {1} times rate and decreasing them at {2} times rate.</tooltip>
+        <var_list>
+            <variable name="increaseMultiplier" type="float" value="-3"/>
+            <variable name="decreaseMultiplier" type="float" value="5"/>
+            <variable name="interval" type="float" value="1"/>
         </var_list>
     </ability>
 

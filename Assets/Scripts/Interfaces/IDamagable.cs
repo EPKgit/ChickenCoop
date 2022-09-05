@@ -87,15 +87,27 @@ public class HealthChangeData
         public HealthChangeDataBuilder Damage(float f)
         {
             data.unmodifiedDelta = -f;
-            data.percentageStat = StatName.DamagePercentage;
-            data.flatStat = StatName.FlatDamage;
+            if (data.percentageStat == StatName.MAX)
+            {
+                data.percentageStat = StatName.DamagePercentage;
+            }
+            if (data.flatStat == StatName.MAX)
+            {
+                data.flatStat = StatName.FlatDamage;
+            }
             return this;
         }
 
         public HealthChangeDataBuilder Healing(float f)
         {
-            data.percentageStat = StatName.HealingPercentage;
-            data.flatStat = StatName.FlatHealing;
+            if (data.percentageStat == StatName.MAX)
+            {
+                data.percentageStat = StatName.HealingPercentage;
+            }
+            if (data.flatStat == StatName.MAX)
+            {
+                data.flatStat = StatName.FlatHealing;
+            }
             return Value(f);
         }
 
@@ -117,6 +129,18 @@ public class HealthChangeData
             return this;
         }
 
+        public HealthChangeDataBuilder PercentageStat(StatName stat)
+        {
+            data.percentageStat = stat;
+            return this;
+        }
+
+        public HealthChangeDataBuilder FlatStat(StatName stat)
+        {
+            data.flatStat = stat;
+            return this;
+        }
+
         private bool Valid()
         {
             if(data.overallSource == null)
@@ -134,6 +158,7 @@ public class HealthChangeData
         {
             if (!Valid())
             {
+                Debug.LogError("ERROR: HealthChangeBuilder created with invalid parameters");
                 throw new Exception();
             }
             StatBlockComponent stats = Lib.FindDownwardsInTree<StatBlockComponent>(data.overallSource);

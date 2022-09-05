@@ -96,8 +96,8 @@ public class AbilityQueue
                         }
                         else
                         {
-                            postAbilityCastEvent(new AbilityEventData(a));
-                            a.FinishAbility();
+                                a.FinishAbility();
+                                postAbilityCastEvent(new AbilityEventData(a));
                         }
                     }
                     current.state = AbilityInputData.AbilityInputState.FINISHED;

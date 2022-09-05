@@ -15,9 +15,9 @@ public class InGamePlayerUI : MonoBehaviour
 
 	private GameObject UIActive;
 	private Slider healthSlider;
-	private Image[] icons = new Image[(int)AbilitySlots.MAX];
-	private Image[] cds = new Image[(int)AbilitySlots.MAX];
-    private TextMeshProUGUI[] cdTexts = new TextMeshProUGUI[(int)AbilitySlots.MAX];
+	private Image[] icons = new Image[(int)AbilitySlot.MAX];
+	private Image[] cds = new Image[(int)AbilitySlot.MAX];
+    private TextMeshProUGUI[] cdTexts = new TextMeshProUGUI[(int)AbilitySlot.MAX];
 
     void Awake()
 	{
@@ -121,25 +121,25 @@ public class InGamePlayerUI : MonoBehaviour
 
 	void UpdateAttackUI(CooldownTickData data)
 	{
-        UpdateAbilityUI(AbilitySlots.SLOT_ATTACK, data);
+        UpdateAbilityUI(AbilitySlot.SLOT_ATTACK, data);
     }
 
     void UpdateAbility1UI(CooldownTickData data)
 	{
-        UpdateAbilityUI(AbilitySlots.SLOT_1, data);
+        UpdateAbilityUI(AbilitySlot.SLOT_1, data);
     }
 
     void UpdateAbility2UI(CooldownTickData data)
 	{
-        UpdateAbilityUI(AbilitySlots.SLOT_2, data);
+        UpdateAbilityUI(AbilitySlot.SLOT_2, data);
     }
 
 	void UpdateAbility3UI(CooldownTickData data)
 	{
-        UpdateAbilityUI(AbilitySlots.SLOT_3, data);
+        UpdateAbilityUI(AbilitySlot.SLOT_3, data);
     }
 
-    private void UpdateAbilityUI(AbilitySlots index, CooldownTickData data)
+    private void UpdateAbilityUI(AbilitySlot index, CooldownTickData data)
     {
         UpdateAbilityUI((int)index, data);
     }

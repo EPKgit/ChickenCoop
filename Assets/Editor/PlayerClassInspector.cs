@@ -31,5 +31,6 @@ public class PlayerClassInspector : Editor
         EditorGUILayout.PropertyField(playerModelPrefab);
     
         EditorGUILayout.PropertyField(stats);
+        serializedObject.ApplyModifiedProperties();
     }
 }

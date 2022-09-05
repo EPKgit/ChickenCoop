@@ -32,7 +32,7 @@ public class AbilityInspector : Editor
     void OnEnable()
     {
         ability = target as Ability;
-        childFields = new List<FieldInfo>(ability.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public));
+        childFields = new List<FieldInfo>(ability.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public));
         for (int x = childFields.Count - 1; x >= 0; --x)
         {
             if (childFields[x].DeclaringType == typeof(Ability))
@@ -112,7 +112,7 @@ public class AbilityInspector : Editor
         var serializedProperty = serializedObject.FindProperty(name);
         if(serializedProperty == null)
         {
-            Debug.LogError(string.Format("ERROR: SERIALIZED PROPERTY \"{0}\" COULD NOT BE FOUND FOR ABILITY", name));
+            Debug.LogError(string.Format("ERROR: SERIALIZED PROPERTY \"{0}\" COULD NOT BE FOUND FOR ABILITY WITH ID:{1}", name, ID.intValue));
             return;
         }
         PotentiallyOverrideProperty(serializedProperty);

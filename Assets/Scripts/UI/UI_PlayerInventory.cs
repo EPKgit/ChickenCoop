@@ -108,10 +108,10 @@ public class UI_PlayerInventory : MonoBehaviour
     void GenerateSlots(List<GameObject> groundAbilities)
     {
         int x = 0;
-        for (x = 0; x < AbilitySlots.MAX.AsInt(); ++x)
+        for (x = 0; x < AbilitySlot.MAX.AsInt(); ++x)
         {
             UI_Slot temp = Instantiate(slotPrefab).GetComponent<UI_Slot>();
-            temp.abilitySlotIndex = (AbilitySlots)x;
+            temp.abilitySlotIndex = (AbilitySlot)x;
             temp.OnAbilityDropped += OnDropAbility;
             slots.Add(temp.gameObject);
             temp.transform.SetParent(transform, false);
@@ -122,7 +122,7 @@ public class UI_PlayerInventory : MonoBehaviour
         for (x = 0; x < groundAbilities.Count; ++x)
         {
             UI_Slot temp = Instantiate(slotPrefab).GetComponent<UI_Slot>();
-            temp.abilitySlotIndex = AbilitySlots.DROPPED_ABILITY;
+            temp.abilitySlotIndex = AbilitySlot.DROPPED_ABILITY;
             temp.OnAbilityDropped += OnDropAbility;
             slots.Add(temp.gameObject);
             temp.transform.SetParent(groundInventoryGameObject.transform, false);
@@ -161,7 +161,7 @@ public class UI_PlayerInventory : MonoBehaviour
             temp.SetSlot(slots[x], false);
             temp.name = "ABILITY " + x;
         }
-        int OFFSET = AbilitySlots.MAX.AsInt();
+        int OFFSET = AbilitySlot.MAX.AsInt();
         for (int x = 0; x < groundAbilities.Count; ++x)
         {
             UI_Ability temp = Instantiate(abilityPrefab).GetComponent<UI_Ability>();
@@ -173,19 +173,19 @@ public class UI_PlayerInventory : MonoBehaviour
         }
     }
 
-    void OnDropAbility(AbilitySlots newAbilitySlot, AbilitySlots oldAbilitySlot, UI_Ability previousAbility, UI_Ability newAbility)
+    void OnDropAbility(AbilitySlot newAbilitySlot, AbilitySlot oldAbilitySlot, UI_Ability previousAbility, UI_Ability newAbility)
     {
         if (newAbility?.ability == null)
         {
             Debug.LogError("Attempted to drop null ability in slot");
             return;
         }
-        if (newAbilitySlot == AbilitySlots.INVALID)
+        if (newAbilitySlot == AbilitySlot.INVALID)
         {
             Debug.LogError("Attempted to drop ability into invalid slot");
             return;
         }
-        if(newAbilitySlot == AbilitySlots.DROPPED_ABILITY)
+        if(newAbilitySlot == AbilitySlot.DROPPED_ABILITY)
         {
             newAbility.CreateDroppedAbilityObject(null, true);
             return;

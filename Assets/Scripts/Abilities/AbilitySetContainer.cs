@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public enum AbilitySlots
+public enum AbilitySlot
 {
     SLOT_ATTACK,
     SLOT_1,
@@ -15,13 +15,13 @@ public enum AbilitySlots
 
 public static class EnumExtensions
 {
-    public static bool ValidSlot(this AbilitySlots a)
+    public static bool ValidSlot(this AbilitySlot a)
     {
-        return a >= AbilitySlots.SLOT_ATTACK && a < AbilitySlots.MAX;
+        return a >= AbilitySlot.SLOT_ATTACK && a < AbilitySlot.MAX;
     }
-    public static int AsInt(this AbilitySlots a)
+    public static int AsInt(this AbilitySlot a)
     {
-        return (int)AbilitySlots.MAX;
+        return (int)AbilitySlot.MAX;
     }
 }
 
@@ -31,11 +31,11 @@ public struct AbilitySetContainer : IEnumerable
     private Ability[] abilities;
     public AbilitySetContainer(params Ability[] list)
     {
-        if (list.Length < (int)AbilitySlots.MAX)
+        if (list.Length < (int)AbilitySlot.MAX)
         {
             throw new Exception("ERROR: Ability Set passed more abilities than allowed");
         }
-        abilities = new Ability[(int)AbilitySlots.MAX];
+        abilities = new Ability[(int)AbilitySlot.MAX];
         for (int x = 0; x < list.Length; ++x)
         {
             abilities[x] = list[x];
@@ -47,7 +47,7 @@ public struct AbilitySetContainer : IEnumerable
         get { return abilities[i]; }
         set { abilities[i] = value; }
     }
-    public Ability this[AbilitySlots i]
+    public Ability this[AbilitySlot i]
     {
         get { return abilities[(int)i]; }
         set { abilities[(int)i] = value; }
@@ -60,7 +60,7 @@ public struct AbilitySetContainer : IEnumerable
 
     public bool SetSlot(int i, Ability a)
     {
-        if(!((AbilitySlots)i).ValidSlot())
+        if(!((AbilitySlot)i).ValidSlot())
         {
             Debug.LogError("ERROR SETTING SLOT IN ABILITIES INVALID INDEX");
             return false;
@@ -69,7 +69,7 @@ public struct AbilitySetContainer : IEnumerable
         return true;
     }
 
-    public bool SetSlot(AbilitySlots i, Ability a)
+    public bool SetSlot(AbilitySlot i, Ability a)
     {
         return SetSlot((int)i, a);
     }

@@ -6,6 +6,6 @@ using UnityEngine;
 public class AbilitySetAsset : ScriptableObject
 {
 	public new string name;
-    public Ability[] abilities = new Ability[(int)AbilitySlots.MAX];
+    public Ability[] abilities = new Ability[(int)AbilitySlot.MAX];
 	public List<Ability> passiveEffects;
 }

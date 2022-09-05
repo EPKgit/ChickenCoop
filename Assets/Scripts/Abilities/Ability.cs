@@ -5,6 +5,18 @@ using UnityEngine.Serialization;
 using UnityEngine.InputSystem;
 using Targeting;
 
+public class MutableCooldownTickData
+{
+    public Stat tickDelta;
+
+    public MutableCooldownTickData(float startingValue)
+    {
+        tickDelta = new Stat(StatName.MAX, startingValue);
+    }
+
+    public MutableCooldownTickData() : this(Time.deltaTime) { }
+}
+
 public class CooldownTickData
 {
     public float currentCooldown;
@@ -19,6 +31,7 @@ public class CooldownTickData
         this.maxRecast = maxRecast;
     }
 }
+public delegate void MutableCooldownTickDelegate(MutableCooldownTickData data);
 public delegate void CooldownTickDelegate(CooldownTickData data);
 public delegate void AbilityCastingDelegate(AbilityEventData data);
 
@@ -29,6 +42,7 @@ public delegate void AbilityCastingDelegate(AbilityEventData data);
 /// </summary>
 public abstract class Ability : ScriptableObject
 {
+    public event MutableCooldownTickDelegate preCooldownTick = delegate { };
     public event CooldownTickDelegate cooldownTick = delegate { };
 
 
@@ -230,7 +244,9 @@ public abstract class Ability : ScriptableObject
         if (currentCooldownTimer > 0)
         {
             ticked = true;
-            currentCooldownTimer -= deltaTime;
+            MutableCooldownTickData mpctd = new MutableCooldownTickData();
+            preCooldownTick(mpctd);
+            currentCooldownTimer -= mpctd.tickDelta.Value;
             if(currentCooldownTimer <= 0)
             {
                 currentCooldownTimer = 0;

@@ -17,7 +17,7 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     [HideInInspector]
     public GameObject droppedAbilityObject = null;
     [HideInInspector]
-    public AbilitySlots currentSlotIndex;
+    public AbilitySlot currentSlotIndex;
 
     private const float DROP_TIMER_RESET_COOLDOWN = 0.05f;
 

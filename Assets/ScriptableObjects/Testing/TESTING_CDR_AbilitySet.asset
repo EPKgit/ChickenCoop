@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1cf6e6f8451785f408b1e0ecd3f3baca, type: 3}
-  m_Name: TestingAbilitySet
-  m_EditorClassIdentifier: Assembly-CSharp::AbilitySetAsset
-  name: test
+  m_Name: TESTING_CDR_AbilitySet
+  m_EditorClassIdentifier: 
+  name: DEBUG_CDR
   abilities:
   - {fileID: 11400000, guid: dbcc47cbefbc6b3449dfc3e2d294e12c, type: 2}
-  - {fileID: 11400000, guid: 7c13e622c45f15b46b60763eb9363ae4, type: 2}
   - {fileID: 11400000, guid: d1c49059ca228df41a46f5b23e410b7e, type: 2}
+  - {fileID: 11400000, guid: acdfcc02ba445c842b76c920c2ddbc31, type: 2}
   - {fileID: 11400000, guid: 654615ef105dc304cbae9060d6280ee3, type: 2}
-  passiveEffects: []
+  passiveEffects:
+  - {fileID: 11400000, guid: 103709321012cab4196987e473ac778f, type: 2}

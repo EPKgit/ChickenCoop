@@ -9,6 +9,16 @@ public class PlayerAbilities : MonoBehaviour
     public delegate void AbilityInitializationDelegate(AbilitySetContainer abilities);
     public event AbilityInitializationDelegate initializedEvent = delegate { };
 
+    public enum AbilityChangeType
+    {
+        ADDED,
+        REMOVED,
+        OVERRIDDEN,
+
+    }
+    public delegate void AbilityChangedDelegate(Ability previousAbility, Ability newAbility, AbilitySlot slot, AbilityChangeType type);
+    public event AbilityChangedDelegate abilityChanged = delegate { };
+
     public event AbilityCastingDelegate preAbilityCastEvent = delegate { };
     public event AbilityCastingDelegate postAbilityCastEvent = delegate { };
 
@@ -60,22 +70,30 @@ public class PlayerAbilities : MonoBehaviour
 	}
 
 
-    private void temp1(AbilityEventData aed)
+    private void PreCastEvent(AbilityEventData aed)
     {
         preAbilityCastEvent(aed);
+    }
+
+    private void PostCastEvent(AbilityEventData aed)
+    {
+        postAbilityCastEvent(aed);
     }
 
     public void Initialize(AbilitySetAsset abilitySet)
 	{
         abilityQueue = new AbilityQueue(this);
-        abilityQueue.preAbilityCastEvent += (data) => { preAbilityCastEvent(data); };
-        abilityQueue.postAbilityCastEvent += (data) => { postAbilityCastEvent(data); };
+        abilityQueue.preAbilityCastEvent += PreCastEvent;
+        abilityQueue.postAbilityCastEvent += PostCastEvent;
         passives = new List<Ability>();
 
         abilitySet = Instantiate(abilitySet);
         for(int x = 0; x < abilitySet.abilities.Length; ++x)
         {
-            abilitySet.abilities[x] = ScriptableObject.Instantiate(abilitySet.abilities[x]);
+            if (abilitySet.abilities[x] != null)
+            {
+                abilitySet.abilities[x] = ScriptableObject.Instantiate(abilitySet.abilities[x]);
+            }
         }
         _abilities = new AbilitySetContainer(abilitySet.abilities);
 		foreach(Ability a in abilitySet.passiveEffects)
@@ -101,7 +119,12 @@ public class PlayerAbilities : MonoBehaviour
         }
         initialized = true;
 		initializedEvent(abilities);
-	}
+        for (int x = 0; x < _abilities.Length; ++x)
+        {
+            abilityChanged.Invoke(null, _abilities[x], (AbilitySlot)x, AbilityChangeType.ADDED);
+        }
+
+    }
 
     /// <summary>
     /// Register cooldown callbacks for all abilities, will be called immediately with the starting values. These values may be 0
@@ -109,7 +132,7 @@ public class PlayerAbilities : MonoBehaviour
     /// <param name="callbacks">Array of callbacks. Length should be equals to or less than the number of slots</param>
 	public void RegisterAbilityCooldownCallbacks(CooldownTickDelegate[] callbacks)
 	{
-        if(callbacks.Length > (int)AbilitySlots.MAX)
+        if(callbacks.Length > (int)AbilitySlot.MAX)
         {
             throw new Exception("ERROR: Cooldown callback size is greater than the number of slots");
         }
@@ -117,6 +140,7 @@ public class PlayerAbilities : MonoBehaviour
         {
             if(callbacks[x] == null || abilities[x] == null)
             {
+                callbacks[x](new CooldownTickData(-1, -1, -1, -1));
                 continue;
             }
             abilities[x].cooldownTick += callbacks[x];
@@ -130,7 +154,7 @@ public class PlayerAbilities : MonoBehaviour
     /// <param name="callbacks">Array of callbacks. Length should be equals to or less than the number of slots</param>
 	public void UnregisterAbilityCooldownCallbacks(CooldownTickDelegate[] callbacks)
     {
-        if (callbacks.Length > (int)AbilitySlots.MAX)
+        if (callbacks.Length > (int)AbilitySlot.MAX)
         {
             throw new Exception("ERROR: Cooldown callback size is greater than the number of slots");
         }
@@ -180,14 +204,14 @@ public class PlayerAbilities : MonoBehaviour
 
 	public Sprite GetIcon(int index)
 	{
-		if(index >= (int)AbilitySlots.MAX || abilities[index] == null)
+		if(index >= (int)AbilitySlot.MAX || abilities[index] == null)
         {
             return null;
         }
         return abilities[index].icon;
 	}
 
-    public void AbilityInput(AbilitySlots index, InputAction.CallbackContext ctx, Vector2 point)
+    public void AbilityInput(AbilitySlot index, InputAction.CallbackContext ctx, Vector2 point)
     {
         AbilityInput(abilities[index], ctx, point);
     }
@@ -238,12 +262,13 @@ public class PlayerAbilities : MonoBehaviour
     /// </summary>
     /// <param name="index">The slot</param>
     /// <returns>True if the slot wasn't empty and an ability was removed, and false otherwise</returns>
-    public bool RemoveAbility(AbilitySlots index)
+    public bool RemoveAbility(AbilitySlot index)
     {
         if(!index.ValidSlot() || abilities[index] == null)
         {
             return false;
         }
+        abilityChanged.Invoke(_abilities[index], null, index, AbilityChangeType.REMOVED);
         _abilities[index] = null;
         initializedEvent(abilities);
         return true;
@@ -260,6 +285,7 @@ public class PlayerAbilities : MonoBehaviour
         {
             if(abilities[x] == a)
             {
+                abilityChanged.Invoke(_abilities[x], null, (AbilitySlot)x, AbilityChangeType.REMOVED);
                 _abilities[x] = null;
                 initializedEvent(abilities);
                 return true;
@@ -274,12 +300,13 @@ public class PlayerAbilities : MonoBehaviour
     /// <param name="index">Which slot to try to add to</param>
     /// <param name="a">The abiltiy to be added</param>
     /// <returns></returns>
-    public bool AddAbility(AbilitySlots index, Ability a)
+    public bool AddAbility(AbilitySlot index, Ability a)
     {
         if(!index.ValidSlot() || abilities[index] != null)
         {
             return false;
         }
+        abilityChanged.Invoke(_abilities[index], null, index, AbilityChangeType.ADDED);
         _abilities[index] = a;
         initializedEvent(abilities);
         return true;
@@ -291,12 +318,13 @@ public class PlayerAbilities : MonoBehaviour
     /// <param name="index">Which slot to try to override</param>
     /// <param name="a">The abiltiy to be added</param>
     /// <returns>False if the slot is invalid, true otherwise</returns>
-    public bool OverrideAbility(AbilitySlots index, Ability a)
+    public bool OverrideAbility(AbilitySlot index, Ability a)
     {
         if(!index.ValidSlot())
         {
             return false;
         }
+        abilityChanged.Invoke(_abilities[index], a, index, AbilityChangeType.OVERRIDDEN);
         _abilities[index] = a;
         initializedEvent(abilities);
         return true;
