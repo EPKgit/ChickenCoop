@@ -10,11 +10,7 @@ public class PassiveRegen : Ability
 	private float timeSinceLastHeal;
 	private IHealable hp;
 	private GameObject owner;
-
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription);
-    }
+	
     public override void Initialize(PlayerAbilities pa)
 	{
 		hp = Lib.FindUpwardsInTree<IHealable>(pa.gameObject);

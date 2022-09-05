@@ -25,9 +25,4 @@ public class RecastableTeleport : Ability
         playerAbilities.movement.TeleportInput(startingPosition);
         SwitchTargetingType(0);
     }
-
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription);
-    }
 }

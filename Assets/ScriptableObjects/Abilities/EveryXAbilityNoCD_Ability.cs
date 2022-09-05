@@ -9,11 +9,6 @@ public class EveryXAbilityNoCD_Ability : Ability
 
     private int counter = 0;
 
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription, NumAbilitiesBeforeReset, SetCDTo);
-    }
-
     public override void Initialize(PlayerAbilities pa)
 	{
 		base.Initialize(pa);

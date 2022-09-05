@@ -10,10 +10,6 @@ public class StatBuff : Ability
 	
 	private uint? bonusHandle;
 
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription);
-    }
     public override void Reinitialize()
 	{
 		base.Reinitialize();

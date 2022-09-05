@@ -17,11 +17,6 @@ public class BasicShoot : Ability
         set;
     }
 
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription, damage);
-    }
-
     public override void Initialize(PlayerAbilities pa)
 	{
 		PoolManager.instance.AddPoolSize(bulletPrefab, 20, true);

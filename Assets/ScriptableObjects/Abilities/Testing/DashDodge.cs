@@ -10,11 +10,6 @@ public class DashDodge : Ability
     private Vector2 destination;
     private Vector2 prevPosition;
 
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription, targetingData.range, maxDuration);
-    }
-
     public override void Initialize(PlayerAbilities pa)
     {
         base.Initialize(pa);
@@ -29,7 +24,7 @@ public class DashDodge : Ability
     {
         base.UseAbility();
         Vector2 direction = GetNormalizedDirectionTowardsTarget(targetingData.inputPoint);
-        destination = (Vector2)playerAbilities.transform.position + (direction * targetingData.range);
+        destination = (Vector2)playerAbilities.transform.position + (direction * range);
         startPosition = playerAbilities.transform.position;
         playerAbilities.movement.DashInput(startPosition, destination, maxDuration);
     }

@@ -7,11 +7,6 @@ public class BasicTargetStun : Ability
 {
     public float stunDuration = 2.0f;
 
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription, stunDuration);
-    }
-
     public override void Initialize(PlayerAbilities pa)
 	{
 		base.Initialize(pa);

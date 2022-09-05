@@ -11,11 +11,6 @@ public class FlipFlopCooldown_Ability : Ability
     private bool increasing;
     private float timer;
 
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription, interval, increaseMultiplier, decreaseMultiplier);
-    }
-
     public override void Initialize(PlayerAbilities pa)
     {
         base.Initialize(pa);

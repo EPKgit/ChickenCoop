@@ -4,7 +4,7 @@
     <ability>
         <ability_ID>1</ability_ID>
         <ability_name>Egg Toss</ability_name>
-        <tooltip>Shoots an egg in targeted direction dealing {0} damage to the first enemy hit</tooltip>
+        <tooltip>Shoots an egg in targeted direction dealing {damage} damage to the first enemy hit</tooltip>
         <var_list>
             <variable name="dmg" type="float" value="1"/>
             <variable name="cd" type="float" value="2"/>
@@ -16,7 +16,7 @@
     <ability>
         <ability_ID>2</ability_ID>
         <ability_name>Bombard</ability_name>
-        <tooltip>Launch an explosive egg towards target area which explodes on landing dealing {0} damage in a {1} unit AOE</tooltip>
+        <tooltip>Launch an explosive egg towards target area which explodes on landing dealing {dmg} damage in a {aoe} unit AOE</tooltip>
         <var_list>
             <variable name="dmg" type="float" value="9"/>
             <variable name="cd" type="float" value="8"/>
@@ -29,7 +29,7 @@
     <ability>
         <ability_ID>3</ability_ID>
         <ability_name>Rooster Slide</ability_name>
-        <tooltip>Dash for {0} units over {1}s in a target direction</tooltip>
+        <tooltip>Dash for {range} units over {duration}s in a target direction</tooltip>
         <var_list>
             <variable name="cd" type="float" value="5"/>
             <variable name="duration" type="float" value="0.1"/>
@@ -41,7 +41,7 @@
     <ability>
         <ability_ID>4</ability_ID>
         <ability_name>Hen Heal</ability_name>
-        <tooltip>Heal a targeted unit for {0} health</tooltip>
+        <tooltip>Heal a targeted unit for {amount} health</tooltip>
         <var_list>
             <variable name="cd" type="float" value="10"/>
             <variable name="amount" type="float" value="5"/>
@@ -53,7 +53,7 @@
     <ability>
         <ability_ID>5</ability_ID>
         <ability_name>Egg Popping</ability_name>
-        <tooltip>Everytime you cast an ability, decrease all cooldowns by {0} seconds</tooltip>
+        <tooltip>Everytime you cast an ability, decrease all cooldowns by {amount}s</tooltip>
         <var_list>
             <variable name="amount" type="float" value="0.5"/>
         </var_list>
@@ -64,7 +64,7 @@
     <ability>
         <ability_ID>6</ability_ID>
         <ability_name>Cooped Up</ability_name>
-        <tooltip>Destroy all enemy projectiles in an {0} unit AOE for the next {1} seconds</tooltip>
+        <tooltip>Destroy all enemy projectiles in an {aoe} unit AOE for the next {duration}s</tooltip>
         <var_list>
             <variable name="cd" type="float" value="2"/>
             <variable name="aoe" type="float" value="3"/>
@@ -77,7 +77,7 @@
     <ability>
         <ability_ID>7</ability_ID>
         <ability_name>Bonk</ability_name>
-        <tooltip>Stun targeted enemy for {1} seconds</tooltip>
+        <tooltip>Stun targeted enemy for {stunDuration}s</tooltip>
         <var_list>
             <variable name="cd" type="float" value="1"/>
             <variable name="stunDuration" type="float" value="2.0"/>
@@ -101,7 +101,7 @@
     <ability>
         <ability_ID>9</ability_ID>
         <ability_name>Repeatable Dash</ability_name>
-        <tooltip>Dash in a target direction, recastable 2 more times</tooltip>
+        <tooltip>Dash {range} units in a target direction, recastable {recasts} more times</tooltip>
         <var_list>
             <variable name="recasts" type="int" value="3"/>
             <variable name="cd" type="float" value="10"/>
@@ -115,7 +115,7 @@
     <ability>
         <ability_ID>10</ability_ID>
         <ability_name>Shockwave</ability_name>
-        <tooltip>Unleash a shockwave, dealing {0} damage and stunning nearby enemies for {1} seconds</tooltip>
+        <tooltip>Unleash a shockwave, dealing {dmg} damage and stunning nearby enemies for {stunDuration}s</tooltip>
         <var_list>
             <variable name="cd" type="float" value="20"/>
             <variable name="stunDuration" type="float" value="1.5"/>
@@ -129,7 +129,7 @@
     <ability>
         <ability_ID>11</ability_ID>
         <ability_name>Tick Cluck</ability_name>
-        <tooltip>Every {0} abilities causes the next ability cooldown to be set to {1} seconds.</tooltip>
+        <tooltip>Every {NumAbilitiesBeforeReset} abilities causes the next ability cooldown to be set to {SetCDTo}s</tooltip>
         <var_list>
             <variable name="SetCDTo" type="float" value="0.5"/>
             <variable name="NumAbilitiesBeforeReset" type="int" value="5"/>
@@ -141,7 +141,7 @@
     <ability>
         <ability_ID>12</ability_ID>
         <ability_name>Topsy Turvey</ability_name>
-        <tooltip>Every {0} secondds swap between increasing your cooldowns at a {1} times rate and decreasing them at {2} times rate.</tooltip>
+        <tooltip>Every {interval} secondds swap between increasing your cooldowns at a {increaseMultiplier} times rate and decreasing them at {decreaseMultiplier} times rate</tooltip>
         <var_list>
             <variable name="increaseMultiplier" type="float" value="-3"/>
             <variable name="decreaseMultiplier" type="float" value="5"/>

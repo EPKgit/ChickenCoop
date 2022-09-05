@@ -12,11 +12,6 @@ public class Shockwave_Ability : Ability
     public float lifetime;
     public float thickness;
 
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription, damage);
-    }
-
     public override void Initialize(PlayerAbilities pa)
 	{
 		PoolManager.instance.AddPoolSize(shockwavePrefab, 3, true);

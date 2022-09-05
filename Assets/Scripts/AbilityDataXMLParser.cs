@@ -115,14 +115,28 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         },
     };
 
-    private Dictionary<string, string> commonVariableRenames = new Dictionary<string, string>()
+    private static Dictionary<string, string> commonVariableRenames = new Dictionary<string, string>()
     {
         { "cooldown", "maxCooldown" },
         { "cd", "maxCooldown" },
         { "dmg", "damage" },
         { "duration", "maxDuration:currentDuration" },
+        { "dur", "maxDuration:currentDuration" },
         { "recasts", "numberTimesRecastable" },
+        { "recastNum", "numberTimesRecastable" },
     };
+
+    public static string[] CommonRenames(string startingName)
+    {
+        if (commonVariableRenames.ContainsKey(startingName))
+        {
+            return commonVariableRenames[startingName].Split(':');
+        }
+        else
+        {
+            return new string[] { startingName };
+        }
+    }
 
     private System.Reflection.PropertyInfo GetPropertyInHierarchy(Type t, string name)
     {
@@ -190,19 +204,12 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         }
         foreach(var e in entry.vars)
         {
-            if(e.name == fieldName)
+            var nameArray = CommonRenames(e.name);
+            foreach (var s in nameArray)
             {
-                return e.value;
-            }
-            if (commonVariableRenames.ContainsKey(e.name))
-            {
-                var nameArray = commonVariableRenames[e.name].Split(':');
-                foreach (var s in nameArray)
+                if(s == fieldName)
                 {
-                    if(s == fieldName)
-                    {
-                        return e.value;
-                    }
+                    return e.value;
                 }
             }
         }
@@ -221,12 +228,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         a.tooltipDescription = entry.tooltip;
         foreach (AbilityXMLVariable variable in entry.vars)
         {
-            var name = variable.name;
-            if (commonVariableRenames.ContainsKey(name))
-            {
-                name = commonVariableRenames[name];
-            }
-            var nameArray = name.Split(':');
+            var nameArray = CommonRenames(variable.name);
             foreach (var s in nameArray)
             {
                 DoField(a, s, variable, entry);

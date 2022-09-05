@@ -9,11 +9,6 @@ public class Ability_Blank : Ability
 	private int? collisionHandle;
     public GameObject splashPrefab;
 
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription, aoe, maxDuration);
-    }
-
     public override void Initialize(PlayerAbilities pa)
     {
         base.Initialize(pa);

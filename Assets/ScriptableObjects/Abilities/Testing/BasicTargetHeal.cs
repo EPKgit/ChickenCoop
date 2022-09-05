@@ -5,16 +5,7 @@ using UnityEngine.InputSystem;
 
 public class BasicTargetHeal : Ability
 {
-    public float amount
-    {
-        get;
-        set;
-    }
-
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription, amount);
-    }
+    public float amount;
 
     public override void Initialize(PlayerAbilities pa)
 	{

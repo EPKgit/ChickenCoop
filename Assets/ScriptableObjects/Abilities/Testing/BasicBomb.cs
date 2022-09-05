@@ -8,16 +8,7 @@ public class BasicBomb : Ability
 	public GameObject bombPrefab;
 	public float arcSteepness;
 	public float arcTime;
-
-    public float damage
-    {
-        get; set;
-    }
-
-    public override string GetTooltip()
-    {
-        return string.Format(tooltipDescription, damage, aoe);
-    }
+    public float damage;
 
     public override void Initialize(PlayerAbilities pa)
 	{
@@ -38,7 +29,7 @@ public class BasicBomb : Ability
 		GameObject temp = PoolManager.instance.RequestObject(bombPrefab);
         Bomb b = temp.GetComponent<Bomb>();
         b.arcSteepness = arcSteepness;
-        b.arcTime = (targetingData.inputPoint - (Vector2)playerAbilities.transform.position).magnitude / targetingData.range * arcTime; //the arc time decreases the shorter we aim
+        b.arcTime = (targetingData.inputPoint - (Vector2)playerAbilities.transform.position).magnitude / range * arcTime; //the arc time decreases the shorter we aim
         b.arcTime = Mathf.Clamp(b.arcTime, 0.5f, arcTime);
         b.Setup
         (

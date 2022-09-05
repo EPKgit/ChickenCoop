@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.InputSystem;
 using Targeting;
 
@@ -129,6 +129,17 @@ public abstract class Ability : ScriptableObject
 
     [SerializeField]
     private AbilityTargetingData[] _targetingData;
+
+    /// <summary>
+    /// Helper property to display ranges when needed
+    /// </summary>
+    public float range
+    {
+        get
+        {
+            return targetingData.range;
+        }
+    }
 
     /// <summary>
     /// The index of what type of targeting we want to use on our ability. We can have a wide variety of targeting over a single
@@ -499,14 +510,14 @@ public abstract class Ability : ScriptableObject
         float magnitude = direction.magnitude;
         if(magnitude > range)
         {
-            return direction.normalized * targetingData.range + (Vector2)playerAbilities.transform.position;
+            return direction.normalized * range + (Vector2)playerAbilities.transform.position;
         }
         return point;
     }
 
     public Vector2 ClampPointWithinRange(Vector2 point)
     {
-        return ClampPointWithinRange(point, targetingData.range);
+        return ClampPointWithinRange(point, range);
     }
 
     /// <summary>
@@ -548,7 +559,63 @@ public abstract class Ability : ScriptableObject
     /// Returns a tooltip with all of the values plugged in, child classes are expected to override this with a string.format of their own variables setup
     /// </summary>
     /// <returns>the tooltip </returns>
-    public abstract string GetTooltip();
+    public string GetTooltip()  
+    {
+        ValidateTooltip();
+        return tooltipDescription;
+    }
+
+    private void ValidateTooltip()
+    {
+        int i1 = tooltipDescription.IndexOf('{');
+        int i2;
+        int failSafe = -2;
+        while(i1 != -1 && failSafe != i1)
+        {
+            i2 = tooltipDescription.IndexOf('}', i1);
+            string variableName = tooltipDescription.Substring(i1, i2 - i1 + 1);
+            
+            tooltipDescription = tooltipDescription.Replace(variableName, GetStringValueOfMember(variableName));
+
+            failSafe = i1;
+            i1 = tooltipDescription.IndexOf('{');
+            if(failSafe == i1)
+            {
+                throw new System.Exception("ERROR: TOOLTIP FOR ABILITY WITH ID:" + ID + "INVALID");
+            }
+        }    
+    }
+
+    private string GetStringValueOfMember(string variableName)
+    {
+        object result = "ERROR";
+        Action<string, System.Type> attemptLambda = (name, type) =>
+        {
+            result = type.InvokeMember
+            (
+                name,
+                BindingFlags.GetField | BindingFlags.GetProperty,
+                null,
+                this,
+                null
+            );
+        };
+        var nameArray = AbilityDataXMLParser.CommonRenames(variableName.Substring(1, variableName.Length - 2));
+        foreach (var s in nameArray)
+        {
+            try
+            {
+                attemptLambda(s, GetType());
+                //we can break if we haven't excepted at this point
+                break;
+            }
+            catch (System.MissingMethodException e)
+            {
+
+            }
+        }
+        return result.ToString();
+    }
 
     public new virtual string ToString()
     {
