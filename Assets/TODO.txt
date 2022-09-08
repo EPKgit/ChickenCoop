@@ -9,7 +9,8 @@ sfx
     -enemies spawning
 
 - make some mvp ability sets
-- implement generalized grab bags
+
+FOG OF WAR
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MVP/PROTOTYPE SHIT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
