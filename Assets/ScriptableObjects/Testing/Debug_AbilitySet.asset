@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilitySetAsset
   name: DEBUG
   abilities:
-  - {fileID: 11400000, guid: d1c49059ca228df41a46f5b23e410b7e, type: 2}
-  - {fileID: 11400000, guid: 54cfeef6e8dba864c9b3fe5f456c92f8, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 11400000, guid: 36dc9023b64293447b539220063aaf01, type: 2}
   - {fileID: 11400000, guid: 654615ef105dc304cbae9060d6280ee3, type: 2}
   passiveEffects: []

@@ -172,6 +172,7 @@ GameObject:
   - component: {fileID: 8226156152404720924}
   - component: {fileID: 8929027772924074797}
   - component: {fileID: 6480845943977688859}
+  - component: {fileID: 1517759972}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -373,6 +374,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: ae944a57-c78c-4a12-a929-fb1572c4eab5
     m_ActionName: Gameplay/Inventory[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9148293411782098716}
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
+        m_MethodName: OnCameraZoom
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 54fa248c-3e8f-4fe3-9a57-776a0a548b0b
+    m_ActionName: Gameplay/CameraZoom[/Mouse/scroll/y]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -411,6 +428,7 @@ MonoBehaviour:
   stats:
     _keys: 
     _values: []
+    serializationOverriden: 0
   hp: {fileID: 0}
   tagComponent: {fileID: 0}
   movement: {fileID: 0}
@@ -470,6 +488,7 @@ MonoBehaviour:
     _values:
     - name: 0
       _baseValue: 5
+    serializationOverriden: 0
 --- !u!114 &1822997906994762990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -496,7 +515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4d44e9e06c2d846b14615397a61d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerClass: {fileID: 11400000, guid: 1a28d8544e2d4b64aa01358adbc8f486, type: 2}
+  playerClass: {fileID: 11400000, guid: 5e8e934bedff3c84a89dcc212044c4f4, type: 2}
   playerID: 0
 --- !u!114 &288553149823017606
 MonoBehaviour:
@@ -554,3 +573,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 0
+--- !u!114 &1517759972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9148293411782098714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ca1248bcd617e48819ea643291a3ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 64

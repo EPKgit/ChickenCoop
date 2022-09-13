@@ -22,12 +22,12 @@ public class PlayerInput : MonoBehaviour
     public event Action<InputEventData<bool>> OnInventoryEvent = delegate { };
 
 
-
     public int playerID = -1;
 
 	private PlayerMovement playerMovement;
 	private PlayerAbilities playerAbilities;
 	private PlayerInteraction playerInteraction;
+    private CameraController cameraController;
 
     private Vector2 aimPointInput;
     public Vector2 aimPoint 
@@ -61,6 +61,11 @@ public class PlayerInput : MonoBehaviour
     void LateUpdate()
     {
         aimDirty = true;
+    }
+
+    public void SetCamera(CameraController cc)
+    {
+        cameraController = cc;
     }
 
 	#endregion
@@ -134,6 +139,14 @@ public class PlayerInput : MonoBehaviour
         if(ctx.performed && !TestOverride(OnInventoryEvent, ctx.performed))
         {
             playerAbilities.ToggleInventory();
+        }
+    }
+
+    public void OnCameraZoom(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            cameraController.OnCameraZoom(ctx.ReadValue<float>());
         }
     }
 

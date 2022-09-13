@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8448847093921120769}
   - component: {fileID: 396800620}
   - component: {fileID: 3164588330907281441}
+  - component: {fileID: 1502351913183700601}
   - component: {fileID: 7025779964210620135}
   - component: {fileID: 6091651632433799909}
   m_Layer: 0
@@ -140,6 +141,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minigamePrefabs:
   - {fileID: 6341083261711086353, guid: 0379eba381e229e4eb0122acdc397e98, type: 3}
+--- !u!114 &1502351913183700601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8448847093921120782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7411307c0ea833345b92e47cbb00a9be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrainTexture: {fileID: 8400000, guid: 2d728a36ef995f7459aff912dd7aefb0, type: 2}
+  nonTerrainTexture: {fileID: 8400000, guid: 66e022133a8490d48a5c411fa99c002f, type: 2}
+  DEBUGIMAGE: {fileID: 0}
+  overlayImage: {fileID: 0}
 --- !u!114 &7025779964210620135
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,7 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
+public class SingletonMonoStub : MonoBehaviour
+{
+    protected virtual void Awake()
+    {
+
+    }
+}
+
+public abstract class MonoSingleton<T> : SingletonMonoStub where T : MonoSingleton<T>
 {
     public static T Instance
     {
@@ -17,6 +25,12 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
         {
             if (_instance == null)
             {
+                //due to execution order sometimes scripts will call singletons after they've been destroyed and we don't
+                //want to respawn them so anytime any singleton goes out of scope we stop spawning new ones 
+                if(SingletonHelpers.sceneUnloading)
+                {
+                    return null;
+                }
                 if (SingletonHelpers.managerObject == null)
                 {
                     SingletonHelpers.managerObject = GameObject.Find(SingletonHelpers.managerObjectName);
@@ -24,10 +38,18 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
                 if (SingletonHelpers.managerObject == null)
                 {
                     SingletonHelpers.managerObject = new GameObject();
+                    DontDestroyOnLoad(SingletonHelpers.managerObject);
+                    SingletonHelpers.managerObject.name = SingletonHelpers.managerObjectName;
                 }
-                DontDestroyOnLoad(SingletonHelpers.managerObject);
-                SingletonHelpers.managerObject.name = SingletonHelpers.managerObjectName;
-                _instance = SingletonHelpers.managerObject.AddComponent(typeof(T)) as T;
+                T temp = SingletonHelpers.managerObject.GetComponent<T>();
+                if(temp != null)
+                {
+                    _instance = temp;
+                }
+                else
+                {
+                    _instance = SingletonHelpers.managerObject.AddComponent(typeof(T)) as T;
+                }
                 _instance.OnCreation();
             }
             return _instance;
@@ -35,7 +57,11 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
     }
     private static T _instance;
 
-    protected virtual void Awake()
+
+    /// <summary>
+    /// DO NOT OVERRIDE IN BASE CLASSES, DO ALL INIT IN OnCreation
+    /// </summary>
+    protected override sealed void Awake()
     {
         OverwriteSingleton((T)this);
     }
@@ -43,18 +69,24 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
 
     protected void OverwriteSingleton(T inst)
     {
-        if (SingletonHelpers.managerObject == null)
-        {
-            SingletonHelpers.managerObject = gameObject;
-            DontDestroyOnLoad(gameObject);
-            gameObject.name = SingletonHelpers.managerObjectName;
-        }
         if (_instance != null)
         {
+            if(_instance == this)
+            {
+                return;
+            }
             Destroy(this);
         }
         _instance = inst;
         OnCreation();
+    }
+
+    /// <summary>
+    /// This can get overriden in child classes if they don't want to kill all singletons when they die
+    /// </summary>
+    protected virtual void OnDisable()
+    {
+        SingletonHelpers.sceneUnloading = true;
     }
 }
 
@@ -102,4 +134,5 @@ public static class SingletonHelpers
 {
     public static GameObject managerObject = null;
     public static string managerObjectName = "Managers";
+    public static bool sceneUnloading = false;
 }

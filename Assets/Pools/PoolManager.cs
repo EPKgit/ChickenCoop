@@ -53,22 +53,19 @@ public class PoolManager : MonoSingleton<PoolManager>
 
     private GameObject poolParent;
 
-    protected override void Awake()
-	{
-		base.Awake();
-		pools = new Dictionary<GameObject, PoolData>();
-		abnormalPools = new List<PoolData>();
+    protected override void OnCreation()
+    {
+        pools = new Dictionary<GameObject, PoolData>();
+        abnormalPools = new List<PoolData>();
         poolParent = new GameObject();
         poolParent.name = "Pool Parent";
     }
-
-
-	/// <summary>
-	/// Polls our current misfit pools, and waits for their TTL to elapse. TTL is reset
-	/// every time an object is requested or returned. If a long enough time has elapsed
-	/// since the pool was used, we downsize down to our size.
-	/// </summary>
-	void Update()
+    /// <summary>
+    /// Polls our current misfit pools, and waits for their TTL to elapse. TTL is reset
+    /// every time an object is requested or returned. If a long enough time has elapsed
+    /// since the pool was used, we downsize down to our size.
+    /// </summary>
+    void Update()
 	{	
 		for(int x = abnormalPools.Count - 1; x >= 0; --x)
 		{

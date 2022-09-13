@@ -16,9 +16,9 @@ public class InGameUIManager : MonoSingleton<InGameUIManager>
 
     private const int MAX_PLAYERS = 4;
 
-    protected override void Awake()
+    protected override void OnCreation()
     {
-        base.Awake();
+        base.OnCreation();
         UIObjects = new List<InGamePlayerUI>();
         layoutGroup = GameObject.Find("InGameCanvas").transform.Find("PlayerUI");
         for (int x = 0; x < MAX_PLAYERS; ++x)
@@ -33,8 +33,9 @@ public class InGameUIManager : MonoSingleton<InGameUIManager>
         UpdateUI();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         PlayerInitialization.OnPlayerNumberChanged -= UpdateUI;
     }
 

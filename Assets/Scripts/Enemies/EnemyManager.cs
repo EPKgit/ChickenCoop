@@ -28,10 +28,9 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
     private List<EnemySpawnData> spawnedEnemies;
 
-    protected override void Awake() 
+    protected override void OnCreation()
     {
-        base.Awake();
-
+        base.OnCreation();
         spawnedEnemies = new List<EnemySpawnData>();
 
         enemySpawnData[(int)EnemyType.DEBUG].spawningRoutine = SpawnDiggingEnemy;
@@ -39,9 +38,9 @@ public class EnemyManager : MonoSingleton<EnemyManager>
         enemySpawnData[(int)EnemyType.SHIELD].spawningRoutine = SpawnDiggingEnemy;
 
         loanTokens = new List<PoolLoanToken>();
-        for(int x = 0; x < enemySpawnData.Length; ++x)
+        for (int x = 0; x < enemySpawnData.Length; ++x)
         {
-            if(enemySpawnData[x].spawningEffect != null)
+            if (enemySpawnData[x].spawningEffect != null)
             {
                 loanTokens.Add(PoolManager.instance.RequestLoan(enemySpawnData[x].spawningEffect, 5, true));
             }

@@ -23,9 +23,10 @@ public class StatusEffectManager : MonoSingleton<StatusEffectManager>
     private GameObject UIRoot;
     private Dictionary<GameObject, StatusBarData> activeStatuses;
     private const int MAX_NUMBER_EFFECTS_DISPLAYED = 4;
-    protected override void Awake()
+
+    protected override void OnCreation()
     {
-        base.Awake();
+        base.OnCreation();
         barToken = PoolManager.instance.RequestLoan(effectBarPrefab, 40, true);
         popupToken = PoolManager.instance.RequestLoan(effectPopupPrefab, 20, true);
         UIRoot = GameObject.Find("ScreenToWorldCanvas");
@@ -33,7 +34,7 @@ public class StatusEffectManager : MonoSingleton<StatusEffectManager>
         PoolManager.instance.ChangeParentOfPool(effectBarPrefab, UIRoot.transform);
         activeStatuses = new Dictionary<GameObject, StatusBarData>();
 
-        if(effectSprites.Length != (int)StatusEffectType.MAX)
+        if (effectSprites.Length != (int)StatusEffectType.MAX)
         {
             throw new System.Exception("ERROR: STATUS EFFECT ICONS NOT SET");
         }

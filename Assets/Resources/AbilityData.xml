@@ -7,7 +7,7 @@
         <tooltip>Shoots an egg in targeted direction dealing {damage} damage to the first enemy hit</tooltip>
         <var_list>
             <variable name="dmg" type="float" value="1"/>
-            <variable name="cd" type="float" value="2"/>
+            <variable name="cd" type="float" value="1"/>
         </var_list>
     </ability>
 

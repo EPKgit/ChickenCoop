@@ -61,10 +61,9 @@ public class EncounterManager : MonoSingleton<EncounterManager>
 
     private EncounterState currentEncounterState;
 
-    protected override void Awake() 
+    protected override void OnCreation()
     {
-        base.Awake();
-
+        base.OnCreation();
         currentEncounter = null;
     }
 

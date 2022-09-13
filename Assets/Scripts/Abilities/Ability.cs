@@ -609,9 +609,10 @@ public abstract class Ability : ScriptableObject
                 //we can break if we haven't excepted at this point
                 break;
             }
+            #pragma warning disable 0168
             catch (System.MissingMethodException e)
+            #pragma warning restore 0168
             {
-
             }
         }
         return result.ToString();

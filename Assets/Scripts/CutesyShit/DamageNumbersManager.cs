@@ -14,9 +14,9 @@ public class DamageNumbersManager : MonoSingleton<DamageNumbersManager>
     private PoolLoanToken token;
     private GameObject UIRoot;
 
-    protected override void Awake()
+    protected override void OnCreation()
     {
-        base.Awake();
+        base.OnCreation();
         token = PoolManager.instance.RequestLoan(textPrefab, 30, true);
         UIRoot = GameObject.Find("ScreenToWorldCanvas");
         PoolManager.instance.ChangeParentOfPool(textPrefab, UIRoot.transform);

@@ -11,6 +11,8 @@ sfx
 - make some mvp ability sets
 
 FOG OF WAR
+    - optimize culling
+    - 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MVP/PROTOTYPE SHIT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
