@@ -98,6 +98,10 @@ public class PlayerAbilities : MonoBehaviour
         _abilities = new AbilitySetContainer(abilitySet.abilities);
 		foreach(Ability a in abilitySet.passiveEffects)
 		{
+            if(a == null)
+            {
+                continue;
+            }
 			if(a.isPassive)
 			{
 				passives.Add(ScriptableObject.Instantiate(a));

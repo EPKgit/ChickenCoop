@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621de5012bd875240b5d0a3590d38a95, type: 3}
+  m_Name: TESTING_CONSTRUCT_Class
+  m_EditorClassIdentifier: 
+  name: TESTING_CDR
+  abilities: {fileID: 11400000, guid: 8bb791b2af5ff904c88390544bbc2004, type: 2}
+  playerModelPrefab: {fileID: 3835468119574595567, guid: ce07186f8d3f118409561a1f700bc9fb, type: 3}
+  stats:
+    _keys: 0000000001000000
+    _values:
+    - name: 0
+      _baseValue: 5
+    - name: 0
+      _baseValue: 10
+    serializationOverriden: 0

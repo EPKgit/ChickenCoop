@@ -21,8 +21,15 @@ public class FogOfWarManager : MonoSingleton<FogOfWarManager>
     protected override void OnCreation()
     {
         base.OnCreation();
+
         grid = new FogVisionGrid(Camera.main);
         units = new List<FogOfWarUnitComponent>();
+
+        if (!FOG_ENABLED)
+        {
+            this.enabled = false;
+            return;
+        }
         
         DEBUGIMAGE.texture = grid.GetTexture();
 
@@ -33,12 +40,9 @@ public class FogOfWarManager : MonoSingleton<FogOfWarManager>
         overlayImage.gameObject.SetActive(true);
         DEBUGIMAGE.gameObject.SetActive(true);
 
-        if(!FOG_ENABLED)
-        {
-            overlayImage.gameObject.SetActive(false);
-            DEBUGIMAGE.gameObject.SetActive(false);
-            this.enabled = false;
-        }
+        overlayImage.gameObject.SetActive(false);
+        DEBUGIMAGE.gameObject.SetActive(false);
+        this.enabled = false;
     }
 
     public bool RegisterUnit(FogOfWarUnitComponent comp)

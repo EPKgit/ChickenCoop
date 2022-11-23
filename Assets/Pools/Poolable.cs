@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Poolable : MonoBehaviour
 {
+    public delegate void OnPoolableReturned(GameObject obj);
+
+    public event OnPoolableReturned onPoolableReturned = delegate { };
     [HideInInspector]
 	public GameObject prefab;
 
@@ -30,6 +33,7 @@ public class Poolable : MonoBehaviour
 	/// </summary>
 	public virtual void DestroySelf()
 	{
-		PoolManager.instance.ReturnObject(prefab, gameObject);
+        onPoolableReturned(gameObject);
+        PoolManager.instance.ReturnObject(prefab, gameObject);
 	}
 }

@@ -9,6 +9,14 @@ sfx
     -enemies spawning
 
 - make some mvp ability sets
+    - construction
+        - teleporter
+        - turret
+        - spikes field
+        - mine
+        - heal station
+    - status
+        - 
 
 FOG OF WAR
     - optimize culling

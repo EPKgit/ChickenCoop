@@ -1,7 +1,6 @@
 using System;
 using System.Xml;
-using System.Xml.Serialization;
-using System.Collections;
+using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -51,6 +50,12 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     Dictionary<uint, AbilityXMLDataEntry> table;
     const string XMLPath = "AbilityData";
     bool loadedTable = false;
+
+    public void ForceReimport()
+    {
+        loadedTable = false;
+        ParseXMLData();
+    }
     
     //TODO MAKE THREAD SAFE
     void ParseXMLData()
@@ -138,28 +143,6 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         }
     }
 
-    private System.Reflection.PropertyInfo GetPropertyInHierarchy(Type t, string name)
-    {
-        var prop = t.GetProperty(name);//, System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-        if(prop != null)
-        {
-            return prop;
-        }
-        foreach(var intf in t.GetInterfaces())
-        {
-            prop = intf.GetProperty(name);//, System.Reflection.BindingFlags.FlattenHierarchy | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-            if (prop != null)
-            {
-                return prop;
-            }
-        }
-        if(t.BaseType != null)
-        {
-            return GetPropertyInHierarchy(t.BaseType, name);
-        }
-        return null;
-    }
-
     /// <summary>
     /// Helper method to check if we have already setup our table
     /// </summary>
@@ -240,27 +223,53 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 
     private void DoField(Ability a, string name, AbilityXMLVariable variable, AbilityXMLDataEntry entry)
     {
-        var type = a.GetType();
-        var property = GetPropertyInHierarchy(type, name);
-        var field = type.GetField(name);
-        if (property == null && field == null)
-        {
-            Debug.LogError(string.Format("ERROR: FAILED TO FIND PROPERTY/FIELD ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
-            return;
-        }
         VariableEvaluationMethod evaluator = evaluationMethods[variable.type];
         if (evaluator == null)
         {
             Debug.LogError(string.Format("ERROR: FAILED TO EVALUATE PROPERTY ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
             return;
         }
-        if (property != null)
+        if(!SetValueInHierarchy(a, a.GetType(), name, evaluator(variable.value)))
         {
-            property.SetValue(a, evaluator(variable.value));
+            Debug.LogError(string.Format("ERROR: FAILED TO FIND PROPERTY/FIELD ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
+            return;
         }
+    }
+
+    private bool SetValueInType(object target, Type t, string name, object value)
+    {
+        var prop = t.GetProperty(name, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | BindingFlags.Instance);
+        if (prop != null)
+        {
+            prop.SetValue(target, value);
+            return true;
+        }
+        var field = t.GetField(name, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | BindingFlags.Instance);
         if (field != null)
         {
-            field.SetValue(a, evaluator(variable.value));
+            field.SetValue(target, value);
+            return true;
         }
+        return false;
+    }
+
+    private bool SetValueInHierarchy(object target, Type t, string name, object value)
+    {
+        if(SetValueInType(target, t, name, value))
+        {
+            return true;
+        }
+        foreach (var intf in t.GetInterfaces())
+        {
+            if(SetValueInType(target, intf, name, value))
+            {
+                return true;
+            }
+        }
+        if (t.BaseType != null)
+        {
+            return SetValueInHierarchy(target, t.BaseType, name, value);
+        }
+        return false;
     }
 }

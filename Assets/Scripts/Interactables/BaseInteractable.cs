@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public abstract class BaseInteractable : MonoBehaviour
+public abstract class BaseInteractable : Poolable
 {
 	public int priority;
 

@@ -150,4 +150,17 @@
     </ability>
 
     <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+    <ability>
+        <ability_ID>13</ability_ID>
+        <ability_name>Construct Teleporter</ability_name>
+        <tooltip>Construct a teleporter at your and target location that allows you to teleport between them with an interaction</tooltip>
+        <var_list>
+            <variable name="tpUses" type="int" value="3"/>
+            <variable name="duration" type="float" value="10"/>
+            <variable name="cd" type="float" value="10"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 </root>

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8f38db445c983548a40caa9a4140e05, type: 3}
+  m_Name: ConstructTeleporter_Ability
+  m_EditorClassIdentifier: 
+  ID: 13
+  abilityName: 
+  tooltipDescription: 
+  abilityTags:
+    tags: []
+  tagsToBlock:
+    tags: []
+  tagsToApply:
+    tags: []
+  isPassive: 0
+  tickingAbility: 1
+  hasDuration: 1
+  maxDuration: 0
+  maxCooldown: 0
+  cost: 0
+  icon: {fileID: 21300000, guid: b87886a41c2268e4a9184fb8223f46c2, type: 3}
+  _targetingData:
+  - inputPoint: {x: 0, y: 0}
+    targetType: 3
+    rangePreviewPrefab: {fileID: 0}
+    secondaryPreviewPrefab: {fileID: 0}
+    range: 5
+    previewScale: {x: 1, y: 1, z: 0}
+    affiliation: 0
+  currentTargetingType: 0
+  numberTimesRecastable: 0
+  recastWindow: 0
+  aoe: -1
+  teleporterPadPrefab: {fileID: 8233825641779127687, guid: 12182b46fccf08340b30d0735d72724d, type: 3}
