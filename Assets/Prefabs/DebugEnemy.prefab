@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2769074329916836620}
   - component: {fileID: 4553929767814290554}
   - component: {fileID: 1661318773}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Render
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 1388209950}
   - component: {fileID: 3142385264362527721}
   - component: {fileID: 7013321912956941123}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DebugEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,7 +181,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8904934775474808004}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0

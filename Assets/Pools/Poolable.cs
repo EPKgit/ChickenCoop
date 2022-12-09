@@ -34,6 +34,11 @@ public class Poolable : MonoBehaviour
 	public virtual void DestroySelf()
 	{
         onPoolableReturned(gameObject);
+		if(prefab == null)
+		{
+            Destroy(gameObject);
+            return;
+        }
         PoolManager.instance.ReturnObject(prefab, gameObject);
 	}
 }

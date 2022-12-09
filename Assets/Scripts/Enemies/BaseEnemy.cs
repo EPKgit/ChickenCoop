@@ -26,10 +26,12 @@ public abstract class BaseEnemy : BaseMovement
 	/// </summary>
 	protected GameObject chosenPlayer;
 
+#if !REMOVE_AGGRO_DATA
 	/// <summary>
 	/// A sorted set of all aggrodata that the enemy has recieved from damage events. 
 	/// </summary>
 	protected PriorityQueue<AggroData> aggro;
+#endif
 
     protected Collider2D col;
 	protected EnemyHealth hp;
@@ -41,10 +43,13 @@ public abstract class BaseEnemy : BaseMovement
         base.Awake();
 		hp = GetComponent<EnemyHealth>();
 		col = GetComponent<Collider2D>();
-        aggro = new PriorityQueue<AggroData>(PlayerInitialization.all.Count, new MaxAggroComparator());
         targetingController = Lib.FindUpwardsInTree<TargetingController>(gameObject);
 
+#if !REMOVE_AGGRO_DATA
+        aggro = new PriorityQueue<AggroData>(PlayerInitialization.all.Count, new MaxAggroComparator());
+
         hp.postDamageEvent += AddAggroEvent;
+#endif
 	}
 
 	protected virtual void Start()
@@ -58,7 +63,9 @@ public abstract class BaseEnemy : BaseMovement
         col.enabled = enabled;
     }
 
-	protected virtual void AddAggroEvent(HealthChangeData hcd)
+
+#if !REMOVE_AGGRO_DATA
+    protected virtual void AddAggroEvent(HealthChangeData hcd)
 	{
 		AggroData temp = aggro.GetValue( (t) => t.source == hcd.overallSource);
 		if(temp == null)
@@ -73,6 +80,7 @@ public abstract class BaseEnemy : BaseMovement
 		temp.value += -hcd.delta * aggroValue;
 		UpdateChosenPlayer();
 	}
+#endif
 
 	/// <summary>
 	/// Decides which player the enemy will choose to attack
@@ -84,8 +92,23 @@ public abstract class BaseEnemy : BaseMovement
 		{
 			return false;
 		}
-		chosenPlayer = aggro?.Peek()?.source ?? PlayerInitialization.all[Random.Range(0, PlayerInitialization.all.Count)].gameObject;
-        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AGGRO, chosenPlayer.name);
+#if REMOVE_AGGRO_DATA
+		float closestDistance = float.MaxValue;
+        PlayerInitialization bestOption = null;
+        foreach(PlayerInitialization player in PlayerInitialization.all)
+        {
+			float dist = Vector2.Distance(transform.position, player.transform.position);
+			if (dist < closestDistance)
+			{
+				bestOption = player;
+				closestDistance = dist;
+			}
+        }
+		chosenPlayer = bestOption.gameObject;
+#else
+        chosenPlayer = aggro?.Peek()?.source ?? PlayerInitialization.all[Random.Range(0, PlayerInitialization.all.Count)].gameObject;
+#endif
+        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AGGRO, chosenPlayer?.name ?? "NO AGGRO");
 		return true;
 	}
 
@@ -140,8 +163,10 @@ public abstract class BaseEnemy : BaseMovement
         }
 	}
 
+#if !REMOVE_AGGRO_DATA
 	public AggroData[] GetAggroDataArray()
 	{
 		return aggro?.ToArray();
 	}
+#endif
 }

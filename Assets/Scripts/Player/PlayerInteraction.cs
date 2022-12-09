@@ -19,7 +19,7 @@ public class PlayerInteraction : MonoBehaviour
 
 	public bool CanPerform()
 	{
-		return actionList.GetAction()?.IsPerformable?.Invoke() ?? false;
+		return actionList.GetFirstPerformableAction()?.IsPerformable?.Invoke() ?? false;
 	}
 
 	/// <summary>
@@ -28,11 +28,12 @@ public class PlayerInteraction : MonoBehaviour
 	/// <returns>Returns true if the action was performed, false if it wasn't</returns>
 	public bool AttemptPerform()
 	{
-		if( (!actionList.GetAction()?.IsPerformable?.Invoke() ?? true) )
+        var firstPerformableAction = actionList.GetFirstPerformableAction();
+        if((!firstPerformableAction?.IsPerformable?.Invoke() ?? true))
 		{
 			return false;
 		}
-		actionList.GetAction().Action(gameObject);
+        firstPerformableAction?.Action(gameObject);
 		return true;
 	}
 

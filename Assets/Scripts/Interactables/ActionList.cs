@@ -25,4 +25,25 @@ public class ActionList
 	{
 		return actions.Max;
 	}	
+
+	public PerformableAction GetFirstPerformableAction()
+	{
+		if(actions.Count == 0)
+		{
+            return null;
+        }
+        if (actions.Max.IsPerformable?.Invoke() ?? false)
+        {
+            return actions.Max;
+        }
+        var iter = actions.Reverse();
+		foreach(var action in iter)
+		{
+			if(action.IsPerformable?.Invoke() ?? false)
+			{
+                return action;
+            }
+		}
+        return null;
+    }
 }

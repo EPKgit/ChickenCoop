@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1220587189}
   - component: {fileID: 1220587188}
   - component: {fileID: 1220587187}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Render
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2105565787450646253}
   - component: {fileID: 2105565787450646242}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ArcRender
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 286705340829513149}
   - component: {fileID: 7906473401518384266}
   - component: {fileID: 7341611183803319822}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ShieldEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2105565787798211784}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
