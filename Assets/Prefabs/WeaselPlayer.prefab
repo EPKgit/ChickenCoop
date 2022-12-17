@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 2965541019635068519}
   - component: {fileID: 2370263138633517142}
   - component: {fileID: 215624929743907936}
-  - component: {fileID: 6561351822101954207}
   m_Layer: 7
   m_Name: WeaselPlayer
   m_TagString: Player
@@ -366,7 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4d44e9e06c2d846b14615397a61d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerClass: {fileID: 11400000, guid: 7deb1c391d8d6634caca6518d3effc00, type: 2}
+  playerClass: {fileID: 11400000, guid: ffea6e3a4ad4b564b8fa13f8e6b4ce05, type: 2}
   playerID: 0
 --- !u!114 &6849903806479462909
 MonoBehaviour:
@@ -424,19 +423,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 0
---- !u!114 &6561351822101954207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2737026204004117601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ca1248bcd617e48819ea643291a3ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: 64
 --- !u!1 &4743985028022589478
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,15 +23,25 @@ public class EnemyManager : MonoSingleton<EnemyManager>
         public GameObject spawningEffect;
         public EnemySpawnRoutineDelegate spawningRoutine;
     }
+
+    public class RegisteredEnemyData
+    {
+        public GameObject enemyGameObject;
+        public BaseEnemy enemyScript;
+        public EnemyType type;
+    }
     public EnemySpawnData[] enemySpawnData;
     private List<PoolLoanToken> loanTokens;
 
-    private List<EnemySpawnData> spawnedEnemies;
+    private List<EnemySpawnData> spawningEnemies;
+    private List<RegisteredEnemyData> registeredEnemies;
+    private bool currentlySpawning;
 
     protected override void OnCreation()
     {
         base.OnCreation();
-        spawnedEnemies = new List<EnemySpawnData>();
+        spawningEnemies = new List<EnemySpawnData>();
+        registeredEnemies = new List<RegisteredEnemyData>();
 
         enemySpawnData[(int)EnemyType.DEBUG].spawningRoutine = SpawnDiggingEnemy;
         enemySpawnData[(int)EnemyType.NORMAL].spawningRoutine = SpawnDiggingEnemy;
@@ -64,18 +74,81 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
         if(data.spawningRoutine != null)
         {
-            return data.spawningRoutine(data, position);
+            currentlySpawning = true;
+            var returnVal = data.spawningRoutine(data, position);
+            currentlySpawning = false;
+            return returnVal;
         }
         EnemySpawnData newEnemy = new EnemySpawnData();
-        newEnemy.prefab = Instantiate(prefab, position, Quaternion.identity);
-        spawnedEnemies.Add(newEnemy);
+        currentlySpawning = true;
+        newEnemy.prefab = Instantiate(prefab, position, Quaternion.identity); ;
+        spawningEnemies.Add(newEnemy);
+        currentlySpawning = false;
         return newEnemy.prefab;
+    }
+
+    public bool IsRegistered(GameObject g)
+    {
+        if(currentlySpawning)
+        {
+            return true;
+        }
+        foreach (EnemySpawnData esd in spawningEnemies)
+        {
+            if(esd.prefab == g)
+            {
+                return true;
+            }
+        }
+        foreach(RegisteredEnemyData esd in registeredEnemies)
+        {
+            if(esd.enemyGameObject == g)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void RegisterEnemy(GameObject g)
+    {
+        if(g == null || IsRegistered(g))
+        {
+            return;
+        }
+        RegisteredEnemyData newEnemy = new RegisteredEnemyData();
+        newEnemy.enemyGameObject = g;
+        newEnemy.enemyScript = g.GetComponent<BaseEnemy>();
+        newEnemy.type = newEnemy.enemyScript.type;
+        registeredEnemies.Add(newEnemy);
+    }
+
+    public void UnregisterEnemy(GameObject g)
+    {
+        int x = 0;
+        foreach(RegisteredEnemyData data in registeredEnemies)
+        {
+            if(data.enemyGameObject == g)
+            {
+                registeredEnemies.RemoveAt(x);
+                return;
+            }
+            ++x;
+        }
+    }
+
+    public void ForceReevaluateEnemyAggro()
+    {
+        foreach(RegisteredEnemyData data in registeredEnemies)
+        {
+            data.enemyGameObject.GetComponent<BaseEnemy>().UpdateChosenPlayer();
+        }
     }
 
     public void FinishSpawnRoutine(GameObject g)
     {
         int index = 0;
-        foreach(EnemySpawnData esd in spawnedEnemies)
+        foreach(EnemySpawnData esd in spawningEnemies)
         {
             if(esd.prefab == g)
             {
@@ -91,7 +164,8 @@ public class EnemyManager : MonoSingleton<EnemyManager>
                         vfxPoolable?.StopParticlePlaying();
                     }
                 }
-                spawnedEnemies.RemoveAt(index);
+                spawningEnemies.RemoveAt(index);
+                RegisterEnemy(esd.prefab);
                 return;
             }
             ++index;
@@ -104,7 +178,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
         newEnemy.prefab = Instantiate(data.prefab, position, Quaternion.identity);
         newEnemy.spawningEffect = PoolManager.instance.RequestObject(data.spawningEffect);
         newEnemy.spawningEffect.transform.position = position + Vector3.down * 0.8f;
-        spawnedEnemies.Add(newEnemy);
+        spawningEnemies.Add(newEnemy);
         return newEnemy.prefab;
     }
 

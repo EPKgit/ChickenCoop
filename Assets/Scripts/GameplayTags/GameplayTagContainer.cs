@@ -45,6 +45,7 @@ public enum GameplayTagFlags : UInt32
             CASTING_DISABLED = (CASTING_EFFECTED) | (1 << 0 + GameplayTagConstants.LAYER_3_BIT_OFFSET) | GameplayTagConstants.LAYER_3,
         ATTACKING_EFFECTED = (STATUS) | (1 << 3 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
             ATTACKING_DISABLED = (ATTACKING_EFFECTED) | (1 << 0 + GameplayTagConstants.LAYER_3_BIT_OFFSET) | GameplayTagConstants.LAYER_3,
+        INVISIBLE           = (STATUS) | (1 << 4 + GameplayTagConstants.LAYER_2_BIT_OFFSET) | GameplayTagConstants.LAYER_2,
         // SLOW = MOVEMENT_EFFECTED,
         // FEAR = MOVEMENT_EFFECTED,
 

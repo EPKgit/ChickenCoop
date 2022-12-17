@@ -47,6 +47,7 @@ public class PlayerInitialization : MonoBehaviour, IStatBlockInitializer
         stats.Initialize(playerClass.stats);
         abilities.Initialize(playerClass);
         GetPlayerID();
+        input.playerID = playerID;
         gameObject.name = "Player " + playerID;
     }
 

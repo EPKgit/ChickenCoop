@@ -25,9 +25,10 @@ public class ShieldEnemy : BaseEnemy
 		hp.preDamageEvent += CheckIfBlocked;
         PoolManager.instance.AddPoolSize(splashPrefab, 10, true);
     }
-    void OnDisable()
+    protected override void OnDisable()
 	{
-		hp.preDamageEvent -= CheckIfBlocked;
+        base.OnDisable();
+        hp.preDamageEvent -= CheckIfBlocked;
         PoolManager.instance.RemovePoolSize(splashPrefab, 10);
     }
 

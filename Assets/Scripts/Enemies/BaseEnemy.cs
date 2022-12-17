@@ -40,6 +40,10 @@ public abstract class BaseEnemy : BaseMovement
 
     protected override void Awake()
 	{
+		if(!EnemyManager.instance.IsRegistered(gameObject))
+		{
+            EnemyManager.instance.RegisterEnemy(gameObject);
+        }
         base.Awake();
 		hp = GetComponent<EnemyHealth>();
 		col = GetComponent<Collider2D>();
@@ -57,8 +61,17 @@ public abstract class BaseEnemy : BaseMovement
 		UpdateChosenPlayer();
 	}
 
+	protected virtual void OnDisable()
+	{
+        EnemyManager.instance.UnregisterEnemy(gameObject);
+    }
+
 	public virtual void SetEnemyEnabled(bool enabled)
 	{
+		if(enabled)
+		{
+            UpdateChosenPlayer();
+        }
         enemyEnabled = enabled;
         col.enabled = enabled;
     }
@@ -86,7 +99,7 @@ public abstract class BaseEnemy : BaseMovement
 	/// Decides which player the enemy will choose to attack
 	/// </summary>
 	/// <returns>Returns true if there is a player, false if one cannot be chosen</returns>
-	protected virtual bool UpdateChosenPlayer()
+	public virtual bool UpdateChosenPlayer()
 	{
 		if(PlayerInitialization.all.Count == 0)
 		{
@@ -97,19 +110,22 @@ public abstract class BaseEnemy : BaseMovement
         PlayerInitialization bestOption = null;
         foreach(PlayerInitialization player in PlayerInitialization.all)
         {
-			float dist = Vector2.Distance(transform.position, player.transform.position);
-			if (dist < closestDistance)
-			{
-				bestOption = player;
-				closestDistance = dist;
-			}
+            if (!player.GetComponent<GameplayTagComponent>().tags.Contains(GameplayTagFlags.INVISIBLE))
+            {
+                float dist = Vector2.Distance(transform.position, player.transform.position);
+                if (dist < closestDistance)
+                {
+                    bestOption = player;
+                    closestDistance = dist;
+                }
+            }
         }
-		chosenPlayer = bestOption.gameObject;
+		chosenPlayer = bestOption?.gameObject;
 #else
         chosenPlayer = aggro?.Peek()?.source ?? PlayerInitialization.all[Random.Range(0, PlayerInitialization.all.Count)].gameObject;
 #endif
         DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AGGRO, chosenPlayer?.name ?? "NO AGGRO");
-		return true;
+		return chosenPlayer != null;
 	}
 
 	//Not that performant, can be updated if we need to
@@ -139,7 +155,7 @@ public abstract class BaseEnemy : BaseMovement
         Attack(other.gameObject);
     }
 
-	void Attack(GameObject g)
+	protected virtual void Attack(GameObject g)
 	{
 		TargetingController controller = Lib.FindUpwardsInTree<TargetingController>(g);
         if (controller != null)

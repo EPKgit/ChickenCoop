@@ -29,9 +29,4 @@ public class NormalEnemy : BaseEnemy
         rb.velocity = dir * speed;
         return true;
 	}
-
-    protected void Attack()
-    {
-        
-    }
 }

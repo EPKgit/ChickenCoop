@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
     {
         if(player == null)
         {
-            this.enabled = false;
+            throw new System.Exception("ERROR: NO PLAYER SET ON CAMERA");
         }
         else
         {

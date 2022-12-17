@@ -346,4 +346,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  offset: {x: 0, y: 0, z: -10}
+  minMaxZValue: {x: -20, y: -3}
+  zoomSpeed: 0.008333334

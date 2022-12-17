@@ -9,18 +9,16 @@ sfx
     -enemies spawning
 
 - make some mvp ability sets
-    - construction
-        - teleporter
-        - turret
-        - spikes field
-        - mine
-        - heal station
-    - status
-        - 
 
-FOG OF WAR
-    - optimize culling
-    - 
+invis should cause the player model to dim/alpha out
+- send out an update whenever the tags change on an object
+- hook into the invis callback
+- set up a dict of effects to play based on tags (vfx?)
+
+setup camera panning
+    
+
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MVP/PROTOTYPE SHIT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,8 +62,6 @@ NICE STUFF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 TECH DEBT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-figure out dashing and movement types
-figure out invul
 encounter manager
     - figure out callbacks when enemies are killed
 
@@ -75,3 +71,5 @@ IDEAS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ability upgrades
 ramping abilities
+FOG OF WAR
+    - optimize culling

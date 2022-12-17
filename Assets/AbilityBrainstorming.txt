@@ -1,3 +1,5 @@
+Brainstorming
+
 Pillars
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Health
@@ -16,3 +18,13 @@ Abilities
 -cooldowns
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Statuses
+
+
+- construction
+        - teleporter
+        - turret
+        - spikes field
+        - mine
+        - heal station
+    - status
+        - 

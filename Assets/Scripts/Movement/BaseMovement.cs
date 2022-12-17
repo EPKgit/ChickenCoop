@@ -49,7 +49,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
         stats = GetComponent<StatBlockComponent>();
         if(stats.HasStat(StatName.MovementSpeed))
         {
-            stats.AddStat(StatName.MovementSpeed, movementSpeed);
+            stats.GetStat(StatName.MovementSpeed).BaseValue = movementSpeed;
         }
         tagComponent = GetComponentInChildren<GameplayTagComponent>();
 		sprite = GetComponentInChildren<SpriteRenderer>();
@@ -65,7 +65,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
 
     void OnDisable()
     {
-        stats.DeregisterStatChangeCallback(StatName.MovementSpeed, UpdateSpeed);
+        stats?.DeregisterStatChangeCallback(StatName.MovementSpeed, UpdateSpeed);
     }
 
 

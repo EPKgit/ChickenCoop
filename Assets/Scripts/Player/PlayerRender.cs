@@ -4,15 +4,32 @@ using UnityEngine;
 
 public class PlayerRender : MonoBehaviour
 {
-	private PlayerInput playerInput;
+    public float highlightRotationSpeed = 10.0f;
+
+    private PlayerInput playerInput;
 	private SpriteRenderer sprite;
+    private Material highlightMaterial;
+    private float rotationDegrees;
     IEnumerator Start()
 	{
 		sprite = transform.Find("Render").GetComponent<SpriteRenderer>();
 		playerInput = GetComponent<PlayerInput>();
-		yield return new WaitUntil( () => playerInput.playerID != -1);
-		sprite.color = Lib.GetPlayerColorByIndex(playerInput.playerID);
-	}
+        enabled = false;
+		while(playerInput.playerID == -1)
+		{
+            yield return null;
+        }
+        // sprite.color = Lib.GetPlayerColorByIndex(playerInput.playerID);
+        enabled = true;
+        highlightMaterial = sprite.transform.Find("Highlight").gameObject.GetComponent<SpriteRenderer>().material;
+        rotationDegrees = 0;
+    }
+
+	void Update()
+	{
+        rotationDegrees += (Time.deltaTime * highlightRotationSpeed) % 360;
+        highlightMaterial.SetFloat("_Rotation", rotationDegrees);
+    }
 
 	public void ReplaceModel(GameObject g)
 	{

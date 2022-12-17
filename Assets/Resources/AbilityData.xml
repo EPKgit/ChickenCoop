@@ -163,4 +163,17 @@
     </ability>
 
     <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+    <ability>
+        <ability_ID>101</ability_ID>
+        <ability_name>Scurry</ability_name>
+        <tooltip>Go invisible and increase your movement speed by {movementSpeedMultiplier} times.</tooltip>
+        <var_list>
+            <variable name="movementSpeedMultiplier" type="float" value="1.5"/>
+            <variable name="duration" type="float" value="4"/>
+            <variable name="cd" type="float" value="10"/>
+        </var_list>
+    </ability>
+
+    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 </root>
