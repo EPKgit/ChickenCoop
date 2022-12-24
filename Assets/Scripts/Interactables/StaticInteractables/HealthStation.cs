@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class HealthStation : BaseInteractable
 {
-	protected override bool CanDo()
+	protected override bool CanInteract()
 	{
 		return true;
 	}
 
-	protected override void ToDo(GameObject user)
+	protected override void PerformInteract(GameObject user)
 	{
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "HealthStation");
         Lib.FindUpwardsInTree<IHealable>(user)?.Heal

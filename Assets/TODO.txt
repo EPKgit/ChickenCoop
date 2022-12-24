@@ -2,20 +2,16 @@ TODO:TODO:TODO
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CURRENT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sfx
-    -movement
-    -taking damage
-    -using abilities
-    -enemies spawning
-
-- make some mvp ability sets
+continue refactor of gameplay tags
+    -implement overlaps in tag wrapper
+    -implement functions in tag containers
 
 invis should cause the player model to dim/alpha out
 - send out an update whenever the tags change on an object
 - hook into the invis callback
 - set up a dict of effects to play based on tags (vfx?)
 
-setup camera panning
+
     
 
 
@@ -24,6 +20,13 @@ MVP/PROTOTYPE SHIT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 setup premade level with terrain
 more abilities
+sfx
+    -movement
+    -taking damage
+    -using abilities
+    -enemies spawning
+
+setup camera panning
 
 
 

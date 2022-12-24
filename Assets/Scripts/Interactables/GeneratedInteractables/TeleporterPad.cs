@@ -13,7 +13,7 @@ public class TeleporterPad : BaseInteractable
     public float maxCooldown = 2.0f;
     private float currentCooldown = 0.0f;
 
-    protected override bool CanDo()
+    protected override bool CanInteract()
     {
         if(currentCooldown <= 0.0f)
         {
@@ -22,7 +22,7 @@ public class TeleporterPad : BaseInteractable
         return false;
     }
 
-    protected override void ToDo(GameObject user)
+    protected override void PerformInteract(GameObject user)
     {
         PlayerMovement pm = Lib.FindDownThenUpwardsInTree<PlayerMovement>(user);
         if(pm == null)

@@ -21,8 +21,9 @@ MonoBehaviour:
     tags: []
   tagsToApply:
     tags:
-    - _ID: 0
-      _flag: 4129
+    - ID:
+        _ID: 0
+      _flag: STATUS.INVISIBLE
   isPassive: 0
   tickingAbility: 1
   hasDuration: 1

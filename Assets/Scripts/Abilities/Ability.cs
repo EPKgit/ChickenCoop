@@ -200,7 +200,7 @@ public abstract class Ability : ScriptableObject
     protected PlayerAbilities playerAbilities;
 
     private int InstanceID;
-    private List<uint> appliedTagIDs;
+    private List<GameplayTagInternals.GameplayTagID> appliedTagIDs;
 
     /// <summary>
     /// Called once when the ability is intantiated, should be used to setup references that the ability
@@ -209,7 +209,7 @@ public abstract class Ability : ScriptableObject
     public virtual void Initialize(PlayerAbilities pa)
     {
         playerAbilities = pa;
-        appliedTagIDs = new List<uint>();
+        appliedTagIDs = new List<GameplayTagInternals.GameplayTagID>();
         Reinitialize();
         currentCooldownTimer    = 0;
         currentRecastTimer      = 0;
@@ -291,7 +291,7 @@ public abstract class Ability : ScriptableObject
         {
             return false;
         }
-        return !playerAbilities.tagComponent.blockedTags.Matches(abilityTags);
+        return !playerAbilities.tagComponent.blockedTags.ContainsAny(abilityTags);
     }
 
     public bool IsDurationFinished()
@@ -385,10 +385,10 @@ public abstract class Ability : ScriptableObject
     /// </summary>
     public virtual void FinishAbility()
     {
-        foreach(uint i in appliedTagIDs)
+        foreach(GameplayTagInternals.GameplayTagID i in appliedTagIDs)
         {
-            playerAbilities.tagComponent.blockedTags.RemoveTagWithID(i);
-            playerAbilities.tagComponent.tags.RemoveTagWithID(i);
+            playerAbilities.tagComponent.blockedTags.RemoveFirstTagWithID(i);
+            playerAbilities.tagComponent.tags.RemoveFirstTagWithID(i);
         }
         Reinitialize();
         if (CheckRecastConditions())

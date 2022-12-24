@@ -84,7 +84,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
         return true;
     }
 
-    uint dashTagID = uint.MaxValue;
+    GameplayTagInternals.GameplayTagID dashTagID;
     Vector3 dashStart;
     Vector3 dashEnd;
     Vector3 dashDelta;
@@ -112,7 +112,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
                 rb.velocity = Vector2.zero;
                 sprite.transform.rotation = Quaternion.identity;
                 dashDuration = 0;
-                tagComponent.tags.RemoveTagWithID(dashTagID);
+                tagComponent.tags.RemoveFirstTagWithID(dashTagID);
             }
             else
             {
@@ -141,7 +141,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
 
     protected float knockbackStartTime;
     protected float knockbackDuration;
-    protected uint knockbackTagID = uint.MaxValue;
+    protected GameplayTagInternals.GameplayTagID knockbackTagID;
     public virtual void DoKnockback(KnockbackData data)
     {
         if (tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK) || tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK_IMMUNITY))
@@ -168,7 +168,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
                     StatusEffectManager.instance.ApplyEffect(gameObject, Statuses.StatusEffectType.KNOCKBACK_IMMUNITY, 0.5f - knockbackDuration);
                 }
                 knockbackDuration = 0;
-                tagComponent.tags.RemoveTagWithID(knockbackTagID);
+                tagComponent.tags.RemoveFirstTagWithID(knockbackTagID);
             }
             movementEvent(new MovementDeltaEventData((Vector2)transform.position - previousPosition, MovementType.KNOCKBACK));
         }

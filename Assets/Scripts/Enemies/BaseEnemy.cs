@@ -63,7 +63,7 @@ public abstract class BaseEnemy : BaseMovement
 
 	protected virtual void OnDisable()
 	{
-        EnemyManager.instance.UnregisterEnemy(gameObject);
+        EnemyManager.instance?.UnregisterEnemy(gameObject);
     }
 
 	public virtual void SetEnemyEnabled(bool enabled)

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <MOVEMENT>
+        <NORMAL_MOVEMENT_DISABLED/>
+        <MOVEMENT_DASHING/>
+        <KNOCKBACK/>
+        <KNOCKBACK_IMMUNITY/>
+    </MOVEMENT>
+    <INTERACTION>
+    </INTERACTION>
+    <ABILITY>
+        <ABILITY_MOVEMENT/>
+        <ABILITY_CC/>
+    </ABILITY>
+    <STATUS>
+        <INVULNERABLE/>
+        <MOVEMENT_EFFECTED>
+            <MOVEMENT_DISABLED/>
+        </MOVEMENT_EFFECTED>
+        <CASTING_EFFECTED>
+            <CASTING_DISABLED/>
+        </CASTING_EFFECTED>
+        <ATTACKING_EFFECTED>
+            <ATTACKING_DISABLED/>
+        </ATTACKING_EFFECTED>
+        <INVISIBLE/>
+    </STATUS>
+</root>

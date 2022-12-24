@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: 
   abilities:
-  - {fileID: 11400000, guid: d3b61272522649b45938ef5fc4777261, type: 2}
   - {fileID: 0}
+  - {fileID: 11400000, guid: d3b61272522649b45938ef5fc4777261, type: 2}
   - {fileID: 0}
   - {fileID: 0}
   passiveEffects: []

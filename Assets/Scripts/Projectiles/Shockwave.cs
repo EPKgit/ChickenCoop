@@ -23,7 +23,7 @@ public class Shockwave : VFXPoolable
 		base.Reset();
 	}
 
-    public void Setup(Vector3 startPosition, float lifetime, float thickness, float scale, GameObject creator, Action<IDamagable> toDo)
+    public void Setup(Vector3 startPosition, float lifetime, float thickness, float scale, GameObject creator, Action<IDamagable> toApplyCallback)
     {
 
         this.startPosition = transform.position = startPosition;
@@ -35,7 +35,7 @@ public class Shockwave : VFXPoolable
         startTime = Time.time;
         alreadyEffected = new List<TargetingController>();
         affiliation = Lib.FindDownwardsInTree<TargetingController>(creator).TargetAffiliation;
-        onIntersectFunc = toDo;
+        onIntersectFunc = toApplyCallback;
 
         effect.SetFloat("MaxLifetime", lifetime);
         effect.SetFloat("Thickness", thickness);

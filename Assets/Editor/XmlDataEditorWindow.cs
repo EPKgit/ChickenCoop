@@ -19,5 +19,13 @@ public class XmlDataEditorWindow : EditorWindow
         {
             AbilityDataXMLParser.instance.ForceReimport();
         }
+
+        if (GUILayout.Button("Reimport Tag XML"))
+        {
+            GameplayTagInternals.GameplayTagXMLParser.instance.ForceReimport();
+#if UNITY_EDITOR_WIN
+            GameplayTagInternals.GameplayTagXMLParser.instance.GenerateTagEnumFile();
+#endif
+        }
     }
 }

@@ -11,12 +11,12 @@ public abstract class BaseInteractable : Poolable
 	
 	void Awake()
 	{
-		toPerform = new PerformableAction(CanDo, priority, ToDo);
+		toPerform = new PerformableAction(CanInteract, priority, PerformInteract);
 	}
 
-	protected abstract void ToDo(GameObject user);
+	protected abstract void PerformInteract(GameObject user);
 
-	protected abstract bool CanDo();
+	protected abstract bool CanInteract();
 
 	void OnTriggerEnter2D(Collider2D col)
 	{

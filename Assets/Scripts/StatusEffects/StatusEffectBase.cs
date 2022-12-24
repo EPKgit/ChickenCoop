@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Statuses;
 
+using RawGameplayTag = System.String;
+
 namespace Statuses
 {
 public enum StatusEffectType
@@ -34,7 +36,7 @@ public abstract class StatusEffectBase
     {
         get;
     }
-    public abstract GameplayTagFlags[] flags
+    public abstract RawGameplayTag[] flags
     {
         get;
     }
@@ -48,14 +50,14 @@ public abstract class StatusEffectBase
         get;
         private set;
     }
-    public List<uint> tagHandles;
+    public List<GameplayTagInternals.GameplayTagID> tagHandles;
 
     public event Action<StatusEffectBase> OnRemoved = delegate { };
     public event Action<float> OnDurationChanged = delegate { };
     public void OnApplicationExternal(GameplayTagComponent tagComponent) 
     {
-        tagHandles = new List<uint>();
-        foreach (GameplayTagFlags flag in flags)
+        tagHandles = new List<GameplayTagInternals.GameplayTagID>();
+        foreach (RawGameplayTag flag in flags)
         {
             tagHandles.Add(tagComponent.tags.AddTag(flag));
         }
@@ -64,9 +66,9 @@ public abstract class StatusEffectBase
     public virtual void OnApplication(GameObject appliedTo) { }
     public void OnRemovalExternal(GameplayTagComponent tagComponent) 
     { 
-        foreach(uint i in tagHandles)
+        foreach(GameplayTagInternals.GameplayTagID i in tagHandles)
         {
-            tagComponent.tags.RemoveTagWithID(i);
+            tagComponent.tags.RemoveFirstTagWithID(i);
         }
         OnRemoved.Invoke(this);
     }

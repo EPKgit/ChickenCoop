@@ -5,7 +5,6 @@ using UnityEditor;
 
 public class CustomPropertyDrawerBase : PropertyDrawer
 {
-
     protected float yofs;
     protected float yinc;
     protected TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -31,7 +30,7 @@ public class CustomPropertyDrawerBase : PropertyDrawer
         // EditorGUI.DrawRect(position, Color.red);
         startRect = position;
         yofs = position.y;
-        yinc = position.height / GetNumLines(property);
+        yinc = (position.height - GetExtraSpace(property)) / GetNumLines(property);
         topRect = rect = NextLine();
         property.isExpanded = EditorGUI.Foldout(rect, property.isExpanded, textInfo.ToTitleCase(label.text));
         if (!property.isExpanded)
@@ -67,12 +66,24 @@ public class CustomPropertyDrawerBase : PropertyDrawer
         }
         return 1;
     }
+    
+    protected virtual float GetExtraSpace(SerializedProperty property)
+    {
+        return 0;
+    }
 
     protected void DrawHorizontalLine(float height, Color? color = null)
     {
         NextLine();
         rect.y += (rect.height - height) / 2.0f;
         rect.height = height;
+        EditorGUI.DrawRect(rect, color ?? Color.grey);
+    }
+
+    protected void DrawHorizontalLineWithoutFullLineAdvance(float height, Color? color = null)
+    {
+        rect = new Rect(startRect.x, yofs, startRect.width, height);
+        yofs += height;
         EditorGUI.DrawRect(rect, color ?? Color.grey);
     }
 

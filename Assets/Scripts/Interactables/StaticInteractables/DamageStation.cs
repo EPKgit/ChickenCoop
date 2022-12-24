@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class DamageStation : BaseInteractable
 {
-	protected override bool CanDo()
+	protected override bool CanInteract()
 	{
 		return true;
 	}
 
-	protected override void ToDo(GameObject user)
+	protected override void PerformInteract(GameObject user)
 	{
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "DamageStation");
 		Lib.FindUpwardsInTree<IDamagable>(user)?.Damage
