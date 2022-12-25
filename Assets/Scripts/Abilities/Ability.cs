@@ -340,11 +340,11 @@ public abstract class Ability : ScriptableObject
     /// </summary>
     protected virtual void UseAbility()
     {
-        foreach(var tag in tagsToApply.GetGameplayTags())
+        foreach(var tag in tagsToApply.Tags)
         {
             appliedTagIDs.Add(playerAbilities.tagComponent.tags.AddTag(tag.Flag));
         }
-        foreach (var tag in tagsToBlock.GetGameplayTags())
+        foreach (var tag in tagsToBlock.Tags)
         {
             appliedTagIDs.Add(playerAbilities.tagComponent.blockedTags.AddTag(tag.Flag));
         }

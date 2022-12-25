@@ -6,8 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerAbilities : MonoBehaviour
 {
-    public delegate void AbilityInitializationDelegate(AbilitySetContainer abilities);
-    public event AbilityInitializationDelegate initializedEvent = delegate { };
+    public event Action<AbilitySetContainer> initializedEvent = delegate { };
 
     public enum AbilityChangeType
     {

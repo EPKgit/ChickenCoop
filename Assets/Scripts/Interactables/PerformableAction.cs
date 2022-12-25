@@ -1,13 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public delegate bool BoolDelegate();
-public delegate void ActionDelegate(GameObject user);
 
 public class PerformableAction
 {
-	public BoolDelegate IsPerformable;	
+	public Func<bool> IsPerformable;	
 	public int priority;
-	public ActionDelegate Action;
+	public Action<GameObject> Action;
 
 	/// <summary>
 	/// Create an instance of a PerformableAction
@@ -17,7 +16,7 @@ public class PerformableAction
 	/// </param>
 	/// <param name="p">The priority of the action, arbitrates which will be executed if multiple are possible. Higher is more likely to happen</param>
 	/// <param name="ad">The action delegate to perform</param>
-	public PerformableAction(BoolDelegate bd, int p, ActionDelegate ad)
+	public PerformableAction(Func<bool> bd, int p, Action<GameObject> ad)
 	{
 		IsPerformable = bd;
 		priority = p;

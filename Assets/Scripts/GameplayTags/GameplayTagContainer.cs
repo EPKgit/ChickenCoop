@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using GameplayTagInternals;
 
@@ -9,6 +10,21 @@ using RawGameplayTag = System.String;
 [System.Serializable]
 public class GameplayTagContainer
 {
+    //called before the tag is added in case callsites want to check
+    //if the tag was already on the container
+    public event Action<GameplayTagWrapper> OnPreTagAdded = delegate {};
+
+    //called after the tag has been removed from the container so we can
+    //check if the tag remains from other tags
+    public event Action<GameplayTagWrapper> OnPostTagRemoved = delegate {};
+
+    //this is called after the tag is added and before a tag is removed
+    public event Action<GameplayTagWrapper> OnTagChanged = delegate {};
+
+    public ReadOnlyCollection<GameplayTagWrapper> Tags
+    {
+        get => tags.AsReadOnly();
+    }
     [SerializeField]
     private List<GameplayTagWrapper> tags;
 
@@ -61,6 +77,11 @@ public class GameplayTagContainer
         return false;
     }
 
+    public bool Contains(GameplayTagWrapper f)
+    {
+        return Contains(f.Flag);
+    }
+
     public bool ContainsExact(RawGameplayTag f)
     {
         throw new NotImplementedException();
@@ -69,7 +90,9 @@ public class GameplayTagContainer
     public GameplayTagID AddTag(RawGameplayTag f)
     {
         var tag = new GameplayTagWrapper(f);
+        OnPreTagAdded(tag);
         tags.Add(tag);
+        OnTagChanged(tag);
         return tag.ID;
     }
 
@@ -79,7 +102,10 @@ public class GameplayTagContainer
         {
             if(tags[x].MatchesExact(f))
             {
+                var toRemove = tags[x];
+                OnTagChanged(toRemove);
                 tags.RemoveAt(x);
+                OnPostTagRemoved(toRemove);
                 return true;
             }
         }
@@ -92,15 +118,13 @@ public class GameplayTagContainer
         {
             if(tags[x].ID == ID)
             {
+                var toRemove = tags[x];
+                OnTagChanged(toRemove);
                 tags.RemoveAt(x);
+                OnPostTagRemoved(toRemove);
                 return true;
             }
         }
         return false;
-    }
-
-    public IList<GameplayTagWrapper> GetGameplayTags()
-    {
-        return tags.AsReadOnly();
     }
 }

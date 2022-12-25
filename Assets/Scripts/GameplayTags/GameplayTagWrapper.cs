@@ -74,7 +74,7 @@ public class GameplayTagID
 }
 
 [System.Serializable]
-public class GameplayTagWrapper
+public class GameplayTagWrapper : ISerializationCallbackReceiver
 {
     public GameplayTagInternals.GameplayTagID ID;
 
@@ -93,7 +93,19 @@ public class GameplayTagWrapper
     }
     [SerializeField] private RawGameplayTag _flag;
 
-    public ReadOnlyCollection<RawGameplayTag> DelimitedRawTags { get => _delimitedRawTags.AsReadOnly(); }
+    public ReadOnlyCollection<RawGameplayTag> DelimitedRawTags 
+    { 
+        get 
+        {
+#if UNITY_EDITOR
+            if(_delimitedRawTags == null)
+            {
+                throw new System.Exception();
+            }
+#endif
+            return _delimitedRawTags.AsReadOnly(); 
+        }
+    }
     private List<RawGameplayTag> _delimitedRawTags;
 
     /// <summary>
@@ -243,6 +255,16 @@ public class GameplayTagWrapper
     public override string ToString()
     {
         return ID.ToString() + ":" + _flag.ToString();
+    }
+
+    public void OnBeforeSerialize()
+    {
+        
+    }
+
+    public void OnAfterDeserialize()
+    {
+        RecalculateDelimitedString();
     }
 #endregion
 }

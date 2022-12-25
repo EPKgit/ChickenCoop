@@ -1,12 +1,11 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class UI_Slot : MonoBehaviour, IDropHandler
 {
-    public delegate void OnDropAbility(AbilitySlot newAbilitySlot, AbilitySlot oldAbilitySlot, UI_Ability previousAbility, UI_Ability newAbility);
-    public event OnDropAbility OnAbilityDropped = delegate { };
+    public event Action<AbilitySlot, AbilitySlot, UI_Ability, UI_Ability> OnAbilityDropped = delegate { };
 
     /// <summary>
     /// Which slot does this ability represent in the UI for the player ability set

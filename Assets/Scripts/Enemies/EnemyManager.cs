@@ -13,7 +13,6 @@ public enum EnemyType
 
 public class EnemyManager : MonoSingleton<EnemyManager>
 {
-    public delegate GameObject EnemySpawnRoutineDelegate(EnemySpawnData data, Vector3 position);
     [System.Serializable]
     public class EnemySpawnData
     {
@@ -21,7 +20,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
         public GameObject prefab;
         [SerializeField]
         public GameObject spawningEffect;
-        public EnemySpawnRoutineDelegate spawningRoutine;
+        public Func<EnemySpawnData, Vector3, GameObject> spawningRoutine;
     }
 
     public class RegisteredEnemyData
@@ -55,6 +54,10 @@ public class EnemyManager : MonoSingleton<EnemyManager>
                 loanTokens.Add(PoolManager.instance.RequestLoan(enemySpawnData[x].spawningEffect, 5, true));
             }
         }
+
+        subscribedTagComponents = new List<PlayerInitialization>();
+        PlayerInitialization.OnPlayerNumberChanged += OnPlayerCountChanged;
+        OnPlayerCountChanged();
     }
 
     public GameObject SpawnEnemy(EnemyType type, Vector3 position)
@@ -188,6 +191,34 @@ public class EnemyManager : MonoSingleton<EnemyManager>
         {
             Debug.LogError("ERROR: enemyPrefabs array is not of same size as EnemyType.MAX");
             Array.Resize(ref enemySpawnData, (int)EnemyType.MAX);
+        }
+    }
+
+    private List<PlayerInitialization> subscribedTagComponents;
+    public void OnPlayerCountChanged()
+    {
+        foreach(var player in PlayerInitialization.all)
+        {
+            GameplayTagComponent tagComp = player.GetComponent<GameplayTagComponent>();
+            if(tagComp == null)
+            {
+                continue;
+            }
+            if(subscribedTagComponents.Contains(player))
+            {
+                tagComp.tags.OnTagChanged -= OnPlayerInvisibilityChanges;
+                subscribedTagComponents.Remove(player);
+            }
+            tagComp.tags.OnTagChanged += OnPlayerInvisibilityChanges;
+            subscribedTagComponents.Add(player);
+        }
+    }
+
+    public void OnPlayerInvisibilityChanges(GameplayTagInternals.GameplayTagWrapper tag)
+    {
+        if(tag.Contains(GameplayTagFlags.INVISIBLE))
+        {
+            ForceReevaluateEnemyAggro();
         }
     }
 }

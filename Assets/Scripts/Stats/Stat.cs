@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public delegate void StatChangeDelegate(float value);
-
 [System.Serializable]
 public class Stat : ISerializationCallbackReceiver
 {
@@ -45,7 +43,7 @@ public class Stat : ISerializationCallbackReceiver
 	/// An event that is fired anytime the stat is changed, either through a new base value
 	/// or if a modifier is added or removed
 	/// </summary>
-	public event StatChangeDelegate statChangeEvent = delegate {};
+	public event Action<float> OnStatChange = delegate {};
 
 	/// <summary>
 	/// Our base value, is added to and multiplied by when we calculate our final value
@@ -103,7 +101,7 @@ public class Stat : ISerializationCallbackReceiver
         _value = finalResult;
         if (changed || forceUpdate)
         {
-            statChangeEvent(_value);
+            OnStatChange(_value);
         }
     }
 
@@ -162,9 +160,9 @@ public class Stat : ISerializationCallbackReceiver
 	/// Registers a method to get called when the stat is changed
 	/// </summary>
 	/// <param name="d">The method to invoke</param>
-	public void RegisterStatChangeCallback(StatChangeDelegate d)
+	public void RegisterStatChangeCallback(Action<float> d)
 	{
-		statChangeEvent += d;
+		OnStatChange += d;
         d(_value);
 	}
 
@@ -172,9 +170,9 @@ public class Stat : ISerializationCallbackReceiver
 	/// Deregisters a method to get called when the stat is changed
 	/// </summary>
 	/// <param name="d">The method that was invoked</param>
-	public void DeregisterStatChangeCallback(StatChangeDelegate d)
+	public void DeregisterStatChangeCallback(Action<float> d)
 	{
-		statChangeEvent -= d;
+		OnStatChange -= d;
 	}
 
     public void OverwriteBaseValueNoUpdate(float f)
@@ -195,6 +193,6 @@ public class Stat : ISerializationCallbackReceiver
     {
         multiplicativeModifiers = new List<Tuple<uint, float>>();
         additiveModifiers = new List<Tuple<uint, float>>();
-        statChangeEvent = delegate { };
+        OnStatChange = delegate { };
     }
 }

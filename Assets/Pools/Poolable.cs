@@ -1,12 +1,11 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Poolable : MonoBehaviour
 {
-    public delegate void OnPoolableReturned(GameObject obj);
-
-    public event OnPoolableReturned onPoolableReturned = delegate { };
+    public event Action<GameObject> onPoolableReturned = delegate { };
+    
     [HideInInspector]
 	public GameObject prefab;
 

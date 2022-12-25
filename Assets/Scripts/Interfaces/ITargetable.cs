@@ -15,9 +15,6 @@ namespace Targeting
         MAX = 1 << 4,
     }
 
-
-    public delegate bool TargetDiscriminatorDelegate(ITargetable potentia);
-
     public interface ITargetable
     {
         Affiliation TargetAffiliation

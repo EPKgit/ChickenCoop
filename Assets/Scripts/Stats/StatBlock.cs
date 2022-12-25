@@ -20,7 +20,7 @@ public enum StatName
 [System.Serializable]
 public class StatBlock : ISerializationCallbackReceiver
 {
-    private List<Tuple<StatName, StatChangeDelegate>> queuedCallbacksToRegister = new List<Tuple<StatName, StatChangeDelegate>>();
+    private List<Tuple<StatName, Action<float>>> queuedCallbacksToRegister = new List<Tuple<StatName, Action<float>>>();
 
     private Dictionary<StatName, Stat> statDict = new Dictionary<StatName, Stat>();
 
@@ -173,7 +173,7 @@ public class StatBlock : ISerializationCallbackReceiver
         return statDict;
     }
 
-    public bool RegisterStatChangeCallback(StatName stat, StatChangeDelegate d)
+    public bool RegisterStatChangeCallback(StatName stat, Action<float> d)
     {
         if (statDict.ContainsKey(stat))
         {
@@ -182,12 +182,12 @@ public class StatBlock : ISerializationCallbackReceiver
         }
         else
         {
-            queuedCallbacksToRegister.Add(new Tuple<StatName, StatChangeDelegate>(stat, d));
+            queuedCallbacksToRegister.Add(new Tuple<StatName, Action<float>>(stat, d));
             return false;
         }
     }
 
-    public bool DeregisterStatChangeCallback(StatName stat, StatChangeDelegate d)
+    public bool DeregisterStatChangeCallback(StatName stat, Action<float> d)
     {
         if (statDict.ContainsKey(stat))
         {

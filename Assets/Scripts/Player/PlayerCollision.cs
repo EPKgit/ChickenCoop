@@ -1,17 +1,14 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
-    public delegate void CollisionDelegate(Collider2D collider);
-    public delegate bool CollisionDiscriminatorDelegate(Collider2D collider);
-
     public class CollisionCallbackData
     {
         public int ID;
-        public CollisionDelegate callback = null;
-        public CollisionDiscriminatorDelegate discriminator = null;
+        public Action<Collider2D> callback = null;
+        public Func<Collider2D, bool> discriminator = null;
         public float range = -1;
     }
 
@@ -26,7 +23,7 @@ public class PlayerCollision : MonoBehaviour
     }
 
     private static int IDCounter = 0;
-    public int AddCallback(CollisionDelegate callback, float range, CollisionDiscriminatorDelegate discriminator)
+    public int AddCallback(Action<Collider2D> callback, float range, Func<Collider2D, bool> discriminator)
     {
         if(callback == null)
         {

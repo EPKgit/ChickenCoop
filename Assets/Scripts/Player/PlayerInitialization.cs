@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,12 +7,12 @@ public class PlayerInitialization : MonoBehaviour, IStatBlockInitializer
     public static PlayerInitialization LocalPlayer = null;
     public static List<PlayerInitialization> all = new List<PlayerInitialization>();
 
-    public delegate void PlayerNumberChangedDelegate();
-    public static event PlayerNumberChangedDelegate OnPlayerNumberChanged = delegate { };
+    public static event Action OnPlayerNumberChanged = delegate { };
 
 
     public PlayerClass playerClass;
-    public int playerID;
+    [System.NonSerialized, HideInInspector]
+    public int playerID = -1;
 
     private PlayerAbilities abilities;
     private StatBlockComponent stats;

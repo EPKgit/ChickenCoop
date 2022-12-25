@@ -2,17 +2,8 @@ TODO:TODO:TODO
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CURRENT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-continue refactor of gameplay tags
-    -implement overlaps in tag wrapper
-    -implement functions in tag containers
-
-invis should cause the player model to dim/alpha out
-- send out an update whenever the tags change on an object
-- hook into the invis callback
-- set up a dict of effects to play based on tags (vfx?)
-
-
-    
+add weasal ability
+setup camera panning
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

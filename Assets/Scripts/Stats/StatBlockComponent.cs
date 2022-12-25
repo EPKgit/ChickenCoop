@@ -96,12 +96,12 @@ public class StatBlockComponent : MonoBehaviour
         return stats;
     }
 
-    public bool RegisterStatChangeCallback(StatName stat, StatChangeDelegate d)
+    public bool RegisterStatChangeCallback(StatName stat, Action<float> d)
 	{
         return stats.RegisterStatChangeCallback(stat, d);
 	}
 
-	public bool DeregisterStatChangeCallback(StatName stat, StatChangeDelegate d)
+	public bool DeregisterStatChangeCallback(StatName stat, Action<float> d)
 	{
         return stats.DeregisterStatChangeCallback(stat, d);
 	}

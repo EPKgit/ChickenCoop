@@ -101,9 +101,8 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         loadedTable = true;
     }
 
-    private delegate object VariableEvaluationMethod(string s);
 
-    private Dictionary<string, VariableEvaluationMethod> evaluationMethods = new Dictionary<string, VariableEvaluationMethod>()
+    private Dictionary<string, Func<string, object>> evaluationMethods = new Dictionary<string, Func<string, object>>()
     {
         {
             "int", (s) =>
@@ -223,7 +222,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 
     private void DoField(Ability a, string name, AbilityXMLVariable variable, AbilityXMLDataEntry entry)
     {
-        VariableEvaluationMethod evaluator = evaluationMethods[variable.type];
+        Func<string, object> evaluator = evaluationMethods[variable.type];
         if (evaluator == null)
         {
             Debug.LogError(string.Format("ERROR: FAILED TO EVALUATE PROPERTY ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));

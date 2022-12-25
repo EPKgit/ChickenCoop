@@ -7,8 +7,7 @@ public class PriorityQueue<T> where T : class
 {
 	private IComparer<T> comparator;
 
-	private delegate bool PushDelegate(T add);
-	private PushDelegate PushDel;
+	private Func<T, bool> PushDelegate;
 
 	private T[] items;
 	private int size;
@@ -25,11 +24,11 @@ public class PriorityQueue<T> where T : class
 			{
 				throw new System.Exception("Generic type must have a comparator passed in or implement the IComparable interface.");
 			}
-			PushDel = PushWithoutComparator;
+			PushDelegate = PushWithoutComparator;
 		}
 		else
 		{
-			PushDel = PushWithComparator;
+			PushDelegate = PushWithComparator;
 		}
 		comparator = c;
 	}
@@ -56,7 +55,7 @@ public class PriorityQueue<T> where T : class
 
 	public bool Push(T add)
 	{
-		return PushDel(add);
+		return PushDelegate(add);
 	}
 	
 	private bool PushWithComparator(T add)
