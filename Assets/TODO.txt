@@ -3,7 +3,8 @@ TODO:TODO:TODO
 CURRENT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add weasal ability
-setup camera panning
+setup shielding
+draw hedgehog
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
