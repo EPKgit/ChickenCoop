@@ -12,12 +12,10 @@ public class DebugEnemy : BaseEnemy
         base.Awake();
     }
 
-    protected override bool Update()
+    protected override void Update()
 	{
-        if (!base.Update() || !CanMove())
+        if (!base.UpdateMovement() || !CanMove())
         {
-            return false;
         }
-        return true;
 	}
 }

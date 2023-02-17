@@ -5,13 +5,20 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public abstract class BaseInteractable : Poolable
 {
+	public uint ID;
 	public int priority;
 
     public PerformableAction toPerform;
-	
+
+	private static uint IDCounter = 0;
 	void Awake()
 	{
-		toPerform = new PerformableAction(CanInteract, priority, PerformInteract);
+		ID = IDCounter++;
+		if(IDCounter == uint.MaxValue)
+        {
+			IDCounter = 0;
+        }
+		toPerform = new PerformableAction(gameObject, CanInteract, priority, PerformInteract);
 	}
 
 	protected abstract void PerformInteract(GameObject user);

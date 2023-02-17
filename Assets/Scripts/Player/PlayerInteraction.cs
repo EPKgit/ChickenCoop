@@ -46,4 +46,11 @@ public class PlayerInteraction : MonoBehaviour
 	{
 		actionList.RemoveAction(pa);
 	}
+
+#if UNITY_EDITOR
+	public List<PerformableAction> GetCurrentInteractions()
+    {
+		return actionList?.GetCurrentInteractions();
+    }
+#endif
 }

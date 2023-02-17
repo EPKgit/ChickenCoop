@@ -29,7 +29,7 @@ public class ShieldEnemy : BaseEnemy
 	{
         base.OnDisable();
         hp.preDamageEvent -= CheckIfBlocked;
-        PoolManager.instance.RemovePoolSize(splashPrefab, 10);
+        PoolManager.instance?.RemovePoolSize(splashPrefab, 10);
     }
 
 	void CheckIfBlocked(MutableHealthChangeEventData mhced)
@@ -69,20 +69,19 @@ public class ShieldEnemy : BaseEnemy
         base.SetEnemyEnabled(enabled);
         arc.SetActive(enabled);
         rb.velocity = Vector2.zero;
-
     }
 
-    protected override bool Update()
+    protected override void Update()
 	{
-        if (!base.Update() || !CanMove())
+        base.Update();
+        if (!base.UpdateMovement() || !CanMove())
         {
             rb.velocity = Vector2.zero;
-            return false;
+            return;
         }
         //Just walks towards the player
         Vector2 dir = (chosenPlayer.transform.position - transform.position).normalized;
         rb.velocity = dir * speed;
         arc.transform.rotation = Quaternion.Lerp(arc.transform.rotation, Quaternion.AngleAxis(Mathf.Rad2Deg * -Mathf.Atan2(dir.x, dir.y), Vector3.forward), turnSpeed);
-        return true;
 	}
 }

@@ -34,7 +34,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
     private List<EnemySpawnData> spawningEnemies;
     private List<RegisteredEnemyData> registeredEnemies;
-    private bool currentlySpawning;
+    private bool currentlySpawning; //only true in the exact moment that something is being spawned so that they can see themselves as registered
 
     protected override void OnCreation()
     {

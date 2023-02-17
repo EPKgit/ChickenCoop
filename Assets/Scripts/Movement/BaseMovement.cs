@@ -34,7 +34,11 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
 
     public float movementSpeed = 1;
     public bool getsKnockbackInvuln = false;
+
     protected Vector2 previousPosition;
+    protected bool movingAtStartOfFrame;
+    protected bool movedDuringFrame;
+    protected bool movingAtEndOfFrame;
 
     protected Rigidbody2D rb;
     protected StatBlockComponent stats;
@@ -58,6 +62,11 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
         animatorMovingHashCode = Animator.StringToHash("moving");
     }
 
+    protected virtual void Update()
+    {
+        movingAtStartOfFrame = rb.velocity.magnitude > float.Epsilon;
+    }
+
     void OnEnable()
     {
         stats.RegisterStatChangeCallback(StatName.MovementSpeed, UpdateSpeed);
@@ -71,6 +80,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
 
     private void LateUpdate()
     {
+        movingAtEndOfFrame = rb.velocity.magnitude > float.Epsilon;
         movementEvent(new MovementDeltaEventData((Vector2)transform.position - previousPosition, MovementType.END_OF_FRAME_DELTA));
         previousPosition = transform.position;
     }

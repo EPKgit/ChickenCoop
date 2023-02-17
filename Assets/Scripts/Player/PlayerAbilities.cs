@@ -53,7 +53,7 @@ public class PlayerAbilities : MonoBehaviour
 	void Awake()
 	{
         rb = GetComponent<Rigidbody2D>();
-		col = transform.Find("Colliders").GetComponent<CircleCollider2D>();
+		col = transform.Find("DefaultCollider").GetComponent<CircleCollider2D>();
 		stats = GetComponent<StatBlockComponent>().GetStatBlock();
 		hp = GetComponent<PlayerHealth>();
 		tagComponent = GetComponent<GameplayTagComponent>();

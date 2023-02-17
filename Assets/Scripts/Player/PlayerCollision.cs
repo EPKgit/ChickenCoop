@@ -6,7 +6,7 @@ public class PlayerCollision : MonoBehaviour
 {
     public class CollisionCallbackData
     {
-        public int ID;
+        public uint ID;
         public Action<Collider2D> callback = null;
         public Func<Collider2D, bool> discriminator = null;
         public float range = -1;
@@ -22,24 +22,28 @@ public class PlayerCollision : MonoBehaviour
         cachedMaxDistance = 0;
     }
 
-    private static int IDCounter = 0;
-    public int AddCallback(Action<Collider2D> callback, float range, Func<Collider2D, bool> discriminator)
+    private static uint IDCounter = 0;
+    public uint AddCallback(Action<Collider2D> callback, float range, Func<Collider2D, bool> discriminator)
     {
         if(callback == null)
         {
-            return -1;
+            return uint.MaxValue;
         }
         CollisionCallbackData data = new CollisionCallbackData() ;
         data.callback = callback;
         data.range = range;
         data.discriminator = discriminator;
         data.ID = IDCounter++;
+        if(IDCounter == uint.MaxValue)
+        {
+            IDCounter = 0;
+        }
         callbacks.Add(data);
         cachedMaxDistance = Mathf.Max(cachedMaxDistance, data.range);
         return data.ID;
     }
 
-    public bool RemoveCallback(int ID)
+    public bool RemoveCallback(uint ID)
     {
         for(int x = 0; x < callbacks.Count; ++x)
         {

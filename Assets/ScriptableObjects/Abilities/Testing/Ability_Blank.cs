@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class Ability_Blank : Ability
 {
-	private int? collisionHandle;
+	private uint? collisionHandle;
     public GameObject splashPrefab;
 
     public override void Initialize(PlayerAbilities pa)

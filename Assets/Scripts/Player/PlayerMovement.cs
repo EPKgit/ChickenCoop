@@ -7,8 +7,9 @@ public class PlayerMovement : BaseMovement
 {
 	private Vector2 movementInputAxis;
 
-	void Update()
+	protected override void Update()
 	{
+        base.Update();
         if(!CanMove())
         {
             rb.velocity = Vector2.zero;
@@ -50,9 +51,9 @@ public class PlayerMovement : BaseMovement
                 rb.AddForce(movementInputAxis * movementSpeed * 1.5f);
             }
         }
-        bool moving = movementInputAxis.magnitude > float.Epsilon;
-        animator.SetBool(animatorMovingHashCode, moving);
-        if (moving)
+        movedDuringFrame = movementInputAxis.sqrMagnitude > float.Epsilon;
+        animator.SetBool(animatorMovingHashCode, movedDuringFrame);
+        if (movedDuringFrame)
         {
             sprite.flipX = rb.velocity.x < 0;
         }

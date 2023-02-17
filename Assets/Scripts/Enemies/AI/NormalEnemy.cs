@@ -17,16 +17,16 @@ public class NormalEnemy : BaseEnemy
         rb.velocity = Vector2.zero;
     }
 
-    protected override bool Update()
+    protected override void Update()
 	{
-        if (!base.Update() || !CanMove())
+        base.Update();
+        if (!base.UpdateMovement() || !CanMove())
         {
             rb.velocity = Vector2.zero;
-            return false;
+            return;
         }
         //Just walks towards the player
         Vector2 dir = (chosenPlayer.transform.position - transform.position).normalized;
         rb.velocity = dir * speed;
-        return true;
 	}
 }

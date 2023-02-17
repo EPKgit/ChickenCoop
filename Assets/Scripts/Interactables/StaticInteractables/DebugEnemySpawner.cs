@@ -22,5 +22,6 @@ public class DebugEnemySpawner : BaseInteractable
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, transform.position + offset);
+        Gizmos.DrawIcon(transform.position + offset, "spawnpointgizmo");
     }
 }

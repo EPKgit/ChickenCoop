@@ -8,10 +8,13 @@ public abstract class BaseEnemy : BaseMovement
     public abstract EnemyType type { get; }
     public float speed = 1f;
 
+	[HideInInspector]
+	public bool isRegistered;
+
 	/// <summary>
-    /// Setting to true will enable default 
-    /// </summary>
-    public bool doesContactDamage = true;
+	/// Setting to true will enable default 
+	/// </summary>
+	public bool doesContactDamage = true;
 
 
     /// <summary>
@@ -40,7 +43,8 @@ public abstract class BaseEnemy : BaseMovement
 
     protected override void Awake()
 	{
-		if(!EnemyManager.instance.IsRegistered(gameObject))
+		isRegistered = EnemyManager.instance.IsRegistered(gameObject);
+		if (!isRegistered)
 		{
             EnemyManager.instance.RegisterEnemy(gameObject);
         }
@@ -131,9 +135,14 @@ public abstract class BaseEnemy : BaseMovement
 	//Not that performant, can be updated if we need to
 	//Should add an aggro range 
 	// returns false if we shouldn't do anything
-	protected virtual bool Update()
+	protected virtual bool UpdateMovement()
 	{
-		if(!enemyEnabled)
+		animator.SetBool(animatorMovingHashCode, movingAtStartOfFrame);
+		if (movingAtStartOfFrame)
+		{
+			sprite.flipX = rb.velocity.x < 0;
+		}
+		if (!enemyEnabled)
 		{
             return false;
         }

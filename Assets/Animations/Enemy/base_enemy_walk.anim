@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: chicken_player_walk
+  m_Name: base_enemy_walk
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,9 +20,9 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 4334783836991956000, guid: d16d02de95f850f42950f8de30af0dcb, type: 3}
+      value: {fileID: 8678448789981272047, guid: d16d02de95f850f42950f8de30af0dcb, type: 3}
     - time: 0.083333336
-      value: {fileID: 7388399842426930641, guid: d16d02de95f850f42950f8de30af0dcb, type: 3}
+      value: {fileID: -1249941551368896030, guid: d16d02de95f850f42950f8de30af0dcb, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -42,8 +42,8 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 4334783836991956000, guid: d16d02de95f850f42950f8de30af0dcb, type: 3}
-    - {fileID: 7388399842426930641, guid: d16d02de95f850f42950f8de30af0dcb, type: 3}
+    - {fileID: 8678448789981272047, guid: d16d02de95f850f42950f8de30af0dcb, type: 3}
+    - {fileID: -1249941551368896030, guid: d16d02de95f850f42950f8de30af0dcb, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
