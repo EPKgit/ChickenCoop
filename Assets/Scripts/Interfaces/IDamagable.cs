@@ -22,6 +22,7 @@ public class MutableHealthChangeEventData
 
 public class HealthChangeData
 {
+    public bool valid { get; private set; } = false;
     public GameObject overallSource { get; private set; }
     public GameObject localSource { get; private set; }
     public GameObject target { get; private set; }
@@ -33,9 +34,10 @@ public class HealthChangeData
     private StatName _flatStat = StatName.MAX;
     public StatName percentageStat { get => _percentageStat; private set => _percentageStat = value; }
     private StatName _percentageStat = StatName.MAX;
+
     public class HealthChangeDataBuilder
     {
-        public HealthChangeData data;
+        private HealthChangeData data;
         public HealthChangeDataBuilder(HealthChangeData data)
         {
             this.data = data;
@@ -180,6 +182,7 @@ public class HealthChangeData
                     data.delta = (data.unmodifiedDelta + flatIncrease) * percentIncrease;
                 }
             }
+            data.valid = true;
             return data;
         }
     }

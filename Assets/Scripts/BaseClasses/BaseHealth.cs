@@ -93,6 +93,10 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 
 	public void Damage(HealthChangeData data)
 	{
+		if(!data.valid)
+        {
+			throw new System.Exception("ERROR Invalid HealthChangeData used in damage method");
+        }
 		if(tagComponent?.tags.Contains(GameplayTagFlags.INVULNERABLE) ?? false)
 		{
 			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "DAMAGE CANCELED FROM INVULN");

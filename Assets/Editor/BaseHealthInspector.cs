@@ -59,4 +59,9 @@ public class BaseHealthInspector : Editor
             );
         }
     }
+
+    public override bool RequiresConstantRepaint()
+    {
+        return true;
+    }
 }

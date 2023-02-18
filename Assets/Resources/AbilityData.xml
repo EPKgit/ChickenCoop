@@ -176,4 +176,18 @@
     </ability>
 
     <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>102</ability_ID>
+		<ability_name>Chomp</ability_name>
+		<tooltip>Bite in front of you</tooltip>
+		<var_list>
+			<variable name="cd" type="float" value="1"/>
+			<variable name="damage" type="float" value="5"/>
+			<variable name="hitboxDuration" type="float" value="0.25"/>
+			<variable name="hitboxRadius" type="float" value="0.5"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 </root>

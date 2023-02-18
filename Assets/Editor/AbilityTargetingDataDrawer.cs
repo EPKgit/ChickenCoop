@@ -35,7 +35,8 @@ public class AbilityTargetingDataDrawer : CustomPropertyDrawerBase
         SetupProperties(property);
         DrawHorizontalLine(1, 0.25f);
         EditorGUI.PropertyField(NextLine(), targetType);
-        customTargetingPrefabs = EditorGUI.Toggle(NextLine(), "Custom Prefabs", customTargetingPrefabs);
+        customTargetingPrefabs |= secondaryPreviewPrefab.objectReferenceValue != null;
+        customTargetingPrefabs |= EditorGUI.Toggle(NextLine(), "Custom Prefabs", customTargetingPrefabs);
         AbilityTargetingData.TargetType type = (AbilityTargetingData.TargetType)targetType.enumValueIndex;
         if(type != AbilityTargetingData.TargetType.NONE)
         {

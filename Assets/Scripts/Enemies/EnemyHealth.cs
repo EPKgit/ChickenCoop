@@ -17,16 +17,16 @@ public class EnemyHealth : BaseHealth
         {
             location = hcd.damageLocation();
         }
-        else if (hcd.localSource != null)
+        else if (hcd.target != null)
         {
-            location = hcd.localSource.transform.position;
+            location = hcd.target.transform.position;
         }
         else
         {
             Debug.LogError("ERROR: Trying to spawn damage numbers without proper location setup");
             location = transform.position;
         }
-        DamageNumbersManager.instance.CreateNumber(-hcd.delta, location);
+        DamageNumbersManager.instance.CreateNumber(-hcd.delta, location, 0.3f);
     }
 
     protected override void Die(GameObject killer = null)

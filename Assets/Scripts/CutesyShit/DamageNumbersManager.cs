@@ -22,12 +22,19 @@ public class DamageNumbersManager : MonoSingleton<DamageNumbersManager>
         PoolManager.instance.ChangeParentOfPool(textPrefab, UIRoot.transform);
     }
 
-    public void CreateNumber(float i, Vector3 position)
+    public void CreateNumber(float i, Vector3 position, float LRWiggleAmount = 0)
     {
         var gameObject = PoolManager.instance.RequestObject(textPrefab);
-        if(gameObject == null) return;
+        if (gameObject == null)
+        {
+            return;
+        }
         DamageNumberPopup popup = gameObject.GetComponent<DamageNumberPopup>();
-        if (popup == null) return;
-        popup.Setup(i, position);
+        if (popup == null)
+        {
+            return;
+        }
+        float rand = Random.Range(0, LRWiggleAmount) * 2 - LRWiggleAmount;
+        popup.Setup(i, position + Vector3.left * rand);
     }
 }
