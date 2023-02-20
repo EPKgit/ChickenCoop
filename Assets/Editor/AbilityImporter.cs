@@ -33,14 +33,14 @@ public class AbilityImporter : EditorWindow
 			{
 				fullPath = AssetDatabase.GUIDToAssetPath(s);
 				path = fullPath.Substring(0, AssetDatabase.GUIDToAssetPath(s).LastIndexOf('/'));
-                DebugFlags.Log(DebugFlags.FLAGS.ABILITY, "fp:" + fullPath);
-                DebugFlags.Log(DebugFlags.FLAGS.ABILITY, "path:" + path);
+                DebugFlags.Log(DebugFlags.Flags.ABILITY, "fp:" + fullPath);
+                DebugFlags.Log(DebugFlags.Flags.ABILITY, "path:" + path);
 				if(fullPath.IndexOf('.') == -1 || !fullPath.Contains(".cs"))
 				{
 					continue;
 				}
 				abilityName = fullPath.Substring(AssetDatabase.GUIDToAssetPath(s).LastIndexOf('/') + 1, fullPath.LastIndexOf('.') - AssetDatabase.GUIDToAssetPath(s).LastIndexOf('/') - 1);
-                DebugFlags.Log(DebugFlags.FLAGS.ABILITY, abilityName);
+                DebugFlags.Log(DebugFlags.Flags.ABILITY, abilityName);
 				if(alreadyCreatedAssets.Contains(abilityName))
 				{
 					continue;

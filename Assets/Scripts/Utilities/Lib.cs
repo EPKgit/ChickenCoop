@@ -35,7 +35,7 @@ public static class Lib
         T temp = LibGetComponentDownTree<T>(start);
         if (IsNotNull<T>(temp))
         {
-            DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning " + temp);
+            DebugFlags.Log(DebugFlags.Flags.LIB, "returning " + temp);
             return temp;
         }
         Transform curr = start.transform.parent;
@@ -45,13 +45,13 @@ public static class Lib
             temp = LibGetComponentInChildren<T>(curr.gameObject, prev);
             if (IsNotNull<T>(temp))
             {
-                DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning " + temp);
+                DebugFlags.Log(DebugFlags.Flags.LIB, "returning " + temp);
                 return temp;
             }
             prev = curr;
             curr = curr.transform.parent;
         }
-        DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning null");
+        DebugFlags.Log(DebugFlags.Flags.LIB, "returning null");
         return null;
     }
 
@@ -90,7 +90,7 @@ public static class Lib
             T temp = curr.GetComponent<T>();
             if (IsNotNull<T>(temp))
             {
-                DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning " + temp);
+                DebugFlags.Log(DebugFlags.Flags.LIB, "returning " + temp);
                 return temp;
             }
 			curr = curr.parent;
@@ -108,10 +108,10 @@ public static class Lib
     {
         if (typeof(T).IsSubclassOf(typeof(Component)))
         {
-            DebugFlags.Log(DebugFlags.FLAGS.LIB, string.Format("isComponent and toCheck==null:{0} || toCheck.Equals(null):{1}", toCheck != null, !toCheck?.Equals(null)));
+            DebugFlags.Log(DebugFlags.Flags.LIB, string.Format("isComponent and toCheck==null:{0} || toCheck.Equals(null):{1}", toCheck != null, !toCheck?.Equals(null)));
             return toCheck != null && !toCheck.Equals(null);
         }
-        DebugFlags.Log(DebugFlags.FLAGS.LIB, string.Format("isntComponent and toCheck==null:{0}", toCheck != null));
+        DebugFlags.Log(DebugFlags.Flags.LIB, string.Format("isntComponent and toCheck==null:{0}", toCheck != null));
         return toCheck != null;
     }
 
@@ -125,7 +125,7 @@ public static class Lib
             T temp = curr.GetComponent<T>();
             if (IsNotNull<T>(temp))
             {
-                DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning " + temp);
+                DebugFlags.Log(DebugFlags.Flags.LIB, "returning " + temp);
                 return temp;
             }
             foreach (Transform t in curr.transform)
@@ -133,7 +133,7 @@ public static class Lib
                 toCheck.Enqueue(t.gameObject);
             }
         }
-        DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning null");
+        DebugFlags.Log(DebugFlags.Flags.LIB, "returning null");
         return null;
     }
 
@@ -146,11 +146,11 @@ public static class Lib
     /// <returns></returns>
     internal static T LibGetComponentInChildren<T>(GameObject check, Transform excludedChild = null) where T : class
     {
-        DebugFlags.Log(DebugFlags.FLAGS.LIB, "checking " + check.name);
+        DebugFlags.Log(DebugFlags.Flags.LIB, "checking " + check.name);
         T temp = check.GetComponent<T>();
         if (IsNotNull<T>(temp))
         {
-            DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning " + temp);
+            DebugFlags.Log(DebugFlags.Flags.LIB, "returning " + temp);
             return temp;
         }
         for (int index = 0; index < check.transform.childCount; ++index)
@@ -163,11 +163,11 @@ public static class Lib
             temp = t.gameObject.GetComponent<T>();
             if (IsNotNull<T>(temp))
             {
-                DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning " + temp);
+                DebugFlags.Log(DebugFlags.Flags.LIB, "returning " + temp);
                 return temp;
             }
         }
-        DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning null");
+        DebugFlags.Log(DebugFlags.Flags.LIB, "returning null");
         return null;
     }
 
@@ -182,7 +182,7 @@ public static class Lib
         T temp = check.GetComponent<T>();
         if (IsNotNull<T>(temp))
         {
-            DebugFlags.Log(DebugFlags.FLAGS.LIB, "returning " + temp);
+            DebugFlags.Log(DebugFlags.Flags.LIB, "returning " + temp);
             return temp;
         }
         return null;
@@ -194,7 +194,7 @@ public static class Lib
         bool found = false;
         while(curr != null)
 		{
-    		DebugFlags.Log(DebugFlags.FLAGS.LIB, "Checking for tag " + tag + " on " + curr.name );
+    		DebugFlags.Log(DebugFlags.Flags.LIB, "Checking for tag " + tag + " on " + curr.name );
             found = curr.CompareTag(tag);
             if(found)
             {
@@ -202,13 +202,13 @@ public static class Lib
             }
 			curr = curr.parent;
         }
-		DebugFlags.Log(DebugFlags.FLAGS.LIB, "Ending search for tag " + tag + " with result " + found);
+		DebugFlags.Log(DebugFlags.Flags.LIB, "Ending search for tag " + tag + " with result " + found);
 		return found;
 	}
 
     public static bool HasTagInHierarchyDownward(GameObject start, string tag)
     {
-        DebugFlags.Log(DebugFlags.FLAGS.LIB, "Starting search on " + start.name + " for " + tag);
+        DebugFlags.Log(DebugFlags.Flags.LIB, "Starting search on " + start.name + " for " + tag);
         return Lib.TagRecursiveHelper(start, tag);
     }
 

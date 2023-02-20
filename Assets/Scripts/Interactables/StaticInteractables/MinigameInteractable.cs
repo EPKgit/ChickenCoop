@@ -11,7 +11,7 @@ public class MinigameInteractable : BaseInteractable
 
     protected override void PerformInteract(GameObject user)
     {
-        DebugFlags.Log(DebugFlags.FLAGS.INTERACTABLES, "MinigameInteractable");
+        DebugFlags.Log(DebugFlags.Flags.INTERACTABLES, "MinigameInteractable");
         MinigameManager.instance.StartMinigame(Minigame.MinigameType.MAX, OnMinigameFinish, user);
     }
 

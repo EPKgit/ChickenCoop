@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 public class DebugFlags
 {
-    public enum FLAGS
+    public enum Flags
     {
         MENU = 0,
         MOVEMENT = 0,
@@ -23,7 +23,7 @@ public class DebugFlags
         HITBOXES_IN_GAME = 1,
     }
 
-    public static void Log(FLAGS flag, string printString)
+    public static void Log(Flags flag, string printString)
     {
         if((int)flag == 1)
         {

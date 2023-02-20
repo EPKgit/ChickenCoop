@@ -317,7 +317,7 @@ public abstract class Ability : ScriptableObject
     /// <returns>Returns true if the ability is used succesfully</returns>
     public virtual bool AttemptUseAbility()
     {
-        DebugFlags.Log(DebugFlags.FLAGS.ABILITY, string.Format("{0} ATTEMPT USE AT {1}", name, targetingData.inputPoint));
+        DebugFlags.Log(DebugFlags.Flags.ABILITY, string.Format("{0} ATTEMPT USE AT {1}", name, targetingData.inputPoint));
         // if the ability is already ticking or on cooldown
         // should also check cost
         if (!IsCastable())

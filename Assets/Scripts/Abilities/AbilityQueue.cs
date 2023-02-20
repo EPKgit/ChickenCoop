@@ -63,13 +63,13 @@ public class AbilityQueue
             {
                 case AbilityInputData.AbilityInputState.WAITING_IN_QUEUE:
                 {
-                    DebugFlags.Log(DebugFlags.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} STARTED FRAME WAITING IN QUEUE, STARTING", current.ability.name));
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} STARTED FRAME WAITING IN QUEUE, STARTING", current.ability.name));
                     current.state = AbilityInputData.AbilityInputState.START_PREVIEW;
                     goto case AbilityInputData.AbilityInputState.START_PREVIEW;
                 }
                 case AbilityInputData.AbilityInputState.START_PREVIEW:
                 {
-                    DebugFlags.Log(DebugFlags.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} START PREVIEW", a.name));
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} START PREVIEW", a.name));
                     current.ability.targetingData.Preview(a, attached);
                     current.state = AbilityInputData.AbilityInputState.WAITING_FOR_INPUT;
                     goto case AbilityInputData.AbilityInputState.WAITING_FOR_INPUT;
@@ -86,7 +86,7 @@ public class AbilityQueue
                 } break;
                 case AbilityInputData.AbilityInputState.CASTING:
                 {
-                    DebugFlags.Log(DebugFlags.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1} {2}", a.name, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1} {2}", a.name, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
                     preAbilityCastEvent(new AbilityEventData(a));
                     if (a.AttemptUseAbility())
                     {
@@ -105,7 +105,7 @@ public class AbilityQueue
                 }
                 case AbilityInputData.AbilityInputState.FINISHED:
                 {
-                    DebugFlags.Log(DebugFlags.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} FINISHED", current.ability.name));
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} FINISHED", current.ability.name));
                     a.targetingData.isInputSet = false;
                     a.CleanupAllTargeting(attached);
                     abilityInputQueue.Dequeue();
@@ -129,11 +129,11 @@ public class AbilityQueue
         {
             if(data.ability == a)
             {
-                DebugFlags.Log(DebugFlags.FLAGS.ABILITYQUEUE, string.Format("FAILED ENQUEING {0} BECAUSE IT WAS ALREADY IN QUEUE", a.name));
+                DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("FAILED ENQUEING {0} BECAUSE IT WAS ALREADY IN QUEUE", a.name));
                 return;
             }
         }
-        DebugFlags.Log(DebugFlags.FLAGS.ABILITYQUEUE, string.Format("ENQUEING {0}", a.name));
+        DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ENQUEING {0}", a.name));
         abilityInputQueue.Enqueue(new AbilityInputData(a));
     }
 
@@ -151,7 +151,7 @@ public class AbilityQueue
         if(aid != null)
         {
             Targeting.AbilityTargetingData atd = aid.ability.targetingData;
-            DebugFlags.Log(DebugFlags.FLAGS.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", a.name, targetData));
+            DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", a.name, targetData));
             atd.inputPoint = targetData;
             atd.inputRotationZ = Mathf.Rad2Deg * -Mathf.Atan2(atd.inputPoint.x, atd.inputPoint.y);
             atd.inputTarget = Ability.FindTargetable(targetData, a.targetingData.affiliation);

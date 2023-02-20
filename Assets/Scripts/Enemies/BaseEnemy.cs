@@ -128,7 +128,7 @@ public abstract class BaseEnemy : BaseMovement
 #else
         chosenPlayer = aggro?.Peek()?.source ?? PlayerInitialization.all[Random.Range(0, PlayerInitialization.all.Count)].gameObject;
 #endif
-        DebugFlags.Log(DebugFlags.FLAGS.AGGRO, chosenPlayer?.name ?? "NO AGGRO");
+        DebugFlags.Log(DebugFlags.Flags.AGGRO, chosenPlayer?.name ?? "NO AGGRO");
 		return chosenPlayer != null;
 	}
 

@@ -117,7 +117,7 @@ public class PlayerRender : MonoBehaviour
 		Transform temp;
 		if( (temp = transform.Find("Render").Find("Model")) != null)
 		{
-            DebugFlags.Log(DebugFlags.FLAGS.RENDER, "killing old model");
+            DebugFlags.Log(DebugFlags.Flags.RENDER, "killing old model");
 			Destroy(temp.gameObject);
 		}
 		GameObject newModel = Instantiate(g);
