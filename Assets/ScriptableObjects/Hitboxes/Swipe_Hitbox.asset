@@ -26,4 +26,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   radius: 0.5
-  duration: 30
+  duration: 0.25

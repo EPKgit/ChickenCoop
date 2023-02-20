@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Hitbox : Poolable
 {
+    public static Color debugColor = new Color(1.0f, 0.0f, 0.0f, 0.4f);
     public HitboxData data;
 
     private bool active;
@@ -78,7 +79,7 @@ public class Hitbox : Poolable
                 overlaps = Physics2D.OverlapCircleAll(transform.position, data.Radius, data.LayerMask.value);
                 break;
             case HitboxShape.SQUARE:
-                overlaps = Physics2D.OverlapBoxAll(transform.position, new Vector2(data.Radius * 2, data.Radius * 2), 0, data.LayerMask.value);
+                overlaps = Physics2D.OverlapBoxAll(transform.position, new Vector2(data.Radius * 2, data.Radius * 2), data.StartRotationZ, data.LayerMask.value);
                 break;
             case HitboxShape.POLYGON:
                 overlaps = new Collider2D[8];
@@ -185,18 +186,26 @@ public class Hitbox : Poolable
 
     void DrawGizmo()
     {
-        UnityEditor.Handles.color = Color.red;
+        UnityEditor.Handles.color = debugColor;
         switch (data.Shape)
         {
             case HitboxShape.CIRCLE:
+            {
                 UnityEditor.Handles.DrawSolidDisc(transform.position, transform.forward, data.Radius);
-                break;
+            } break;
             case HitboxShape.SQUARE:
+            {
+                var points = new Vector3[4];
                 Rect rect = new Rect(0, 0, data.Radius * 2, data.Radius * 2);
-                rect.center = transform.position;
-                UnityEditor.Handles.DrawSolidRectangleWithOutline(rect, Color.red, Color.red);
-                break;
+                points[0] = transform.rotation * new Vector3(-data.Radius, -data.Radius) + transform.position;
+                points[1] = transform.rotation * new Vector3( data.Radius, -data.Radius) + transform.position;
+                points[2] = transform.rotation * new Vector3( data.Radius,  data.Radius) + transform.position;
+                points[3] = transform.rotation * new Vector3(-data.Radius,  data.Radius) + transform.position;
+                UnityEditor.Handles.DrawAAConvexPolygon(points);
+            } break;
+
             case HitboxShape.POLYGON:
+            { 
                 var points = new Vector3[data.Points.Length];
                 int x = 0;
                 foreach(Vector2 v in data.Points)
@@ -204,14 +213,14 @@ public class Hitbox : Poolable
                     points[x] = (transform.rotation * (Vector3)data.Points[x++]) + transform.position;
                 }
                 UnityEditor.Handles.DrawAAConvexPolygon(points);
-                break;
+            } break;
 
         }
     }
 
     private void OnRenderObject()
     {
-        if (data != null && active)
+        if ((int)DebugFlags.Flags.HITBOXES_IN_GAME == 1 && data != null && active)
         {
             DrawInGameDebug();
         }
@@ -222,12 +231,12 @@ public class Hitbox : Poolable
         switch (data.Shape)
         {
             case HitboxShape.CIRCLE:
-                GLHelpers.GLDrawCircle(transform, data.Radius, 32, Color.red);
+                GLHelpers.GLDrawCircle(transform, data.Radius, 32, debugColor);
                 break;
             case HitboxShape.SQUARE:
                 Rect rect = new Rect(0, 0, data.Radius * 2, data.Radius * 2);
                 rect.center = transform.position;
-                GLHelpers.GLDrawRect(transform, rect, Color.red);
+                GLHelpers.GLDrawRect(transform, rect, debugColor);
                 break;
             case HitboxShape.POLYGON:
                 var points = new Vector3[data.Points.Length];
@@ -236,7 +245,7 @@ public class Hitbox : Poolable
                 {
                     points[x] = data.Points[x++];
                 }
-                GLHelpers.GLDrawPolygon(transform, points, Color.red);
+                GLHelpers.GLDrawPolygon(transform, points, debugColor);
                 break;
         }
     }

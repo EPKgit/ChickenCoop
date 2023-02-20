@@ -153,7 +153,9 @@ public class AbilityQueue
             Targeting.AbilityTargetingData atd = aid.ability.targetingData;
             DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", a.name, targetData));
             atd.inputPoint = targetData;
-            atd.inputRotationZ = Mathf.Rad2Deg * -Mathf.Atan2(atd.inputPoint.x, atd.inputPoint.y);
+            Vector2 relativePosition = new Vector2(atd.inputPoint.x - playerAbilities.transform.position.x, atd.inputPoint.y - playerAbilities.transform.position.y);
+            atd.inputRotationZ = Vector2.SignedAngle(Vector2.up, relativePosition);
+            atd.inputRotationZ = atd.inputRotationZ < 0 ? atd.inputRotationZ + 360.0f : atd.inputRotationZ;
             atd.inputTarget = Ability.FindTargetable(targetData, a.targetingData.affiliation);
             atd.isInputSet = true;
             if(!atd.isInputSet)

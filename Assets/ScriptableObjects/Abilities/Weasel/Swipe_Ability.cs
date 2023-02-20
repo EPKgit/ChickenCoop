@@ -12,6 +12,8 @@ public class Swipe_Ability : Ability
     public override void Initialize(PlayerAbilities pa)
 	{
 		base.Initialize(pa);
+        customHitbox = ScriptableObject.Instantiate(customHitbox);
+        customHitbox.duration = hitboxDuration;
     }
 
     protected override void UseAbility()
