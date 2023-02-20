@@ -6,6 +6,7 @@ public enum HitboxShape
 {
     CIRCLE,
     SQUARE,
+    POLYGON,
     MAX
 }
 
@@ -24,32 +25,27 @@ public enum HitboxRepeatPolicy
     UNLIMITED,
     MAX
 }
-[Serializable, CreateAssetMenu(menuName = "HitboxData")]
-public class HitboxData : ScriptableObject
+public class HitboxData
 { 
-    //public non-serialized properties
-    public bool valid { get; private set; } = false;
-    public Vector3 StartPosition { get; private set; }
+    public bool Validated { get; private set; } = false;
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //These are what are necessary for a valid hitbox
+    public Vector3 StartPosition { get; private set; } = Vector3.positiveInfinity;
     public Action<Collider2D> OnCollision { get; private set; }
     public Func<Collider2D, bool> Discriminator { get; private set; }
 
-    //public serialized accesor properties
-    public HitboxShape Shape { get => shape; private set => shape = value; }
-    public HitboxInteractionType InteractionType { get => interactionType; private set => interactionType = value; }
-    public HitboxRepeatPolicy RepeatPolicy { get => repeatPolicy; private set => repeatPolicy = value; }
-    public float RepeatCooldown { get => repeatCooldown; private set => repeatCooldown = value; }
-    public LayerMask LayerMask { get => layerMask; private set => layerMask = value; }
-    public float Radius { get => radius; private set => radius = value; }
-    public float Duration { get => duration; private set => duration = value; }
 
-    //private serialized backing fields
-    [SerializeField] private HitboxShape shape = HitboxShape.CIRCLE;
-    [SerializeField] private HitboxInteractionType interactionType = HitboxInteractionType.ALL;
-    [SerializeField] private HitboxRepeatPolicy repeatPolicy = HitboxRepeatPolicy.ONLY_ONCE;
-    [SerializeField] private float repeatCooldown = -1;
-    [SerializeField] private LayerMask layerMask = 0;
-    [SerializeField] private float radius = 0.5f;
-    [SerializeField] private float duration = -1;
+    //These have defaults and aren't necessary
+    public HitboxShape Shape { get; private set; } = HitboxShape.CIRCLE;
+    public Vector2[] Points { get; private set; }
+    public HitboxInteractionType InteractionType { get; private set; } = HitboxInteractionType.ALL;
+    public HitboxRepeatPolicy RepeatPolicy { get; private set; } = HitboxRepeatPolicy.ONLY_ONCE;
+    public float RepeatCooldown { get; private set; } = -1;
+    public LayerMask LayerMask { get; private set; } = -1;
+    public float Radius { get; private set; } = 0.5f;
+    public float Duration { get; private set; } = 0;
+    public float StartRotationZ { get; private set; } = 0;
 
     public bool TickDuration(float deltaTime)
     {
@@ -89,6 +85,12 @@ public class HitboxData : ScriptableObject
             return this;
         }
 
+        public HitboxDataBuilder Points(Vector2[] v)
+        {
+            data.Points = v;
+            return this;
+        }
+
         public HitboxDataBuilder Layer(LayerMask layer)
         {
             data.LayerMask = layer;
@@ -125,6 +127,12 @@ public class HitboxData : ScriptableObject
             return this;
         }
 
+        public HitboxDataBuilder StartRotation(float f)
+        {
+            data.StartRotationZ = f;
+            return this;
+        }
+
         private bool Valid()
         {
             if (data.OnCollision == null)
@@ -135,11 +143,11 @@ public class HitboxData : ScriptableObject
             {
                 return false;
             }
-            if (data.Duration < 0)
+            if (data.RepeatPolicy == HitboxRepeatPolicy.COOLDOWN && data.RepeatCooldown == -1)
             {
                 return false;
             }
-            if (data.RepeatPolicy == HitboxRepeatPolicy.COOLDOWN && data.RepeatCooldown == -1)
+            if (data.Shape == HitboxShape.POLYGON && data.Points == null)
             {
                 return false;
             }
@@ -152,17 +160,17 @@ public class HitboxData : ScriptableObject
             {
                 throw new System.Exception("ERROR: INVALID HURTBOX DATA CREATED");
             }
-            if(data.layerMask == 0)
+            if(data.LayerMask == -1)
             {
-                data.layerMask = HitboxManager.instance.defaultLayer;
+                data.LayerMask = HitboxManager.instance.defaultLayer;
             }
-            data.valid = true;
+            data.Validated = true;
             return data;
         }
     }
 
     public static HitboxDataBuilder GetBuilder()
     {
-        return new HitboxDataBuilder(ScriptableObject.CreateInstance<HitboxData>());
+        return new HitboxDataBuilder(new HitboxData());
     }
 }

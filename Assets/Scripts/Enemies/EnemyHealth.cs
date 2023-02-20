@@ -13,20 +13,20 @@ public class EnemyHealth : BaseHealth
     void OnDamage(HealthChangeData hcd)
     {
         Vector3 location;
-        if (hcd.damageLocation != null)
+        if (hcd.DamageLocation != null)
         {
-            location = hcd.damageLocation();
+            location = hcd.DamageLocation();
         }
-        else if (hcd.target != null)
+        else if (hcd.Target != null)
         {
-            location = hcd.target.transform.position;
+            location = hcd.Target.transform.position;
         }
         else
         {
             Debug.LogError("ERROR: Trying to spawn damage numbers without proper location setup");
             location = transform.position;
         }
-        DamageNumbersManager.instance.CreateNumber(-hcd.delta, location, 0.3f);
+        DamageNumbersManager.instance.CreateNumber(-hcd.Delta, location, 0.3f);
     }
 
     protected override void Die(GameObject killer = null)

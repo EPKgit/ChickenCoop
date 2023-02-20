@@ -19,6 +19,7 @@ namespace Targeting
         }
 
         public Vector2 inputPoint;
+        public float inputRotationZ;
         public ITargetable inputTarget;
 
         /// <summary>

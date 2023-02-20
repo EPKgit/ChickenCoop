@@ -7,13 +7,10 @@ public class Bite_Ability : Ability
 {
     public float damage = 1.0f;
     public float hitboxDuration = 0.25f;
-    public float hitboxRadius = 0.5f;
 
-    private StatBlock statBlock;
     public override void Initialize(PlayerAbilities pa)
 	{
 		base.Initialize(pa);
-        statBlock = pa.stats;
     }
 
     public override void FinishAbility()

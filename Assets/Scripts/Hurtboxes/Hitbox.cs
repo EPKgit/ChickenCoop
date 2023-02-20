@@ -8,9 +8,11 @@ public class Hitbox : Poolable
     public HitboxData data;
 
     private bool active;
+    private PolygonCollider2D polyCollider;
     private Dictionary<GameObject, float> interactionTimestamps;
     void Awake()
     {
+        polyCollider = GetComponent<PolygonCollider2D>();
         Reset();
     }
 
@@ -31,7 +33,20 @@ public class Hitbox : Poolable
 
     public void Setup(HitboxData d)
     {
+        if(!d.Validated)
+        {
+            throw new System.Exception("ERROR: Set HitboxData with invalid data");
+        }
         data = d;
+        if(data.Shape == HitboxShape.POLYGON)
+        {
+            polyCollider.points = data.Points;
+            polyCollider.enabled = true;
+        }
+        else
+        {
+            polyCollider.enabled = false;
+        }
         SetActive(true);
     }
 
@@ -65,26 +80,23 @@ public class Hitbox : Poolable
             case HitboxShape.SQUARE:
                 overlaps = Physics2D.OverlapBoxAll(transform.position, new Vector2(data.Radius * 2, data.Radius * 2), 0, data.LayerMask.value);
                 break;
+            case HitboxShape.POLYGON:
+                overlaps = new Collider2D[8];
+                Physics2D.OverlapCollider(polyCollider, new ContactFilter2D() { layerMask = data.LayerMask, useLayerMask = true }, overlaps);
+                break;
             default:
                 Debug.LogError("ERROR: HURTBOX UPDATED WITH INCORRECT TYPE INFORMATION");
                 return null;
         }
-        if(data.Discriminator == null)
-        {
-            return new List<Collider2D>(overlaps);
-        }
-        else
-        {
-            List<Collider2D> candidates = new List<Collider2D>();
-            foreach (Collider2D col in overlaps)
-            { 
-                if(data.Discriminator(col))
-                {
-                    candidates.Add(col);
-                }
+        List<Collider2D> candidates = new List<Collider2D>();
+        foreach (Collider2D col in overlaps)
+        { 
+            if (col != null && (data.Discriminator == null || data.Discriminator(col)))
+            {
+                candidates.Add(col);
             }
-            return candidates;
         }
+        return candidates;
     }
 
     void ResolveCollisions(List<Collider2D> collisions)
@@ -156,7 +168,7 @@ public class Hitbox : Poolable
 #pragma warning disable 162 //depending on the debug flag one of these is unreachable
     void OnDrawGizmosSelected()
     {
-        if ((int)DEBUGFLAGS.FLAGS.HITBOXES == 0 && data != null)
+        if (data != null)
         {
             DrawGizmo();
         }
@@ -164,7 +176,7 @@ public class Hitbox : Poolable
 
     void OnDrawGizmos()
     {
-        if((int)DEBUGFLAGS.FLAGS.HITBOXES == 1 && data != null)
+        if((int)DEBUGFLAGS.FLAGS.HITBOXES_EDITOR_ALWAYS == 1 && data != null)
         {
             DrawGizmo();
         }
@@ -183,6 +195,48 @@ public class Hitbox : Poolable
                 Rect rect = new Rect(0, 0, data.Radius * 2, data.Radius * 2);
                 rect.center = transform.position;
                 UnityEditor.Handles.DrawSolidRectangleWithOutline(rect, Color.red, Color.red);
+                break;
+            case HitboxShape.POLYGON:
+                var points = new Vector3[data.Points.Length];
+                int x = 0;
+                foreach(Vector2 v in data.Points)
+                {
+                    points[x] = (transform.rotation * (Vector3)data.Points[x++]) + transform.position;
+                }
+                UnityEditor.Handles.DrawAAConvexPolygon(points);
+                break;
+
+        }
+    }
+
+    private void OnRenderObject()
+    {
+        if (data != null && active)
+        {
+            DrawInGameDebug();
+        }
+    }
+
+    public void DrawInGameDebug()
+    {
+        switch (data.Shape)
+        {
+            case HitboxShape.CIRCLE:
+                GLHelpers.GLDrawCircle(transform, data.Radius, 32, Color.red);
+                break;
+            case HitboxShape.SQUARE:
+                Rect rect = new Rect(0, 0, data.Radius * 2, data.Radius * 2);
+                rect.center = transform.position;
+                GLHelpers.GLDrawRect(transform, rect, Color.red);
+                break;
+            case HitboxShape.POLYGON:
+                var points = new Vector3[data.Points.Length];
+                int x = 0;
+                foreach (Vector2 v in data.Points)
+                {
+                    points[x] = data.Points[x++];
+                }
+                GLHelpers.GLDrawPolygon(transform, points, Color.red);
                 break;
         }
     }

@@ -15,25 +15,23 @@ public class MutableHealthChangeEventData
     public MutableHealthChangeEventData(HealthChangeData data)
     {
         this.data = data;
-        this.delta = data.delta;
+        this.delta = data.Delta;
         this.cancelled = false;
     }
 }
 
 public class HealthChangeData
 {
-    public bool valid { get; private set; } = false;
-    public GameObject overallSource { get; private set; }
-    public GameObject localSource { get; private set; }
-    public GameObject target { get; private set; }
-    public float delta { get; private set; }
-    public float unmodifiedDelta { get;  private set; }
-    public KnockbackData knockbackData { get; private set; }
-    public Func<Vector3> damageLocation { get; private set; }
-    public StatName flatStat { get => _flatStat; private set => _flatStat = value; }
-    private StatName _flatStat = StatName.MAX;
-    public StatName percentageStat { get => _percentageStat; private set => _percentageStat = value; }
-    private StatName _percentageStat = StatName.MAX;
+    public bool Valid { get; private set; } = false;
+    public GameObject OverallSource { get; private set; }
+    public GameObject LocalSource { get; private set; }
+    public GameObject Target { get; private set; }
+    public float Delta { get; private set; }
+    public float UnmodifiedDelta { get;  private set; }
+    public KnockbackData KnockbackData { get; private set; }
+    public Func<Vector3> DamageLocation { get; private set; }
+    public StatName FlatStat { get; private set; } = StatName.MAX;
+    public StatName PercentageStat { get; private set; } = StatName.MAX;
 
     public class HealthChangeDataBuilder
     {
@@ -45,111 +43,111 @@ public class HealthChangeData
 
         public HealthChangeDataBuilder OverallSource(GameObject g)
         {
-            data.overallSource = g;
+            data.OverallSource = g;
             return this;
         }
 
         public HealthChangeDataBuilder LocalSource(GameObject g)
         {
-            data.localSource = g;
+            data.LocalSource = g;
             return this;
         }
 
         public HealthChangeDataBuilder BothSources(GameObject g)
         {
-            data.localSource = g;
-            data.overallSource = g;
+            data.LocalSource = g;
+            data.OverallSource = g;
             return this;
         }
 
         public HealthChangeDataBuilder Target(GameObject g)
         {
-            data.target = g;
+            data.Target = g;
             return this;
         }
 
         public HealthChangeDataBuilder Target(IDamagable i)
         {
-            data.target = i.attached;
+            data.Target = i.attached;
             return this;
         }
 
         public HealthChangeDataBuilder Target(IHealable i)
         {
-            data.target = i.attached;
+            data.Target = i.attached;
             return this;
         }
 
         public HealthChangeDataBuilder Value(float f)
         {
-            data.unmodifiedDelta = f;
+            data.UnmodifiedDelta = f;
             return this;
         }
 
         public HealthChangeDataBuilder Damage(float f)
         {
-            data.unmodifiedDelta = -f;
-            if (data.percentageStat == StatName.MAX)
+            data.UnmodifiedDelta = -f;
+            if (data.PercentageStat == StatName.MAX)
             {
-                data.percentageStat = StatName.DamagePercentage;
+                data.PercentageStat = StatName.DamagePercentage;
             }
-            if (data.flatStat == StatName.MAX)
+            if (data.FlatStat == StatName.MAX)
             {
-                data.flatStat = StatName.FlatDamage;
+                data.FlatStat = StatName.FlatDamage;
             }
             return this;
         }
 
         public HealthChangeDataBuilder Healing(float f)
         {
-            if (data.percentageStat == StatName.MAX)
+            if (data.PercentageStat == StatName.MAX)
             {
-                data.percentageStat = StatName.HealingPercentage;
+                data.PercentageStat = StatName.HealingPercentage;
             }
-            if (data.flatStat == StatName.MAX)
+            if (data.FlatStat == StatName.MAX)
             {
-                data.flatStat = StatName.FlatHealing;
+                data.FlatStat = StatName.FlatHealing;
             }
             return Value(f);
         }
 
         public HealthChangeDataBuilder KnockbackData(KnockbackData kbd)
         {
-            data.knockbackData = kbd;
+            data.KnockbackData = kbd;
             return this;
         }
 
         public HealthChangeDataBuilder KnockbackData(KnockbackPreset preset)
         {
-            data.knockbackData = PresetKnockbackData.GetKnockbackPreset(preset);
+            data.KnockbackData = PresetKnockbackData.GetKnockbackPreset(preset);
             return this;
         }
 
         public HealthChangeDataBuilder LocationFunction(Func<Vector3> f)
         {
-            data.damageLocation = f;
+            data.DamageLocation = f;
             return this;
         }
 
         public HealthChangeDataBuilder PercentageStat(StatName stat)
         {
-            data.percentageStat = stat;
+            data.PercentageStat = stat;
             return this;
         }
 
         public HealthChangeDataBuilder FlatStat(StatName stat)
         {
-            data.flatStat = stat;
+            data.FlatStat = stat;
             return this;
         }
 
         private bool Valid()
         {
-            if(data.overallSource == null)
+            if(data.OverallSource == null)
             {
                 return false;
             }
-            if(data.target == null)
+            if(data.Target == null)
             {
                 return false;
             }
@@ -163,26 +161,26 @@ public class HealthChangeData
                 Debug.LogError("ERROR: HealthChangeBuilder created with invalid parameters");
                 throw new Exception();
             }
-            StatBlockComponent stats = Lib.FindDownwardsInTree<StatBlockComponent>(data.overallSource);
+            StatBlockComponent stats = Lib.FindDownwardsInTree<StatBlockComponent>(data.OverallSource);
             if (stats == null)
             {
-                data.delta = data.unmodifiedDelta;
+                data.Delta = data.UnmodifiedDelta;
             }
             else
             {
-                bool negative = data.unmodifiedDelta < 0;
-                float flatIncrease = stats.GetValueOrDefault(data.flatStat);
-                float percentIncrease = stats.GetValueOrDefault(data.percentageStat);
+                bool negative = data.UnmodifiedDelta < 0;
+                float flatIncrease = stats.GetValueOrDefault(data.FlatStat);
+                float percentIncrease = stats.GetValueOrDefault(data.PercentageStat);
                 if(negative)
                 {
-                    data.delta = (data.unmodifiedDelta - flatIncrease) * percentIncrease;
+                    data.Delta = (data.UnmodifiedDelta - flatIncrease) * percentIncrease;
                 }
                 else
                 {
-                    data.delta = (data.unmodifiedDelta + flatIncrease) * percentIncrease;
+                    data.Delta = (data.UnmodifiedDelta + flatIncrease) * percentIncrease;
                 }
             }
-            data.valid = true;
+            data.Valid = true;
             return data;
         }
     }

@@ -9,15 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e77469a6646c35648b8cf81c930ce3e1, type: 3}
-  m_Name: Testing
+  m_Script: {fileID: 11500000, guid: 9c0f90e78b75efd44b99d5be2f3d8ba9, type: 3}
+  m_Name: Swipe_Hitbox
   m_EditorClassIdentifier: 
-  shape: 0
+  shape: 2
+  points:
+  - {x: -0.5, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0.5, y: 0}
+  - {x: 1, y: 1}
+  - {x: -1, y: 1}
   interactionType: 2
   repeatPolicy: 0
   repeatCooldown: -1
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   radius: 0.5
-  duration: -1
+  duration: 30

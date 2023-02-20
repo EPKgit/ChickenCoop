@@ -93,7 +93,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 
 	public void Damage(HealthChangeData data)
 	{
-		if(!data.valid)
+		if(!data.Valid)
         {
 			throw new System.Exception("ERROR Invalid HealthChangeData used in damage method");
         }
@@ -113,22 +113,22 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		}
 		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "not cancelled");
 		currentHealth += mutableEventData.delta;
-		float aggroValue = data.overallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
-        if (data.knockbackData != null && knockbackHandler != null)
+		float aggroValue = data.OverallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
+        if (data.KnockbackData != null && knockbackHandler != null)
         {
-			if(data.knockbackData.direction == Vector2.zero)
+			if(data.KnockbackData.direction == Vector2.zero)
 			{
-                data.knockbackData.direction = (knockbackHandler.position - data.localSource.transform.position).normalized;
+                data.KnockbackData.direction = (knockbackHandler.position - data.LocalSource.transform.position).normalized;
             }
-            knockbackHandler.DoKnockback(data.knockbackData);
+            knockbackHandler.DoKnockback(data.KnockbackData);
         }
 		postDamageEvent(data);
-		data.overallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(data);
+		data.OverallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(data);
 		healthChangeEvent(data);
 		
 		if(currentHealth <= 0)
 		{
-			Die(data.overallSource);			
+			Die(data.OverallSource);			
 		}
 	}
 
@@ -142,10 +142,10 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 			return;
 		}
 		currentHealth += mutableEventData.delta;
-		float aggroValue = data.overallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
+		float aggroValue = data.OverallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
 		postHealEvent(data);
 		healthChangeEvent(data);
-		data.overallSource?.GetComponent<IHealthCallbacks>()?.DamageHealedCallback(data);
+		data.OverallSource?.GetComponent<IHealthCallbacks>()?.DamageHealedCallback(data);
 		if(currentHealth > maxHealth)
 		{
 			currentHealth = maxHealth;

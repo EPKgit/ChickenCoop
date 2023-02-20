@@ -153,6 +153,7 @@ public class AbilityQueue
             Targeting.AbilityTargetingData atd = aid.ability.targetingData;
             DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", a.name, targetData));
             atd.inputPoint = targetData;
+            atd.inputRotationZ = Mathf.Rad2Deg * -Mathf.Atan2(atd.inputPoint.x, atd.inputPoint.y);
             atd.inputTarget = Ability.FindTargetable(targetData, a.targetingData.affiliation);
             atd.isInputSet = true;
             if(!atd.isInputSet)

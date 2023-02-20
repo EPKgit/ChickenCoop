@@ -19,7 +19,8 @@ public class DEBUGFLAGS
         INGAMEUI = 0,
         RENDER = 0,
         ABILITYQUEUE = 0,
-        HITBOXES = 1,
+        HITBOXES_EDITOR_ALWAYS = 0,
+        HITBOXES_IN_GAME = 1,
     }
 
     public static void Log(FLAGS flag, string printString)

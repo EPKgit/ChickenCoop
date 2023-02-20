@@ -184,6 +184,20 @@
 		<var_list>
 			<variable name="cd" type="float" value="1"/>
 			<variable name="damage" type="float" value="5"/>
+			<variable name="hitboxDuration" type="float" value="33.25"/>
+			<variable name="hitboxRadius" type="float" value="0.5"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>103</ability_ID>
+		<ability_name>Swipe</ability_name>
+		<tooltip>Swipe in a cone in front of you</tooltip>
+		<var_list>
+			<variable name="cd" type="float" value="1"/>
+			<variable name="damage" type="float" value="20"/>
 			<variable name="hitboxDuration" type="float" value="0.25"/>
 			<variable name="hitboxRadius" type="float" value="0.5"/>
 		</var_list>

@@ -16,9 +16,9 @@ public class AggroData : IEquatable<AggroData>
 
 	public AggroData(HealthChangeData hcd)
 	{
-		source = hcd.overallSource;
+		source = hcd.OverallSource;
         float aggroValue = StatBlockComponent.GetValueOrDefault(source, StatName.AggroPercentage);
-		value = -hcd.delta * aggroValue;
+		value = -hcd.Delta * aggroValue;
 	}
 
 	public bool Equals(AggroData other)
