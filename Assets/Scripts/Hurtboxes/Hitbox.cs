@@ -176,7 +176,7 @@ public class Hitbox : Poolable
 
     void OnDrawGizmos()
     {
-        if((int)DEBUGFLAGS.FLAGS.HITBOXES_EDITOR_ALWAYS == 1 && data != null)
+        if((int)DebugFlags.FLAGS.HITBOXES_EDITOR_ALWAYS == 1 && data != null)
         {
             DrawGizmo();
         }

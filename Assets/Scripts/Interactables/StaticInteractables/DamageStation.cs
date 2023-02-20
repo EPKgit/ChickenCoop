@@ -11,7 +11,7 @@ public class DamageStation : BaseInteractable
 
 	protected override void PerformInteract(GameObject user)
 	{
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "DamageStation");
+		DebugFlags.Log(DebugFlags.FLAGS.INTERACTABLES, "DamageStation");
 		Lib.FindUpwardsInTree<IDamagable>(user)?.Damage
 		(
 			HealthChangeData.GetBuilder()

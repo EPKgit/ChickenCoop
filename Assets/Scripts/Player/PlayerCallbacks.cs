@@ -11,19 +11,19 @@ public class PlayerCallbacks : MonoBehaviour, IHealthCallbacks
 
     public void DamageDealtCallback(HealthChangeData hcd)
 	{
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTHCALLBACKS, gameObject.name + " dealt " + -hcd.Delta + " to " + hcd.Target);
+		DebugFlags.Log(DebugFlags.FLAGS.HEALTHCALLBACKS, gameObject.name + " dealt " + -hcd.Delta + " to " + hcd.Target);
 		OnDealDamage(hcd);
 	}
 
 	public void DamageHealedCallback(HealthChangeData hcd)
 	{
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTHCALLBACKS, gameObject.name + " healed " + hcd.Delta + " to " + hcd.Target);
+		DebugFlags.Log(DebugFlags.FLAGS.HEALTHCALLBACKS, gameObject.name + " healed " + hcd.Delta + " to " + hcd.Target);
 		OnHealDamage(hcd);
 	}
 
 	public void KillCallback(GameObject killed)
 	{
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTHCALLBACKS, gameObject.name + " killed " + killed.name);
+		DebugFlags.Log(DebugFlags.FLAGS.HEALTHCALLBACKS, gameObject.name + " killed " + killed.name);
         OnKill(killed);
     }
 }

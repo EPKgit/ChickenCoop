@@ -27,7 +27,7 @@ public class Bullet : BaseLineTargeted
         IDamagable damagable = Lib.FindUpwardsInTree<IDamagable>(col.gameObject);
         if(damagable != null)
         {
-            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.COLLISIONS, "trigger");
+            DebugFlags.Log(DebugFlags.FLAGS.COLLISIONS, "trigger");
             damagable.Damage
 			(
 				HealthChangeData.GetBuilder()

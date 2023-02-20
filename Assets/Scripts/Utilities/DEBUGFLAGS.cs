@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-public class DEBUGFLAGS
+public class DebugFlags
 {
     public enum FLAGS
     {

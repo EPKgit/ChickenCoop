@@ -32,7 +32,7 @@ public abstract class BaseInteractable : Poolable
 		{
 			return;
 		}
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "registering");
+		DebugFlags.Log(DebugFlags.FLAGS.INTERACTABLES, "registering");
 		pi.RegisterAction(toPerform);
 	}
 
@@ -43,7 +43,7 @@ public abstract class BaseInteractable : Poolable
 		{
 			return;
 		}
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "deregistering");
+		DebugFlags.Log(DebugFlags.FLAGS.INTERACTABLES, "deregistering");
 		pi.DeregisterAction(toPerform);
 	}
 }

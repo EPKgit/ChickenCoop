@@ -99,19 +99,19 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
         }
 		if(tagComponent?.tags.Contains(GameplayTagFlags.INVULNERABLE) ?? false)
 		{
-			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "DAMAGE CANCELED FROM INVULN");
+			DebugFlags.Log(DebugFlags.FLAGS.HEALTH, "DAMAGE CANCELED FROM INVULN");
 			return;
 		}
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "taking damage");
+		DebugFlags.Log(DebugFlags.FLAGS.HEALTH, "taking damage");
 		MutableHealthChangeEventData mutableEventData = new MutableHealthChangeEventData(data);
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "pre damage");
+		DebugFlags.Log(DebugFlags.FLAGS.HEALTH, "pre damage");
 		preDamageEvent(mutableEventData);
 		if(mutableEventData.cancelled)
 		{
-			DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "cancelled");
+			DebugFlags.Log(DebugFlags.FLAGS.HEALTH, "cancelled");
 			return;
 		}
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "not cancelled");
+		DebugFlags.Log(DebugFlags.FLAGS.HEALTH, "not cancelled");
 		currentHealth += mutableEventData.delta;
 		float aggroValue = data.OverallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
         if (data.KnockbackData != null && knockbackHandler != null)
@@ -134,7 +134,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 
 	public void Heal(HealthChangeData data)
 	{
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.HEALTH, "healing");
+		DebugFlags.Log(DebugFlags.FLAGS.HEALTH, "healing");
 		MutableHealthChangeEventData mutableEventData = new MutableHealthChangeEventData(data);
 		preHealEvent(mutableEventData);
 		if(mutableEventData.cancelled)

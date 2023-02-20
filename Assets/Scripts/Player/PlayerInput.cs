@@ -74,7 +74,7 @@ public class PlayerInput : MonoBehaviour
 
 	public void OnMovement(InputAction.CallbackContext ctx)
 	{
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, gameObject.name + " MOVING ");
+		DebugFlags.Log(DebugFlags.FLAGS.MOVEMENT, gameObject.name + " MOVING ");
         Vector2 value = ctx.ReadValue<Vector2>();
         if (!TestOverride(OnMoveEvent, value))
         {
@@ -89,7 +89,7 @@ public class PlayerInput : MonoBehaviour
 
 	public void OnAimPoint(InputAction.CallbackContext ctx)
 	{
-        DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.AIMING, gameObject.name + " AIMING AT " + aimPoint);
+        DebugFlags.Log(DebugFlags.FLAGS.AIMING, gameObject.name + " AIMING AT " + aimPoint);
         aimPointInput = ctx.ReadValue<Vector2>();
         RecalcAimPoint();
     }

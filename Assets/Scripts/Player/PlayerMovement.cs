@@ -18,13 +18,13 @@ public class PlayerMovement : BaseMovement
         CheckKnockbackInput();
         if(tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK))
         {
-            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "MOVEMENT CANCELED FROM KNOCKBAC");
+            DebugFlags.Log(DebugFlags.FLAGS.MOVEMENT, "MOVEMENT CANCELED FROM KNOCKBAC");
             return;
         }
         CheckDashInput();
         if(tagComponent.tags.Contains(GameplayTagFlags.NORMAL_MOVEMENT_DISABLED))
         {
-            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "MOVEMENT CANCELED FROM TAG");
+            DebugFlags.Log(DebugFlags.FLAGS.MOVEMENT, "MOVEMENT CANCELED FROM TAG");
             return;
         }
         UseMoveInput();
@@ -34,7 +34,7 @@ public class PlayerMovement : BaseMovement
     {
         if (rb.velocity.magnitude < movementSpeed * 1.05f)
         {
-            DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "SETTING SPEED FROM INPUT");
+            DebugFlags.Log(DebugFlags.FLAGS.MOVEMENT, "SETTING SPEED FROM INPUT");
             rb.velocity = movementInputAxis.normalized * movementSpeed;
         }
         else
@@ -42,12 +42,12 @@ public class PlayerMovement : BaseMovement
             float degrees = Vector2.Angle(rb.velocity, movementInputAxis);
             if (150 > degrees)
             {
-                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "ADDING TO OVER MOVEMENT FORCE");
+                DebugFlags.Log(DebugFlags.FLAGS.MOVEMENT, "ADDING TO OVER MOVEMENT FORCE");
                 rb.AddForce(movementInputAxis * movementSpeed * 0.4f);
             }
             else
             {
-                DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.MOVEMENT, "OPPOSING OVER MOVEMENT FORCE");
+                DebugFlags.Log(DebugFlags.FLAGS.MOVEMENT, "OPPOSING OVER MOVEMENT FORCE");
                 rb.AddForce(movementInputAxis * movementSpeed * 1.5f);
             }
         }

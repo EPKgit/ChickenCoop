@@ -11,7 +11,7 @@ public class HealthStation : BaseInteractable
 
 	protected override void PerformInteract(GameObject user)
 	{
-		DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.INTERACTABLES, "HealthStation");
+		DebugFlags.Log(DebugFlags.FLAGS.INTERACTABLES, "HealthStation");
         Lib.FindUpwardsInTree<IHealable>(user)?.Heal
         (
             HealthChangeData.GetBuilder()
