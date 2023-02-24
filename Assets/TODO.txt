@@ -5,6 +5,8 @@ CURRENT
 add weasal ability
 setup shielding
 draw hedgehog
+hitbox chains need to share interactions
+hitbox chain callback should also send the index in
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -56,6 +58,7 @@ TECH DEBT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 encounter manager
     - figure out callbacks when enemies are killed
+use rolling ID numbers in other places that should use it
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

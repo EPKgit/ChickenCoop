@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Hitbox : Poolable
 {
     public static Color debugColor = new Color(1.0f, 0.0f, 0.0f, 0.4f);
+    
     public HitboxData data;
 
     private bool active;
@@ -39,7 +41,13 @@ public class Hitbox : Poolable
             throw new System.Exception("ERROR: Set HitboxData with invalid data");
         }
         data = d;
-        if(data.Shape == HitboxShape.POLYGON)
+#if UNITY_EDITOR
+        if (!EditorApplication.isPlaying)
+        {
+            polyCollider = GetComponent<PolygonCollider2D>();
+        }
+#endif
+        if (data.Shape == HitboxShape.POLYGON)
         {
             polyCollider.points = data.Points;
             polyCollider.enabled = true;
@@ -57,17 +65,13 @@ public class Hitbox : Poolable
         {
             return true;
         }
-        if(!data.TickDuration(Time.deltaTime))
-        {
-            return false;
-        }
         List<Collider2D> collisions = GatherCollisionCandidates();
         if(collisions == null)
         {
             return true;
         }
         ResolveCollisions(collisions);
-        return true;
+        return data.TickDuration(Time.deltaTime);
     }
 
     List<Collider2D> GatherCollisionCandidates()

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Swipe_Ability : Ability
+public class Maul_Ability : Ability
 {
     public float damage = 20.0f;
     public float hitboxDuration = 0.25f;
-    public HitboxDataAsset customHitbox;
+    public HitboxChainAsset customChain;
+
+    private Vector2 startPosition;
+    private float startRotation;
 
     public override void Initialize(PlayerAbilities pa)
 	{
@@ -17,8 +20,19 @@ public class Swipe_Ability : Ability
     protected override void UseAbility()
 	{
         base.UseAbility();
-        targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, 0.5f);
-        HitboxManager.instance.SpawnHitbox(customHitbox, targetingData.inputPoint, HitboxCallback, targetingData.inputRotationZ, hitboxDuration);
+        startPosition = targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, 0.5f);
+        startRotation = targetingData.inputRotationZ;
+        HitboxManager.instance.StartHitboxChain(customChain, HitboxPositionCallback, HitboxRotationCallback, HitboxCallback);
+    }
+
+    Vector2 HitboxPositionCallback()
+    {
+        return startPosition;
+    }
+
+    float HitboxRotationCallback()
+    {
+        return startRotation;
     }
 
     void HitboxCallback(Collider2D col)

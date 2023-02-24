@@ -203,4 +203,17 @@
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>104</ability_ID>
+		<ability_name>Maul</ability_name>
+		<tooltip>Swing multiple times in front of you</tooltip>
+		<var_list>
+			<variable name="cd" type="float" value="1"/>
+			<variable name="damage" type="float" value="20"/>
+			<variable name="hitboxDuration" type="float" value="0.25"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 </root>

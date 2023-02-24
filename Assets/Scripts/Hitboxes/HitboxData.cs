@@ -127,7 +127,7 @@ public class HitboxData
             return this;
         }
 
-        public HitboxDataBuilder StartRotation(float f)
+        public HitboxDataBuilder StartRotationZ(float f)
         {
             data.StartRotationZ = f;
             return this;
@@ -160,7 +160,7 @@ public class HitboxData
             {
                 throw new System.Exception("ERROR: INVALID HURTBOX DATA CREATED");
             }
-            if(data.LayerMask == -1)
+            if(data.LayerMask == -1 || data.LayerMask == 0)
             {
                 data.LayerMask = HitboxManager.instance.defaultLayer;
             }
@@ -172,5 +172,18 @@ public class HitboxData
     public static HitboxDataBuilder GetBuilder()
     {
         return new HitboxDataBuilder(new HitboxData());
+    }
+
+    public static HitboxDataBuilder GetBuilder(HitboxDataAsset dataAsset)
+    {
+        return new HitboxDataBuilder(new HitboxData())
+                .Shape(dataAsset.Shape)
+                .Points(dataAsset.Points)
+                .InteractionType(dataAsset.InteractionType)
+                .RepeatPolicy(dataAsset.RepeatPolicy)
+                .RepeatCooldown(dataAsset.RepeatCooldown)
+                .Layer(dataAsset.LayerMask)
+                .Radius(dataAsset.Radius)
+                .Duration(dataAsset.Duration);
     }
 }

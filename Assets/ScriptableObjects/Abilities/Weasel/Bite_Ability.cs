@@ -28,7 +28,7 @@ public class Bite_Ability : Ability
             HitboxData.GetBuilder()
                 .Duration(hitboxDuration)
                 .Shape(HitboxShape.SQUARE)
-                .StartRotation(targetingData.inputRotationZ)
+                .StartRotationZ(targetingData.inputRotationZ)
                 .StartPosition(targetingData.inputPoint)
                 .Callback(HitboxCallback)
                 .Discriminator(HitboxManager.Discriminators.Damagables)

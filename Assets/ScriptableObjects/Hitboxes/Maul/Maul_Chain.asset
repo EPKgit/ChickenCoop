@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4892befffa9ff1a41a63805bfff2d816, type: 3}
+  m_Name: Maul_Chain
+  m_EditorClassIdentifier: 
+  _defaultDuration: 0.3
+  _defaultHitbox: {fileID: 11400000, guid: 2c2f8322a1ec7934996c86b921b01a2b, type: 2}
+  _chain:
+  - _delay: 0
+    _duration: -1
+    _offset: {x: 0, y: 0}
+    _rotationZ: 0
+    _hitboxes:
+    - _hitbox: {fileID: 0}
+      _offset: {x: 0, y: 0}
+      _sizeOverride: -1
+    - _hitbox: {fileID: 0}
+      _offset: {x: 0.5, y: 0}
+      _sizeOverride: -1
+    - _hitbox: {fileID: 0}
+      _offset: {x: 0.7, y: -0.5}
+      _sizeOverride: -1
+  - _delay: 0.2
+    _duration: -1
+    _offset: {x: 0, y: 0}
+    _rotationZ: 0
+    _hitboxes:
+    - _hitbox: {fileID: 0}
+      _offset: {x: 0, y: 0}
+      _sizeOverride: -1
+    - _hitbox: {fileID: 0}
+      _offset: {x: -0.5, y: 0}
+      _sizeOverride: -1
+    - _hitbox: {fileID: 0}
+      _offset: {x: -0.7, y: -0.5}
+      _sizeOverride: -1
+  - _delay: 0.6
+    _duration: -1
+    _offset: {x: 0, y: 0}
+    _rotationZ: 0
+    _hitboxes:
+    - _hitbox: {fileID: 11400000, guid: 2c2f8322a1ec7934996c86b921b01a2b, type: 2}
+      _offset: {x: 0, y: 1}
+      _sizeOverride: 1
+    - _hitbox: {fileID: 0}
+      _offset: {x: -0.5, y: 0}
+      _sizeOverride: -1
+    - _hitbox: {fileID: 0}
+      _offset: {x: 0.5, y: 0}
+      _sizeOverride: -1

@@ -9,11 +9,13 @@ public class HitboxManager : MonoSingleton<HitboxManager>
     public LayerMask defaultLayer;
 
     private List<Hitbox> activeHitboxes;
+    private List<(HitboxChainHandle, HitboxChain)> activeChains;
 
     protected override void OnCreation()
     {
         base.OnCreation();
         activeHitboxes = new List<Hitbox>();
+        activeChains = new List<(HitboxChainHandle, HitboxChain)>();
     }
     public void SpawnHitbox(HitboxData data)
     {
@@ -27,24 +29,77 @@ public class HitboxManager : MonoSingleton<HitboxManager>
         activeHitboxes.Add(hitbox);
     }
 
-    public void SpawnHitbox(HitboxDataAsset data, Vector3 startPosition, Action<Collider2D> callback, float startRotationZ = 0)
+    public void SpawnHitbox(HitboxDataAsset dataAsset, Vector3 startPosition, Action<Collider2D> callback, float startRotationZ = 0)
     {
         SpawnHitbox(HitboxData.GetBuilder()
                 .StartPosition(startPosition)
                 .Callback(callback)
-                .StartRotation(startRotationZ)
-                .Shape(data.shape)
-                .Points(data.points)
-                .InteractionType(data.interactionType)
-                .RepeatPolicy(data.repeatPolicy)
-                .RepeatCooldown(data.repeatCooldown)
-                .Layer(data.layerMask)
-                .Radius(data.radius)
-                .Duration(data.duration)
+                .StartRotationZ(startRotationZ)
+                .Shape(dataAsset.Shape)
+                .Points(dataAsset.Points)
+                .InteractionType(dataAsset.InteractionType)
+                .RepeatPolicy(dataAsset.RepeatPolicy)
+                .RepeatCooldown(dataAsset.RepeatCooldown)
+                .Layer(dataAsset.LayerMask)
+                .Radius(dataAsset.Radius)
+                .Duration(dataAsset.Duration)
                 .Finalize());
     }
 
+    public void SpawnHitbox(HitboxDataAsset dataAsset, Vector3 startPosition, Action<Collider2D> callback, float startRotationZ = 0, float durationOverride = 0)
+    {
+        SpawnHitbox(HitboxData.GetBuilder()
+                .StartPosition(startPosition)
+                .Callback(callback)
+                .StartRotationZ(startRotationZ)
+                .Shape(dataAsset.Shape)
+                .Points(dataAsset.Points)
+                .InteractionType(dataAsset.InteractionType)
+                .RepeatPolicy(dataAsset.RepeatPolicy)
+                .RepeatCooldown(dataAsset.RepeatCooldown)
+                .Layer(dataAsset.LayerMask)
+                .Radius(dataAsset.Radius)
+                .Duration(durationOverride)
+                .Finalize());
+    }
+
+    private static RollingIDNumber IDCounter = new RollingIDNumber();
+    public HitboxChainHandle StartHitboxChain(HitboxChainAsset data, Func<Vector2> positionCallback, Func<float> rotationCallback, Action<Collider2D> callback)
+    {
+        var handle = new HitboxChainHandle(IDCounter++);
+        activeChains.Add((handle, new HitboxChain(ScriptableObject.Instantiate(data), positionCallback, rotationCallback, callback)));
+        return handle;
+    }
+
+    public void CancelHitboxChain(HitboxChainHandle handle)
+    {
+        for(int x = activeChains.Count - 1; x >= 0; --x)
+        {
+            if(activeChains[x].Item1 == handle)
+            {
+                activeChains.RemoveAt(x);
+            }
+        }
+    }
+
     protected void Update()
+    {
+        TickChains();
+        TickHitboxes();
+    }
+
+    void TickChains()
+    {
+        for(int x = activeChains.Count - 1; x >= 0; --x)
+        {
+            if (!activeChains[x].Item2.UpdateChain())
+            {
+                activeChains.RemoveAt(x);
+            }
+        }
+    }
+
+    void TickHitboxes()
     {
         for (int x = activeHitboxes.Count - 1; x >= 0; --x)
         {
@@ -68,5 +123,15 @@ public class HitboxManager : MonoSingleton<HitboxManager>
         {
             return col.GetComponent<IHealable>() != null;
         }
+    }
+}
+
+public class HitboxChainHandle : IHandleWithIDNumber
+{
+    public HitboxChainHandle(RollingIDNumber i) : base(i) { }
+
+    public static implicit operator uint(HitboxChainHandle hch)
+    {
+        return hch.ID;
     }
 }
