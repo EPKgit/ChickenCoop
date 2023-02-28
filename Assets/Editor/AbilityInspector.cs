@@ -41,7 +41,7 @@ public class AbilityInspector : Editor
             }
         }
         ID = serializedObject.FindProperty("ID");
-        ticking = serializedObject.FindProperty("tickingAbility");
+        ticking = serializedObject.FindProperty("_tickingAbilitySerialized");
         hasDuration = serializedObject.FindProperty("hasDuration");
         maxDuration = serializedObject.FindProperty("maxDuration");
         cost = serializedObject.FindProperty("cost");
@@ -68,7 +68,7 @@ public class AbilityInspector : Editor
         if (!ability.isPassive)
         {
             EditorGUILayout.PropertyField(ticking);
-            if (ability.tickingAbility)
+            if (ability.IsTickingAbility)
             {
                 EditorGUILayout.PropertyField(hasDuration);
                 if (ability.hasDuration)

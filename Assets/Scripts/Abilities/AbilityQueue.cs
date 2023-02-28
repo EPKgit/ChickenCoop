@@ -90,14 +90,14 @@ public class AbilityQueue
                     preAbilityCastEvent(new AbilityEventData(a));
                     if (a.AttemptUseAbility())
                     {
-                        if (a.tickingAbility)
+                        if (a.IsTickingAbility)
                         {
                             currentlyTicking.Add(a);
                         }
                         else
                         {
-                                a.FinishAbility();
-                                postAbilityCastEvent(new AbilityEventData(a));
+                            a.FinishAbility();
+                            postAbilityCastEvent(new AbilityEventData(a));
                         }
                     }
                     current.state = AbilityInputData.AbilityInputState.FINISHED;

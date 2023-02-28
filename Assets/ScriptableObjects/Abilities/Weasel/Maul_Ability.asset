@@ -20,7 +20,10 @@ MonoBehaviour:
   tagsToBlock:
     tags: []
   tagsToApply:
-    tags: []
+    tags:
+    - ID:
+        _ID: 0
+      _flag: MOVEMENT.NORMAL_MOVEMENT_DISABLED
   isPassive: 0
   tickingAbility: 0
   hasDuration: 0

@@ -7,27 +7,42 @@ public class PlayerMovement : BaseMovement
 {
 	private Vector2 movementInputAxis;
 
-	protected override void Update()
-	{
+    protected override void Update()
+    {
         base.Update();
+        if(!DoMovement())
+        {
+            movedDuringFrame = false;
+        }
+        animator.SetBool(animatorMovingHashCode, movedDuringFrame);
+        if (movedDuringFrame)
+        {
+            sprite.flipX = rb.velocity.x < 0;
+        }
+    }
+
+    private bool DoMovement()
+    { 
         if(!CanMove())
         {
             rb.velocity = Vector2.zero;
-            return;
+            return false;
         }
         CheckKnockbackInput();
         if(tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK))
         {
             DebugFlags.Log(DebugFlags.Flags.MOVEMENT, "MOVEMENT CANCELED FROM KNOCKBAC");
-            return;
+            return false;
         }
         CheckDashInput();
         if(tagComponent.tags.Contains(GameplayTagFlags.NORMAL_MOVEMENT_DISABLED))
         {
+            rb.velocity = Vector2.zero;
             DebugFlags.Log(DebugFlags.Flags.MOVEMENT, "MOVEMENT CANCELED FROM TAG");
-            return;
+            return false;
         }
         UseMoveInput();
+        return true;
     }
 
     void UseMoveInput()
@@ -52,11 +67,6 @@ public class PlayerMovement : BaseMovement
             }
         }
         movedDuringFrame = movementInputAxis.sqrMagnitude > float.Epsilon;
-        animator.SetBool(animatorMovingHashCode, movedDuringFrame);
-        if (movedDuringFrame)
-        {
-            sprite.flipX = rb.velocity.x < 0;
-        }
     }
 
     public void MoveInput(Vector2 dir)

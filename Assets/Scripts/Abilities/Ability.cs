@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.InputSystem;
 using Targeting;
 
@@ -88,7 +89,9 @@ public abstract class Ability : ScriptableObject
     /// <summary>
     /// Set true if you want the ability's Tick function and FinishAbility functions to get called
     /// </summary>
-    public bool tickingAbility;
+    public bool IsTickingAbility { get { return _tickingAbilitySerialized || OverrideSetTickingAbility(); } }
+    [FormerlySerializedAs("tickingAbility"), SerializeField]
+    private bool _tickingAbilitySerialized;
 
     /// <summary>
     /// Set true if the ability has a duration, if so the parent class's tick can be used to remove the
@@ -443,6 +446,9 @@ public abstract class Ability : ScriptableObject
         currentTargetingType = newIndex;
     }
 
+    /// <summary>
+    /// Called by child class to move the target data index forward
+    /// </summary>
     protected void IncrementTargetingType()
     {
         currentTargetingType = (++currentTargetingType + _targetingData.Length) % _targetingData.Length;
@@ -457,6 +463,8 @@ public abstract class Ability : ScriptableObject
     {
         return currentCooldownTimer / maxCooldown;
     }
+
+    protected virtual bool OverrideSetTickingAbility() { return false; }
 
 
 #region ABILITY_HELPERS

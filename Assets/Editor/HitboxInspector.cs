@@ -43,7 +43,7 @@ public class HitboxInspector : Editor
         }
         else
         {
-            EditorGUILayout.PropertyField(data);
+            //EditorGUILayout.PropertyField(data);
         }
     }
 

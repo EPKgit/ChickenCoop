@@ -94,6 +94,7 @@ public class HitboxManager : MonoSingleton<HitboxManager>
         {
             if (!activeChains[x].Item2.UpdateChain())
             {
+                activeChains[x].Item1.SetCompleted();
                 activeChains.RemoveAt(x);
             }
         }
@@ -128,6 +129,13 @@ public class HitboxManager : MonoSingleton<HitboxManager>
 
 public class HitboxChainHandle : IHandleWithIDNumber
 {
+    public bool Completed { get; private set; } = false;
+
+    public void SetCompleted()
+    {
+        Completed = true;
+    }
+
     public HitboxChainHandle(RollingIDNumber i) : base(i) { }
 
     public static implicit operator uint(HitboxChainHandle hch)

@@ -3,8 +3,15 @@ TODO:TODO:TODO
 CURRENT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add weasal ability
-setup shielding
-draw hedgehog
+
+ability overhaul
+-instead of single SO instances of every ability setup all of the data to come from the xml file
+-any prefab/GO references should come from a single SO that contains all references and is passed around on ability creation
+-abilitys will need a wrapper around them to keep them immutable and shareable i.e. the ability data could be shared among multiple instances of the ability
+
+hitbox chain handles need to set data when finished
+    -setup maul as a ticking that runs until the chain is done
+
 hitbox chains need to share interactions
 hitbox chain callback should also send the index in
 
@@ -19,7 +26,8 @@ sfx
     -taking damage
     -using abilities
     -enemies spawning
-
+draw hedgehog
+setup shielding
 setup camera panning
 
 
