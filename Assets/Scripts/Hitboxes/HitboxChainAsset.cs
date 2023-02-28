@@ -17,12 +17,16 @@ public class HitboxChainAsset : ScriptableObject
     {
         public float Delay { get => _delay; }
         [SerializeField] float _delay = 0;
+
         public float Duration { get => _duration; }
         [SerializeField] float _duration = -1;
+
         public Vector2 Offset { get => _offset; }
         [SerializeField] Vector2 _offset;
+
         public float RotationZ { get => _rotationZ; }
         [SerializeField] float _rotationZ = 0;
+
         public HitboxWithOffset[] Hitboxes { get => _hitboxes; }
         [SerializeField] HitboxWithOffset[] _hitboxes;
     }
@@ -32,6 +36,7 @@ public class HitboxChainAsset : ScriptableObject
     {
         public HitboxDataAsset Hitbox { get => _hitbox; }
         [SerializeField] HitboxDataAsset _hitbox;
+
         public Vector2 Offset { get => _offset; }
         [SerializeField] Vector2 _offset;
 
