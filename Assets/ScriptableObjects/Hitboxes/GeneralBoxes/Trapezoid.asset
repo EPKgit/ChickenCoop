@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shape: 2
   _points:
+  - {x: -0.5, y: 0}
+  - {x: 0, y: 0}
   - {x: 0.5, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
+  - {x: 1, y: 1}
+  - {x: -1, y: 1}
   _interactionType: 2
   _repeatPolicy: 0
   _repeatCooldown: -1

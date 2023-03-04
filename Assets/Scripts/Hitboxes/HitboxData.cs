@@ -46,6 +46,7 @@ public class HitboxData
     public float Radius { get; private set; } = 0.5f;
     public float Duration { get; private set; } = 0;
     public float StartRotationZ { get; private set; } = 0;
+    public Dictionary<GameObject, float> InteractionTimeStamps { get; private set; } = null;
 
     public bool TickDuration(float deltaTime)
     {
@@ -130,6 +131,12 @@ public class HitboxData
         public HitboxDataBuilder StartRotationZ(float f)
         {
             data.StartRotationZ = f;
+            return this;
+        }
+
+        public HitboxDataBuilder InteractionTimeStamps(Dictionary<GameObject, float> d)
+        {
+            data.InteractionTimeStamps = d;
             return this;
         }
 

@@ -1,11 +1,18 @@
 using System;
 using UnityEngine;
 
+public enum HitboxFrameInteractionPolicy
+{
+    SINGLE,
+    MULTIPLE,
+}
+
 [Serializable, CreateAssetMenu(menuName = "HitboxChainAsset")]
 public class HitboxChainAsset : ScriptableObject
 {
     public float DefaultDuration { get => _defaultDuration; }
     [SerializeField] float _defaultDuration = 0;
+
     public HitboxDataAsset DefaultHitbox { get => _defaultHitbox; }
     [SerializeField] HitboxDataAsset _defaultHitbox;
 
@@ -29,6 +36,9 @@ public class HitboxChainAsset : ScriptableObject
 
         public HitboxWithOffset[] Hitboxes { get => _hitboxes; }
         [SerializeField] HitboxWithOffset[] _hitboxes;
+
+        public HitboxFrameInteractionPolicy Policy { get => _policy; }
+        [SerializeField] HitboxFrameInteractionPolicy _policy = HitboxFrameInteractionPolicy.SINGLE;
     }
 
     [Serializable]

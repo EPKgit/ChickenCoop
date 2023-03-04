@@ -2,18 +2,8 @@ TODO:TODO:TODO
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CURRENT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-add weasal ability
-
-ability overhaul
--instead of single SO instances of every ability setup all of the data to come from the xml file
--any prefab/GO references should come from a single SO that contains all references and is passed around on ability creation
--abilitys will need a wrapper around them to keep them immutable and shareable i.e. the ability data could be shared among multiple instances of the ability
-
-hitbox chain handles need to set data when finished
-    -setup maul as a ticking that runs until the chain is done
-
-hitbox chains need to share interactions
-hitbox chain callback should also send the index in
+add weasel ability
+add knockback index parser for xml
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,7 +25,10 @@ setup camera panning
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 NICE STUFF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--add serializable hitbox datas/chains
+-ability overhaul
+    -instead of single SO instances of every ability setup all of the data to come from the xml file
+    -any prefab/GO references should come from a single SO that contains all references and is passed around on ability creation
+    -abilitys will need a wrapper around them to keep them immutable and shareable i.e. the ability data could be shared among multiple instances of the ability
 -add more granularity for how encounters can get built
     - seperate enemy types in a single wave
     - alternate wave finish conditions (percentage, time, switch)

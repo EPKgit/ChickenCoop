@@ -101,6 +101,10 @@ public class AbilityInspector : Editor
         ++EditorGUI.indentLevel;
         foreach (FieldInfo temp in childFields)
 		{
+            if(temp.IsNotSerialized)
+            {
+                continue;
+            }
             PotentiallyOverrideProperty(temp.Name);
 		}
         --EditorGUI.indentLevel;

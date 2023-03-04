@@ -56,6 +56,12 @@ public class Hitbox : Poolable
         {
             polyCollider.enabled = false;
         }
+
+        if(data.InteractionTimeStamps != null)
+        {
+            interactionTimestamps = data.InteractionTimeStamps;
+        }
+
         SetActive(true);
     }
 

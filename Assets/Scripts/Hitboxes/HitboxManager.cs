@@ -64,10 +64,10 @@ public class HitboxManager : MonoSingleton<HitboxManager>
     }
 
     private static RollingIDNumber IDCounter = new RollingIDNumber();
-    public HitboxChainHandle StartHitboxChain(HitboxChainAsset data, Func<Vector2> positionCallback, Func<float> rotationCallback, Action<Collider2D> callback)
+    public HitboxChainHandle StartHitboxChain(HitboxChainAsset data, Func<Vector2> positionCallback, Func<float> rotationCallback, Action<Collider2D, int> onHitCallback)
     {
         var handle = new HitboxChainHandle(IDCounter++);
-        activeChains.Add((handle, new HitboxChain(ScriptableObject.Instantiate(data), positionCallback, rotationCallback, callback)));
+        activeChains.Add((handle, new HitboxChain(ScriptableObject.Instantiate(data), positionCallback, rotationCallback, onHitCallback)));
         return handle;
     }
 

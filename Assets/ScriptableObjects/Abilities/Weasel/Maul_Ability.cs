@@ -5,11 +5,12 @@ using UnityEngine.InputSystem;
 
 public class Maul_Ability : Ability
 {
-    public float damage = 20.0f;
+    public float damageInitial = 10.0f;
+    public float damageFinal = 20.0f;
     public float hitboxDuration = 0.25f;
     public HitboxChainAsset customChain;
-    public HitboxChainHandle handle;
-
+    
+    private HitboxChainHandle handle;
     private Vector2 startPosition;
     private float startRotation;
 
@@ -46,14 +47,16 @@ public class Maul_Ability : Ability
         return true;
     }
 
-    void HitboxCallback(Collider2D col)
+    void HitboxCallback(Collider2D col, int index)
     {
+        float dmg = index > 1 ? damageFinal : damageInitial;
+        KnockbackPreset kb = index > 1 ? KnockbackPreset.BIG : KnockbackPreset.LITTLE;
         col.GetComponent<IDamagable>().Damage
         (
             HealthChangeData.GetBuilder()
-                .Damage(damage)
+                .Damage(dmg)
                 .BothSources(playerAbilities.gameObject)
-                .KnockbackData(KnockbackPreset.MEDIUM)
+                .KnockbackData(kb)
                 .Target(col.gameObject)
                 .Finalize()
         );

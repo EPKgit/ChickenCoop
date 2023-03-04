@@ -29,6 +29,7 @@ MonoBehaviour:
     - _hitbox: {fileID: 0}
       _offset: {x: 0.7, y: -0.5}
       _sizeOverride: -1
+    _policy: 0
   - _delay: 0.2
     _duration: -1
     _offset: {x: 0, y: 0}
@@ -43,6 +44,7 @@ MonoBehaviour:
     - _hitbox: {fileID: 0}
       _offset: {x: -0.7, y: -0.5}
       _sizeOverride: -1
+    _policy: 0
   - _delay: 0.6
     _duration: -1
     _offset: {x: 0, y: 0}
@@ -57,3 +59,4 @@ MonoBehaviour:
     - _hitbox: {fileID: 0}
       _offset: {x: 0.5, y: 0}
       _sizeOverride: -1
+    _policy: 0
