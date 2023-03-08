@@ -5,26 +5,34 @@ using UnityEngine;
 
 public class PriorityQueue<T> where T : class
 {
-	private IComparer<T> comparator;
-
-	private Func<T, bool> PushDelegate;
+	public bool IsEmpty { get => size == 0; }
+	public int Count { get => size; }
 
 	private T[] items;
+	private IComparer<T> comparator;
+	private Func<T, bool> PushDelegate;
 	private int size;
 	private int capacity;
 
 	public PriorityQueue(int i = 1, IComparer<T> c = null)
 	{
-		capacity = 1;
+		capacity = i;
 		size = 0;
 		items = new T[capacity];
 		if(c == null)
 		{
-			if(!typeof(IComparable).IsAssignableFrom(typeof(T)))
+			if (typeof(T).GetInterface(typeof(IComparable).Name) == null)
 			{
-				throw new System.Exception("Generic type must have a comparator passed in or implement the IComparable interface.");
+				if (typeof(T).GetInterface(typeof(IComparable<T>).Name) == null)
+				{
+					throw new System.Exception("Generic type must have a comparator passed in or implement the IComparable interface.");
+				}
+				PushDelegate = PushWithoutComparatorGeneric;
 			}
-			PushDelegate = PushWithoutComparator;
+			else
+			{ 
+				PushDelegate = PushWithoutComparator;
+			}
 		}
 		else
 		{
@@ -35,7 +43,7 @@ public class PriorityQueue<T> where T : class
 
 	public T Peek()
 	{
-		return !IsEmpty() ? items[0] : null;
+		return !IsEmpty ? items[0] : null;
 	}
 
 	public T Pop()
@@ -95,9 +103,23 @@ public class PriorityQueue<T> where T : class
 		return true;
 	}
 
-	public bool IsEmpty()
+	private bool PushWithoutComparatorGeneric(T add)
 	{
-		return size == 0;
+		if (++size >= capacity)
+		{
+			Resize();
+		}
+		IComparable<T> temp = (IComparable<T>)add;
+		for (int x = 0; x < size - 1; ++x)
+		{
+			if (temp.CompareTo(items[x]) < 0)
+			{
+				InsertAt(add, x);
+				return true;
+			}
+		}
+		InsertAt(add, size - 1);
+		return true;
 	}
 
 	public void Print()
