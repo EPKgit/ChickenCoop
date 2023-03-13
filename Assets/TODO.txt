@@ -3,7 +3,9 @@ TODO:TODO:TODO
 CURRENT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 add weasel ability
-add knockback index parser for xml
+
+fix shield enemies AI using new system
+write editor/gizmos to preview enemy AI
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
