@@ -111,6 +111,29 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                 return float.Parse(s);
             }
         },
+        {
+            "kb", (s) =>
+            {
+                s = s.ToLower();
+                if(s == "tiny")
+                {
+                    return KnockbackPreset.TINY;
+                }
+                else if(s == "little")
+                {
+                    return KnockbackPreset.LITTLE;
+                }
+                else if(s == "medium")
+                {
+                    return KnockbackPreset.MEDIUM;
+                }
+                else if(s == "big")
+                {
+                    return KnockbackPreset.BIG;
+                }
+                return KnockbackPreset.MAX;
+            }
+        },
     };
 
     private static Dictionary<string, string> commonVariableRenames = new Dictionary<string, string>()
@@ -216,7 +239,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 
     private void DoField(Ability a, string name, AbilityXMLVariable variable, AbilityXMLDataEntry entry)
     {
-        Func<string, object> evaluator = evaluationMethods[variable.type];
+        Func<string, object> evaluator = evaluationMethods[variable.type.ToLower()];
         if (evaluator == null)
         {
             Debug.LogError(string.Format("ERROR: FAILED TO EVALUATE PROPERTY ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));

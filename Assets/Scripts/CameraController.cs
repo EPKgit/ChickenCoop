@@ -15,7 +15,11 @@ public class CameraController : MonoBehaviour
     {
         if(player == null)
         {
-            throw new System.Exception("ERROR: NO PLAYER SET ON CAMERA");
+            player = GameObject.FindGameObjectWithTag("Player");
+            if (player == null)
+            {
+                throw new System.Exception("ERROR: NO PLAYER FOUND ON CAMERA");
+            }
         }
         else
         {

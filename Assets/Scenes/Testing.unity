@@ -1252,10 +1252,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7630090134084184713, guid: 79efd4c42da5a2e4baa76700d7126571, type: 3}
-      propertyPath: hitboxPrefab
-      value: 
-      objectReference: {fileID: 2140549124854207220, guid: 9549a57d901f1384191539d33b9ab7b5, type: 3}
     - target: {fileID: 8448847093921120780, guid: 79efd4c42da5a2e4baa76700d7126571, type: 3}
       propertyPath: m_RootOrder
       value: 0

@@ -46,5 +46,5 @@ public interface IKnockbackHandler
 {
     public Vector3 position { get; }
 
-    public abstract void DoKnockback(KnockbackData data);
+    public abstract void ApplyKnockback(KnockbackData data);
 }

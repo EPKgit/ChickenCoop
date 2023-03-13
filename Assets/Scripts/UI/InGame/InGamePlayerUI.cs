@@ -116,6 +116,11 @@ public class InGamePlayerUI : MonoBehaviour
 
 	void UpdateHealthUI()
 	{
+        if(maxHealth <= 0)
+        {
+            healthSlider.value = 0;
+            return;
+        }
 		healthSlider.value = currentHealth / maxHealth;
 	}
 

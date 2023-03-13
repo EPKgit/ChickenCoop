@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyHealth), typeof(Rigidbody2D))]
+[RequireComponent(typeof(EnemyHealth))]
 public abstract class BaseEnemy : BaseMovement
 {
     public abstract EnemyType type { get; }
@@ -78,7 +78,8 @@ public abstract class BaseEnemy : BaseMovement
         }
         enemyEnabled = enabled;
         col.enabled = enabled;
-    }
+		rb.velocity = Vector2.zero;
+	}
 
 
 #if !REMOVE_AGGRO_DATA
@@ -107,7 +108,7 @@ public abstract class BaseEnemy : BaseMovement
 	{
 		if(PlayerInitialization.all.Count == 0)
 		{
-			return false;
+			return true;
 		}
 #if REMOVE_AGGRO_DATA
 		float closestDistance = float.MaxValue;
@@ -129,29 +130,45 @@ public abstract class BaseEnemy : BaseMovement
         chosenPlayer = aggro?.Peek()?.source ?? PlayerInitialization.all[Random.Range(0, PlayerInitialization.all.Count)].gameObject;
 #endif
         DebugFlags.Log(DebugFlags.Flags.AGGRO, chosenPlayer?.name ?? "NO AGGRO");
-		return chosenPlayer != null;
+		return chosenPlayer == null;
 	}
 
-	//Not that performant, can be updated if we need to
-	//Should add an aggro range 
-	// returns false if we shouldn't do anything
-	protected virtual bool UpdateMovement()
-	{
+	protected virtual bool IsDisabled()
+    {
+		return !enemyEnabled;
+	}
+
+	protected virtual bool HasNoValidTarget()
+    {
+		if (chosenPlayer == null)
+		{
+			return UpdateChosenPlayer();
+		}
+		return false;
+	}
+
+	protected virtual void AnimationUpdate()
+    {
 		animator.SetBool(animatorMovingHashCode, movingAtStartOfFrame);
 		if (movingAtStartOfFrame)
 		{
 			sprite.flipX = rb.velocity.x < 0;
 		}
-		if (!enemyEnabled)
-		{
-            return false;
-        }
-		if(chosenPlayer == null)
-		{
-			return UpdateChosenPlayer();
-		}
+	}
+
+
+	//Not that performant, can be updated if we need to
+	//Should add an aggro range 
+	// returns false if we shouldn't do anything
+	protected virtual bool UpdateKnockback()
+	{
         CheckKnockbackInput();
-        return true;
+		if (tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK))
+		{
+			DebugFlags.Log(DebugFlags.Flags.MOVEMENT, "MOVEMENT CANCELED FROM KNOCKBAC");
+			return false;
+		}
+		return true;
 	}
 
 	private void OnCollisionEnter2D(Collision2D other) 

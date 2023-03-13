@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e899184b2529e034ab2c301ebf328e10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DEBUG_LOW_COOLDOWN: 1
+  DEBUG_LOW_COOLDOWN: 0
   inventoryUIPrefab: {fileID: 3971932206135975564, guid: 45454edd31afc5746bb5255242b310c0, type: 3}
   pickupRadius: 3
   rb: {fileID: 0}

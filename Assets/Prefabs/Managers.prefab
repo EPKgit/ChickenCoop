@@ -71,7 +71,7 @@ MonoBehaviour:
   textPrefab: {fileID: 1647112879069678025, guid: 993f25f36fde53944b1902f14864ca2a, type: 3}
   lowDamageColor: {r: 0.71687007, g: 1, b: 0, a: 1}
   highDamageColor: {r: 1, g: 0, b: 0, a: 1}
-  highEndDamage: 10
+  highEndDamage: 100
   sizeModifier: 0.75
 --- !u!114 &8448847093921120770
 MonoBehaviour:
@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42476e3377a4404d808e936f2fb7023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitboxPrefab: {fileID: 2140549124854207220, guid: 9549a57d901f1384191539d33b9ab7b5, type: 3}
   defaultLayer:
     serializedVersion: 2
     m_Bits: 256

@@ -14,8 +14,8 @@ public class DebugEnemy : BaseEnemy
 
     protected override void Update()
 	{
-        if (!base.UpdateMovement() || !CanMove())
-        {
-        }
+        //if (!base.UpdateMovement() || !CanMove())
+        //{
+        //}
 	}
 }

@@ -120,7 +120,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 			{
                 data.KnockbackData.direction = (knockbackHandler.position - data.LocalSource.transform.position).normalized;
             }
-            knockbackHandler.DoKnockback(data.KnockbackData);
+            knockbackHandler.ApplyKnockback(data.KnockbackData);
         }
 		postDamageEvent(data);
 		data.OverallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(data);

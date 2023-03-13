@@ -15,16 +15,12 @@ public class ShieldEnemy : BaseEnemy
 	public float turnSpeed = 0.05f;
 
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     void OnEnable()
 	{
 		hp.preDamageEvent += CheckIfBlocked;
         PoolManager.instance.AddPoolSize(splashPrefab, 10, true);
     }
+
     protected override void OnDisable()
 	{
         base.OnDisable();
@@ -68,13 +64,17 @@ public class ShieldEnemy : BaseEnemy
     {
         base.SetEnemyEnabled(enabled);
         arc.SetActive(enabled);
-        rb.velocity = Vector2.zero;
     }
 
     protected override void Update()
 	{
         base.Update();
-        if (!base.UpdateMovement() || !CanMove())
+        base.IsDisabled();
+        if (!UpdateKnockback())
+        {
+            return;
+        }
+        if (!CanMove())
         {
             rb.velocity = Vector2.zero;
             return;

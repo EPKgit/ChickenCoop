@@ -69,12 +69,12 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
 
     void OnEnable()
     {
-        stats.RegisterStatChangeCallback(StatName.MovementSpeed, UpdateSpeed);
+        stats.RegisterStatChangeCallback(StatName.MovementSpeed, UpdateMovementSpeedStat);
     }
 
     void OnDisable()
     {
-        stats?.DeregisterStatChangeCallback(StatName.MovementSpeed, UpdateSpeed);
+        stats?.DeregisterStatChangeCallback(StatName.MovementSpeed, UpdateMovementSpeedStat);
     }
 
 
@@ -144,7 +144,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
         movementEvent(new MovementDeltaEventData(curr - end, MovementType.TELEPORT));
     }
 
-    public void UpdateSpeed(float f)
+    public void UpdateMovementSpeedStat(float f)
     {
         movementSpeed = f;
     }
@@ -152,7 +152,7 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
     protected float knockbackStartTime;
     protected float knockbackDuration;
     protected GameplayTagInternals.GameplayTagID knockbackTagID;
-    public virtual void DoKnockback(KnockbackData data)
+    public virtual void ApplyKnockback(KnockbackData data)
     {
         if (tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK) || tagComponent.tags.Contains(GameplayTagFlags.KNOCKBACK_IMMUNITY))
         {
@@ -165,22 +165,32 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
         rb.drag = 0;
     }
 
+    protected bool IsKnockedBack()
+    {
+        return knockbackDuration != 0;
+    }
+
+    protected void KnockbackUpdate()
+    {
+        float t = (Time.time - knockbackStartTime) / knockbackDuration;
+        if (t > 1)
+        {
+            rb.velocity = Vector2.zero;
+            if (getsKnockbackInvuln)
+            {
+                StatusEffectManager.instance.ApplyEffect(gameObject, Statuses.StatusEffectType.KNOCKBACK_IMMUNITY, 0.5f - knockbackDuration);
+            }
+            knockbackDuration = 0;
+            tagComponent.tags.RemoveFirstTagWithID(knockbackTagID);
+        }
+        movementEvent(new MovementDeltaEventData((Vector2)transform.position - previousPosition, MovementType.KNOCKBACK));
+    }
+
     protected void CheckKnockbackInput()
     {
-        if(knockbackDuration != 0)
+        if(IsKnockedBack())
         {
-            float t = (Time.time - knockbackStartTime) / knockbackDuration;
-            if (t > 1)
-            {
-                rb.velocity = Vector2.zero;
-                if (getsKnockbackInvuln)
-                {
-                    StatusEffectManager.instance.ApplyEffect(gameObject, Statuses.StatusEffectType.KNOCKBACK_IMMUNITY, 0.5f - knockbackDuration);
-                }
-                knockbackDuration = 0;
-                tagComponent.tags.RemoveFirstTagWithID(knockbackTagID);
-            }
-            movementEvent(new MovementDeltaEventData((Vector2)transform.position - previousPosition, MovementType.KNOCKBACK));
+            KnockbackUpdate();
         }
     }
 }
