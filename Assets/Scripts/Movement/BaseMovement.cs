@@ -193,4 +193,10 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
             KnockbackUpdate();
         }
     }
+
+    protected void StopMovement()
+    {
+        rb.velocity = Vector2.zero;
+        animator.SetBool(animatorMovingHashCode, false);
+    }
 }

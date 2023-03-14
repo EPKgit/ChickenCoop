@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnemyBehaviourSyntax;
 
 [RequireComponent(typeof(EnemyHealth))]
 public abstract class BaseEnemy : BaseMovement
@@ -29,6 +30,12 @@ public abstract class BaseEnemy : BaseMovement
 	/// </summary>
 	protected GameObject chosenPlayer;
 
+	/// <summary>
+	/// List of commands that are run every frame for the enemy, empty by default but dervied classes can fill it
+	/// see NormalEnemy.cs
+	/// </summary>
+	protected List<EnemyBehaviourAction> updateList;
+
 #if !REMOVE_AGGRO_DATA
 	/// <summary>
 	/// A sorted set of all aggrodata that the enemy has recieved from damage events. 
@@ -36,7 +43,7 @@ public abstract class BaseEnemy : BaseMovement
 	protected PriorityQueue<AggroData> aggro;
 #endif
 
-    protected Collider2D col;
+	protected Collider2D col;
 	protected EnemyHealth hp;
     protected TargetingController targetingController;
 
@@ -52,6 +59,7 @@ public abstract class BaseEnemy : BaseMovement
 		hp = GetComponent<EnemyHealth>();
 		col = GetComponent<Collider2D>();
         targetingController = Lib.FindUpwardsInTree<TargetingController>(gameObject);
+		updateList = new List<EnemyBehaviourAction>();
 
 #if !REMOVE_AGGRO_DATA
         aggro = new PriorityQueue<AggroData>(PlayerInitialization.all.Count, new MaxAggroComparator());
@@ -63,6 +71,24 @@ public abstract class BaseEnemy : BaseMovement
 	protected virtual void Start()
 	{
 		UpdateChosenPlayer();
+	}
+
+	protected override void Update()
+	{
+		base.Update();
+		ProcessUpdateList();
+	}
+
+	protected void ProcessUpdateList()
+	{
+		for (int x = 0; x < updateList.Count; ++x)
+		{
+			EnemyBehaviourAction action = updateList[x];
+			if (!action.Evaluate())
+			{
+				break;
+			}
+		}
 	}
 
 	protected virtual void OnDisable()
@@ -169,6 +195,13 @@ public abstract class BaseEnemy : BaseMovement
 			return false;
 		}
 		return true;
+	}
+
+	protected virtual void Move()
+	{
+		//Just walks towards the player
+		Vector2 dir = (chosenPlayer.transform.position - transform.position).normalized;
+		rb.velocity = dir * speed;
 	}
 
 	private void OnCollisionEnter2D(Collision2D other) 

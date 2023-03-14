@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using EnemyBehaviourSyntax;
 
 public class ShieldEnemy : BaseEnemy
 {
@@ -14,7 +15,15 @@ public class ShieldEnemy : BaseEnemy
 	public float blockAngle;
 	public float turnSpeed = 0.05f;
 
-
+    protected override void Awake()
+    {
+        base.Awake();
+        updateList.Add(new EnemyBehaviourAction().If(IsDisabled).Then(StopMovement).AndEnd());
+        updateList.Add(new EnemyBehaviourAction().If(HasNoValidTarget).Then(StopMovement).Else(UpdateShieldAngle));
+        updateList.Add(new EnemyBehaviourAction().If(IsKnockedBack).Then(KnockbackUpdate).AndEnd());
+        updateList.Add(new EnemyBehaviourAction().Do(AnimationUpdate));
+        updateList.Add(new EnemyBehaviourAction().If(CanMove).Then(Move).Else(StopMovement).AndEnd());
+    }
     void OnEnable()
 	{
 		hp.preDamageEvent += CheckIfBlocked;
@@ -66,22 +75,8 @@ public class ShieldEnemy : BaseEnemy
         arc.SetActive(enabled);
     }
 
-    protected override void Update()
-	{
-        base.Update();
-        base.IsDisabled();
-        if (!UpdateKnockback())
-        {
-            return;
-        }
-        if (!CanMove())
-        {
-            rb.velocity = Vector2.zero;
-            return;
-        }
-        //Just walks towards the player
-        Vector2 dir = (chosenPlayer.transform.position - transform.position).normalized;
-        rb.velocity = dir * speed;
-        arc.transform.rotation = Quaternion.Lerp(arc.transform.rotation, Quaternion.AngleAxis(Mathf.Rad2Deg * -Mathf.Atan2(dir.x, dir.y), Vector3.forward), turnSpeed);
-	}
+    void UpdateShieldAngle()
+    {
+        arc.transform.rotation = Quaternion.Lerp(arc.transform.rotation, Quaternion.AngleAxis(Mathf.Rad2Deg * -Mathf.Atan2(rb.velocity.x, rb.velocity.y), Vector3.forward), turnSpeed);
+    }
 }
