@@ -36,6 +36,13 @@ public abstract class BaseEnemy : BaseMovement
 	/// </summary>
 	protected List<EnemyBehaviourAction> updateList;
 
+	/// <summary>
+	/// List of springs that affect default movement for the enemy, empty by default but derived classes can fill it
+	/// </summary>
+	protected List<EnemySpring> movementSprings;
+
+	protected SpringData currentFrameSpringData;
+
 #if !REMOVE_AGGRO_DATA
 	/// <summary>
 	/// A sorted set of all aggrodata that the enemy has recieved from damage events. 
@@ -60,6 +67,7 @@ public abstract class BaseEnemy : BaseMovement
 		col = GetComponent<Collider2D>();
         targetingController = Lib.FindUpwardsInTree<TargetingController>(gameObject);
 		updateList = new List<EnemyBehaviourAction>();
+		movementSprings = new List<EnemySpring>();
 
 #if !REMOVE_AGGRO_DATA
         aggro = new PriorityQueue<AggroData>(PlayerInitialization.all.Count, new MaxAggroComparator());
@@ -199,9 +207,19 @@ public abstract class BaseEnemy : BaseMovement
 
 	protected virtual void Move()
 	{
-		//Just walks towards the player
-		Vector2 dir = (chosenPlayer.transform.position - transform.position).normalized;
-		rb.velocity = dir * speed;
+		currentFrameSpringData = new SpringData()
+		{
+			allPlayers = PlayerInitialization.all,
+			targetedPlayer = chosenPlayer,
+			attached = gameObject,
+			inRange = Physics2D.OverlapCircleAll(transform.position, 20)
+		};
+		Vector2 dir = Vector2.zero;
+		foreach(EnemySpring spring in movementSprings)
+        {
+			dir += spring.EvaluateDirection(currentFrameSpringData);
+        }
+		rb.velocity = dir.normalized * speed;
 	}
 
 	private void OnCollisionEnter2D(Collision2D other) 
@@ -242,6 +260,16 @@ public abstract class BaseEnemy : BaseMovement
 	public AggroData[] GetAggroDataArray()
 	{
 		return aggro?.ToArray();
+	}
+#endif
+
+#if UNITY_EDITOR
+	private void OnDrawGizmosSelected()
+    {
+		foreach(EnemySpring spring in movementSprings)
+        {
+			spring.DrawGizmo();
+        }
 	}
 #endif
 }

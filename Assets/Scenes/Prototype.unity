@@ -480,10 +480,12 @@ MonoBehaviour:
   - {x: 4.06, y: 0}
   - {x: 3.26, y: 1}
   - {x: 2.88, y: 3.16}
+  - {x: 4.05, y: 2.46}
+  - {x: 4.41, y: 1.47}
   encounterData:
     waves:
     - enemyType: 1
-      maxAmount: 1
+      maxAmount: 5
       spawnType: 0
     - enemyType: 2
       maxAmount: 1
