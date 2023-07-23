@@ -27,24 +27,29 @@ public class StatBlock : ISerializationCallbackReceiver
     public static Dictionary<StatName, float> defaultValues = new Dictionary<StatName, float>()
     {
 
-        { StatName.MovementSpeed,			1.0f },
-        { StatName.MaxHealth,			    1.0f },
-        { StatName.AggroPercentage,			1.0f },
-        { StatName.DamagePercentage,		1.0f },
-        { StatName.FlatDamage,			    0.0f },
-        { StatName.HealingPercentage,		1.0f },
-        { StatName.FlatHealing,			    0.0f },
-        { StatName.CooldownReduction,		1.0f },
-        { StatName.PuzzleSolving,			0.0f },
+        { StatName.MovementSpeed,           1.0f },
+        { StatName.MaxHealth,               1.0f },
+        { StatName.AggroPercentage,         1.0f },
+        { StatName.DamagePercentage,        1.0f },
+        { StatName.FlatDamage,              0.0f },
+        { StatName.HealingPercentage,       1.0f },
+        { StatName.FlatHealing,             0.0f },
+        { StatName.CooldownReduction,       1.0f },
+        { StatName.PuzzleSolving,           0.0f },
+        { StatName.MAX,                     -1.0f },
     };
 
     public StatBlock()
     {
-        // foreach (StatName key in Enum.GetValues(typeof(StatName)))
-        // {
-        //     float defaultValue = defaultValues[key];
-        //     statDict.Add(key, new Stat(key, defaultValue));
-        // }
+        foreach (StatName key in Enum.GetValues(typeof(StatName)))
+        {
+            if (key == StatName.MAX)
+            {
+                continue;
+            }
+            float defaultValue = defaultValues[key];
+            statDict.Add(key, new Stat(key, defaultValue));
+        }
     }
 
     public void Initialize(StatBlock other)
@@ -52,6 +57,10 @@ public class StatBlock : ISerializationCallbackReceiver
         var otherStats = other.statDict;
         foreach (StatName key in Enum.GetValues(typeof(StatName)))
         {
+            if(key == StatName.MAX)
+            {
+                continue;
+            }
             if (otherStats.ContainsKey(key)) //if the other stats have a definition for it
             {
                 if (HasStat(key)) //override our local value with the other stats value
@@ -63,31 +72,31 @@ public class StatBlock : ISerializationCallbackReceiver
                     statDict.Add(key, new Stat(key, otherStats[key].BaseValue));
                 }
             }
-            // else //otherwise if it's not defined by the other block
-            // {
-            //     float defaultValue = defaultValues[key];
-            //     if (HasStat(key)) //make sure we are reset to default
-            //     {
-            //         statDict[key].BaseValue = defaultValue;
-            //     }
-            //     else //add it with default value
-            //     {
-            //         statDict.Add(key, new Stat(key, defaultValue));
-            //     }
-            // }
+            else //otherwise if it's not defined by the other block
+            {
+                float defaultValue = defaultValues[key];
+                if (HasStat(key)) //make sure we are reset to default
+                {
+                    statDict[key].BaseValue = defaultValue;
+                }
+                else //add it with default value
+                {
+                    statDict.Add(key, new Stat(key, defaultValue));
+                }
+            }
         }
         FlushInitializationQueue();
     }
     public void Initialize()
     {
-        // foreach (StatName key in Enum.GetValues(typeof(StatName)))
-        // {
-        //     if (!HasStat(key))
-        //     {
-        //         float defaultValue = defaultValues[key];
-        //         statDict.Add(key, new Stat(key, defaultValue));
-        //     }
-        // }
+        foreach (StatName key in Enum.GetValues(typeof(StatName)))
+        {
+            if (key != StatName.MAX && !HasStat(key))
+            {
+                float defaultValue = defaultValues[key];
+                statDict.Add(key, new Stat(key, defaultValue));
+            }
+        }
         FlushInitializationQueue();
     }
 
@@ -159,7 +168,7 @@ public class StatBlock : ISerializationCallbackReceiver
 
     public Stat AddStat(StatName stat, float value)
     {
-        if(statDict.ContainsKey(stat))
+        if(statDict.ContainsKey(stat) && stat != StatName.MAX)
         {
             return null;
         }

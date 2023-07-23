@@ -8,7 +8,7 @@ public class Bite_Ability : Ability
     public float damage = 1.0f;
     public float hitboxDuration = 0.25f;
     public float hitboxRadius = 0.5f;
-    public KnockbackPreset knckbackPreset;
+    public KnockbackPreset knockbackPreset;
 
     public override void Initialize(PlayerAbilities pa)
 	{
@@ -47,7 +47,7 @@ public class Bite_Ability : Ability
                 .Damage(damage)
                 .BothSources(playerAbilities.gameObject)
                 .Target(col.gameObject)
-                .KnockbackData(knckbackPreset)
+                .KnockbackData(knockbackPreset)
                 .Finalize()
         );
     }

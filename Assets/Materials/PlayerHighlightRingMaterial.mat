@@ -47,5 +47,5 @@ Material:
     - _Rotation: 0
     - _SegmentCount: 5
     m_Colors:
-    - _Color: {r: 0.008216262, g: 1, b: 0, a: 0}
+    - _Color: {r: 0.094117574, g: 1, b: 0, a: 0.49803922}
   m_BuildTextureStacks: []

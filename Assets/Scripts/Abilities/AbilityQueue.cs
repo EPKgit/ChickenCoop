@@ -137,6 +137,24 @@ public class AbilityQueue
         abilityInputQueue.Enqueue(new AbilityInputData(a));
     }
 
+    public bool AbilityEndedExternal(Ability a)
+    {
+        for (int x = 0; x < currentlyTicking.Count; ++x)
+        {
+            if (currentlyTicking[x] != a)
+            {
+                continue;
+            }
+            postAbilityCastEvent(new AbilityEventData(currentlyTicking[x]));
+            currentlyTicking[x].FinishAbility();
+            currentlyTicking.RemoveAt(x);
+            return true;
+        }
+        return false;
+    }
+
+    
+
     public void AbilityRecieveInput(Ability a, Vector2 targetData)
     {
         AbilityInputData aid = null;

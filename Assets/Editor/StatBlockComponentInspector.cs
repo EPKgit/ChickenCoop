@@ -26,6 +26,10 @@ public class StatBlockComponentInspector : Editor
             var overridenStats = overrider.GetOverridingBlock().GetStats();
             foreach (var pair in overridenStats)
             {
+                if(pair.Key == StatName.MAX)
+                {
+                    continue;
+                }
                 EditorGUILayout.LabelField(string.Format("{0}:{1}", pair.Key.ToString(), pair.Value.Value));
             }
             return;
@@ -35,7 +39,11 @@ public class StatBlockComponentInspector : Editor
 		{
             foreach (var pair in stats)
             {
-				EditorGUILayout.LabelField(string.Format("{0}:{1}", pair.Key.ToString(), pair.Value.Value));
+                if (pair.Key == StatName.MAX)
+                {
+                    continue;
+                }
+                EditorGUILayout.LabelField(string.Format("{0}:{1}", pair.Key.ToString(), pair.Value.Value));
 			}
             return;
 		}

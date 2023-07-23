@@ -49,7 +49,6 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
 
     void DrawDict()
     {
-        var names = Enum.GetNames(typeof(StatName));
         if (!statKeys.isArray || !statVals.isArray || statKeys.arraySize != statVals.arraySize)
         {
             return;
@@ -61,7 +60,7 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
             var baseValueProp = valAtIndex.FindPropertyRelative("_baseValue");
             EditorGUI.BeginChangeCheck();
             Rect fullRect = NextLine();
-            fullRect.width -= 20.0f;
+            fullRect.width -= 30.0f;
             float f = EditorGUI.DelayedFloatField(fullRect, new GUIContent(Enum.GetName(typeof(StatName), nameAtIndex.enumValueIndex)), baseValueProp.floatValue);
             if (EditorGUI.EndChangeCheck())
             {
@@ -70,33 +69,44 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
                 serializationOverriden.serializedObject.ApplyModifiedProperties();
             }
             fullRect.x += fullRect.width;
-            fullRect.width = 20.0f;
-            if(GUI.Button(fullRect, new GUIContent("-")))
+            fullRect.width = 30.0f;
+            //if(GUI.Button(fullRect, new GUIContent("-")))
+            //{
+            //    statKeys.DeleteArrayElementAtIndex(x);
+            //    statVals.DeleteArrayElementAtIndex(x);
+            //    serializationOverriden.boolValue = true;
+            //    serializationOverriden.serializedObject.ApplyModifiedProperties();
+            //    SetAddEnum();
+            //}
+            if (GUI.Button(fullRect, new GUIContent("↻")))
             {
-                statKeys.DeleteArrayElementAtIndex(x);
-                statVals.DeleteArrayElementAtIndex(x);
+                statVals.GetArrayElementAtIndex(x).FindPropertyRelative("_baseValue").floatValue = StatBlock.defaultValues[(StatName)statKeys.GetArrayElementAtIndex(x).enumValueIndex];
                 serializationOverriden.boolValue = true;
                 serializationOverriden.serializedObject.ApplyModifiedProperties();
-                SetAddEnum();
             }
         }
-        DrawAddButton();
+        //DrawAddButton();
     }
 
     void DrawAddButton()
     {
-        Rect fullRect = NextLine();
-        Rect halfRect = fullRect;
-        halfRect.width *= 0.5f;
         var names = new List<String>(Enum.GetNames(typeof(StatName)));
-        int index = 0;
         for (int x = names.Count - 1; x >= 0; --x)
         {
-            if(!Discriminator((StatName)x))
+            if (!Discriminator((StatName)x))
             {
                 names.RemoveAt(x);
             }
         }
+        if(names.Count == 0)
+        {
+            return;
+        }
+        Rect fullRect = NextLine();
+        Rect halfRect = fullRect;
+        halfRect.width *= 0.5f;
+        int index = 0;
+        
         for (int x = 0; x < names.Count; ++x)
         {
             if(newKey == (StatName)Enum.Parse(typeof(StatName), names[x]))
@@ -175,6 +185,10 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
         SetupProperties(property);
         float num = EXTRA_LINES;
         num += statKeys.arraySize;
+        if (!Discriminator(newKey))
+        {
+            num--;
+        }
         return num;
     }
 }

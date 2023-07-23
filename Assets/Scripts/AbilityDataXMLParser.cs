@@ -63,6 +63,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         if (file == null)
         {
             Debug.LogAssertion("ERROR: COULD NOT OPEN ABILITY XML");
+            return;
         }
         XmlDocument doc = new XmlDocument();
         doc.LoadXml(file.text);

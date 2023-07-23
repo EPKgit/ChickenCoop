@@ -255,6 +255,15 @@ public class PlayerAbilities : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called by external sources to notify that an ability wants to be ended before it normally would
+    /// </summary>
+    /// <param name="a">the ability to end</param>
+    public void AbilityEndedExternal(Ability a)
+    {
+        abilityQueue.AbilityEndedExternal(a);
+    }
+
     public bool IsInitialized()
     {
         return initialized;

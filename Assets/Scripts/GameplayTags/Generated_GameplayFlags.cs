@@ -11,6 +11,7 @@ public static class GameplayTagFlags
 		public static string ABILITY { get => "ABILITY"; }
 			public static string ABILITY_MOVEMENT { get => "ABILITY.ABILITY_MOVEMENT"; }
 			public static string ABILITY_CC { get => "ABILITY.ABILITY_CC"; }
+			public static string ABILITY_DAMAGE { get => "ABILITY.ABILITY_DAMAGE"; }
 		public static string STATUS { get => "STATUS"; }
 			public static string INVULNERABLE { get => "STATUS.INVULNERABLE"; }
 			public static string MOVEMENT_EFFECTED { get => "STATUS.MOVEMENT_EFFECTED"; }

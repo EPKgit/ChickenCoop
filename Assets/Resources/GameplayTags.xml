@@ -11,6 +11,7 @@
     <ABILITY>
         <ABILITY_MOVEMENT/>
         <ABILITY_CC/>
+        <ABILITY_DAMAGE/>
     </ABILITY>
     <STATUS>
         <INVULNERABLE/>

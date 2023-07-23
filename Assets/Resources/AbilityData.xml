@@ -170,6 +170,7 @@
         <tooltip>Go invisible and increase your movement speed by {movementSpeedMultiplier} times.</tooltip>
         <var_list>
             <variable name="movementSpeedMultiplier" type="float" value="1.5"/>
+            <variable name="damageMultiplier" type="float" value="2.0"/>
             <variable name="duration" type="float" value="4"/>
             <variable name="cd" type="float" value="10"/>
         </var_list>
@@ -186,7 +187,7 @@
 			<variable name="damage" type="float" value="5"/>
 			<variable name="hitboxDuration" type="float" value="0.25"/>
 			<variable name="hitboxRadius" type="float" value="0.5"/>
-			<variable name="knckbackPreset" type="kb" value="BIG"/>
+			<variable name="knockbackPreset" type="kb" value="BIG"/>
 		</var_list>
 	</ability>
 

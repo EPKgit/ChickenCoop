@@ -38,7 +38,9 @@ public class PlayerRender : MonoBehaviour
         }
         enabled = true;
         highlightMaterial = sprite.transform.Find("Highlight").gameObject.GetComponent<SpriteRenderer>().material;
-        highlightMaterial.SetColor("_Color", Lib.GetPlayerColorByIndex(playerInput.playerID));
+        Color c = Lib.GetPlayerColorByIndex(playerInput.playerID);
+        c.a = highlightMaterial.GetColor("_Color").a;
+        highlightMaterial.SetColor("_Color", c);
         rotationDegrees = 0;
         if(!registeredCallbacks)
         {

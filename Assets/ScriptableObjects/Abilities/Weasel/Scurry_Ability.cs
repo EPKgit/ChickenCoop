@@ -6,28 +6,51 @@ using UnityEngine.InputSystem;
 public class Scurry_Ability : Ability
 {
     public float movementSpeedMultiplier = 1.5f;
+    public float damageMultiplier = 2.0f;
 
-    private uint? statusHandle;
+    private uint? invisStatusHandle;
+    private uint? dmgStatusHandle;
     private StatBlock statBlock;
     public override void Initialize(PlayerAbilities pa)
 	{
 		base.Initialize(pa);
         statBlock = pa.stats;
+        pa.postAbilityCastEvent += OnPostAbilityCast;
+    }
+
+    public override void Cleanup(PlayerAbilities pa)
+    {
+        base.Cleanup(pa);
+        pa.postAbilityCastEvent -= OnPostAbilityCast;
+    }
+
+    protected override void UseAbility()
+    {
+        base.UseAbility();
+        invisStatusHandle = statBlock.GetStat(StatName.MovementSpeed)?.AddMultiplicativeModifier(movementSpeedMultiplier);
+        dmgStatusHandle = statBlock.GetStat(StatName.DamagePercentage)?.AddMultiplicativeModifier(damageMultiplier);
+    }
+
+    void OnPostAbilityCast(AbilityEventData aed)
+    {
+        if(aed.ability.abilityTags.Contains(GameplayTagFlags.ABILITY_DAMAGE))
+        {
+            playerAbilities.AbilityEndedExternal(this);
+        }
     }
 
     public override void FinishAbility()
     {
         base.FinishAbility();
-        if(statusHandle.HasValue)
+        if(invisStatusHandle.HasValue)
         {
-            statBlock.GetStat(StatName.MovementSpeed)?.RemoveMultiplicativeModifier(statusHandle.Value);
-            statusHandle = null;
+            statBlock.GetStat(StatName.MovementSpeed)?.RemoveMultiplicativeModifier(invisStatusHandle.Value);
+            invisStatusHandle = null;
         }
-    }
-
-    protected override void UseAbility()
-	{
-        base.UseAbility();
-        statusHandle = statBlock.GetStat(StatName.MovementSpeed)?.AddMultiplicativeModifier(movementSpeedMultiplier);
+        if (dmgStatusHandle.HasValue)
+        {
+            statBlock.GetStat(StatName.DamagePercentage)?.RemoveMultiplicativeModifier(dmgStatusHandle.Value);
+            dmgStatusHandle = null;
+        }
     }
 }

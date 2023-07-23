@@ -12,7 +12,10 @@ public class AssetWatchdog : AssetPostprocessor
         foreach (string str in importedAssets)
         {
             string[] splitStr = str.Split('/', '.');
-
+            if(str.Length <= 1)
+            {
+                continue;
+            }
             string fileName = splitStr[splitStr.Length - 2];
             string extension = splitStr[splitStr.Length - 1];
             if(extension == "xml")

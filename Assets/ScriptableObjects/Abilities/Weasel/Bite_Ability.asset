@@ -16,13 +16,16 @@ MonoBehaviour:
   abilityName: 
   tooltipDescription: 
   abilityTags:
-    tags: []
+    tags:
+    - ID:
+        _ID: 0
+      _flag: ABILITY.ABILITY_DAMAGE
   tagsToBlock:
     tags: []
   tagsToApply:
     tags: []
   isPassive: 0
-  tickingAbility: 0
+  _tickingAbilitySerialized: 0
   hasDuration: 0
   maxDuration: 0
   maxCooldown: 0
@@ -30,6 +33,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: e78959404ab609943ad5218e6da5d952, type: 3}
   _targetingData:
   - inputPoint: {x: 0, y: 0}
+    inputRotationZ: 0
     targetType: 1
     rangePreviewPrefab: {fileID: 0}
     secondaryPreviewPrefab: {fileID: 4964544705974548, guid: 36887ab93a5cf9745a648e8a3956a436, type: 3}
@@ -43,4 +47,4 @@ MonoBehaviour:
   damage: 1
   hitboxDuration: 0.25
   hitboxRadius: 0.5
-  customHitbox: {fileID: 11400000, guid: 3749564298a5b424d9ff0849b063057d, type: 2}
+  knckbackPreset: 0
