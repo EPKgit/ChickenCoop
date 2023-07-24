@@ -6,6 +6,8 @@ add weasel ability
 add new ranged enemy
 - figure out weighting of attacks vs movement
 - springs
+parrys
+add cast time, block othjer abilities on cast, UI to show casting in progress
 
 write editor/gizmos to preview enemy AI
 

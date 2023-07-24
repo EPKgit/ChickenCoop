@@ -25,9 +25,17 @@ public class DebugFlags
 
     public static void Log(Flags flag, string printString)
     {
-        if((int)flag == 1)
+        if ((int)flag == 1)
         {
             Debug.Log(printString);
+        }
+    }
+
+    public static void Log(Flags flag, string format, params object[] vs)
+    {
+        if ((int)flag == 1)
+        {
+            Debug.Log(string.Format(format, vs));
         }
     }
 }

@@ -18,6 +18,6 @@ public class NormalEnemy : BaseEnemy
         updateList.Add(new EnemyBehaviourAction().If(CanMove).Then(Move).Else(StopMovement).AndEnd());
 
         movementSprings.Add(new MoveTowardsTargetPlayerSpring());
-        //movementSprings.Add(new SeperateEnemiesSpring());
+        movementSprings.Add(new SeperateEnemiesSpring());
     }
 }

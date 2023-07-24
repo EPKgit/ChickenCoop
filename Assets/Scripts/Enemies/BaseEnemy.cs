@@ -212,7 +212,7 @@ public abstract class BaseEnemy : BaseMovement
 			allPlayers = PlayerInitialization.all,
 			targetedPlayer = chosenPlayer,
 			attached = gameObject,
-			inRange = Physics2D.OverlapCircleAll(transform.position, 20)
+			inRange = Physics2D.OverlapCircleAll(transform.position, 3)
 		};
 		Vector2 dir = Vector2.zero;
 		foreach(EnemySpring spring in movementSprings)

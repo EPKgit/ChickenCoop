@@ -79,6 +79,7 @@ namespace EnemyBehaviourSyntax
 
     public class SeperateEnemiesSpring : EnemySpring
     {
+        //private static Dictionary<GameObject, >
         public override Vector2 EvaluateDirection(SpringData data)
         {
 #if UNITY_EDITOR
@@ -88,19 +89,21 @@ namespace EnemyBehaviourSyntax
             foreach (Collider2D col in data.inRange)
             {
                 GameObject curr = col.gameObject;
-                if (Lib.FindUpwardsInTree<BaseEnemy>(curr) != null)
+                if (!curr.CompareTag("Enemy"))
                 {
-                    Vector3 start = data.attached.transform.position;
-                    Vector3 end = curr.transform.position;
-                    float dist = Mathf.Clamp(start.GetDistanceTo(end), 0, float.MaxValue);
-                    Vector2 direction = data.attached.transform.position.GetDirectionToNormalized(curr.transform.position);
-
-                    float springStrength = 1.0f / (1.0f + dist * dist * dist);
-                    final += -direction * springStrength;
-#if UNITY_EDITOR
-                    debugInfo.Add((start, end, springStrength));
-#endif
+                    continue;
                 }
+
+                Vector3 start = data.attached.transform.position;
+                Vector3 end = curr.transform.position;
+                float dist = Mathf.Clamp(start.GetDistanceTo(end), 0, float.MaxValue);
+                Vector2 direction = data.attached.transform.position.GetDirectionToNormalized(curr.transform.position);
+
+                float springStrength = 1.0f / (1.0f + dist * dist * dist);
+                final += -direction * springStrength;
+#if UNITY_EDITOR
+                debugInfo.Add((start, end, springStrength));
+#endif
             }
             return final;
         }
