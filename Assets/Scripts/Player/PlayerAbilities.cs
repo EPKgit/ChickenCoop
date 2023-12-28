@@ -13,7 +13,6 @@ public class PlayerAbilities : MonoBehaviour
         ADDED,
         REMOVED,
         OVERRIDDEN,
-
     }
     public delegate void AbilityChangedDelegate(Ability previousAbility, Ability newAbility, AbilitySlot slot, AbilityChangeType type);
     public event AbilityChangedDelegate abilityChanged = delegate { };
@@ -38,10 +37,7 @@ public class PlayerAbilities : MonoBehaviour
     [HideInInspector] public PlayerMovement movement;
     [HideInInspector] public PlayerCollision collision;
 
-    private AbilitySetAsset abilitySet;
-
     public AbilitySetContainer abilities { get { return _abilities; } }
-
     private AbilitySetContainer _abilities;
 
     private List<Ability> passives = new List<Ability>();
