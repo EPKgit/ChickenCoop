@@ -68,7 +68,7 @@ public class PlayerCollision : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(callbacks.Count == 0)
+        if(callbacks == null && callbacks.Count == 0)
         {
             return;
         }

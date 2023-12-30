@@ -12,6 +12,8 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     public TextMeshProUGUI tooltipText;
     public GameObject droppedAbilityPrefab;
 
+    public bool tooltipEnabled = false;
+
     [HideInInspector]
     public Ability ability = null;
     [HideInInspector]
@@ -76,7 +78,7 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     #region POINTER_CALLBACKS
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(ability == null)
+        if(ability == null || !tooltipEnabled)
         {
             return;
         }
@@ -113,10 +115,10 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     {
         canvas.blocksRaycasts = true;
         dropTimer = DROP_TIMER_RESET_COOLDOWN;
-        if(droppedOutsideUI)
-        {
-            CreateDroppedAbilityObject(ability, true);
-        }
+        // if(droppedOutsideUI)
+        // {
+        //     CreateDroppedAbilityObject(ability, true);
+        // }
     }
 
     public void CreateDroppedAbilityObject(Ability a, bool removeFromPlayerAbilities = false)
@@ -163,8 +165,8 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
         dropTimer = 0.0f;
         slot.Initialize(this);
         controllingSlot = slot;
-        transform.SetParent(slot.transform, false);
-        rect.localPosition = Vector3.zero;
+        transform.SetParent(slot.dropTarget.transform, false);
+        rect.anchoredPosition = Vector2.zero;
         ConfirmDrop();
     }
 }

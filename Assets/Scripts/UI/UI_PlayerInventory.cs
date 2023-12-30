@@ -12,16 +12,12 @@ public class UI_PlayerInventory : MonoBehaviour
 
     private List<GameObject> slots = new List<GameObject>();
     private List<GameObject> playerAbilityObjects = new List<GameObject>();
-    private List<GameObject> groundAbilityObjects = new List<GameObject>();
 
     private PlayerAbilities playerAbilities;
-    private List<GameObject> groundAbilities;
-    private float interactRadius;
 
     private RectTransform rectTransform;
     private GridLayoutGroup gridGroup;
     private GameObject playerInventoryGameObject;
-    private GameObject groundInventoryGameObject;
 
     private float cachedX, cachedY;
 
@@ -32,16 +28,14 @@ public class UI_PlayerInventory : MonoBehaviour
         {
             playerInventoryGameObject.gameObject.SetActive(false);
         }
-        groundInventoryGameObject = transform.parent.GetChild(1).gameObject;
         gridGroup = GetComponent<GridLayoutGroup>();
         rectTransform = GetComponent<RectTransform>();
         
         cachedX = cachedY = -1;
     }
-    public void Setup(PlayerAbilities pa, float ir)
+    public void Setup(PlayerAbilities pa)
     {
         playerAbilities = pa;
-        interactRadius = ir;
         Recalculate();
     }
 
@@ -73,12 +67,6 @@ public class UI_PlayerInventory : MonoBehaviour
 
     public void Recalculate()
     {
-        var cols = Physics2D.OverlapCircleAll(playerAbilities.transform.position, interactRadius, LayerMask.GetMask("GroundAbilities"));
-        List<GameObject> groundAbilities = new List<GameObject>();
-        foreach (var c in cols)
-        {
-            groundAbilities.Add(c.gameObject);
-        }
         for (int x = slots.Count - 1; x >= 0; --x)
         {
             Destroy(slots[x]);
@@ -89,9 +77,8 @@ public class UI_PlayerInventory : MonoBehaviour
             Destroy(playerAbilityObjects[x]);
         }
         playerAbilityObjects.Clear();
-        groundAbilityObjects.Clear();
-        GenerateSlots(groundAbilities);
-        GenerateAbilities(groundAbilities);
+        GenerateSlots();
+        GenerateAbilities();
     }
 
     private void Update()
@@ -105,10 +92,9 @@ public class UI_PlayerInventory : MonoBehaviour
         }
     }
 
-    void GenerateSlots(List<GameObject> groundAbilities)
+    void GenerateSlots()
     {
-        int x = 0;
-        for (x = 0; x < AbilitySlot.MAX.AsInt(); ++x)
+        for (int x = 0; x < AbilitySlot.MAX.AsInt(); ++x)
         {
             UI_Slot temp = Instantiate(slotPrefab).GetComponent<UI_Slot>();
             temp.abilitySlotIndex = (AbilitySlot)x;
@@ -118,17 +104,6 @@ public class UI_PlayerInventory : MonoBehaviour
             temp.name = "SLOT " + x;
             temp.controller = this;
         }
-        int offset = x;
-        for (x = 0; x < groundAbilities.Count; ++x)
-        {
-            UI_Slot temp = Instantiate(slotPrefab).GetComponent<UI_Slot>();
-            temp.abilitySlotIndex = AbilitySlot.DROPPED_ABILITY;
-            temp.OnAbilityDropped += OnDropAbility;
-            slots.Add(temp.gameObject);
-            temp.transform.SetParent(groundInventoryGameObject.transform, false);
-            temp.name = "GROUND SLOT " + x;
-            temp.controller = this;
-        }
         GridSizing();
     }
 
@@ -136,22 +111,24 @@ public class UI_PlayerInventory : MonoBehaviour
     {
         Rect rect = rectTransform.rect;
         if (playerAbilities == null)
+        {
             return;
-        var w = rect.width / (float)(playerAbilities.abilities.Length + 1);
-        var h = rect.height;
-        if (w > h)
-        {
-            gridGroup.cellSize = new Vector2(h, h);
         }
-        else
+        var w = rect.width;
+        var h = rect.height / (float)(playerAbilities.abilities.Length + 1);
+        // if (w > h)
         {
-            gridGroup.cellSize = new Vector2(w, w);
+            gridGroup.cellSize = new Vector2(w, h);
         }
-        gridGroup.spacing = new Vector2(w / (float)playerAbilities.abilities.Length, h);
+        // else
+        // {
+        //     gridGroup.cellSize = new Vector2(w, w);
+        // }
+        gridGroup.spacing = new Vector2(w, h / (float)playerAbilities.abilities.Length);
         transform.hasChanged = false;
     }
 
-    void GenerateAbilities(List<GameObject> groundAbilities)
+    void GenerateAbilities()
     {
         for (int x = 0; x < playerAbilities.abilities.Length; ++x)
         {
@@ -160,16 +137,6 @@ public class UI_PlayerInventory : MonoBehaviour
             playerAbilityObjects.Add(temp.gameObject);
             temp.SetSlot(slots[x], false);
             temp.name = "ABILITY " + x;
-        }
-        int OFFSET = AbilitySlot.MAX.AsInt();
-        for (int x = 0; x < groundAbilities.Count; ++x)
-        {
-            UI_Ability temp = Instantiate(abilityPrefab).GetComponent<UI_Ability>();
-            DroppedAbility da = groundAbilities[x].GetComponent<DroppedAbility>();
-            temp.Setup(da.ability, groundAbilities[x]);
-            groundAbilityObjects.Add(temp.gameObject);
-            temp.SetSlot(slots[x + OFFSET], false);
-            temp.name = "ABILITY " + (x + OFFSET);
         }
     }
 
@@ -187,7 +154,7 @@ public class UI_PlayerInventory : MonoBehaviour
         }
         if(newAbilitySlot == AbilitySlot.DROPPED_ABILITY)
         {
-            newAbility.CreateDroppedAbilityObject(null, true);
+            // newAbility.CreateDroppedAbilityObject(null, true);
             return;
         }
         InGameUIManager.instance.RevokeCallbacks();

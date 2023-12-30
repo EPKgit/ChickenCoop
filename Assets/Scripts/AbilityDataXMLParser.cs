@@ -224,8 +224,8 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             Debug.LogError("ERROR: FAILED TO FIND XML DATA FOR ABILITY:\"" + a.GetType().Name + "\"");
             return false;
         }
-        a.name = entry.name;
-        a.tooltipDescription = entry.tooltip;
+        a.abilityName = entry.name;
+        a.SetTooltip(entry.tooltip);
         foreach (AbilityXMLVariable variable in entry.vars)
         {
             var nameArray = CommonRenames(variable.name);

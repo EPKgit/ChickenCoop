@@ -61,7 +61,11 @@ public abstract class Ability : ScriptableObject
     /// <summary>
     /// The ability tooltip to be displayed when the ability is moused over in a menu
     /// </summary>
-    public string tooltipDescription;
+    public string tooltipDescription
+    {
+        get { return GetTooltip(); }
+    }
+    private string _tooltipDescription;
 
     /// <summary>
     /// Tag set that apply to what this ability is
@@ -570,23 +574,28 @@ public abstract class Ability : ScriptableObject
     public string GetTooltip()  
     {
         ValidateTooltip();
-        return tooltipDescription;
+        return _tooltipDescription;
+    }
+
+    public void SetTooltip(string s)
+    {
+        _tooltipDescription = s;
     }
 
     private void ValidateTooltip()
     {
-        int i1 = tooltipDescription.IndexOf('{');
+        int i1 = _tooltipDescription.IndexOf('{');
         int i2;
         int failSafe = -2;
         while(i1 != -1 && failSafe != i1)
         {
-            i2 = tooltipDescription.IndexOf('}', i1);
-            string variableName = tooltipDescription.Substring(i1, i2 - i1 + 1);
+            i2 = _tooltipDescription.IndexOf('}', i1);
+            string variableName = _tooltipDescription.Substring(i1, i2 - i1 + 1);
             
-            tooltipDescription = tooltipDescription.Replace(variableName, GetStringValueOfMember(variableName));
+            _tooltipDescription = _tooltipDescription.Replace(variableName, GetStringValueOfMember(variableName));
 
             failSafe = i1;
-            i1 = tooltipDescription.IndexOf('{');
+            i1 = _tooltipDescription.IndexOf('{');
             if(failSafe == i1)
             {
                 throw new System.Exception("ERROR: TOOLTIP FOR ABILITY WITH ID:" + ID + "INVALID");
