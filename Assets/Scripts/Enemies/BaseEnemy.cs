@@ -266,6 +266,10 @@ public abstract class BaseEnemy : BaseMovement
 #if UNITY_EDITOR
 	private void OnDrawGizmosSelected()
     {
+		if(movementSprings == null)
+		{
+			return;
+		}
 		foreach(EnemySpring spring in movementSprings)
         {
 			spring.DrawGizmo();

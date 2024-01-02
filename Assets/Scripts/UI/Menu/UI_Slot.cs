@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UI;
 
 public class UI_Slot : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class UI_Slot : MonoBehaviour
     public UI_DropHandler dropTarget;
     public TextMeshProUGUI titleTextComponent;
     public TextMeshProUGUI tooltipTextComponent;
+    public Toggle[] upgradeButtons;
 
     /// <summary>
     /// Which slot does this ability represent in the UI for the player ability set
@@ -29,7 +31,6 @@ public class UI_Slot : MonoBehaviour
         {
             OnAbilityDropped(abilitySlotIndex, AbilitySlot.INVALID, _controlledAbility, value);
             _controlledAbility = value;
-            
         }
     }
     private UI_Ability _controlledAbility;
@@ -41,6 +42,25 @@ public class UI_Slot : MonoBehaviour
             Debug.LogError("ERROR: drop target for ability slot is not set");
         }
         dropTarget.OnItemDropped += OnDrop;
+
+        if (upgradeButtons.Length != Ability.AbilityUpgradeSlot.MAX.intValue())
+        {
+            Debug.LogError("Error: not enough buttons supplied to match the number of upgrades");
+        }
+        for(int x = 0; x < upgradeButtons.Length; ++x)
+        {
+            int lambdaCapture = x;
+            upgradeButtons[x].onValueChanged.AddListener((state) => OnUpgradeButtonPressed(lambdaCapture, state));
+        }
+    }
+
+    public void OnUpgradeButtonPressed(int index, bool state)
+    {
+        _controlledAbility.ability.ToggleAbilityUpgrade((Ability.AbilityUpgradeSlot)index);
+        //if(_controlledAbility.ability.GetAbilityUpgradeStatus(Ability.AbilityUpgradeSlot)index)))
+        //{
+            //upgradeButtons[index].
+        //}
     }
 
     public void OnDrop(GameObject droppedObject)
@@ -65,6 +85,10 @@ public class UI_Slot : MonoBehaviour
         {
             titleTextComponent.text = _controlledAbility.ability.abilityName;
             tooltipTextComponent.text = _controlledAbility.ability.GetTooltip();
+            for(int x = 0; x < Ability.AbilityUpgradeSlot.MAX.intValue(); ++x)
+            {
+                upgradeButtons[x].SetIsOnWithoutNotify(_controlledAbility.ability.GetAbilityUpgradeStatus((Ability.AbilityUpgradeSlot)x));
+            }
         }
     }
 }

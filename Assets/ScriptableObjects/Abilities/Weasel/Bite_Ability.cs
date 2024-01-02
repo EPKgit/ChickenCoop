@@ -44,7 +44,7 @@ public class Bite_Ability : Ability
         col.GetComponent<IDamagable>().Damage
         (
             HealthChangeData.GetBuilder()
-                .Damage(damage)
+                .Damage(damage + (upgradeStatus[0] ? 1 : 0) + (upgradeStatus[1] ? 1 : 0) + (upgradeStatus[2] ? 1 : 0))
                 .BothSources(playerAbilities.gameObject)
                 .Target(col.gameObject)
                 .KnockbackData(knockbackPreset)

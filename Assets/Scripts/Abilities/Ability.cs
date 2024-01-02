@@ -46,6 +46,14 @@ public abstract class Ability : ScriptableObject
     public event MutableCooldownTickDelegate preCooldownTick = delegate { };
     public event CooldownTickDelegate cooldownTick = delegate { };
 
+    public enum AbilityUpgradeSlot
+    {
+        RED,
+        BLUE,
+        YELLOW,
+        MAX,
+    }
+
 
     /// <summary>
     /// The ID that this ability uses to identify itself in the xml, multiple instances of the same variant of this ability will share an ID. 
@@ -53,6 +61,8 @@ public abstract class Ability : ScriptableObject
     /// </summary>
     public uint ID = 0;
 
+
+    #region ABILITY_ASSET_DATA
     /// <summary>
     /// The name of this ability 
     /// </summary>
@@ -204,7 +214,10 @@ public abstract class Ability : ScriptableObject
     /// </summary>
     public float aoe = -1;
 
+#endregion
+
     protected PlayerAbilities playerAbilities;
+    protected bool[] upgradeStatus;
 
     private int InstanceID;
     private List<GameplayTagInternals.GameplayTagID> appliedTagIDs;
@@ -217,6 +230,7 @@ public abstract class Ability : ScriptableObject
     {
         playerAbilities = pa;
         appliedTagIDs = new List<GameplayTagInternals.GameplayTagID>();
+        upgradeStatus = new bool[(int)AbilityUpgradeSlot.MAX];
         Reinitialize();
         currentCooldownTimer    = 0;
         currentRecastTimer      = 0;
@@ -250,6 +264,57 @@ public abstract class Ability : ScriptableObject
     {
         currentDuration = maxDuration;
         appliedTagIDs.Clear();
+    }
+
+    /// <summary>
+    /// Upgrades the ability on the slot passed in, will fail if it's already upgraded on that slot
+    /// </summary>
+    /// <param name="slot">The slot of the upgrade to give the ability</param>
+    /// <returns>True if the ability was upgraded, false if it already was</returns>
+    public virtual bool UpgradeAbility(AbilityUpgradeSlot slot)
+    {
+        if (upgradeStatus[(int)slot])
+        {
+            Debug.LogError("Error: ability attempted to be upgraded in the same fashion twice");
+            return false;
+        }
+        upgradeStatus[(int)slot] = true;
+        return true;
+    }
+
+    /// <summary>
+    /// Removes the upgrade of the ability on the slot passed in, will fail if it wasn't upgraded on that slot
+    /// </summary>
+    /// <param name="slot">The slot of the upgrade to remove</param>
+    /// <returns>True if the ability was downgraded, false if it already was</returns>
+    public virtual bool DownGradeAbility(AbilityUpgradeSlot slot)
+    {
+        if (!upgradeStatus[(int)slot])
+        {
+            Debug.LogError("Error: ability attempted to be downgraded in the same fashion twice");
+            return false;
+        }
+        upgradeStatus[(int)slot] = false;
+        return true;
+    }
+
+    /// <summary>
+    /// Swaps the ability upgrade status on the upgrade slot passed in
+    /// </summary>
+    /// <param name="slot">The upgrade slot to swap</param>
+    public virtual void ToggleAbilityUpgrade(AbilityUpgradeSlot slot)
+    {
+        upgradeStatus[(int)slot] = !upgradeStatus[(int)slot];
+    }
+
+    /// <summary>
+    /// Get the upgrade status of the abilty on a certain slot
+    /// </summary>
+    /// <param name="slot">The slot to check</param>
+    /// <returns>True if the ability is upgraded on that slot, false otherwise</returns>
+    public bool GetAbilityUpgradeStatus(AbilityUpgradeSlot slot)
+    {
+        return upgradeStatus[(int)slot];
     }
 
     /// <summary>
