@@ -30,7 +30,7 @@ public class FogVisionGrid
         width = (int)(displayCamera.aspect * height);
         halfWidth = (int)(width * 0.5f);
         halfHeight = (int)(height * 0.5f);
-        texture.Resize(width, height);
+        texture.Reinitialize(width, height);
         visionValues = new byte[width, height];
     }
 

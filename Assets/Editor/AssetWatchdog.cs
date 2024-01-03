@@ -12,7 +12,7 @@ public class AssetWatchdog : AssetPostprocessor
         foreach (string str in importedAssets)
         {
             string[] splitStr = str.Split('/', '.');
-            if(str.Length <= 1)
+            if(str.Length <= 2)
             {
                 continue;
             }

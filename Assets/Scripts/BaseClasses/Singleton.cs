@@ -50,7 +50,6 @@ public abstract class MonoSingleton<T> : SingletonMonoStub where T : MonoSinglet
                 {
                     _instance = SingletonHelpers.managerObject.AddComponent(typeof(T)) as T;
                 }
-                _instance.OnCreation();
             }
             return _instance;
         }
