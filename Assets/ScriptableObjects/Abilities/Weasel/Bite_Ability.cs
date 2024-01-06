@@ -9,6 +9,7 @@ public class Bite_Ability : Ability
     public float hitboxDuration = 0.25f;
     public float hitboxRadius = 0.5f;
     public KnockbackPreset knockbackPreset;
+    public GameObject biteVFX;
 
     // RED UPGRADE
     public float stunDuration = 1.0f;
@@ -46,6 +47,8 @@ public class Bite_Ability : Ability
                 .Radius(hitboxRadius)
                 .Finalize()
         );
+        PoolManager.instance.RequestObject(biteVFX).transform.position = targetingData.inputPoint;
+
     }
 
     void HitboxCallback(Collider2D col)

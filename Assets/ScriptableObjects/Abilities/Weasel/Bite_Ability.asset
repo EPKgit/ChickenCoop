@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 102
   abilityName: 
-  tooltipDescription: 
   abilityTags:
     tags:
     - ID:
@@ -47,4 +46,8 @@ MonoBehaviour:
   damage: 1
   hitboxDuration: 0.25
   hitboxRadius: 0.5
-  knckbackPreset: 0
+  knockbackPreset: 0
+  biteVFX: {fileID: 1018918628547429837, guid: 430493b4c7747b347955dae58eb83b2f, type: 3}
+  stunDuration: 1
+  multiHit: 2
+  otherAbilityCooldownTick: 1

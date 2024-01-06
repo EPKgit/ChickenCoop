@@ -20,7 +20,7 @@ public class DebugFlags
         RENDER = 0,
         ABILITYQUEUE = 0,
         HITBOXES_EDITOR_ALWAYS = 0,
-        HITBOXES_IN_GAME = 1,
+        HITBOXES_IN_GAME = 0,
     }
 
     public static void Log(Flags flag, string printString)
