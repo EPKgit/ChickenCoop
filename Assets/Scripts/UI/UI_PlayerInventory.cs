@@ -67,6 +67,10 @@ public class UI_PlayerInventory : MonoBehaviour
 
     public void Recalculate()
     {
+        for(int x = transform.childCount - 1; x >= 0; --x)
+        {
+            Destroy(transform.GetChild(x).gameObject);
+        }
         for (int x = slots.Count - 1; x >= 0; --x)
         {
             Destroy(slots[x]);

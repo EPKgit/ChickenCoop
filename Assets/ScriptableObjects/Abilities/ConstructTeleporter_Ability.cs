@@ -5,7 +5,7 @@ using UnityEngine;
 public class ConstructTeleporter_Ability : Ability
 {
     public GameObject teleporterPadPrefab;
-    private int tpUses;
+    public int tpUses;
     private GameObject pad1;
     private GameObject pad2;
 

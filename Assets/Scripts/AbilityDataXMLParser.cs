@@ -11,14 +11,25 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     {
         public uint ID;
         public string name;
-        public string tooltip;
+        public List<AbilityXMLTooltip> tooltips;
         public List<AbilityXMLVariable> vars;
-        public AbilityXMLDataEntry(uint i, string n, string t)
+        public AbilityXMLDataEntry(uint i, string n)
         {
             ID = i;
             name = n;
-            tooltip = t;
+            tooltips = new List<AbilityXMLTooltip>();
             vars = new List<AbilityXMLVariable>();
+        }
+    }
+
+    private class AbilityXMLTooltip
+    {
+        public string type;
+        public string text;
+        public AbilityXMLTooltip(string ty, string te)
+        {
+            type = ty;
+            text = te;
         }
     }
 
@@ -50,7 +61,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         loadedTable = false;
         ParseXMLData();
     }
-    
+
     //TODO MAKE THREAD SAFE
     void ParseXMLData()
     {
@@ -76,17 +87,21 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         }
         var uniqueAbilityIDTable = new Dictionary<uint, bool>();
         table = new Dictionary<uint, AbilityXMLDataEntry>();
-        var root = doc["root"];
+        var root = doc["ability_list"];
         foreach (XmlElement ability in root.ChildNodes)
         {
             uint ability_ID = Convert.ToUInt32(ability["ability_ID"].InnerText);
-            if(uniqueAbilityIDTable.ContainsKey(ability_ID))
+            if (uniqueAbilityIDTable.ContainsKey(ability_ID))
             {
-
+                Debug.LogError("ERROR: duplicate ability ids found");
+                continue;
             }
             string ability_name = ability["ability_name"].InnerText;
-            string tooltip = ability["tooltip"].InnerText;
-            AbilityXMLDataEntry data = new AbilityXMLDataEntry(ability_ID, ability_name, tooltip);
+            AbilityXMLDataEntry data = new AbilityXMLDataEntry(ability_ID, ability_name);
+            foreach (XmlElement tooltip in ability["tooltip_list"].ChildNodes)
+            {
+                data.tooltips.Add(new AbilityXMLTooltip(tooltip.GetAttribute("type"), tooltip.GetAttribute("text")));
+            };
             foreach (XmlElement variable in ability["var_list"].ChildNodes)
             {
                 data.vars.Add(new AbilityXMLVariable(variable.GetAttribute("name"), variable.GetAttribute("value"), variable.GetAttribute("type")));
@@ -146,6 +161,14 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         { "dur", "maxDuration:currentDuration" },
         { "recasts", "numberTimesRecastable" },
         { "recastNum", "numberTimesRecastable" },
+    };
+
+    private static Dictionary<string, Ability.AbilityUpgradeSlot> abilityUpgradeLookup = new Dictionary<string, Ability.AbilityUpgradeSlot>()
+    {
+        { "default", Ability.AbilityUpgradeSlot.DEFAULT },
+        { "red", Ability.AbilityUpgradeSlot.RED },
+        { "blue", Ability.AbilityUpgradeSlot.BLUE },
+        { "yellow", Ability.AbilityUpgradeSlot.YELLOW },
     };
 
     public static string[] CommonRenames(string startingName)
@@ -225,7 +248,10 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             return false;
         }
         a.abilityName = entry.name;
-        a.SetTooltip(entry.tooltip);
+        foreach(AbilityXMLTooltip tooltip in entry.tooltips)
+        {
+            a.SetTooltip(abilityUpgradeLookup[tooltip.type], tooltip.text);
+        }
         foreach (AbilityXMLVariable variable in entry.vars)
         {
             var nameArray = CommonRenames(variable.name);

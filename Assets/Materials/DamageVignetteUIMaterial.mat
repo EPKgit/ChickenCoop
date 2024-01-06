@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: VignetteUIMaterial
+  m_Name: DamageVignetteUIMaterial
   m_Shader: {fileID: -6465566751694194690, guid: 6ffee5271879f23448796c242d5f69d6, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []

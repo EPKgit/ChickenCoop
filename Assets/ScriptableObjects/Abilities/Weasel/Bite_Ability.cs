@@ -10,6 +10,15 @@ public class Bite_Ability : Ability
     public float hitboxRadius = 0.5f;
     public KnockbackPreset knockbackPreset;
 
+    // RED UPGRADE
+    public float stunDuration = 1.0f;
+
+    // BLUE UPGRADE
+    public int multiHit = 2;
+
+    // YELLOW UPGRADE
+    public float otherAbilityCooldownTick = 1.0f;
+
     public override void Initialize(PlayerAbilities pa)
 	{
 		base.Initialize(pa);
@@ -41,14 +50,37 @@ public class Bite_Ability : Ability
 
     void HitboxCallback(Collider2D col)
     {
-        col.GetComponent<IDamagable>().Damage
-        (
-            HealthChangeData.GetBuilder()
-                .Damage(damage + (upgradeStatus[0] ? 1 : 0) + (upgradeStatus[1] ? 1 : 0) + (upgradeStatus[2] ? 1 : 0))
-                .BothSources(playerAbilities.gameObject)
-                .Target(col.gameObject)
-                .KnockbackData(knockbackPreset)
-                .Finalize()
-        );
+        IDamagable damageInterface = col.GetComponent<IDamagable>();
+        if(damageInterface == null)
+        {
+            return;
+        }
+
+        int hitCount = GetAbilityUpgradeStatus(AbilityUpgradeSlot.BLUE) ? multiHit : 1;
+        for (int x = 0; x < hitCount; ++x)
+        {
+            damageInterface.Damage
+            (
+                HealthChangeData.GetBuilder()
+                    .Damage(damage)
+                    .BothSources(playerAbilities.gameObject)
+                    .Target(col.gameObject)
+                    //.KnockbackData(knockbackPreset)
+                    .Finalize()
+            );
+        }
+
+        if(GetAbilityUpgradeStatus(AbilityUpgradeSlot.RED))
+        {
+            StatusEffectManager.instance.ApplyEffect(damageInterface.attached, Statuses.StatusEffectType.STUN, stunDuration);
+        }
+
+        if (GetAbilityUpgradeStatus(AbilityUpgradeSlot.YELLOW))
+        {
+            foreach (Ability a in playerAbilities.abilities)
+            {
+                a.Cooldown(otherAbilityCooldownTick);
+            }
+        }
     }
 }

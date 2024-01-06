@@ -11,7 +11,8 @@ public class UI_Slot : MonoBehaviour
 
     public UI_DropHandler dropTarget;
     public TextMeshProUGUI titleTextComponent;
-    public TextMeshProUGUI tooltipTextComponent;
+    public TextMeshProUGUI defaultTooltipText;
+    public TextMeshProUGUI[] upgradeTooltipTexts;
     public Toggle[] upgradeButtons;
 
     /// <summary>
@@ -79,14 +80,15 @@ public class UI_Slot : MonoBehaviour
         if(_controlledAbility == null)
         {
             titleTextComponent.text = "";
-            tooltipTextComponent.text = "";
+            defaultTooltipText.text = "";
         }
         else
         {
             titleTextComponent.text = _controlledAbility.ability.abilityName;
-            tooltipTextComponent.text = _controlledAbility.ability.GetTooltip();
+            defaultTooltipText.text = _controlledAbility.ability.GetTooltip(Ability.AbilityUpgradeSlot.DEFAULT);
             for(int x = 0; x < Ability.AbilityUpgradeSlot.MAX.intValue(); ++x)
             {
+                upgradeTooltipTexts[x].text = _controlledAbility.ability.GetTooltip((Ability.AbilityUpgradeSlot)x);
                 upgradeButtons[x].SetIsOnWithoutNotify(_controlledAbility.ability.GetAbilityUpgradeStatus((Ability.AbilityUpgradeSlot)x));
             }
         }

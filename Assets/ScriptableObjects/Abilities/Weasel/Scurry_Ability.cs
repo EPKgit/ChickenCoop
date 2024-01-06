@@ -8,7 +8,7 @@ public class Scurry_Ability : Ability
     public float movementSpeedMultiplier = 1.5f;
     public float damageMultiplier = 2.0f;
 
-    private uint? invisStatusHandle;
+    private uint? movementSpeedBonusHandle;
     private uint? dmgStatusHandle;
     private StatBlock statBlock;
     public override void Initialize(PlayerAbilities pa)
@@ -17,7 +17,7 @@ public class Scurry_Ability : Ability
         statBlock = pa.stats;
         pa.postAbilityCastEvent += OnPostAbilityCast;
     }
-
+    
     public override void Cleanup(PlayerAbilities pa)
     {
         base.Cleanup(pa);
@@ -27,7 +27,7 @@ public class Scurry_Ability : Ability
     protected override void UseAbility()
     {
         base.UseAbility();
-        invisStatusHandle = statBlock.GetStat(StatName.MovementSpeed)?.AddMultiplicativeModifier(movementSpeedMultiplier);
+        movementSpeedBonusHandle = statBlock.GetStat(StatName.MovementSpeed)?.AddMultiplicativeModifier(movementSpeedMultiplier);
         dmgStatusHandle = statBlock.GetStat(StatName.DamagePercentage)?.AddMultiplicativeModifier(damageMultiplier);
     }
 
@@ -42,10 +42,10 @@ public class Scurry_Ability : Ability
     public override void FinishAbility()
     {
         base.FinishAbility();
-        if(invisStatusHandle.HasValue)
+        if(movementSpeedBonusHandle.HasValue)
         {
-            statBlock.GetStat(StatName.MovementSpeed)?.RemoveMultiplicativeModifier(invisStatusHandle.Value);
-            invisStatusHandle = null;
+            statBlock.GetStat(StatName.MovementSpeed)?.RemoveMultiplicativeModifier(movementSpeedBonusHandle.Value);
+            movementSpeedBonusHandle = null;
         }
         if (dmgStatusHandle.HasValue)
         {

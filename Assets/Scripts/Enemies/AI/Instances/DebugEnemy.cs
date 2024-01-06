@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using EnemyBehaviourSyntax;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -10,12 +11,6 @@ public class DebugEnemy : BaseEnemy
     protected override void Awake()
     {
         base.Awake();
+        updateList.Add(new EnemyBehaviourAction().Do(StopMovement));
     }
-
-    protected override void Update()
-	{
-        //if (!base.UpdateMovement() || !CanMove())
-        //{
-        //}
-	}
 }

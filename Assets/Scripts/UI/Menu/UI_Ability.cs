@@ -82,7 +82,7 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
         {
             return;
         }
-        tooltipText.text = ability.GetTooltip();
+        tooltipText.text = ability.GetTooltip(Ability.AbilityUpgradeSlot.DEFAULT);
         tooltipObject.SetActive(true);
     }
 
@@ -115,10 +115,10 @@ public class UI_Ability : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     {
         canvas.blocksRaycasts = true;
         dropTimer = DROP_TIMER_RESET_COOLDOWN;
-        // if(droppedOutsideUI)
-        // {
-        //     CreateDroppedAbilityObject(ability, true);
-        // }
+        if(droppedOutsideUI)
+        {
+            //     CreateDroppedAbilityObject(ability, true);
+        }
     }
 
     public void CreateDroppedAbilityObject(Ability a, bool removeFromPlayerAbilities = false)

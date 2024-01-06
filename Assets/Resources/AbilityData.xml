@@ -1,193 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE root SYSTEM "AbilityData.dtd">
-<root>
-    <ability>
-        <ability_ID>1</ability_ID>
-        <ability_name>Egg Toss</ability_name>
-        <tooltip>Shoots an egg in targeted direction dealing {damage} damage to the first enemy hit</tooltip>
-        <var_list>
-            <variable name="dmg" type="float" value="1"/>
-            <variable name="cd" type="float" value="1"/>
-        </var_list>
-    </ability>
+<ability_list
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="AbilityData.xsd">
+	<ability>
+		<ability_ID>1</ability_ID>
+		<ability_name>Egg Toss</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Shoots an egg in targeted direction dealing {damage} damage to the first enemy hit"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="dmg" type="float" value="1"/>
+			<variable name="cd" type="float" value="1"/>
+		</var_list>
+	</ability>
 
-    <!--XML XML XML |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<!--XML XML XML |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <ability>
-        <ability_ID>2</ability_ID>
-        <ability_name>Bombard</ability_name>
-        <tooltip>Launch an explosive egg towards target area which explodes on landing dealing {dmg} damage in a {aoe} unit AOE</tooltip>
-        <var_list>
-            <variable name="dmg" type="float" value="9"/>
-            <variable name="cd" type="float" value="8"/>
-            <variable name="aoe" type="float" value="2"/>
-        </var_list>
-    </ability>
-    
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>2</ability_ID>
+		<ability_name>Bombard</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Launch an explosive egg towards target area which explodes on landing dealing {dmg} damage in a {aoe} unit AOE"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="dmg" type="float" value="9"/>
+			<variable name="cd" type="float" value="8"/>
+			<variable name="aoe" type="float" value="2"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>3</ability_ID>
-        <ability_name>Rooster Slide</ability_name>
-        <tooltip>Dash for {range} units over {duration}s in a target direction</tooltip>
-        <var_list>
-            <variable name="cd" type="float" value="5"/>
-            <variable name="duration" type="float" value="0.1"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>3</ability_ID>
+		<ability_name>Rooster Slide</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Dash for {range} units over {duration}s in a target direction"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="5"/>
+			<variable name="duration" type="float" value="0.1"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>4</ability_ID>
-        <ability_name>Hen Heal</ability_name>
-        <tooltip>Heal a targeted unit for {amount} health</tooltip>
-        <var_list>
-            <variable name="cd" type="float" value="10"/>
-            <variable name="amount" type="float" value="5"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>4</ability_ID>
+		<ability_name>Hen Heal</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Heal a targeted unit for {amount} health"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="10"/>
+			<variable name="amount" type="float" value="5"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>5</ability_ID>
-        <ability_name>Egg Popping</ability_name>
-        <tooltip>Everytime you cast an ability, decrease all cooldowns by {amount}s</tooltip>
-        <var_list>
-            <variable name="amount" type="float" value="0.5"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>5</ability_ID>
+		<ability_name>Egg Popping</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Everytime you cast an ability, decrease all cooldowns by {amount}s"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="amount" type="float" value="0.5"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>6</ability_ID>
-        <ability_name>Cooped Up</ability_name>
-        <tooltip>Destroy all enemy projectiles in an {aoe} unit AOE for the next {duration}s</tooltip>
-        <var_list>
-            <variable name="cd" type="float" value="2"/>
-            <variable name="aoe" type="float" value="3"/>
-            <variable name="duration" type="float" value="0.15"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>6</ability_ID>
+		<ability_name>Cooped Up</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Destroy all enemy projectiles in an {aoe} unit AOE for the next {duration}s"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="2"/>
+			<variable name="aoe" type="float" value="3"/>
+			<variable name="duration" type="float" value="0.15"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>7</ability_ID>
-        <ability_name>Bonk</ability_name>
-        <tooltip>Stun targeted enemy for {stunDuration}s</tooltip>
-        <var_list>
-            <variable name="cd" type="float" value="1"/>
-            <variable name="stunDuration" type="float" value="2.0"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>7</ability_ID>
+		<ability_name>Bonk</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Stun targeted enemy for {stunDuration}s"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="1"/>
+			<variable name="stunDuration" type="float" value="2.0"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>8</ability_ID>
-        <ability_name>Teleport</ability_name>
-        <tooltip>Teleports to target location, recast to return to your original position</tooltip>
-        <var_list>
-            <variable name="cd" type="float" value="10"/>
-            <!-- <variable name="range" type="float" value="7.0"/> -->
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>8</ability_ID>
+		<ability_name>Teleport</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Teleports to target location, recast to return to your original position"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="10"/>
+			<!-- <variable name="range" type="float" value="7.0"/> -->
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>9</ability_ID>
-        <ability_name>Repeatable Dash</ability_name>
-        <tooltip>Dash {range} units in a target direction, recastable {recasts} more times</tooltip>
-        <var_list>
-            <variable name="recasts" type="int" value="3"/>
-            <variable name="cd" type="float" value="10"/>
-            <variable name="duration" type="float" value="0.1"/>
-            <variable name="recastWindow" type="float" value="3"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>9</ability_ID>
+		<ability_name>Repeatable Dash</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Dash {range} units in a target direction, recastable {recasts} more times"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="recasts" type="int" value="3"/>
+			<variable name="cd" type="float" value="10"/>
+			<variable name="duration" type="float" value="0.1"/>
+			<variable name="recastWindow" type="float" value="3"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>10</ability_ID>
-        <ability_name>Shockwave</ability_name>
-        <tooltip>Unleash a shockwave, dealing {dmg} damage and stunning nearby enemies for {stunDuration}s</tooltip>
-        <var_list>
-            <variable name="cd" type="float" value="20"/>
-            <variable name="stunDuration" type="float" value="1.5"/>
-            <variable name="damage" type="float" value="20"/>
-            <variable name="aoe" type="float" value="10"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>10</ability_ID>
+		<ability_name>Shockwave</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Unleash a shockwave, dealing {dmg} damage and stunning nearby enemies for {stunDuration}s"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="20"/>
+			<variable name="stunDuration" type="float" value="1.5"/>
+			<variable name="damage" type="float" value="20"/>
+			<variable name="aoe" type="float" value="10"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>11</ability_ID>
-        <ability_name>Tick Cluck</ability_name>
-        <tooltip>Every {NumAbilitiesBeforeReset} abilities causes the next ability cooldown to be set to {SetCDTo}s</tooltip>
-        <var_list>
-            <variable name="SetCDTo" type="float" value="0.5"/>
-            <variable name="NumAbilitiesBeforeReset" type="int" value="5"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>11</ability_ID>
+		<ability_name>Tick Cluck</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Every {NumAbilitiesBeforeReset} abilities causes the next ability cooldown to be set to {SetCDTo}s"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="SetCDTo" type="float" value="0.5"/>
+			<variable name="NumAbilitiesBeforeReset" type="int" value="5"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>12</ability_ID>
-        <ability_name>Topsy Turvey</ability_name>
-        <tooltip>Every {interval} secondds swap between increasing your cooldowns at a {increaseMultiplier} times rate and decreasing them at {decreaseMultiplier} times rate</tooltip>
-        <var_list>
-            <variable name="increaseMultiplier" type="float" value="-3"/>
-            <variable name="decreaseMultiplier" type="float" value="5"/>
-            <variable name="interval" type="float" value="1"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>12</ability_ID>
+		<ability_name>Topsy Turvey</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Every {interval} secondds swap between increasing your cooldowns at a {increaseMultiplier} times rate and decreasing them at {decreaseMultiplier} times rate"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="increaseMultiplier" type="float" value="-3"/>
+			<variable name="decreaseMultiplier" type="float" value="5"/>
+			<variable name="interval" type="float" value="1"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>13</ability_ID>
-        <ability_name>Construct Teleporter</ability_name>
-        <tooltip>Construct a teleporter at your and target location that allows you to teleport between them with an interaction</tooltip>
-        <var_list>
-            <variable name="tpUses" type="int" value="3"/>
-            <variable name="duration" type="float" value="10"/>
-            <variable name="cd" type="float" value="10"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>13</ability_ID>
+		<ability_name>Construct Teleporter</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Construct a teleporter at your and target location that allows you to teleport between them with an interaction"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="tpUses" type="int" value="3"/>
+			<variable name="duration" type="float" value="10"/>
+			<variable name="cd" type="float" value="10"/>
+		</var_list>
+	</ability>
 
-    <ability>
-        <ability_ID>101</ability_ID>
-        <ability_name>Scurry</ability_name>
-        <tooltip>Go invisible and increase your movement speed by {movementSpeedMultiplier} times.</tooltip>
-        <var_list>
-            <variable name="movementSpeedMultiplier" type="float" value="1.5"/>
-            <variable name="damageMultiplier" type="float" value="2.0"/>
-            <variable name="duration" type="float" value="4"/>
-            <variable name="cd" type="float" value="10"/>
-        </var_list>
-    </ability>
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
-    <!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<ability>
+		<ability_ID>101</ability_ID>
+		<ability_name>Scurry</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Go invisible and increase your movement speed by {movementSpeedMultiplier} times."/>
+		</tooltip_list>
+		<var_list>
+			<variable name="movementSpeedMultiplier" type="float" value="1.5"/>
+			<variable name="damageMultiplier" type="float" value="2.0"/>
+			<variable name="duration" type="float" value="4"/>
+			<variable name="cd" type="float" value="10"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
 	<ability>
 		<ability_ID>102</ability_ID>
 		<ability_name>Chomp</ability_name>
-		<tooltip>Bite in front of you</tooltip>
+		<tooltip_list>
+			<tooltip type="default" text="Bite in front of you"/>
+			<tooltip type="red" text="and stun"/>
+			<tooltip type="blue" text="and hit twice"/>
+			<tooltip type="yellow" text="and reduce all cooldowns"/>
+		</tooltip_list>
 		<var_list>
 			<variable name="cd" type="float" value="1"/>
 			<variable name="damage" type="float" value="5"/>
 			<variable name="hitboxDuration" type="float" value="0.25"/>
 			<variable name="hitboxRadius" type="float" value="0.5"/>
 			<variable name="knockbackPreset" type="kb" value="BIG"/>
+			<variable name="stunDuration" type="float" value="1.0"/>
+			<variable name="multiHit" type="int" value="2"/>
+			<variable name="otherAbilityCooldownTick" type="float" value="1.0"/>
 		</var_list>
 	</ability>
 
@@ -196,7 +233,9 @@
 	<ability>
 		<ability_ID>103</ability_ID>
 		<ability_name>Swipe</ability_name>
-		<tooltip>Swipe in a cone in front of you</tooltip>
+		<tooltip_list>
+			<tooltip type="default" text="Swipe in a cone in front of you"/>
+		</tooltip_list>
 		<var_list>
 			<variable name="cd" type="float" value="1"/>
 			<variable name="damage" type="float" value="20"/>
@@ -209,7 +248,9 @@
 	<ability>
 		<ability_ID>104</ability_ID>
 		<ability_name>Maul</ability_name>
-		<tooltip>Swing multiple times in front of you</tooltip>
+		<tooltip_list>
+			<tooltip type="default" text="Swing multiple times in front of you"/>
+		</tooltip_list>
 		<var_list>
 			<variable name="cd" type="float" value="1"/>
 			<variable name="damageInitial" type="float" value="10"/>
@@ -219,4 +260,4 @@
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
-</root>
+</ability_list>

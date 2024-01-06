@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5010549287683802348}
   m_RootOrder: 1
@@ -161,6 +162,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4902395437449410312}
   - {fileID: 1425095507235312441}
@@ -200,6 +202,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5010549287683802348}
   m_RootOrder: 0
@@ -277,6 +280,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5010549287683802348}
   m_Father: {fileID: 0}
@@ -340,7 +344,10 @@ MonoBehaviour:
   tooltipObject: {fileID: 4786087705940033483}
   tooltipText: {fileID: 1574730129135428351}
   droppedAbilityPrefab: {fileID: 3226570667654189279, guid: 229407b3e0e50e244afdbe9a4c4a15f0, type: 3}
+  tooltipEnabled: 0
   ability: {fileID: 0}
+  droppedAbilityObject: {fileID: 0}
+  currentSlotIndex: 0
   controllingSlot: {fileID: 0}
 --- !u!225 &8232152517597317496
 CanvasGroup:

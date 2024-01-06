@@ -48,10 +48,11 @@ public abstract class Ability : ScriptableObject
 
     public enum AbilityUpgradeSlot
     {
-        RED,
-        BLUE,
-        YELLOW,
-        MAX,
+        RED = 0,
+        BLUE = 1,
+        YELLOW = 2,
+        MAX = 3,
+        DEFAULT = 3,
     }
 
 
@@ -69,13 +70,9 @@ public abstract class Ability : ScriptableObject
     public string abilityName;
 
     /// <summary>
-    /// The ability tooltip to be displayed when the ability is moused over in a menu
+    /// The ability tooltip to be displayed when the ability is displayed in a menu
     /// </summary>
-    public string tooltipDescription
-    {
-        get { return GetTooltip(); }
-    }
-    private string _tooltipDescription;
+    private string[] tooltipDescriptions;
 
     /// <summary>
     /// Tag set that apply to what this ability is
@@ -327,7 +324,7 @@ public abstract class Ability : ScriptableObject
         if (currentCooldownTimer > 0)
         {
             ticked = true;
-            MutableCooldownTickData mpctd = new MutableCooldownTickData();
+            MutableCooldownTickData mpctd = new MutableCooldownTickData(deltaTime);
             preCooldownTick(mpctd);
             currentCooldownTimer -= mpctd.tickDelta.Value;
             if(currentCooldownTimer <= 0)
@@ -636,36 +633,50 @@ public abstract class Ability : ScriptableObject
     /// Returns a tooltip with all of the values plugged in, child classes are expected to override this with a string.format of their own variables setup
     /// </summary>
     /// <returns>the tooltip </returns>
-    public string GetTooltip()  
+    public string GetTooltip(AbilityUpgradeSlot slot)  
     {
-        ValidateTooltip();
-        return _tooltipDescription;
+        if (tooltipDescriptions == null || (int)slot > tooltipDescriptions.Length || tooltipDescriptions[(int)slot] == null)
+        {
+            return "";
+        }
+        return PopulateTooltip(slot);
     }
 
-    public void SetTooltip(string s)
+    public void SetTooltips(string[] tooltips)
     {
-        _tooltipDescription = s;
+        tooltipDescriptions = tooltips;
     }
 
-    private void ValidateTooltip()
+    public void SetTooltip(AbilityUpgradeSlot slot, string s)
     {
-        int i1 = _tooltipDescription.IndexOf('{');
+        if(tooltipDescriptions == null || (int)slot > tooltipDescriptions.Length)
+        {
+            tooltipDescriptions = new string[(int)slot + 1];
+        }
+        tooltipDescriptions[(int)slot] = s;
+    }
+
+    private string PopulateTooltip(AbilityUpgradeSlot slot)
+    {
+        string s = tooltipDescriptions[(int)slot];
+        int i1 = s.IndexOf('{');
         int i2;
         int failSafe = -2;
         while(i1 != -1 && failSafe != i1)
         {
-            i2 = _tooltipDescription.IndexOf('}', i1);
-            string variableName = _tooltipDescription.Substring(i1, i2 - i1 + 1);
-            
-            _tooltipDescription = _tooltipDescription.Replace(variableName, GetStringValueOfMember(variableName));
+            i2 = s.IndexOf('}', i1);
+            string variableName = s.Substring(i1, i2 - i1 + 1);
+
+            s = s.Replace(variableName, GetStringValueOfMember(variableName));
 
             failSafe = i1;
-            i1 = _tooltipDescription.IndexOf('{');
+            i1 = s.IndexOf('{');
             if(failSafe == i1)
             {
                 throw new System.Exception("ERROR: TOOLTIP FOR ABILITY WITH ID:" + ID + "INVALID");
             }
-        }    
+        }
+        return s;
     }
 
     private string GetStringValueOfMember(string variableName)

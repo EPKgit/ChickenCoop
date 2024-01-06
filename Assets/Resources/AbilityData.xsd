@@ -1,0 +1,76 @@
+﻿<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+elementFormDefault="qualified">
+	
+<xs:element name="ability_list">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" ref="ability"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+	
+<xs:element name="ability">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="ability_ID" type="xs:string" />
+			<xs:element name="ability_name" type="xs:string" />
+			<xs:element minOccurs="0" maxOccurs="1" ref="tooltip_list" />
+			<xs:element minOccurs="0" maxOccurs="1" ref="var_list" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+	
+<xs:element name="tooltip_list">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="unbounded" ref="tooltip" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+	
+<xs:element name="tooltip">
+	<xs:complexType>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute default="default" name="type" type="tooltipType" />
+				<xs:attribute default="tooltip text" name="text" type="xs:string" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+	
+<xs:simpleType name="tooltipType">
+	<xs:restriction base="xs:string">
+		<xs:enumeration value="default"/>
+		<xs:enumeration value="red"/>
+		<xs:enumeration value="blue"/>
+		<xs:enumeration value="yellow"/>
+	</xs:restriction>
+</xs:simpleType>
+	
+<xs:element name="var_list">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="unbounded" ref="variable" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+	
+<xs:element name="variable">
+	<xs:complexType>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="type" type="variableType" use="required" />
+		<xs:attribute name="value" type="xs:string" use="required" />
+	</xs:complexType>
+</xs:element>
+
+<xs:simpleType name="variableType">
+	<xs:restriction base="xs:string">
+		<xs:enumeration value="int"/>
+		<xs:enumeration value="float"/>
+		<xs:enumeration value="kb"/>
+	</xs:restriction>
+</xs:simpleType>
+	
+</xs:schema>
