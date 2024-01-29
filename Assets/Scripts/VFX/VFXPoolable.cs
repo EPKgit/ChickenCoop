@@ -4,9 +4,12 @@ using UnityEngine.VFX;
 public class VFXPoolable : Poolable
 {
     public bool looping = false;
+    public float fixedDuration = -1;
+
     protected VisualEffect effect;
     protected bool active = false;
     protected bool initialized = false;
+    protected float fixedTimer = 0;
     protected virtual void Awake()
     {
         effect = GetComponent<VisualEffect>();
@@ -18,6 +21,9 @@ public class VFXPoolable : Poolable
         active = true;
         initialized = false;
         effect.Play();
+        fixedTimer = 0;
+        transform.position = Vector3.zero;
+        transform.localScale = Vector3.one;
     }
 
     public void StopParticlePlaying()
@@ -38,6 +44,14 @@ public class VFXPoolable : Poolable
         if(!active)
         {
             return;
+        }
+        if (fixedDuration > 0)
+        {
+            fixedTimer += Time.deltaTime;
+            if (fixedTimer > fixedDuration)
+            {
+                Cleanup();
+            }
         }
         if (effect.aliveParticleCount != 0)
         {

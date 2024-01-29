@@ -9,16 +9,18 @@ public class HitboxChain
     public Func<Vector2> positionCallback;
     public Func<float> rotationCallback;
     public Action<Collider2D, int> onHitCallback;
+    public Action<int> onSpawnHitboxCallback;
 
     private float timer = 0;
     private int index = 0;
 
-    public HitboxChain(HitboxChainAsset d, Func<Vector2> p, Func<float> r, Action<Collider2D, int> o)
+    public HitboxChain(HitboxChainAsset d, Func<Vector2> p, Func<float> r, Action<Collider2D, int> onHitCallback, Action<int> onSpawnHitboxCallback = null)
     {
         chainData = d;
         positionCallback = p;
         rotationCallback = r;
-        onHitCallback = o;
+        this.onHitCallback = onHitCallback;
+        this.onSpawnHitboxCallback = onSpawnHitboxCallback;
         timer = -Time.deltaTime;
         index = 0;
         UpdateChain();
@@ -31,7 +33,7 @@ public class HitboxChain
             return false;
         }
         timer += Time.deltaTime;
-        while (timer >= chainData.Chain[index].Delay)
+        while (timer >= chainData.Chain[index].StartAt)
         {
             var currentFrame = chainData.Chain[index];
             Dictionary<GameObject, float> its = null;
@@ -54,6 +56,7 @@ public class HitboxChain
                                                     .Finalize();
                 HitboxManager.instance.SpawnHitbox(hitboxData);
             }
+            onSpawnHitboxCallback(index);
             ++index;
             if (index >= chainData.Chain.Length)
             {

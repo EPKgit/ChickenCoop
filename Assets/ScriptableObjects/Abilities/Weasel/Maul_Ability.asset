@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 104
   abilityName: 
-  tooltipDescription: 
   abilityTags:
     tags: []
   tagsToBlock:
@@ -25,7 +24,7 @@ MonoBehaviour:
         _ID: 0
       _flag: MOVEMENT.NORMAL_MOVEMENT_DISABLED
   isPassive: 0
-  tickingAbility: 0
+  _tickingAbilitySerialized: 0
   hasDuration: 0
   maxDuration: 0
   maxCooldown: 0
@@ -44,6 +43,9 @@ MonoBehaviour:
   numberTimesRecastable: 0
   recastWindow: 0
   aoe: -1
-  damage: 20
+  slashVFX: {fileID: 4241873580683176077, guid: 1145879b2c3dfcb409583b5d917622ef, type: 3}
+  biteVFX: {fileID: 2041182912489614927, guid: 31c9b89d792971641ba3ed6f2659203c, type: 3}
+  damageInitial: 10
+  damageFinal: 20
   hitboxDuration: 0.25
   customChain: {fileID: 11400000, guid: 7f9cbcbf50dfb5346942d763bbf273e8, type: 2}

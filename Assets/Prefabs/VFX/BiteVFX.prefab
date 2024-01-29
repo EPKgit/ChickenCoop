@@ -165,3 +165,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 0}
   looping: 0
+  fixedDuration: -1

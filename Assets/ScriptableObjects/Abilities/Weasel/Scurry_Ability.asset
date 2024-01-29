@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 101
   abilityName: 
-  tooltipDescription: 
   abilityTags:
     tags: []
   tagsToBlock:
@@ -25,7 +24,7 @@ MonoBehaviour:
         _ID: 0
       _flag: STATUS.INVISIBLE
   isPassive: 0
-  tickingAbility: 1
+  _tickingAbilitySerialized: 1
   hasDuration: 1
   maxDuration: 0
   maxCooldown: 0
@@ -33,6 +32,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: e6ef3b64d9ebfa643a048caa7d164aeb, type: 3}
   _targetingData:
   - inputPoint: {x: 0, y: 0}
+    inputRotationZ: 0
     targetType: 0
     rangePreviewPrefab: {fileID: 0}
     secondaryPreviewPrefab: {fileID: 0}
@@ -43,5 +43,7 @@ MonoBehaviour:
   numberTimesRecastable: 0
   recastWindow: 0
   aoe: -1
+  scurryVFXPrefab: {fileID: 2696724119336944860, guid: 855e80bc8ae957c4d964bd0551d183ec, type: 3}
   movementSpeedMultiplier: 1.5
-  smokePrefab: {fileID: 2696724119336944860, guid: f83949b8e80e17c4da124f9560f47b6f, type: 3}
+  damageMultiplier: 2
+  smokeCloudDuration: 3

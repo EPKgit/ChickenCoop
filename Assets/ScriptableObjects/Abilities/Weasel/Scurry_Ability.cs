@@ -5,8 +5,10 @@ using UnityEngine.InputSystem;
 
 public class Scurry_Ability : Ability
 {
+    public GameObject scurryVFXPrefab;
     public float movementSpeedMultiplier = 1.5f;
     public float damageMultiplier = 2.0f;
+    public float smokeCloudDuration = 3.0f;
 
     private uint? movementSpeedBonusHandle;
     private uint? dmgStatusHandle;
@@ -16,6 +18,7 @@ public class Scurry_Ability : Ability
 		base.Initialize(pa);
         statBlock = pa.stats;
         pa.postAbilityCastEvent += OnPostAbilityCast;
+        scurryVFXPrefab.GetComponent<VFXPoolable>().fixedDuration = smokeCloudDuration;
     }
     
     public override void Cleanup(PlayerAbilities pa)
@@ -29,6 +32,45 @@ public class Scurry_Ability : Ability
         base.UseAbility();
         movementSpeedBonusHandle = statBlock.GetStat(StatName.MovementSpeed)?.AddMultiplicativeModifier(movementSpeedMultiplier);
         dmgStatusHandle = statBlock.GetStat(StatName.DamagePercentage)?.AddMultiplicativeModifier(damageMultiplier);
+
+        if(GetAbilityUpgradeStatus(AbilityUpgradeSlot.RED))
+        {
+            PoolManager.instance.RequestObject(scurryVFXPrefab).transform.position = playerAbilities.transform.position;
+            HitboxManager.instance.SpawnHitbox
+            (
+                HitboxData.GetBuilder()
+                    .Duration(smokeCloudDuration)
+                    .Delay(0.5f)
+                    .Shape(HitboxShape.CIRCLE)
+                    .StartRotationZ(0)
+                    .StartPosition(playerAbilities.transform.position)
+                    .Callback(HitboxCallback)
+                    .Discriminator(HitboxManager.Discriminators.Damagables)
+                    .RepeatPolicy(HitboxRepeatPolicy.COOLDOWN)
+                    .RepeatCooldown(0.1f)
+                    .Radius(2)
+                    .Finalize()
+            );
+        }
+    }
+
+    void HitboxCallback(Collider2D col)
+    {
+        IDamagable damageInterface = col.GetComponent<IDamagable>();
+        if (damageInterface == null)
+        {
+            return;
+        }
+        StatusEffectManager.instance.ApplyEffect(damageInterface.attached, Statuses.StatusEffectType.STUN, 0.5f);
+        damageInterface.Damage
+        (
+            HealthChangeData.GetBuilder()
+                .Damage(1)
+                .BothSources(playerAbilities.gameObject)
+                .Target(col.gameObject)
+                //.KnockbackData(knockbackPreset)
+                .Finalize()
+        );
     }
 
     void OnPostAbilityCast(AbilityEventData aed)

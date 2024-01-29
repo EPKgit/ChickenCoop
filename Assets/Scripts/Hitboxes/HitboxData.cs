@@ -45,8 +45,22 @@ public class HitboxData
     public LayerMask LayerMask { get; private set; } = -1;
     public float Radius { get; private set; } = 0.5f;
     public float Duration { get; private set; } = 0;
+    public float Delay { get; private set; } = 0;
     public float StartRotationZ { get; private set; } = 0;
     public Dictionary<GameObject, float> InteractionTimeStamps { get; private set; } = null;
+
+    public bool IsDelayed()
+    {
+        return Delay > 0;
+    }
+    public void TickDelay(float deltaTime)
+    { 
+        if(Delay < 0)
+        {
+            return;
+        }
+        Delay -= deltaTime;
+    }
 
     public bool TickDuration(float deltaTime)
     {
@@ -119,6 +133,12 @@ public class HitboxData
         public HitboxDataBuilder StartPosition(Vector3 v)
         {
             data.StartPosition = v;
+            return this;
+        }
+
+        public HitboxDataBuilder Delay(float f)
+        {
+            data.Delay = f;
             return this;
         }
 

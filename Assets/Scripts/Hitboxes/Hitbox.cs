@@ -6,7 +6,8 @@ using UnityEditor;
 
 public class Hitbox : Poolable
 {
-    public static Color debugColor = new Color(1.0f, 0.0f, 0.0f, 0.4f);
+    public static Color debugColorNormal = new Color(1.0f, 0.0f, 0.0f, 0.4f);
+    public static Color debugColorDelayed = new Color(1.0f, 1.0f, 0.0f, 0.4f);
     
     public HitboxData data;
 
@@ -71,6 +72,13 @@ public class Hitbox : Poolable
         {
             return true;
         }
+
+        if(data.IsDelayed())
+        {
+            data.TickDelay(Time.deltaTime);
+            return true;
+        }
+
         List<Collider2D> collisions = GatherCollisionCandidates();
         if(collisions == null)
         {
@@ -176,6 +184,7 @@ public class Hitbox : Poolable
         data.OnCollision(col);
     }
 
+#if UNITY_EDITOR
 #pragma warning disable 162 //depending on the debug flag one of these is unreachable
     void OnDrawGizmosSelected()
     {
@@ -196,7 +205,7 @@ public class Hitbox : Poolable
 
     void DrawGizmo()
     {
-        UnityEditor.Handles.color = debugColor;
+        UnityEditor.Handles.color = data.IsDelayed() ? debugColorDelayed : debugColorNormal;
         switch (data.Shape)
         {
             case HitboxShape.CIRCLE:
@@ -227,6 +236,7 @@ public class Hitbox : Poolable
 
         }
     }
+#endif
 
     private void OnRenderObject()
     {
@@ -238,15 +248,16 @@ public class Hitbox : Poolable
 
     public void DrawInGameDebug()
     {
+        var color = data.IsDelayed() ? debugColorDelayed : debugColorNormal;
         switch (data.Shape)
         {
             case HitboxShape.CIRCLE:
-                GLHelpers.GLDrawCircle(transform, data.Radius, 32, debugColor);
+                GLHelpers.GLDrawCircle(transform, data.Radius, 32, color);
                 break;
             case HitboxShape.SQUARE:
                 Rect rect = new Rect(0, 0, data.Radius * 2, data.Radius * 2);
                 rect.center = transform.position;
-                GLHelpers.GLDrawRect(transform, rect, debugColor);
+                GLHelpers.GLDrawRect(transform, rect, color);
                 break;
             case HitboxShape.POLYGON:
                 var points = new Vector3[data.Points.Length];
@@ -255,7 +266,7 @@ public class Hitbox : Poolable
                 {
                     points[x] = data.Points[x++];
                 }
-                GLHelpers.GLDrawPolygon(transform, points, debugColor);
+                GLHelpers.GLDrawPolygon(transform, points, color);
                 break;
         }
     }

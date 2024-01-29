@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum HitboxFrameInteractionPolicy
 {
@@ -22,8 +23,9 @@ public class HitboxChainAsset : ScriptableObject
     [Serializable]
     public class HitboxFrame
     {
-        public float Delay { get => _delay; }
-        [SerializeField] float _delay = 0;
+        public float StartAt { get => _startAt; }
+        [FormerlySerializedAs("_delay")]
+        [SerializeField] float _startAt = 0;
 
         public float Duration { get => _duration; }
         [SerializeField] float _duration = -1;

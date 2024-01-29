@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public class Maul_Ability : Ability
 {
+    public GameObject slashVFX;
+    public GameObject biteVFX;
+
     public float damageInitial = 10.0f;
     public float damageFinal = 20.0f;
     public float hitboxDuration = 0.25f;
@@ -13,10 +17,12 @@ public class Maul_Ability : Ability
     private HitboxChainHandle handle;
     private Vector2 startPosition;
     private float startRotation;
+    private PoolLoanToken token;
 
     public override void Initialize(PlayerAbilities pa)
-	{
-		base.Initialize(pa);
+    { 
+        token = new PoolLoanToken(slashVFX, 4, true);
+        base.Initialize(pa);
     }
 
     protected override void UseAbility()
@@ -24,7 +30,7 @@ public class Maul_Ability : Ability
         base.UseAbility();
         startPosition = targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, 0.5f);
         startRotation = targetingData.inputRotationZ;
-        handle = HitboxManager.instance.StartHitboxChain(customChain, HitboxPositionCallback, HitboxRotationCallback, HitboxCallback);
+        handle = HitboxManager.instance.StartHitboxChain(customChain, HitboxPositionCallback, HitboxRotationCallback, HitboxCallback, HitboxSpawnCallback);
     }
 
     public override bool Tick(float deltaTime)
@@ -45,6 +51,31 @@ public class Maul_Ability : Ability
     protected override bool OverrideSetTickingAbility()
     {
         return true;
+    }
+
+    void HitboxSpawnCallback(int index)
+    {
+        if (index < 2)
+        {
+            const float ARC_PERCENT = 0.3f;
+            float first = index == 0 ? -1f : 1f;
+
+            GameObject vfx = PoolManager.instance.RequestObject(slashVFX);
+            vfx.transform.position = playerAbilities.transform.position;
+            vfx.transform.rotation = Quaternion.Euler(0, 0, startRotation + first * (360 * ARC_PERCENT));
+            vfx.transform.localScale = new Vector3(first, 1, 1);
+
+            VisualEffect ve = vfx.GetComponent<VisualEffect>();
+            ve.SetFloat("Lifetime", 0.2f);
+            ve.SetFloat("ArcPercent", ARC_PERCENT);
+        }
+        else
+        {
+            GameObject vfx = PoolManager.instance.RequestObject(biteVFX);
+            vfx.transform.position = startPosition;
+            vfx.transform.rotation = Quaternion.Euler(0, 0, startRotation);
+            vfx.transform.localScale = new Vector3(3, 5, 3);
+        }
     }
 
     void HitboxCallback(Collider2D col, int index)
