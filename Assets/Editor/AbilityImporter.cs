@@ -25,7 +25,9 @@ public class AbilityImporter : EditorWindow
 				alreadyCreatedAssets.Add(((Ability)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(s), typeof(Ability))).GetType().Name);
 			}
 
-			string[] allAbilityScriptsNames = AssetDatabase.FindAssets("", new [] {"Assets/ScriptableObjects/Abilities"});
+			List<string> allAbilityScriptsNames = new List<string>();
+			allAbilityScriptsNames.AddRange(AssetDatabase.FindAssets("", new [] {"Assets/ScriptableObjects/Abilities"}));
+			allAbilityScriptsNames.AddRange(AssetDatabase.FindAssets("", new [] {"Assets/PlayerAbilities"}));
 			string fullPath;
 			string path;
 			string abilityName;

@@ -260,4 +260,18 @@
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>201</ability_ID>
+		<ability_name>Piercing Spine</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Fire a spine that pierces enemies, doing damage"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="1"/>
+			<variable name="damage" type="float" value="10"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 </ability_list>

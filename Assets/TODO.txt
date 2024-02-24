@@ -1,8 +1,13 @@
+TODO TODO TODO
 TODO:TODO:TODO
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CURRENT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-add weasel ability
+weasel porcupine abilities
+break abilities out from scriptable objects and make them soley exist in script and xml
+    - xml parsing for range/targeting
+    - prefab database (manager class?)
+    - tagging
 add new ranged enemy
 - figure out weighting of attacks vs movement
 - springs
