@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Pocurpine_Ability_Set
   abilities:
-  - {fileID: 11400000, guid: dbcc47cbefbc6b3449dfc3e2d294e12c, type: 2}
-  - {fileID: 11400000, guid: dbcc47cbefbc6b3449dfc3e2d294e12c, type: 2}
-  - {fileID: 11400000, guid: dbcc47cbefbc6b3449dfc3e2d294e12c, type: 2}
-  - {fileID: 11400000, guid: dbcc47cbefbc6b3449dfc3e2d294e12c, type: 2}
+  - {fileID: 11400000, guid: 7e85580bf68c18545bb9a4f43c864190, type: 2}
+  - {fileID: 11400000, guid: 7e85580bf68c18545bb9a4f43c864190, type: 2}
+  - {fileID: 11400000, guid: 7e85580bf68c18545bb9a4f43c864190, type: 2}
+  - {fileID: 11400000, guid: 7e85580bf68c18545bb9a4f43c864190, type: 2}
   passiveEffects: []

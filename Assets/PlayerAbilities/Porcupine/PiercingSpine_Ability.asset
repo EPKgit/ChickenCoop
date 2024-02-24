@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9738092eae13fbb46abee08852ce4804, type: 3}
   m_Name: PiercingSpine_Ability
   m_EditorClassIdentifier: 
-  ID: 0
+  ID: 201
   abilityName: 
   abilityTags:
     tags: []
@@ -26,8 +26,16 @@ MonoBehaviour:
   maxDuration: 0
   maxCooldown: 0
   cost: 0
-  icon: {fileID: 0}
-  _targetingData: []
+  icon: {fileID: 21300000, guid: 04c344821476d1345a20a4c6f1a373d7, type: 3}
+  _targetingData:
+  - inputPoint: {x: 0, y: 0}
+    inputRotationZ: 0
+    targetType: 1
+    rangePreviewPrefab: {fileID: 0}
+    secondaryPreviewPrefab: {fileID: 0}
+    range: 5
+    previewScale: {x: 1, y: 0, z: 0}
+    affiliation: 0
   currentTargetingType: 0
   numberTimesRecastable: 0
   recastWindow: 0
@@ -36,4 +44,4 @@ MonoBehaviour:
   projectileSpeed: 10
   projectileLifetime: 0.5
   knockbackPreset: 0
-  spinePrefab: {fileID: 0}
+  spinePrefab: {fileID: 1925506602525786021, guid: 9aa133e85efd77045b1bdbc90598ca12, type: 3}
