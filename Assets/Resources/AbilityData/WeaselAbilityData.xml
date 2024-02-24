@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ability_list
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="AbilityData.xsd">
+	
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>101</ability_ID>
+		<ability_name>Scurry</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Go invisible and increase your movement speed by {movementSpeedMultiplier} times."/>
+		</tooltip_list>
+		<var_list>
+			<variable name="movementSpeedMultiplier" type="float" value="1.5"/>
+			<variable name="damageMultiplier" type="float" value="2.0"/>
+			<variable name="duration" type="float" value="4"/>
+			<variable name="cd" type="float" value="10"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>102</ability_ID>
+		<ability_name>Chomp</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Bite in front of you"/>
+			<tooltip type="red" text="and stun"/>
+			<tooltip type="blue" text="and hit twice"/>
+			<tooltip type="yellow" text="and reduce all cooldowns"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="1"/>
+			<variable name="damage" type="float" value="5"/>
+			<variable name="hitboxDuration" type="float" value="0.25"/>
+			<variable name="hitboxRadius" type="float" value="0.5"/>
+			<variable name="knockbackPreset" type="kb" value="BIG"/>
+			<variable name="stunDuration" type="float" value="1.0"/>
+			<variable name="multiHit" type="int" value="2"/>
+			<variable name="otherAbilityCooldownTick" type="float" value="1.0"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>103</ability_ID>
+		<ability_name>Swipe</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Swipe in a cone in front of you"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="1"/>
+			<variable name="damage" type="float" value="20"/>
+			<variable name="hitboxDuration" type="float" value="0.25"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>104</ability_ID>
+		<ability_name>Maul</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Swing multiple times in front of you"/>
+		</tooltip_list>
+		<var_list>
+			<variable name="cd" type="float" value="1"/>
+			<variable name="damageInitial" type="float" value="10"/>
+			<variable name="damageFinal" type="float" value="20"/>
+			<variable name="hitboxDuration" type="float" value="0.25"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	
+</ability_list>

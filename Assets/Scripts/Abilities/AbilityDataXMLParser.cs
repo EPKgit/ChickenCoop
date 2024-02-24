@@ -53,7 +53,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     }
 
     Dictionary<uint, AbilityXMLDataEntry> table;
-    const string XMLPath = "AbilityData";
+    const string XMLFolderPath = "AbilityData";
     bool loadedTable = false;
 
     public void ForceReimport()
@@ -70,31 +70,50 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             return;
         }
         loadedTable = false;
-        var file = Resources.Load<TextAsset>(XMLPath);
-        if (file == null)
+
+        var files = Resources.LoadAll(XMLFolderPath, typeof(TextAsset));
+        table = new Dictionary<uint, AbilityXMLDataEntry>();
+        foreach (var file in files)
         {
-            Debug.LogAssertion("ERROR: COULD NOT OPEN ABILITY XML");
-            return;
+            if (file == null)
+            {
+                Debug.LogAssertion("ERROR: COULD NOT OPEN ABILITY XML FOR UNKNOWN FILE");
+                return;
+            }
+            if(file.GetType() != typeof(TextAsset))
+            {
+                Debug.LogAssertion("ERROR: ABILITY XML IS NOT TEXT ASSET:" + file.name);
+                return;
+            }
+
+            if(!LoadFile((TextAsset)file))
+            {
+                Debug.LogAssertion("ERROR IN FILE " + file.name);
+                return;
+            }
         }
+        
+        loadedTable = true;
+    }
+
+    bool LoadFile(TextAsset file)
+    {
         XmlDocument doc = new XmlDocument();
         doc.LoadXml(file.text);
-
 
         XmlNodeList list = doc.SelectNodes("//comment()");
         foreach (XmlNode node in list)
         {
             node.ParentNode.RemoveChild(node);
         }
-        var uniqueAbilityIDTable = new Dictionary<uint, bool>();
-        table = new Dictionary<uint, AbilityXMLDataEntry>();
         var root = doc["ability_list"];
         foreach (XmlElement ability in root.ChildNodes)
         {
             uint ability_ID = Convert.ToUInt32(ability["ability_ID"].InnerText);
-            if (uniqueAbilityIDTable.ContainsKey(ability_ID))
+            if (table.ContainsKey(ability_ID))
             {
-                Debug.LogError("ERROR: duplicate ability ids found");
-                continue;
+                Debug.LogError("ERROR: duplicate ability id found for '" + ability["ability_name"].InnerText + "' ID:" + ability_ID);
+                return false;
             }
             string ability_name = ability["ability_name"].InnerText;
             AbilityXMLDataEntry data = new AbilityXMLDataEntry(ability_ID, ability_name);
@@ -108,7 +127,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             }
             table.Add(ability_ID, data);
         }
-        loadedTable = true;
+        return true;
     }
 
 

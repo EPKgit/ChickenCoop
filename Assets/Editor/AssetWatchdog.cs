@@ -20,14 +20,14 @@ public class AssetWatchdog : AssetPostprocessor
             string extension = splitStr[splitStr.Length - 1];
             if(extension == "xml")
             {
-                if(fileName == "AbilityData")
+                if(fileName == "AbilityData" || str.Contains("SplitAbilityData"))
                 {
-                    Debug.Log(EditorApplication.timeSinceStartup + "Hot Reloading Ability XML");
+                    Debug.Log(EditorApplication.timeSinceStartup + "~ Hot Reloading Ability XMLs");
                     AbilityDataXMLParser.instance.ForceReimport();
                 }
                 if (fileName == "GameplayTags")
                 {
-                    Debug.Log(EditorApplication.timeSinceStartup + "Hot Reloading Gameplay Tags");
+                    Debug.Log(EditorApplication.timeSinceStartup + "~ Hot Reloading Gameplay Tags");
                     GameplayTagInternals.GameplayTagXMLParser.instance.ForceReimport();
 #if UNITY_EDITOR_WIN
                     GameplayTagInternals.GameplayTagXMLParser.instance.GenerateTagEnumFile();
