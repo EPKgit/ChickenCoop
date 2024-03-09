@@ -84,7 +84,7 @@ public class AbilityInspector : Editor
             {
                 PotentiallyOverrideProperty(recastWindow);
             }
-            DoTargetData();
+            //DoTargetData();
         }
         EditorGUIUtility.labelWidth = prevLabelWidth;
         --EditorGUI.indentLevel;

@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="AbilityData.xsd">
 
-	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+	<!--Porcupine XML |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
 	<ability>
 		<ability_ID>201</ability_ID>
@@ -11,9 +11,16 @@
 		<tooltip_list>
 			<tooltip type="default" text="Fire a spine that pierces enemies, doing damage"/>
 		</tooltip_list>
+		<targeting_list>
+			<lineTargetingData>
+				<range>3</range>
+				<width>1</width>
+			</lineTargetingData>
+		</targeting_list>
 		<var_list>
 			<variable name="cd" type="float" value="1"/>
 			<variable name="damage" type="float" value="10"/>
+			<variable name="spinePrefab" type="asset" value="porcupine.spine"/>
 		</var_list>
 	</ability>
 

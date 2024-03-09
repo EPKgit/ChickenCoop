@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Targeting;
 
 public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 {
@@ -12,11 +13,13 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         public uint ID;
         public string name;
         public List<AbilityXMLTooltip> tooltips;
+        public List<AbilityXMLTargetingData> targetingData;
         public List<AbilityXMLVariable> vars;
         public AbilityXMLDataEntry(uint i, string n)
         {
             ID = i;
             name = n;
+            targetingData = new List<AbilityXMLTargetingData>();
             tooltips = new List<AbilityXMLTooltip>();
             vars = new List<AbilityXMLVariable>();
         }
@@ -26,23 +29,71 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     {
         public string type;
         public string text;
-        public AbilityXMLTooltip(string ty, string te)
+
+        private AbilityXMLTooltip() { }
+        public AbilityXMLTooltip(XmlElement node)
         {
-            type = ty;
-            text = te;
+            type = node.GetAttribute("type");
+            text = node.GetAttribute("text");
         }
     }
+
+    private class AbilityXMLTargetingData
+    {
+        public AbilityTargetingData targetingData;
+        private AbilityXMLTargetingData() { }
+        public AbilityXMLTargetingData(XmlElement node)
+        {
+            targetingData = new AbilityTargetingData();
+            switch(node.Name)
+            {
+                case "noneTargetingDataType":
+                {
+                    targetingData.targetType = TargetType.NONE;
+                    targetingData.range = float.Parse(node["range"].InnerText);
+                    targetingData.previewScale = new Vector3(float.Parse(node["width"].InnerText), 0, 0);
+                } break;
+
+                case "lineTargetingData":
+                {
+                    targetingData.targetType = TargetType.LINE_TARGETED;
+                    targetingData.range = float.Parse(node["range"].InnerText);
+                    targetingData.previewScale = new Vector3(float.Parse(node["width"].InnerText), 0, 0);
+                } break;
+
+                case "groundTargetingData":
+                {
+                    targetingData.targetType = TargetType.GROUND_TARGETED;
+                    targetingData.range = float.Parse(node["range"].InnerText);
+                    var size = node["size"];
+                    targetingData.previewScale = new Vector3(float.Parse(size["x"].InnerText), float.Parse(size["y"].InnerText), 0);
+                } break;
+
+                case "entityTargetingData":
+                {
+                    targetingData.targetType = TargetType.ENTITY_TARGETED;
+                    targetingData.range = float.Parse(node["range"].InnerText);
+                    targetingData.affiliation = (Targeting.Affiliation)Enum.Parse(typeof(Targeting.Affiliation), node["affiliation"].InnerText);
+                } break;
+            }
+
+            //TODO do custom preview parsing
+        }
+    }
+    
 
     private class AbilityXMLVariable
     {
         public string name;
         public string value;
         public string type;
-        public AbilityXMLVariable(string n, string v, string t)
+
+        private AbilityXMLVariable() { }
+        public AbilityXMLVariable(XmlElement node)
         {
-            name = n;
-            value = v;
-            type = t;
+            name = node.GetAttribute("name");
+            value = node.GetAttribute("value");
+            type = node.GetAttribute("type");
         }
     }
 
@@ -58,8 +109,16 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 
     public void ForceReimport()
     {
+        // TODO make reimports from hot reloading only reload specific files
         loadedTable = false;
         ParseXMLData();
+        foreach(PlayerInitialization player in PlayerInitialization.all)
+        {
+            foreach(Ability a in player.GetComponent<PlayerAbilities>().abilities)
+            {
+                UpdateAbilityData(a);
+            }
+        }
     }
 
     //TODO MAKE THREAD SAFE
@@ -119,11 +178,15 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             AbilityXMLDataEntry data = new AbilityXMLDataEntry(ability_ID, ability_name);
             foreach (XmlElement tooltip in ability["tooltip_list"].ChildNodes)
             {
-                data.tooltips.Add(new AbilityXMLTooltip(tooltip.GetAttribute("type"), tooltip.GetAttribute("text")));
+                data.tooltips.Add(new AbilityXMLTooltip(tooltip));
+            };
+            foreach (XmlElement targetData in ability["targeting_list"].ChildNodes)
+            {
+                data.targetingData.Add(new AbilityXMLTargetingData(targetData));
             };
             foreach (XmlElement variable in ability["var_list"].ChildNodes)
             {
-                data.vars.Add(new AbilityXMLVariable(variable.GetAttribute("name"), variable.GetAttribute("value"), variable.GetAttribute("type")));
+                data.vars.Add(new AbilityXMLVariable(variable));
             }
             table.Add(ability_ID, data);
         }
@@ -167,6 +230,15 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                     return KnockbackPreset.BIG;
                 }
                 return KnockbackPreset.MAX;
+            }
+        },
+        {
+            "asset", (s) =>
+            {
+                int index = s.IndexOf('.');
+                string category = s.Substring(0, index);
+                string name = s.Substring(index + 1);
+                return AssetLibraryManager.instance.RequestPrefab(name, category);
             }
         },
     };
@@ -271,6 +343,15 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         {
             a.SetTooltip(abilityUpgradeLookup[tooltip.type], tooltip.text);
         }
+        
+        int n = entry.targetingData.Count;
+        var targetingData = new AbilityTargetingData[n];
+        for (int x = 0; x < n; x++)
+        {
+            targetingData[x] = entry.targetingData[x].targetingData;
+        }
+        a.SetupTargetingData(targetingData);
+        
         foreach (AbilityXMLVariable variable in entry.vars)
         {
             var nameArray = CommonRenames(variable.name);

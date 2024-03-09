@@ -29,7 +29,7 @@ public class BasicBomb : Ability
 		GameObject temp = PoolManager.instance.RequestObject(bombPrefab);
         Bomb b = temp.GetComponent<Bomb>();
         b.arcSteepness = arcSteepness;
-        b.arcTime = (targetingData.inputPoint - (Vector2)playerAbilities.transform.position).magnitude / range * arcTime; //the arc time decreases the shorter we aim
+        b.arcTime = (targetingData.inputPoint - (Vector2)playerAbilities.transform.position).magnitude / Range * arcTime; //the arc time decreases the shorter we aim
         b.arcTime = Mathf.Clamp(b.arcTime, 0.5f, arcTime);
         b.Setup
         (

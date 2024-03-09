@@ -24,7 +24,7 @@ public class DashDodge : Ability
     {
         base.UseAbility();
         Vector2 direction = GetNormalizedDirectionTowardsTarget(targetingData.inputPoint);
-        destination = (Vector2)playerAbilities.transform.position + (direction * range);
+        destination = (Vector2)playerAbilities.transform.position + (direction * Range);
         startPosition = playerAbilities.transform.position;
         playerAbilities.movement.DashInput(startPosition, destination, maxDuration);
     }

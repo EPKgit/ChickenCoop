@@ -2,75 +2,172 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 elementFormDefault="qualified">
 	
-<xs:element name="ability_list">
-	<xs:complexType>
-		<xs:sequence>
-			<xs:element minOccurs="0" maxOccurs="unbounded" ref="ability"/>
-		</xs:sequence>
-	</xs:complexType>
-</xs:element>
+	<xs:element name="ability_list">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="ability"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	
-<xs:element name="ability">
-	<xs:complexType>
-		<xs:sequence>
-			<xs:element name="ability_ID" type="xs:string" />
-			<xs:element name="ability_name" type="xs:string" />
-			<xs:element minOccurs="0" maxOccurs="1" ref="tooltip_list" />
-			<xs:element minOccurs="0" maxOccurs="1" ref="var_list" />
-		</xs:sequence>
-	</xs:complexType>
-</xs:element>
+	<xs:element name="ability">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ability_ID" type="xs:string" />
+				<xs:element name="ability_name" type="xs:string" />
+				<xs:element minOccurs="0" maxOccurs="1" ref="tooltip_list" />
+				<xs:element minOccurs="1" maxOccurs="1" ref="targeting_list" />
+				<xs:element minOccurs="0" maxOccurs="1" ref="var_list" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	
-<xs:element name="tooltip_list">
-	<xs:complexType>
-		<xs:sequence>
-			<xs:element minOccurs="1" maxOccurs="unbounded" ref="tooltip" />
-		</xs:sequence>
-	</xs:complexType>
-</xs:element>
+	<xs:element name="tooltip_list">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="1" maxOccurs="unbounded" ref="tooltip" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	
-<xs:element name="tooltip">
-	<xs:complexType>
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute default="default" name="type" type="tooltipType" />
-				<xs:attribute default="tooltip text" name="text" type="xs:string" />
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-</xs:element>
+	<xs:element name="tooltip">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute default="default" name="type" type="tooltipType" />
+					<xs:attribute default="tooltip text" name="text" type="xs:string" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
 	
-<xs:simpleType name="tooltipType">
-	<xs:restriction base="xs:string">
-		<xs:enumeration value="default"/>
-		<xs:enumeration value="red"/>
-		<xs:enumeration value="blue"/>
-		<xs:enumeration value="yellow"/>
-	</xs:restriction>
-</xs:simpleType>
-	
-<xs:element name="var_list">
-	<xs:complexType>
-		<xs:sequence>
-			<xs:element minOccurs="1" maxOccurs="unbounded" ref="variable" />
-		</xs:sequence>
-	</xs:complexType>
-</xs:element>
-	
-<xs:element name="variable">
-	<xs:complexType>
-		<xs:attribute name="name" type="xs:string" use="required" />
-		<xs:attribute name="type" type="variableType" use="required" />
-		<xs:attribute name="value" type="xs:string" use="required" />
-	</xs:complexType>
-</xs:element>
+	<xs:simpleType name="tooltipType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="default"/>
+			<xs:enumeration value="red"/>
+			<xs:enumeration value="blue"/>
+			<xs:enumeration value="yellow"/>
+		</xs:restriction>
+	</xs:simpleType>
 
-<xs:simpleType name="variableType">
-	<xs:restriction base="xs:string">
-		<xs:enumeration value="int"/>
-		<xs:enumeration value="float"/>
-		<xs:enumeration value="kb"/>
-	</xs:restriction>
-</xs:simpleType>
+	<xs:element name="targeting_list">
+		<xs:complexType>
+			<xs:choice minOccurs="1" maxOccurs="unbounded">
+				<xs:element name="noneTargetingData" type="noneTargetingDataType"/>
+				<xs:element name="lineTargetingData" type="lineTargetingDataType"/>
+				<xs:element name="groundTargetingData" type="groundTargetingDataType"/>
+				<xs:element name="entityTargetingData" type="entityTargetingDataType"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="targetingDataType">
+		<xs:attribute name="index" type="xs:integer" default="-1"/>
+	</xs:complexType>
+	
+	<xs:complexType name="noneTargetingDataType">
+		<xs:attribute name="type" type="targetingType" fixed="LINE_TARGETED"/>
+	</xs:complexType>
+
+	<xs:complexType name="lineTargetingDataType">
+		<xs:complexContent>
+			<xs:extension base="targetingDataType">
+				<xs:sequence>
+					<xs:element name="range" type="xs:decimal" />
+					<xs:element name="width" type="xs:decimal" />
+				</xs:sequence>
+				<xs:attribute name="type" type="targetingType" fixed="LINE_TARGETED"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="groundTargetingDataType">
+		<xs:complexContent>
+			<xs:extension base="targetingDataType">
+				<xs:sequence>
+					<xs:element default="0" name="range" type="xs:decimal" />
+					<xs:element name="size" type="vector2Type" />
+				</xs:sequence>
+				<xs:attribute name="type" type="targetingType" fixed="LINE_TARGETED"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="entityTargetingDataType">
+		<xs:complexContent>
+			<xs:extension base="targetingDataType">
+				<xs:sequence>
+					<xs:element default="0" name="range" type="xs:decimal" />
+					<xs:element name="affiliation" type="targetAffiliationType" />
+				</xs:sequence>
+				<xs:attribute name="type" type="targetingType" fixed="LINE_TARGETED"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:simpleType name="targetingType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NONE"/>
+			<xs:enumeration value="LINE_TARGETED"/>
+			<xs:enumeration value="GROUND_TARGETED"/>
+			<xs:enumeration value="ENTITY_TARGETED"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="var_list">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="1" maxOccurs="unbounded" ref="variable" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="variable">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="type" type="variableType" use="required" />
+			<xs:attribute name="value" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="variableType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="int"/>
+			<xs:enumeration value="float"/>
+			<xs:enumeration value="kb"/>
+			<xs:enumeration value="asset"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="knockbackPresetType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TINY"/>
+			<xs:enumeration value="LITTLE"/>
+			<xs:enumeration value="MEDIUM"/>
+			<xs:enumeration value="BIG"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="targetAffiliationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PLAYERS"/>
+			<xs:enumeration value="ENEMIES"/>
+			<xs:enumeration value="NEUTRAL"/>
+			<xs:enumeration value="NONE"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="vector2Type">
+		<xs:sequence>
+			<xs:element name="x" type="xs:decimal"/>
+			<xs:element name="y" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="vector3Type">
+		<xs:attribute name="x" type="xs:decimal" use="required"/>
+		<xs:attribute name="y" type="xs:decimal" use="required"/>
+		<xs:attribute name="z" type="xs:decimal" use="required"/>
+	</xs:complexType>
 	
 </xs:schema>

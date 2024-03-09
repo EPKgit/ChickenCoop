@@ -22,6 +22,9 @@ public class GameplayTagContainerDrawer : CustomPropertyDrawerBase
 
     private int displayTab = 0;
     private static readonly string[] toolbarStrings = new string[] { "Current Tags", "Tag Editor" };
+
+    protected override bool DoesExpansion() { return true; }
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         if(StartOnGUI(position, property, label))

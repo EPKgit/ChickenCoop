@@ -133,7 +133,7 @@ public abstract class Ability : ScriptableObject
     /// <summary>
     /// The targeting information e.g. range type
     /// </summary>
-    public AbilityTargetingData targetingData
+    public RuntimeAbilityTargetingData targetingData
     {
         get
         {
@@ -141,17 +141,16 @@ public abstract class Ability : ScriptableObject
         }
     }
 
-    [SerializeField]
-    private AbilityTargetingData[] _targetingData;
+    private RuntimeAbilityTargetingData[] _targetingData;
 
     /// <summary>
     /// Helper property to display ranges when needed
     /// </summary>
-    public float range
+    public float Range
     {
         get
         {
-            return targetingData.range;
+            return targetingData.Range;
         }
     }
 
@@ -503,6 +502,17 @@ public abstract class Ability : ScriptableObject
 #endif
     }
 
+    public void SetupTargetingData(AbilityTargetingData[] newTargetingData)
+    {
+        _targetingData = new RuntimeAbilityTargetingData[newTargetingData.Length];
+        
+        int index = 0;
+        foreach(AbilityTargetingData data in newTargetingData)
+        {
+            _targetingData[index++] = new RuntimeAbilityTargetingData(data);
+        }
+    }
+
     protected void SwitchTargetingType(int newIndex)
     {
         if(newIndex < 0 || newIndex >= _targetingData.Length)
@@ -591,7 +601,7 @@ public abstract class Ability : ScriptableObject
 
     public Vector2 ClampPointWithinRange(Vector2 point)
     {
-        return ClampPointWithinRange(point, range);
+        return ClampPointWithinRange(point, Range);
     }
 
     /// <summary>
@@ -620,7 +630,7 @@ public abstract class Ability : ScriptableObject
 
     public void CleanupAllTargeting(GameObject user)
     {
-        foreach(AbilityTargetingData atd in _targetingData)
+        foreach(RuntimeAbilityTargetingData atd in _targetingData)
         {
             atd.Cleanup(this, user);
         }

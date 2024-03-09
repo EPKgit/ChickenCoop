@@ -33,7 +33,7 @@ public class Bite_Ability : Ability
     protected override void UseAbility()
 	{
         base.UseAbility();
-        targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, targetingData.range - 0.5f);
+        targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, targetingData.Range - 0.5f);
         HitboxManager.instance.SpawnHitbox
         (
             HitboxData.GetBuilder()

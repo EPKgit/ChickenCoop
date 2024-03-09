@@ -25,6 +25,8 @@ public class AbilityTargetingDataDrawer : CustomPropertyDrawerBase
 
     private bool customTargetingPrefabs;
 
+    protected override bool DoesExpansion() { return true; }
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // EditorGUI.DrawRect(position, Color.red);
@@ -37,14 +39,14 @@ public class AbilityTargetingDataDrawer : CustomPropertyDrawerBase
         EditorGUI.PropertyField(NextLine(), targetType);
         customTargetingPrefabs |= secondaryPreviewPrefab.objectReferenceValue != null;
         customTargetingPrefabs |= EditorGUI.Toggle(NextLine(), "Custom Prefabs", customTargetingPrefabs);
-        AbilityTargetingData.TargetType type = (AbilityTargetingData.TargetType)targetType.enumValueIndex;
-        if(type != AbilityTargetingData.TargetType.NONE)
+        TargetType type = (TargetType)targetType.enumValueIndex;
+        if(type != TargetType.NONE)
         {
             EditorGUI.PropertyField(NextLine(), range);
         }
-        switch((AbilityTargetingData.TargetType)targetType.enumValueIndex)
+        switch((TargetType)targetType.enumValueIndex)
         {
-            case AbilityTargetingData.TargetType.LINE_TARGETED:
+            case TargetType.LINE_TARGETED:
             {
                 if (customTargetingPrefabs)
                 {
@@ -53,7 +55,7 @@ public class AbilityTargetingDataDrawer : CustomPropertyDrawerBase
                 previewScale.vector3Value = new Vector3(EditorGUI.DelayedFloatField(NextLine(), "Width", previewScale.vector3Value.x), 0, 0);
                 break;
             } 
-            case AbilityTargetingData.TargetType.GROUND_TARGETED:
+            case TargetType.GROUND_TARGETED:
             {
                 if (customTargetingPrefabs)
                 {
@@ -62,7 +64,7 @@ public class AbilityTargetingDataDrawer : CustomPropertyDrawerBase
                 EditorGUI.PropertyField(NextLine(), previewScale);
                 break;
             } 
-            case AbilityTargetingData.TargetType.ENTITY_TARGETED:
+            case TargetType.ENTITY_TARGETED:
             {
                 if (customTargetingPrefabs)
                 {
@@ -104,20 +106,20 @@ public class AbilityTargetingDataDrawer : CustomPropertyDrawerBase
         {
             return num;
         }
-        AbilityTargetingData.TargetType type = (AbilityTargetingData.TargetType)targetType.enumValueIndex;
-        if (type != AbilityTargetingData.TargetType.NONE)
+        TargetType type = (TargetType)targetType.enumValueIndex;
+        if (type != TargetType.NONE)
         {
             num += 1;
         }
         switch(type)
         {
-            case AbilityTargetingData.TargetType.LINE_TARGETED:
+            case TargetType.LINE_TARGETED:
                 num += customTargetingPrefabs ? 2 : 1;
                 break;
-            case AbilityTargetingData.TargetType.GROUND_TARGETED:
+            case TargetType.GROUND_TARGETED:
                 num += customTargetingPrefabs ? 2 : 1;
                 break;
-            case AbilityTargetingData.TargetType.ENTITY_TARGETED:
+            case TargetType.ENTITY_TARGETED:
                 num += customTargetingPrefabs ? 2 : 1;
                 break;
         }

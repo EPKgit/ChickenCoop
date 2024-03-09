@@ -155,12 +155,12 @@ public class AbilityQueue
 
     
 
-    public void AbilityRecieveInput(Ability a, Vector2 targetData)
+    public void AbilityRecieveInput(Ability ability, Vector2 targetData)
     {
         AbilityInputData aid = null;
         foreach(var data in abilityInputQueue)
         {
-            if (data.ability == a)
+            if (data.ability == ability)
             {
                 aid = data;
                 break;
@@ -168,13 +168,13 @@ public class AbilityQueue
         }
         if(aid != null)
         {
-            Targeting.AbilityTargetingData atd = aid.ability.targetingData;
-            DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", a.name, targetData));
+            Targeting.RuntimeAbilityTargetingData atd = aid.ability.targetingData;
+            DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", ability.name, targetData));
             atd.inputPoint = targetData;
             Vector2 relativePosition = new Vector2(atd.inputPoint.x - playerAbilities.transform.position.x, atd.inputPoint.y - playerAbilities.transform.position.y);
             atd.inputRotationZ = Vector2.SignedAngle(Vector2.up, relativePosition);
             atd.inputRotationZ = atd.inputRotationZ < 0 ? atd.inputRotationZ + 360.0f : atd.inputRotationZ;
-            atd.inputTarget = Ability.FindTargetable(targetData, a.targetingData.affiliation);
+            atd.inputTarget = Ability.FindTargetable(targetData, ability.targetingData.Affiliation);
             atd.isInputSet = true;
             if(!atd.isInputSet)
             {

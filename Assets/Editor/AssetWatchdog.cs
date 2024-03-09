@@ -20,7 +20,7 @@ public class AssetWatchdog : AssetPostprocessor
             string extension = splitStr[splitStr.Length - 1];
             if(extension == "xml")
             {
-                if(fileName == "AbilityData" || str.Contains("SplitAbilityData"))
+                if(str.Contains("AbilityData"))
                 {
                     Debug.Log(EditorApplication.timeSinceStartup + "~ Hot Reloading Ability XMLs");
                     AbilityDataXMLParser.instance.ForceReimport();

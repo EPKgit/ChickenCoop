@@ -18,6 +18,8 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
     private SerializedProperty statVals;
     private SerializedProperty serializationOverriden;
 
+    protected override bool DoesExpansion() { return true; }
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // EditorGUI.DrawRect(position, Color.red);

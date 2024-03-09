@@ -3,7 +3,7 @@ using System.Globalization;
 using UnityEngine;
 using UnityEditor;
 
-public class CustomPropertyDrawerBase : PropertyDrawer
+public abstract class CustomPropertyDrawerBase : PropertyDrawer
 {
     protected float yofs;
     protected float yinc;
@@ -25,14 +25,24 @@ public class CustomPropertyDrawerBase : PropertyDrawer
         return rect;
     }
 
+    abstract protected bool DoesExpansion();
+
     protected bool StartOnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // EditorGUI.DrawRect(position, Color.red);
         startRect = position;
         yofs = position.y;
         yinc = (position.height - GetExtraSpace(property)) / GetNumLines(property);
-        topRect = rect = NextLine();
-        property.isExpanded = EditorGUI.Foldout(rect, property.isExpanded, textInfo.ToTitleCase(label.text));
+
+        if (DoesExpansion())
+        {
+            topRect = rect = NextLine();
+            property.isExpanded = EditorGUI.Foldout(rect, property.isExpanded, textInfo.ToTitleCase(label.text));
+        }
+        else
+        {
+            property.isExpanded = true;
+        }
         if (!property.isExpanded)
         {
             return true;
