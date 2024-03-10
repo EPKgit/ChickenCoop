@@ -29,7 +29,7 @@ public class MinigameManager : MonoSingleton<MinigameManager>
         currentMinigame = Lib.FindDownwardsInTree<MinigameBase>(g);
         MinigameData data = new MinigameData();
         data.triggeringPlayer = starter.GetComponent<PlayerInput>();
-        data.difficultyModifier = Lib.FindDownwardsInTree<StatBlockComponent>(starter).GetIntValueOrDefault(StatName.PuzzleSolving);
+        data.difficultyModifier = Lib.FindDownwardsInTree<StatBlockComponent>(starter).GetIntValue(StatName.PuzzleSolving);
         currentMinigame.StartMinigame(data);
         callback = cb;
         return true;

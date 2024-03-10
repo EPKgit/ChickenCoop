@@ -169,8 +169,8 @@ public class HealthChangeData
             else
             {
                 bool negative = data.UnmodifiedDelta < 0;
-                float flatIncrease = stats.GetValueOrDefault(data.FlatStat);
-                float percentIncrease = stats.GetValueOrDefault(data.PercentageStat);
+                float flatIncrease = stats.GetValue(data.FlatStat);
+                float percentIncrease = stats.GetValue(data.PercentageStat);
                 if(negative)
                 {
                     data.Delta = (data.UnmodifiedDelta - flatIncrease) * percentIncrease;

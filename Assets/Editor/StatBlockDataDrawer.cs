@@ -62,7 +62,7 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
             var baseValueProp = valAtIndex.FindPropertyRelative("_baseValue");
             EditorGUI.BeginChangeCheck();
             Rect fullRect = NextLine();
-            fullRect.width -= 30.0f;
+            fullRect.width -= 20.0f;
             float f = EditorGUI.DelayedFloatField(fullRect, new GUIContent(Enum.GetName(typeof(StatName), nameAtIndex.enumValueIndex)), baseValueProp.floatValue);
             if (EditorGUI.EndChangeCheck())
             {
@@ -71,15 +71,15 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
                 serializationOverriden.serializedObject.ApplyModifiedProperties();
             }
             fullRect.x += fullRect.width;
-            fullRect.width = 30.0f;
-            //if(GUI.Button(fullRect, new GUIContent("-")))
-            //{
-            //    statKeys.DeleteArrayElementAtIndex(x);
-            //    statVals.DeleteArrayElementAtIndex(x);
-            //    serializationOverriden.boolValue = true;
-            //    serializationOverriden.serializedObject.ApplyModifiedProperties();
-            //    SetAddEnum();
-            //}
+            fullRect.width = 20.0f;
+            if (GUI.Button(fullRect, new GUIContent("-")))
+            {
+                statKeys.DeleteArrayElementAtIndex(x);
+                statVals.DeleteArrayElementAtIndex(x);
+                serializationOverriden.boolValue = true;
+                serializationOverriden.serializedObject.ApplyModifiedProperties();
+                SetAddEnum();
+            }
             if (GUI.Button(fullRect, new GUIContent("↻")))
             {
                 statVals.GetArrayElementAtIndex(x).FindPropertyRelative("_baseValue").floatValue = StatBlock.defaultValues[(StatName)statKeys.GetArrayElementAtIndex(x).enumValueIndex];
@@ -87,7 +87,7 @@ public class StatBlockDataDrawer : CustomPropertyDrawerBase
                 serializationOverriden.serializedObject.ApplyModifiedProperties();
             }
         }
-        //DrawAddButton();
+        DrawAddButton();
     }
 
     void DrawAddButton()

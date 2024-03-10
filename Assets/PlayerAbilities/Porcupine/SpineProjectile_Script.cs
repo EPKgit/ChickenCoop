@@ -20,7 +20,7 @@ public class SpineProjectile_Script : BaseLineTargeted
         rb.velocity = direction;
         creator = p;
         damage = d;
-        timeLeftMax = l;
+        timeLeftMax = timeLeftCurrent = l;
         transform.rotation = Quaternion.FromToRotation(Vector2.up, direction);
     }
 

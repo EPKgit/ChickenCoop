@@ -45,35 +45,30 @@ public class StatBlockComponent : MonoBehaviour
 	/// Gives us access to the value of a certain stat
 	/// </summary>
 	/// <param name="name">The name of the stat to check</param>
-	/// <returns>Returns the final value of the stat if it exists, -1 if it doesn't</returns>
+	/// <returns>Returns the final value of the stat if it exists or creates it and returns the default value</returns>
 	public float GetValue(StatName name)
 	{
 		return stats.GetValue(name);
 	}
 
-	public float GetValueOrDefault(StatName name)
-	{
-        return stats.GetValueOrDefault(name);
-    }
-
-	public static float GetValueOrDefault(GameObject g, StatName name)
-	{
+    /// <summary>
+    /// Gives us access to the value of a certain stat
+    /// </summary>
+    /// <param name="name">The name of the stat to check</param>
+    /// <returns>Returns the final value of the stat if it exists, -1 if it doesn't</returns>
+    public static float GetValue(GameObject g, StatName name)
+    {
         StatBlockComponent comp = Lib.FindDownwardsInTree<StatBlockComponent>(g);
-		if(comp != null)
-		{
-            return comp.GetValueOrDefault(name);
+        if (comp != null)
+        {
+            return comp.GetValue(name);
         }
-        return StatBlock.defaultValues[name];
+        return -1;
     }
 
-	public int GetIntValue(StatName name)
+    public int GetIntValue(StatName name)
 	{
         return stats.GetIntValue(name);
-    }
-
-	public int GetIntValueOrDefault(StatName name)
-	{
-        return stats.GetIntValueOrDefault(name);
     }
 
 	/// <summary>

@@ -14,17 +14,26 @@ public class PiercingSpine_Ability : Ability
     public override void Initialize(PlayerAbilities pa)
 	{
 		base.Initialize(pa);
+        pa.stats.RegisterStatChangeCallback(StatName.SpineDuration, OnSpineDurationChange);
+        pa.stats.RegisterStatChangeCallback(StatName.SpineSpeed, OnSpineSpeedChange);
+    }
+
+    public void OnSpineDurationChange(float f)
+    {
+        projectileLifetime = f;
+        targetingData.SetRangeOverride(projectileLifetime * projectileSpeed);
+    }
+
+    public void OnSpineSpeedChange(float f)
+    {
+        projectileSpeed = f;
+        targetingData.SetRangeOverride(projectileLifetime * projectileSpeed);
     }
 
     public override void OnAbilityDataUpdated()
     {
         base.OnAbilityDataUpdated();
         targetingData.SetRangeOverride(projectileLifetime * projectileSpeed);
-    }
-
-    public override void FinishAbility()
-    {
-        base.FinishAbility();
     }
 
     protected override void UseAbility()

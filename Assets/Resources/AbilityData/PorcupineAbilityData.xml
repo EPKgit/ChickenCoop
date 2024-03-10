@@ -20,7 +20,6 @@
 		<var_list>
 			<variable name="cd" type="float" value="1"/>
 			<variable name="damage" type="float" value="10"/>
-			<variable name="projectileLifetime" type="float" value="0.5"/>
 			<variable name="spinePrefab" type="asset" value="porcupine.spine"/>
 		</var_list>
 	</ability>

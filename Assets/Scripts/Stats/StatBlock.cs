@@ -2,19 +2,42 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum StatName 
 { 
-    MovementSpeed       = 0, 
-    MaxHealth           = 1, 
-    AggroPercentage     = 2, 
-    DamagePercentage    = 3,
-    FlatDamage          = 4,
-    HealingPercentage   = 5, 
-    FlatHealing         = 6, 
-    CooldownReduction   = 7, 
-    PuzzleSolving       = 8, 
-    MAX = 9
+    //General 
+    MovementSpeed, 
+    MaxHealth,
+    
+    //Damage
+    AggroPercentage, 
+    DamagePercentage,
+    FlatDamage,
+
+    //Healing
+    HealingPercentage, 
+    FlatHealing, 
+
+    //Abilities
+    CooldownReduction, 
+
+    //Misc
+    PuzzleSolving, 
+
+    // PORCUPINE
+    SpineDuration,
+    SpineSpeed, 
+
+    MAX
+}
+
+public static class ___
+{
+    public static int Index(this StatName s)
+    {
+        return (int)s;
+    }
 }
 
 [System.Serializable]
@@ -36,68 +59,38 @@ public class StatBlock : ISerializationCallbackReceiver
         { StatName.FlatHealing,             0.0f },
         { StatName.CooldownReduction,       1.0f },
         { StatName.PuzzleSolving,           0.0f },
+        { StatName.SpineDuration,           0.2f },
+        { StatName.SpineSpeed,              25.0f },
         { StatName.MAX,                     -1.0f },
     };
 
-    public StatBlock()
+    private bool initialized = false;
+    public StatBlock() 
     {
-        foreach (StatName key in Enum.GetValues(typeof(StatName)))
-        {
-            if (key == StatName.MAX)
-            {
-                continue;
-            }
-            float defaultValue = defaultValues[key];
-            statDict.Add(key, new Stat(key, defaultValue));
-        }
+        initialized = false;
     }
 
     public void Initialize(StatBlock other)
     {
         var otherStats = other.statDict;
-        foreach (StatName key in Enum.GetValues(typeof(StatName)))
+        foreach(var statPair in otherStats) 
         {
-            if(key == StatName.MAX)
+            StatName statName = statPair.Key;
+            if (statName == StatName.MAX)
             {
                 continue;
             }
-            if (otherStats.ContainsKey(key)) //if the other stats have a definition for it
-            {
-                if (HasStat(key)) //override our local value with the other stats value
-                {
-                    statDict[key].BaseValue = otherStats[key].BaseValue;
-                }
-                else //otherwise add it to our dictionary
-                {
-                    statDict.Add(key, new Stat(key, otherStats[key].BaseValue));
-                }
-            }
-            else //otherwise if it's not defined by the other block
-            {
-                float defaultValue = defaultValues[key];
-                if (HasStat(key)) //make sure we are reset to default
-                {
-                    statDict[key].BaseValue = defaultValue;
-                }
-                else //add it with default value
-                {
-                    statDict.Add(key, new Stat(key, defaultValue));
-                }
-            }
+            Stat theirStat = statPair.Value;
+            Stat ourStat = GetStat(statName);
+            ourStat.BaseValue = theirStat.BaseValue;
         }
         FlushInitializationQueue();
+        initialized = true;
     }
     public void Initialize()
     {
-        foreach (StatName key in Enum.GetValues(typeof(StatName)))
-        {
-            if (key != StatName.MAX && !HasStat(key))
-            {
-                float defaultValue = defaultValues[key];
-                statDict.Add(key, new Stat(key, defaultValue));
-            }
-        }
         FlushInitializationQueue();
+        initialized = true;
     }
 
     /// <summary>
@@ -107,7 +100,7 @@ public class StatBlock : ISerializationCallbackReceiver
     {
         foreach(var pair in queuedCallbacksToRegister)
         {
-            statDict[pair.Item1].RegisterStatChangeCallback(pair.Item2);
+            GetStat(pair.Item1).RegisterStatChangeCallback(pair.Item2);
         }
     }
 
@@ -122,55 +115,46 @@ public class StatBlock : ISerializationCallbackReceiver
     }
 
     /// <summary>
-    /// Gives us access to the value of a certain stat
+    /// Gives us access to the value of a certain stat and creates it with a default value if it doesn't exist
     /// </summary>
     /// <param name="name">The name of the stat to check</param>
-    /// <returns>Returns the final value of the stat if it exists, -1 if it doesn't</returns>
+    /// <returns>Returns the final value of the stat</returns>
     public float GetValue(StatName name)
     {
-        Stat temp = null;
-        statDict.TryGetValue(name, out temp);
-        return temp == null ? -1f : temp.Value;
+        return GetStat(name).Value;
     }
 
-    public float GetValueOrDefault(StatName name)
-    {
-        Stat temp = null;
-        statDict.TryGetValue(name, out temp);
-        return temp == null ? StatBlock.defaultValues[name] : temp.Value;
-    }
-
+    /// <summary>
+    /// Gives us access to the value of a certain stat as an integer and creates it with a default value if it doesn't exist
+    /// </summary>
+    /// <param name="name">The name of the stat to check</param>
+    /// <returns>Returns the final value of the stat as an integer</returns>
     public int GetIntValue(StatName name)
     {
-        Stat temp = null;
-        statDict.TryGetValue(name, out temp);
-        return temp == null ? -1 : temp.IntValue;
-    }
-
-    public int GetIntValueOrDefault(StatName name)
-    {
-        Stat temp = null;
-        statDict.TryGetValue(name, out temp);
-        return temp == null ? (int)StatBlock.defaultValues[name] : temp.IntValue;
+        return GetStat(name).IntValue;
     }
 
     /// <summary>
     /// Gives us access to a certain stat. Useful for registering callbacks on a stat, or adding bonuses
     /// </summary>
     /// <param name="name">The name of the stat to get</param>
-    /// <returns>Returns the stat if it exists, null otherwise</returns>
+    /// <returns>Returns the stat if it exists, otherwise we create it with a default value then return that</returns>
     public Stat GetStat(StatName name)
     {
-        Stat temp = null;
+        Stat temp;
         statDict.TryGetValue(name, out temp);
-        return temp;
+        if(temp != null)
+        {
+            return temp;
+        }
+        return AddStat(name, defaultValues[name]);
     }
 
     public Stat AddStat(StatName stat, float value)
     {
-        if(statDict.ContainsKey(stat) && stat != StatName.MAX)
+        if(statDict.ContainsKey(stat) || stat >= StatName.MAX || stat < 0)
         {
-            return null;
+            throw new Exception("ERROR: attemping to create duplicate value or invalid index ~ " + stat);
         }
         Stat newStat = new Stat(stat, value);
         statDict.Add(stat, newStat);
@@ -182,17 +166,17 @@ public class StatBlock : ISerializationCallbackReceiver
         return statDict;
     }
 
-    public bool RegisterStatChangeCallback(StatName stat, Action<float> d)
+    public bool RegisterStatChangeCallback(StatName statName, Action<float> d)
     {
-        if (statDict.ContainsKey(stat))
+        if(!initialized)
         {
-            statDict[stat].RegisterStatChangeCallback(d);
-            return true;
+            queuedCallbacksToRegister.Add(new Tuple<StatName, Action<float>>(statName, d));
+            return false;
         }
         else
         {
-            queuedCallbacksToRegister.Add(new Tuple<StatName, Action<float>>(stat, d));
-            return false;
+            GetStat(statName).RegisterStatChangeCallback(d);
+            return true;
         }
     }
 
