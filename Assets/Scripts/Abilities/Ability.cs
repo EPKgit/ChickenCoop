@@ -235,6 +235,11 @@ public abstract class Ability : ScriptableObject
         AbilityDataXMLParser.instance.UpdateAbilityData(this);
     }
 
+    public virtual void OnAbilityDataUpdated()
+    {
+
+    }
+
 
     /// <summary>
     /// Called when the ability has left the scope it exists in, should be used to cleanup any pools allocated

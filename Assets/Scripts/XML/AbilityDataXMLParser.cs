@@ -361,6 +361,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             }
         }
 
+        a.OnAbilityDataUpdated();
         return true;
     }
 

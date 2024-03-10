@@ -16,6 +16,12 @@ public class PiercingSpine_Ability : Ability
 		base.Initialize(pa);
     }
 
+    public override void OnAbilityDataUpdated()
+    {
+        base.OnAbilityDataUpdated();
+        targetingData.SetRangeOverride(projectileLifetime * projectileSpeed);
+    }
+
     public override void FinishAbility()
     {
         base.FinishAbility();
