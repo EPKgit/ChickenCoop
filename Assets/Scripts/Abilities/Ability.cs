@@ -60,7 +60,10 @@ public abstract class Ability : ScriptableObject
     /// The ID that this ability uses to identify itself in the xml, multiple instances of the same variant of this ability will share an ID. 
     /// ID 0 is an invalid ID
     /// </summary>
-    public uint ID = 0;
+    public abstract uint ID
+    {
+        get;
+    }
 
 
     #region ABILITY_ASSET_DATA

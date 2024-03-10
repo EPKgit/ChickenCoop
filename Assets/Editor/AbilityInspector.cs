@@ -13,7 +13,7 @@ public class AbilityInspector : Editor
 	private Ability ability;
 	private List<FieldInfo> childFields;
 
-	private SerializedProperty ID;
+	//private SerializedProperty ID;
 	private SerializedProperty passive;
 	private SerializedProperty ticking;
 	private SerializedProperty hasDuration;
@@ -41,7 +41,7 @@ public class AbilityInspector : Editor
                 childFields.RemoveAt(x);
             }
         }
-        ID = serializedObject.FindProperty("ID");
+        //ID = serializedObject.FindProperty("ID");
         ticking = serializedObject.FindProperty("_tickingAbilitySerialized");
         hasDuration = serializedObject.FindProperty("hasDuration");
         maxDuration = serializedObject.FindProperty("maxDuration");
@@ -63,7 +63,7 @@ public class AbilityInspector : Editor
         ++EditorGUI.indentLevel;
         var prevLabelWidth = EditorGUIUtility.labelWidth;
         EditorGUIUtility.labelWidth = EditorGUIUtility.currentViewWidth * LABEL_RATIO;
-        EditorGUILayout.PropertyField(ID);
+        EditorGUILayout.LabelField(string.Format("{0}", ability.ID));
         EditorGUILayout.PropertyField(icon);
         EditorGUILayout.PropertyField(passive);
         if (!ability.isPassive)
@@ -125,7 +125,7 @@ public class AbilityInspector : Editor
         var serializedProperty = serializedObject.FindProperty(name);
         if(serializedProperty == null)
         {
-            Debug.LogError(string.Format("ERROR: SERIALIZED PROPERTY \"{0}\" COULD NOT BE FOUND FOR ABILITY WITH ID:{1}", name, ID.intValue));
+            Debug.LogError(string.Format("ERROR: SERIALIZED PROPERTY \"{0}\" COULD NOT BE FOUND FOR ABILITY WITH ID:{1}", name, ability.ID));
             return;
         }
         PotentiallyOverrideProperty(serializedProperty);
@@ -133,7 +133,7 @@ public class AbilityInspector : Editor
 
     void PotentiallyOverrideProperty(SerializedProperty prop)
     {
-        string entry = AbilityDataXMLParser.instance.HasFieldInEntry((uint)ID.intValue, prop.propertyPath);
+        string entry = AbilityDataXMLParser.instance.HasFieldInEntry(ability.ID, prop.propertyPath);
         if (entry != "")
         {
             GUILayout.BeginHorizontal();

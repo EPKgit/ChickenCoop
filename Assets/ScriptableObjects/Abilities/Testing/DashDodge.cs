@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DashDodge : Ability
 {
+    public override uint ID => 3;
     public MovementType type => MovementType.DASH;
 
     private Vector2 startPosition;

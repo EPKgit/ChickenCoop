@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class BasicTargetStun : Ability
 {
+    public override uint ID => 7;
+
     public float stunDuration = 2.0f;
 
     public override void Initialize(PlayerAbilities pa)

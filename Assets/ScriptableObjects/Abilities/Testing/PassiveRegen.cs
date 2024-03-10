@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class PassiveRegen : Ability
 {
+    public override uint ID => 14;
+
 	public float hpPerSecond;
 
-	private float healInterval;
+    private float healInterval;
 	private float timeSinceLastHeal;
 	private IHealable hp;
 	private GameObject owner;

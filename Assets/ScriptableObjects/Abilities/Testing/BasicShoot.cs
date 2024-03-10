@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class BasicShoot : Ability
 {
+    public override uint ID => 1;
+
 	public GameObject bulletPrefab;
 	public float moveSpeed;
 	public float lifetime = 6.0f;

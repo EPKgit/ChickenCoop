@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class BasicTargetHeal : Ability
 {
+    public override uint ID => 4;
+
     public float amount;
 
     public override void Initialize(PlayerAbilities pa)

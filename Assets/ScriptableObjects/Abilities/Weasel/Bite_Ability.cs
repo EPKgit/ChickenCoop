@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Bite_Ability : Ability
 {
+    public override uint ID => 102;
+
     public float damage = 1.0f;
     public float hitboxDuration = 0.25f;
     public float hitboxRadius = 0.5f;

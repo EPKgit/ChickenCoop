@@ -262,5 +262,21 @@
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>14</ability_ID>
+		<ability_name>Passive Regen</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Regen {1} per second"/>
+		</tooltip_list>
+		<targeting_list>
+			<noneTargetingData/>
+		</targeting_list>
+		<var_list>
+			<variable name="hpPerSecond" type="int" value="5"/>
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 	
 </ability_list>

@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Shockwave_Ability : Ability
 {
+    public override uint ID => 10;
+
     public GameObject shockwavePrefab;
 
     public float damage;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ConstructTeleporter_Ability : Ability
 {
+    public override uint ID => 13;
+
     public GameObject teleporterPadPrefab;
     public int tpUses;
     private GameObject pad1;

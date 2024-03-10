@@ -6,6 +6,8 @@ using UnityEngine.VFX;
 
 public class Maul_Ability : Ability
 {
+    public override uint ID => 104;
+
     public GameObject slashVFX;
     public GameObject biteVFX;
 

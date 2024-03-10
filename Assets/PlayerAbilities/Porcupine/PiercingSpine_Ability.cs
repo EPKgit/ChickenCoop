@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PiercingSpine_Ability : Ability
 {
+    public override uint ID => 201;
+
     public float damage = 1.0f;
     public float projectileSpeed = 10.0f;
     public float projectileLifetime = 0.5f;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CooldownOnAbilityCast : Ability
 {
+    public override uint ID => 5;
+
     public float amount = 0.5f;
     
     public override void Initialize(PlayerAbilities pa)

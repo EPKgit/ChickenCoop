@@ -2,6 +2,8 @@
 
 public class RecastableTeleport : Ability
 {   
+    public override uint ID => 8;
+
 	private Vector3 startingPosition;
 
     public MovementType type => MovementType.TELEPORT;

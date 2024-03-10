@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FlipFlopCooldown_Ability : Ability
 {
+    public override uint ID => 12;
+
     public float increaseMultiplier;
     public float decreaseMultiplier;
     public float interval;

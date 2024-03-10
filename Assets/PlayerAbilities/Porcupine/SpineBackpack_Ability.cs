@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class SpineBackpack_Ability : Ability
 {
+    public override uint ID => 202;
+
     public GameObject backpackPrefab;
 
     public float damage = 1.0f;

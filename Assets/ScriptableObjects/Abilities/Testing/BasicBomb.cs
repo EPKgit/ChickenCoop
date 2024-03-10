@@ -5,7 +5,9 @@ using UnityEngine.InputSystem;
 
 public class BasicBomb : Ability
 {
-	public GameObject bombPrefab;
+    public override uint ID => 2;
+
+    public GameObject bombPrefab;
 	public float arcSteepness;
 	public float arcTime;
     public float damage;

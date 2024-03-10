@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Scurry_Ability : Ability
 {
+    public override uint ID => 101;
+
     public GameObject scurryVFXPrefab;
     public float movementSpeedMultiplier = 1.5f;
     public float damageMultiplier = 2.0f;

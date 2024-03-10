@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EveryXAbilityNoCD_Ability : Ability
 {
+    public override uint ID => 11;
+
     public float SetCDTo = 0.5f;
     public int NumAbilitiesBeforeReset = 5;
 

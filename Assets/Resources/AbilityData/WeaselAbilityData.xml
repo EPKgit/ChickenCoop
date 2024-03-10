@@ -2,8 +2,8 @@
 <ability_list
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="AbilityData.xsd">
-	
-	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<!--Weasel XML |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
 	<ability>
 		<ability_ID>101</ability_ID>
