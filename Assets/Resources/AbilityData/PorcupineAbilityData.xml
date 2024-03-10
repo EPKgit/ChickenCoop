@@ -25,5 +25,36 @@
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>202</ability_ID>
+		<ability_name>Spiny Backpack</ability_name>
+		<tooltip_list>
+			<tooltip type="default" text="Drop a backpack rigged to explode with spines when an enemy passes near it"/>
+			<tooltip type="blue" text="You can now throw the backpack, and it will setup up landing"/>
+		</tooltip_list>
+		<targeting_list>
+			<noneTargetingData/>
+			<groundTargetingData>
+				<range>4</range>
+				<size>
+					<x>1</x>
+					<y>1</y>
+				</size>
+			</groundTargetingData>
+		</targeting_list>
+		<var_list>
+			<variable name="cd" type="float" value="0.1"/>
+			<variable name="damage" type="float" value="10"/>
+			<variable name="spineCount" type="float" value="16"/>
+			<variable name="backpackLifetime" type="float" value="30"/>
+			<variable name="backpackPrefab" type="asset" value="porcupine.backpack"/>
+			
+			<variable name="launchTime" type="float" value="0.5"/>			
+			<variable name="arcSteepness" type="float" value="2.0"/>			
+		</var_list>
+	</ability>
+
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 	
 </ability_list>

@@ -99,20 +99,22 @@ namespace Targeting
                     preview = usedAbility.GameObjectManipulation(PreviewPrefab, true);
                 } break;
             }
-            previewSecondary = usedAbility.GameObjectManipulation(SecondaryPreviewPrefab, true);
 
             switch (TargetType)
             {
                 case TargetType.LINE_TARGETED:
                 {
+                    previewSecondary = usedAbility.GameObjectManipulation(SecondaryPreviewPrefab, true);
                     PreviewLine(usedAbility, user);
                 } break;
                 case TargetType.ENTITY_TARGETED:
                 {
+                    previewSecondary = usedAbility.GameObjectManipulation(SecondaryPreviewPrefab, true);
                     PreviewTargeted(usedAbility, user);
                 } break;
                 case TargetType.GROUND_TARGETED:
                 {
+                    previewSecondary = usedAbility.GameObjectManipulation(SecondaryPreviewPrefab, true);
                     PreviewGround(usedAbility, user);
                 } break;
                 // case TargetType.CUSTOM_TARGETING:

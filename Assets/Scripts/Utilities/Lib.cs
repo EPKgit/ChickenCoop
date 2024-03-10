@@ -58,7 +58,7 @@ public static class Lib
     public static T FindDownThenUpwardsInTree<T>(GameObject start) where T : class
     {
         T temp = FindDownwardsInTree<T>(start);
-        if(temp == null)
+        if (temp == null)
         {
             temp = FindUpwardsInTree<T>(start);
         }
@@ -85,7 +85,7 @@ public static class Lib
     public static T FindUpwardsInTree<T>(GameObject start) where T : class
     {
         Transform curr = start.transform;
-        while(curr != null)
+        while (curr != null)
         {
             T temp = curr.GetComponent<T>();
             if (IsNotNull<T>(temp))
@@ -93,7 +93,7 @@ public static class Lib
                 DebugFlags.Log(DebugFlags.Flags.LIB, "returning " + temp);
                 return temp;
             }
-			curr = curr.parent;
+            curr = curr.parent;
         }
         return null;
     }
@@ -189,22 +189,22 @@ public static class Lib
     }
 
     public static bool HasTagInParents(GameObject start, string tag)
-	{
-		Transform curr = start?.transform;
+    {
+        Transform curr = start?.transform;
         bool found = false;
-        while(curr != null)
-		{
-    		DebugFlags.Log(DebugFlags.Flags.LIB, "Checking for tag " + tag + " on " + curr.name );
+        while (curr != null)
+        {
+            DebugFlags.Log(DebugFlags.Flags.LIB, "Checking for tag " + tag + " on " + curr.name);
             found = curr.CompareTag(tag);
-            if(found)
+            if (found)
             {
                 break;
             }
-			curr = curr.parent;
+            curr = curr.parent;
         }
-		DebugFlags.Log(DebugFlags.Flags.LIB, "Ending search for tag " + tag + " with result " + found);
-		return found;
-	}
+        DebugFlags.Log(DebugFlags.Flags.LIB, "Ending search for tag " + tag + " with result " + found);
+        return found;
+    }
 
     public static bool HasTagInHierarchyDownward(GameObject start, string tag)
     {
@@ -213,40 +213,40 @@ public static class Lib
     }
 
     internal static bool TagRecursiveHelper(GameObject toCheck, string tag)
-	{
-		bool temp = toCheck.CompareTag(tag);
-		if(temp)
-		{
-			return temp;
-		}
-		foreach(Transform t in toCheck.transform)
-		{
-			temp = Lib.TagRecursiveHelper(t.gameObject, tag);
-			if(temp)
-			{
-				return temp;
-			}
-		}
-		return false;
-	}
+    {
+        bool temp = toCheck.CompareTag(tag);
+        if (temp)
+        {
+            return temp;
+        }
+        foreach (Transform t in toCheck.transform)
+        {
+            temp = Lib.TagRecursiveHelper(t.gameObject, tag);
+            if (temp)
+            {
+                return temp;
+            }
+        }
+        return false;
+    }
 
-	public static bool HasParent(GameObject toCheck, GameObject potentialParent)
-	{
-		if(toCheck == null || potentialParent == null)
-		{
-			return false;
-		}
-		Transform parent = toCheck.transform;
-		while(parent != null)
-		{
-			if(parent.gameObject == potentialParent)
-			{
-				return true;
-			}
-			parent = parent.parent;
-		}
-		return false;
-	}
+    public static bool HasParent(GameObject toCheck, GameObject potentialParent)
+    {
+        if (toCheck == null || potentialParent == null)
+        {
+            return false;
+        }
+        Transform parent = toCheck.transform;
+        while (parent != null)
+        {
+            if (parent.gameObject == potentialParent)
+            {
+                return true;
+            }
+            parent = parent.parent;
+        }
+        return false;
+    }
 
     //   public static Vector3 GetMouseDirection(Mouse m, GameObject from)
     //   {
@@ -261,7 +261,7 @@ public static class Lib
 
     public static Vector2 GetAimPoint(InputAction.CallbackContext ctx)
     {
-        switch(ctx.control.device.description.deviceClass)
+        switch (ctx.control.device.description.deviceClass)
         {
             case "Mouse":
             {
@@ -283,26 +283,36 @@ public static class Lib
     }
 
     public static Vector2 DefaultDirectionCheck(Vector2 dir)
-	{
-		if(dir.x == 0 && dir.y == 0)
-		{
-			dir = Vector2.right;
-		}
-		dir.Normalize();
-		return dir;
-	}
+    {
+        if (dir.x == 0 && dir.y == 0)
+        {
+            dir = Vector2.right;
+        }
+        dir.Normalize();
+        return dir;
+    }
 
-	public static Vector2 DefaultDirectionCheck(Vector2 dir, Rigidbody2D rb)
-	{
-		if(dir.x == 0 && dir.y == 0)
-		{
-			dir = rb.velocity;
-			if(dir.x == 0 && dir.y == 0)
-			{
-				dir = Vector2.right;
-			}
-		}
-		dir.Normalize();
-		return dir;
-	}
+    public static Vector2 DefaultDirectionCheck(Vector2 dir, Rigidbody2D rb)
+    {
+        if (dir.x == 0 && dir.y == 0)
+        {
+            dir = rb.velocity;
+            if (dir.x == 0 && dir.y == 0)
+            {
+                dir = Vector2.right;
+            }
+        }
+        dir.Normalize();
+        return dir;
+    }
+
+    public static Vector3 GetArcPosition(Vector3 startPos, Vector3 endPos, float currentTime, float totalTime, float arcSteepness)
+    { 
+        float t = currentTime / totalTime;
+        Vector3 newPosition = Vector3.Lerp(startPos, endPos, t);
+        t = 2 * t - 1;
+        t *= t; //remap from 0-1 to the input to a quadratic
+        newPosition.z = arcSteepness * (t) - arcSteepness;
+        return newPosition;
+    }
 }

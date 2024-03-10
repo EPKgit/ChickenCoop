@@ -14,8 +14,8 @@ public class AssetLibraryManager : MonoSingleton<AssetLibraryManager>
         main.Initialize();
     }
 
-    public GameObject RequestPrefab(string category, string name)
+    public GameObject RequestPrefab(string name, string category)
     {
-        return main.GetAsset(category, name);
+        return main.GetAsset(name, category);
     }
 }

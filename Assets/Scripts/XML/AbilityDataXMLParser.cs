@@ -47,11 +47,9 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             targetingData = new AbilityTargetingData();
             switch(node.Name)
             {
-                case "noneTargetingDataType":
+                case "noneTargetingData":
                 {
                     targetingData.targetType = TargetType.NONE;
-                    targetingData.range = float.Parse(node["range"].InnerText);
-                    targetingData.previewScale = new Vector3(float.Parse(node["width"].InnerText), 0, 0);
                 } break;
 
                 case "lineTargetingData":
@@ -332,7 +330,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 
     public bool UpdateAbilityData(Ability a)
     {
-        AbilityXMLDataEntry entry = null;
+        AbilityXMLDataEntry entry;
         if (a.ID == 0 || !table.TryGetValue(a.ID, out entry))
         {
             Debug.LogError("ERROR: FAILED TO FIND XML DATA FOR ABILITY:\"" + a.GetType().Name + "\"");

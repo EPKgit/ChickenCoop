@@ -280,7 +280,13 @@ public abstract class Ability : ScriptableObject
             return false;
         }
         upgradeStatus[(int)slot] = true;
+        OnUpgrade(slot);
         return true;
+    }
+
+    public virtual void OnUpgrade(AbilityUpgradeSlot slot)
+    {
+
     }
 
     /// <summary>
@@ -299,13 +305,27 @@ public abstract class Ability : ScriptableObject
         return true;
     }
 
+    public virtual void OnDowngrade(AbilityUpgradeSlot slot)
+    {
+
+    }
+
     /// <summary>
     /// Swaps the ability upgrade status on the upgrade slot passed in
     /// </summary>
     /// <param name="slot">The upgrade slot to swap</param>
     public virtual void ToggleAbilityUpgrade(AbilityUpgradeSlot slot)
     {
-        upgradeStatus[(int)slot] = !upgradeStatus[(int)slot];
+        if (upgradeStatus[(int)slot])
+        {
+            OnDowngrade(slot);
+            upgradeStatus[(int)slot] = false;
+        } 
+        else
+        {
+            OnUpgrade(slot);
+            upgradeStatus[(int)slot] = true;
+        }
     }
 
     /// <summary>

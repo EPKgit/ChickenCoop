@@ -59,11 +59,6 @@ public class BaseArcingProjectile : Poolable
             OnEnd();
             DestroySelf();
         }
-        float t = timer / arcTime;
-        Vector3 newPosition = Vector3.Lerp(startPosition, endPosition, t);
-        t = 2 * t - 1;
-        t *= t; //remap from 0-1 to the input to a quadratic
-        newPosition.z = arcSteepness * (t) - arcSteepness;
-        transform.position = newPosition;
+        transform.position = Lib.GetArcPosition(startPosition, endPosition, timer, arcTime, arcSteepness);
     }
 }

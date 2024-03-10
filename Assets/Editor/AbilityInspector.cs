@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Targeting;
+using System.Linq;
 
 [CustomEditor(typeof(Ability), true)]
 public class AbilityInspector : Editor
@@ -104,6 +105,14 @@ public class AbilityInspector : Editor
             if(temp.IsNotSerialized)
             {
                 continue;
+            }
+            System.Attribute[] attributes = System.Attribute.GetCustomAttributes(temp);
+            foreach(Attribute attribute in attributes)
+            {
+                if(attribute is HideInInspector)
+                {
+                    continue;
+                }
             }
             PotentiallyOverrideProperty(temp.Name);
 		}
