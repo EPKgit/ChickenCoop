@@ -21,6 +21,7 @@ public class DebugFlags
         ABILITYQUEUE = 0,
         HITBOXES_EDITOR_ALWAYS = 0,
         HITBOXES_IN_GAME = 0,
+        ABILITYXML = 1,
     }
 
     public static void Log(Flags flag, string printString)

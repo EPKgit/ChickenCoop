@@ -8,6 +8,11 @@
 	<ability>
 		<ability_ID>101</ability_ID>
 		<ability_name>Scurry</ability_name>
+		<ability_icon>5_56</ability_icon>
+		<ability_data>
+			<cd>10</cd>
+			<duration>4</duration>
+		</ability_data>
 		<tooltip_list>
 			<tooltip type="default" text="Go invisible and increase your movement speed by {movementSpeedMultiplier} times."/>
 		</tooltip_list>
@@ -17,8 +22,6 @@
 		<var_list>
 			<variable name="movementSpeedMultiplier" type="float" value="1.5"/>
 			<variable name="damageMultiplier" type="float" value="2.0"/>
-			<variable name="duration" type="float" value="4"/>
-			<variable name="cd" type="float" value="10"/>
 		</var_list>
 	</ability>
 
@@ -27,6 +30,10 @@
 	<ability>
 		<ability_ID>102</ability_ID>
 		<ability_name>Chomp</ability_name>
+		<ability_icon>6_09</ability_icon>
+		<ability_data>
+			<cd>1</cd>
+		</ability_data>
 		<tooltip_list>
 			<tooltip type="default" text="Bite in front of you"/>
 			<tooltip type="red" text="and stun"/>
@@ -40,7 +47,6 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="cd" type="float" value="1"/>
 			<variable name="damage" type="float" value="5"/>
 			<variable name="hitboxDuration" type="float" value="0.25"/>
 			<variable name="hitboxRadius" type="float" value="0.5"/>
@@ -56,6 +62,10 @@
 	<ability>
 		<ability_ID>103</ability_ID>
 		<ability_name>Swipe</ability_name>
+		<ability_icon>5_45</ability_icon>
+		<ability_data>
+			<cd>1</cd>
+		</ability_data>
 		<tooltip_list>
 			<tooltip type="default" text="Swipe in a cone in front of you"/>
 		</tooltip_list>
@@ -66,7 +76,6 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="cd" type="float" value="1"/>
 			<variable name="damage" type="float" value="20"/>
 			<variable name="hitboxDuration" type="float" value="0.25"/>
 		</var_list>
@@ -77,6 +86,11 @@
 	<ability>
 		<ability_ID>104</ability_ID>
 		<ability_name>Maul</ability_name>
+		<ability_icon>1_21</ability_icon>
+		<ability_data>
+			<cd>1</cd>
+			<doesTicking>true</doesTicking>
+		</ability_data>
 		<tooltip_list>
 			<tooltip type="default" text="Swing multiple times in front of you"/>
 		</tooltip_list>
@@ -87,7 +101,6 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="cd" type="float" value="1"/>
 			<variable name="damageInitial" type="float" value="10"/>
 			<variable name="damageFinal" type="float" value="20"/>
 			<variable name="hitboxDuration" type="float" value="0.25"/>

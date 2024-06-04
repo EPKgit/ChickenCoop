@@ -73,6 +73,11 @@ public abstract class Ability : ScriptableObject
     public string abilityName;
 
     /// <summary>
+    /// The default asset library to try and pull non-scoped (.) assets from for this ability
+    /// </summary>
+    public string defaultAssetLibraryName;
+
+    /// <summary>
     /// The ability tooltip to be displayed when the ability is displayed in a menu
     /// </summary>
     private string[] tooltipDescriptions;
@@ -103,20 +108,23 @@ public abstract class Ability : ScriptableObject
     /// <summary>
     /// Set true if you want the ability's Tick function and FinishAbility functions to get called
     /// </summary>
-    public bool IsTickingAbility { get { return _tickingAbilitySerialized || OverrideSetTickingAbility(); } }
-    [FormerlySerializedAs("tickingAbility"), SerializeField]
-    private bool _tickingAbilitySerialized;
+    public bool IsTickingAbility 
+    { 
+        get 
+        {
+            return isTickingAbilityOverride || maxDuration > 0;
+        } 
+    }
 
     /// <summary>
-    /// Set true if the ability has a duration, if so the parent class's tick can be used to remove the
-    /// effect once it's done, otherwise it's up to the ability to return true in Tick when it's finished
+    /// Can be set to cause an ability to tick even if it doesn't have a duration set
     /// </summary>
-    public bool hasDuration;
+    public bool isTickingAbilityOverride = false;
 
     /// <summary>
     /// The amount of time the ability will remain active if hasDuration is true
     /// </summary>
-    public float maxDuration;
+    public float maxDuration = -1;
 
     /// <summary>
     /// The amount of time to wait after casting the ability before you can cast it again.
@@ -568,9 +576,6 @@ public abstract class Ability : ScriptableObject
         return currentCooldownTimer / maxCooldown;
     }
 
-    protected virtual bool OverrideSetTickingAbility() { return false; }
-
-
 #region ABILITY_HELPERS
     /// <summary>
     /// Helper for the targetting data to be a non-monobehaviour but still instantiate
@@ -751,7 +756,7 @@ public abstract class Ability : ScriptableObject
 
     public new virtual string ToString()
     {
-        if (hasDuration)
+        if (maxDuration >= 0)
         {
             return string.Format("{0} {1}/{2}", this.GetType().Name, currentDuration, maxDuration);
         }

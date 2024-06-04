@@ -91,7 +91,7 @@ public class Stat : ISerializationCallbackReceiver
         float finalResult = BaseValue;
         foreach(Tuple<uint, float> t in additiveModifiers)
         {
-            finalResult += t.Item1;
+            finalResult += t.Item2;
         }
         foreach(Tuple<uint, float> t in multiplicativeModifiers)
         {

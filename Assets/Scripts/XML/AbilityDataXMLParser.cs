@@ -3,8 +3,10 @@ using System.Xml;
 using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 using Targeting;
+using static UnityEngine.Timeline.TimelineAsset;
 
 public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 {
@@ -12,13 +14,25 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     {
         public uint ID;
         public string name;
+        public string defaultLibrary;
+        public string iconPath;
+
+        public bool? isPassive = null;
+        public float? cooldown = null;
+        public float? duration = null;
+        public bool? doesTicking = null;
+        public int? recasts = null;
+        public float? recastWindow = null;
+
         public List<AbilityXMLTooltip> tooltips;
         public List<AbilityXMLTargetingData> targetingData;
         public List<AbilityXMLVariable> vars;
-        public AbilityXMLDataEntry(uint i, string n)
+        public AbilityXMLDataEntry(uint i, string n, string defaultLib, string icon)
         {
             ID = i;
             name = n;
+            defaultLibrary = defaultLib;
+            iconPath = icon;
             targetingData = new List<AbilityXMLTargetingData>();
             tooltips = new List<AbilityXMLTooltip>();
             vars = new List<AbilityXMLVariable>();
@@ -155,6 +169,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 
     bool LoadFile(TextAsset file)
     {
+        DebugFlags.Log(DebugFlags.Flags.ABILITYXML, "starting to load " + file.name);
         XmlDocument doc = new XmlDocument();
         doc.LoadXml(file.text);
 
@@ -163,9 +178,11 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         {
             node.ParentNode.RemoveChild(node);
         }
-        var root = doc["ability_list"];
-        foreach (XmlElement ability in root.ChildNodes)
+        var ability_list_node = doc["ability_list"];
+        string default_library = ability_list_node.GetAttribute("default_library");
+        foreach (XmlElement ability in ability_list_node.ChildNodes)
         {
+            DebugFlags.Log(DebugFlags.Flags.ABILITYXML, "\tloading ability:" + ability["ability_name"].InnerText);
             uint ability_ID = Convert.ToUInt32(ability["ability_ID"].InnerText);
             if (table.ContainsKey(ability_ID))
             {
@@ -173,42 +190,119 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                 return false;
             }
             string ability_name = ability["ability_name"].InnerText;
-            AbilityXMLDataEntry data = new AbilityXMLDataEntry(ability_ID, ability_name);
-            foreach (XmlElement tooltip in ability["tooltip_list"].ChildNodes)
+            string ability_icon = "";
+            var icon_text = ability["ability_icon"];
+            if (icon_text != null)
             {
-                data.tooltips.Add(new AbilityXMLTooltip(tooltip));
-            };
+                ability_icon = icon_text.InnerText;
+            }
+            AbilityXMLDataEntry data = new AbilityXMLDataEntry(ability_ID, ability_name, default_library, ability_icon);
+
+            DoAbilityData(ability["ability_data"], data);
+
+            var tooltip_list_node = ability["tooltip_list"];
+            if (tooltip_list_node != null)
+            {
+                foreach (XmlElement tooltip in tooltip_list_node.ChildNodes)
+                {
+                    data.tooltips.Add(new AbilityXMLTooltip(tooltip));
+                }
+            }
+
             foreach (XmlElement targetData in ability["targeting_list"].ChildNodes)
             {
                 data.targetingData.Add(new AbilityXMLTargetingData(targetData));
-            };
-            foreach (XmlElement variable in ability["var_list"].ChildNodes)
-            {
-                data.vars.Add(new AbilityXMLVariable(variable));
             }
+
+            var var_list_node = ability["var_list"];
+            if (var_list_node != null)
+            {
+                foreach (XmlElement variable in var_list_node.ChildNodes)
+                {
+                    data.vars.Add(new AbilityXMLVariable(variable));
+                }
+            }
+
             table.Add(ability_ID, data);
         }
         return true;
     }
+    private void DoAbilityData(XmlElement ability_data_node, AbilityXMLDataEntry data)
+    {
+        var isPassive_node = ability_data_node["isPassive"];
+        if (isPassive_node != null) 
+        {
+            data.isPassive = bool.Parse(isPassive_node.InnerText);
+        }
 
+        var cooldown_node = ability_data_node["cd"];
+        if(cooldown_node == null)
+        {
+            cooldown_node = ability_data_node["cooldown"];
+        }
+        if (cooldown_node != null)
+        {
+            data.cooldown = float.Parse(cooldown_node.InnerText);
+        }
 
-    private Dictionary<string, Func<string, object>> evaluationMethods = new Dictionary<string, Func<string, object>>()
+        var duration_node = ability_data_node["duration"];
+        if (duration_node == null)
+        {
+            duration_node = ability_data_node["maxDuration"];
+        }
+        if (duration_node != null)
+        {
+            data.duration = float.Parse(duration_node.InnerText);
+        }
+
+        var doesTicking_node = ability_data_node["doesTicking"];
+        if (doesTicking_node != null)
+        {
+            data.doesTicking = bool.Parse(doesTicking_node.InnerText);
+        }
+
+        var recasts_node = ability_data_node["recasts"];
+        if (recasts_node == null)
+        {
+            recasts_node = ability_data_node["recastableCount"];
+        }
+        if (recasts_node != null)
+        {
+            data.recasts = int.Parse(recasts_node.InnerText);
+        }
+
+        var recast_window_node = ability_data_node["recastWindow"];
+        if (recast_window_node != null)
+        {
+            data.recastWindow = float.Parse(recast_window_node.InnerText);
+        }
+    }
+
+    private Dictionary<string, Func<Ability, string, object>> evaluationMethods = new Dictionary<string, Func<Ability, string, object>>()
     {
         {
-            "int", (s) =>
+            "int", (a, s) =>
             {
                 return int.Parse(s);
             }
         },
 
         {
-            "float", (s) =>
+            "float", (a, s) =>
             {
                 return float.Parse(s);
             }
         },
+
         {
-            "kb", (s) =>
+            "bool", (a, s) =>
+            {
+                return bool.Parse(s);
+            }
+        },
+
+        {
+            "kb", (a, s) =>
             {
                 s = s.ToLower();
                 if(s == "tiny")
@@ -231,12 +325,22 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             }
         },
         {
-            "asset", (s) =>
+            "asset", (a, s) =>
             {
+                string category = "";
+                string name = "";
                 int index = s.IndexOf('.');
-                string category = s.Substring(0, index);
-                string name = s.Substring(index + 1);
-                return AssetLibraryManager.instance.RequestPrefab(name, category);
+                if(index == -1)
+                {
+                    category = a.defaultAssetLibraryName;
+                    name = s;
+                }
+                else
+                {
+                    category = s.Substring(0, index);
+                    name = s.Substring(index + 1);
+                }
+                return AssetLibraryManager.instance.GetPrefab(name, category);
             }
         },
     };
@@ -337,7 +441,43 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             return false;
         }
         a.abilityName = entry.name;
-        foreach(AbilityXMLTooltip tooltip in entry.tooltips)
+        a.defaultAssetLibraryName = entry.defaultLibrary;
+        if (entry.iconPath == "null")
+        {
+            a.icon = null;
+        }
+        else
+        {
+            a.icon = AssetLibraryManager.instance.GetIcon(entry.iconPath, entry.defaultLibrary);
+        }
+
+        if(entry.isPassive.HasValue)
+        {
+            a.isPassive = entry.isPassive.Value;
+        }
+
+        if(entry.cooldown.HasValue) 
+        {
+            a.maxCooldown = entry.cooldown.Value;
+        }
+
+        if (entry.duration.HasValue)
+        {
+            a.maxDuration = entry.duration.Value;
+        }
+
+        if(entry.doesTicking.HasValue)
+        {
+            a.isTickingAbilityOverride = entry.doesTicking.Value;
+        }
+
+        if(entry.recasts.HasValue)
+        {
+            a.numberTimesRecastable = entry.recasts.Value;
+            a.recastWindow = entry.recastWindow.Value;
+        }
+
+        foreach (AbilityXMLTooltip tooltip in entry.tooltips)
         {
             a.SetTooltip(abilityUpgradeLookup[tooltip.type], tooltip.text);
         }
@@ -365,13 +505,13 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 
     private void DoField(Ability a, string name, AbilityXMLVariable variable, AbilityXMLDataEntry entry)
     {
-        Func<string, object> evaluator = evaluationMethods[variable.type.ToLower()];
+        Func<Ability, string, object> evaluator = evaluationMethods[variable.type.ToLower()];
         if (evaluator == null)
         {
             Debug.LogError(string.Format("ERROR: FAILED TO EVALUATE PROPERTY ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
             return;
         }
-        if(!SetValueInHierarchy(a, a.GetType(), name, evaluator(variable.value)))
+        if(!SetValueInHierarchy(a, a.GetType(), name, evaluator(a, variable.value)))
         {
             Debug.LogError(string.Format("ERROR: FAILED TO FIND PROPERTY/FIELD ORIG:\"{0}\" RENAMED:\"{1}\" WITH TYPE \"{2}\" ON ABILITY \"{3}\" FROM DATA NAMED \"{4}\"", variable.name, name, variable.type, a.GetType().Name, entry.name));
             return;

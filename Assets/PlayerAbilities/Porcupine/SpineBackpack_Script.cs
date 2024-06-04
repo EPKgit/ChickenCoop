@@ -10,7 +10,7 @@ public class SpineBackpack_Script : Poolable
     private float timeLeftMax = 30.0f;
     private float timeLeftCurrent;
 
-    private Collider2D collider2D;
+    private new Collider2D collider2D;
 
     private GameObject creator;
     private float projectileLifetime;
@@ -30,7 +30,7 @@ public class SpineBackpack_Script : Poolable
 
     public override void PoolInit(GameObject g)
     {
-        spinePrefab = AssetLibraryManager.instance.RequestPrefab("spine", "porcupine");
+        spinePrefab = AssetLibraryManager.instance.GetPrefab("spine", "porcupine");
         collider2D = GetComponent<Collider2D>();
         base.PoolInit(g);
     }

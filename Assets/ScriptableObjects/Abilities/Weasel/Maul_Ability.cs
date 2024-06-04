@@ -50,11 +50,6 @@ public class Maul_Ability : Ability
         return startRotation;
     }
 
-    protected override bool OverrideSetTickingAbility()
-    {
-        return true;
-    }
-
     void HitboxSpawnCallback(int index)
     {
         if (index < 2)

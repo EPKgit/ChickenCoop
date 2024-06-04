@@ -26,7 +26,7 @@ public class AbilityInspector : Editor
 	private SerializedProperty abilityTags;
 	private SerializedProperty tagsToBlock;
 	private SerializedProperty tagsToApply;
-	private SerializedProperty targetingDataArray;
+	//private SerializedProperty targetingDataArray;
 
     private const float LABEL_RATIO = 0.4f;
 
@@ -54,41 +54,37 @@ public class AbilityInspector : Editor
         tagsToApply = serializedObject.FindProperty("tagsToApply");
         numberTimesRecastable = serializedObject.FindProperty("numberTimesRecastable");
         recastWindow = serializedObject.FindProperty("recastWindow");
-        targetingDataArray = serializedObject.FindProperty("_targetingData");
+        //targetingDataArray = serializedObject.FindProperty("_targetingData");
     }
 
     public override void OnInspectorGUI()
 	{
         EditorGUILayout.PrefixLabel("Ability Data");
-        ++EditorGUI.indentLevel;
-        var prevLabelWidth = EditorGUIUtility.labelWidth;
-        EditorGUIUtility.labelWidth = EditorGUIUtility.currentViewWidth * LABEL_RATIO;
-        EditorGUILayout.LabelField(string.Format("{0}", ability.ID));
-        EditorGUILayout.PropertyField(icon);
-        EditorGUILayout.PropertyField(passive);
-        if (!ability.isPassive)
-        {
-            EditorGUILayout.PropertyField(ticking);
-            if (ability.IsTickingAbility)
-            {
-                EditorGUILayout.PropertyField(hasDuration);
-                if (ability.hasDuration)
-                {
-                    PotentiallyOverrideProperty(maxDuration);
-                }
-            }
-            EditorGUILayout.PropertyField(cost);
-            PotentiallyOverrideProperty(cooldown);
+        //++EditorGUI.indentLevel;
+        //var prevLabelWidth = EditorGUIUtility.labelWidth;
+        //EditorGUIUtility.labelWidth = EditorGUIUtility.currentViewWidth * LABEL_RATIO;
+        //EditorGUILayout.LabelField(string.Format("{0}", ability.ID));
+        //EditorGUILayout.PropertyField(icon);
+        //EditorGUILayout.PropertyField(passive);
+        //if (!ability.isPassive)
+        //{
+        //    EditorGUILayout.PropertyField(ticking);
+        //    if (ability.IsTickingAbility)
+        //    {
+        //        PotentiallyOverrideProperty(maxDuration);
+        //    }
+        //    EditorGUILayout.PropertyField(cost);
+        //    PotentiallyOverrideProperty(cooldown);
 
-            PotentiallyOverrideProperty(numberTimesRecastable);
-            if (numberTimesRecastable.intValue != 0)
-            {
-                PotentiallyOverrideProperty(recastWindow);
-            }
-            //DoTargetData();
-        }
-        EditorGUIUtility.labelWidth = prevLabelWidth;
-        --EditorGUI.indentLevel;
+        //    PotentiallyOverrideProperty(numberTimesRecastable);
+        //    if (numberTimesRecastable.intValue != 0)
+        //    {
+        //        PotentiallyOverrideProperty(recastWindow);
+        //    }
+        //    //DoTargetData();
+        //}
+        //EditorGUIUtility.labelWidth = prevLabelWidth;
+        //--EditorGUI.indentLevel;
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PropertyField(abilityTags);
@@ -148,31 +144,31 @@ public class AbilityInspector : Editor
     }
     static int delIndex = 0;
 
-    void DoTargetData()
-    {
-        --EditorGUI.indentLevel;
-        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-        EditorGUILayout.PrefixLabel("Targeting Data");
-        EditorGUILayout.BeginHorizontal();
-        int n = targetingDataArray.arraySize;
-        delIndex = EditorGUILayout.DelayedIntField(delIndex);
-        if(GUILayout.Button("-") && delIndex < n)
-        {
-            targetingDataArray.DeleteArrayElementAtIndex(delIndex);
-            return;
-        }
-        if (GUILayout.Button("+"))
-        {
-            targetingDataArray.InsertArrayElementAtIndex(n);
-        }
-        EditorGUILayout.EndHorizontal();
-        ++EditorGUI.indentLevel;
-        for (int x = 0; x < n; ++x)
-        {
-            EditorGUILayout.PropertyField(targetingDataArray.GetArrayElementAtIndex(x), new GUIContent("Targeting Data " + x));
-        }
-        --EditorGUI.indentLevel;
-        ++EditorGUI.indentLevel;
-    }
+    //void DoTargetData()
+    //{
+    //    --EditorGUI.indentLevel;
+    //    EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+    //    EditorGUILayout.PrefixLabel("Targeting Data");
+    //    EditorGUILayout.BeginHorizontal();
+    //    int n = targetingDataArray.arraySize;
+    //    delIndex = EditorGUILayout.DelayedIntField(delIndex);
+    //    if(GUILayout.Button("-") && delIndex < n)
+    //    {
+    //        targetingDataArray.DeleteArrayElementAtIndex(delIndex);
+    //        return;
+    //    }
+    //    if (GUILayout.Button("+"))
+    //    {
+    //        targetingDataArray.InsertArrayElementAtIndex(n);
+    //    }
+    //    EditorGUILayout.EndHorizontal();
+    //    ++EditorGUI.indentLevel;
+    //    for (int x = 0; x < n; ++x)
+    //    {
+    //        EditorGUILayout.PropertyField(targetingDataArray.GetArrayElementAtIndex(x), new GUIContent("Targeting Data " + x));
+    //    }
+    //    --EditorGUI.indentLevel;
+    //    ++EditorGUI.indentLevel;
+    //}
 
 }

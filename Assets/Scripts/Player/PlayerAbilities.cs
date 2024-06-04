@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System.Runtime.Remoting.Lifetime;
 
 public class PlayerAbilities : MonoBehaviour
 {
@@ -97,23 +98,19 @@ public class PlayerAbilities : MonoBehaviour
             {
                 continue;
             }
-			if(a.isPassive)
-			{
-				passives.Add(ScriptableObject.Instantiate(a));
-			}
-			else
-			{
-				Debug.LogError("Non-passive ability added to passive ability list of " + abilitySet.name);
-			}
-			
+			passives.Add(ScriptableObject.Instantiate(a));
 		}
         foreach (Ability a in abilities)
         {
             a.Initialize(this);
         }
         foreach (Ability a in passives)
-		{
+        {
 			a.Initialize(this);
+            if(!a.isPassive)
+            {
+                Debug.LogError("Non-passive ability added to passive ability list of " + abilitySet.name);
+            }
             abilityQueue.AbilityStarted(a);
         }
         initialized = true;

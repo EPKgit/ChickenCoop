@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ability_list
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="AbilityData.xsd">
+	xsi:noNamespaceSchemaLocation="AbilityData.xsd"
+	default_library="porcupine">
 
 	<!--Porcupine XML |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
 	<ability>
+		<ability_ID>200</ability_ID>
+		<ability_name>Testing Passive</ability_name>
+		<ability_icon>6_09</ability_icon>
+		<ability_data>
+			<isPassive>true</isPassive>
+		</ability_data>
+		<targeting_list>
+			<noneTargetingData/>
+		</targeting_list>
+		<var_list>
+			<variable name="isPassive" type="bool" value="true"/>
+		</var_list>
+	</ability>
+
+	<ability>
 		<ability_ID>201</ability_ID>
 		<ability_name>Piercing Spine</ability_name>
+		<ability_icon>6_09</ability_icon>
+		<ability_data>
+			<cd>1</cd>
+		</ability_data>
 		<tooltip_list>
 			<tooltip type="default" text="Fire a spine that pierces enemies, doing damage"/>
 		</tooltip_list>
@@ -18,9 +38,8 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="cd" type="float" value="1"/>
 			<variable name="damage" type="float" value="10"/>
-			<variable name="spinePrefab" type="asset" value="porcupine.spine"/>
+			<variable name="spinePrefab" type="asset" value="spine"/>
 		</var_list>
 	</ability>
 
@@ -29,6 +48,10 @@
 	<ability>
 		<ability_ID>202</ability_ID>
 		<ability_name>Spiny Backpack</ability_name>
+		<ability_icon>8_84</ability_icon>
+		<ability_data>
+			<cd>0.1</cd>
+		</ability_data>
 		<tooltip_list>
 			<tooltip type="default" text="Drop a backpack rigged to explode with spines when an enemy passes near it"/>
 			<tooltip type="blue" text="You can now throw the backpack, and it will setup up landing"/>
@@ -44,7 +67,6 @@
 			</groundTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="cd" type="float" value="0.1"/>
 			<variable name="damage" type="float" value="10"/>
 			<variable name="spineCount" type="float" value="16"/>
 			<variable name="backpackLifetime" type="float" value="30"/>

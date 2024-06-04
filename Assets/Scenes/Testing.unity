@@ -207,27 +207,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &53781794 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 111988119544191453, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
-  m_PrefabInstance: {fileID: 8821114603763930804}
-  m_PrefabAsset: {fileID: 0}
---- !u!58 &53781798
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 53781794}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 1
 --- !u!1 &292229518
 GameObject:
   m_ObjectHideFlags: 0
@@ -1816,18 +1795,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2324766658073699392, guid: 909a128b93ab77042b696f6260e0d267, type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.22745098
-      objectReference: {fileID: 0}
-    - target: {fileID: 2324766658073699392, guid: 909a128b93ab77042b696f6260e0d267, type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.23019066
-      objectReference: {fileID: 0}
-    - target: {fileID: 2324766658073699392, guid: 909a128b93ab77042b696f6260e0d267, type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.23921569
-      objectReference: {fileID: 0}
     - target: {fileID: 2324766658073699394, guid: 909a128b93ab77042b696f6260e0d267, type: 3}
       propertyPath: player
       value: 
@@ -2293,10 +2260,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpineBackpack
       objectReference: {fileID: 0}
-    - target: {fileID: 111988119544191453, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6957405386403978709, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -2341,20 +2304,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7913734574875287754, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7913734574875287754, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7913734574875287754, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8999857520259454582, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
 --- !u!1001 &9139186485823034384
 PrefabInstance:

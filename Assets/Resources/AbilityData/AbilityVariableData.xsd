@@ -1,0 +1,39 @@
+﻿<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+elementFormDefault="qualified">
+	
+	<xs:element name="var_list">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="1" maxOccurs="unbounded" ref="variable" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="variable">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="type" type="variableType" use="required" />
+			<xs:attribute name="value" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="variableType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="int"/>
+			<xs:enumeration value="float"/>
+			<xs:enumeration value="bool"/>
+			<xs:enumeration value="kb"/>
+			<xs:enumeration value="asset"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="knockbackPresetType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TINY"/>
+			<xs:enumeration value="LITTLE"/>
+			<xs:enumeration value="MEDIUM"/>
+			<xs:enumeration value="BIG"/>
+		</xs:restriction>
+	</xs:simpleType>	
+</xs:schema>

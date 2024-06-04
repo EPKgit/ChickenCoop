@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = "PlayerGameplay/AssetLibrary")]
 public class AssetLibrary : ScriptableObject
@@ -16,13 +17,15 @@ public class AssetLibrary : ScriptableObject
     [System.Serializable]
     public class AssetReference
     {
-        public AssetReference(string name, GameObject reference)
+        public enum AssetType
         {
-            this.name = name;
-            this.reference = reference;
+            GAMEOBJECT,
+            ICON,
         }
         public string name;
+        public AssetType type = AssetType.GAMEOBJECT;
         public GameObject reference;
+        public Sprite icon;
     }
 
     [SerializeField]
@@ -61,4 +64,22 @@ public class AssetLibrary : ScriptableObject
         }
         return assetLookups[name];
     }
+
+    public Sprite GetIcon(string name, string category = "")
+    {
+        if (category != "")
+        {
+            return libraryLookups[category].GetIcon(name);
+        }
+
+        foreach(AssetReference asset in assets)
+        {
+            if(asset.name == name)
+            {
+                return asset.icon;
+            }
+        }
+        return null;
+    }
+
 }

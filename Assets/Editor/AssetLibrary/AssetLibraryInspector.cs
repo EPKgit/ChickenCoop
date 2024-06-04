@@ -1,15 +1,5 @@
-using System;
-using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Targeting;
-using System.Data;
-using static UnityEngine.Rendering.DebugUI.MessageBox;
-using static AssetLibrary;
-using UnityEngine.SocialPlatforms;
-using UnityEditor.IMGUI.Controls;
 
 [CustomEditor(typeof(AssetLibrary), true)]
 public class AssetLibraryInspector : Editor
@@ -136,5 +126,4 @@ public class AssetLibraryInspector : Editor
 
         EditorGUILayout.EndVertical();
     }
-
 }

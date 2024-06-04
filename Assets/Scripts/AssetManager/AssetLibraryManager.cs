@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AssetLibraryManager : MonoSingleton<AssetLibraryManager>
 {
@@ -14,8 +15,13 @@ public class AssetLibraryManager : MonoSingleton<AssetLibraryManager>
         main.Initialize();
     }
 
-    public GameObject RequestPrefab(string name, string category)
+    public GameObject GetPrefab(string name, string category)
     {
         return main.GetAsset(name, category);
+    }
+
+    public Sprite GetIcon(string name, string category)
+    {
+        return main.GetIcon(name, category);
     }
 }

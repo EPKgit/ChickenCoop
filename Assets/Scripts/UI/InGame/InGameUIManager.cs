@@ -23,7 +23,7 @@ public class InGameUIManager : MonoSingleton<InGameUIManager>
         layoutGroup = GameObject.Find("InGameCanvas").transform.Find("PlayerUI");
         for (int x = 0; x < MAX_PLAYERS; ++x)
         {
-            UIObjects.Add(Instantiate(playerUIPrefab, Vector3.zero, Quaternion.identity, layoutGroup).GetComponent<InGamePlayerUI>());
+            UIObjects.Add(Instantiate(playerUIPrefab, layoutGroup, false).GetComponent<InGamePlayerUI>());
         }
     }
 
