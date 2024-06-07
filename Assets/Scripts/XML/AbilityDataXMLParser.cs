@@ -27,6 +27,9 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         public List<AbilityXMLTooltip> tooltips;
         public List<AbilityXMLTargetingData> targetingData;
         public List<AbilityXMLVariable> vars;
+        public List<string> ability_tags;
+        public List<string> ability_blocked_tags;
+        public List<string> ability_applied_tags;
         public AbilityXMLDataEntry(uint i, string n, string defaultLib, string icon)
         {
             ID = i;
@@ -36,6 +39,9 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             targetingData = new List<AbilityXMLTargetingData>();
             tooltips = new List<AbilityXMLTooltip>();
             vars = new List<AbilityXMLVariable>();
+            ability_tags = new List<string>();
+            ability_blocked_tags = new List<string>();
+            ability_applied_tags = new List<string>();
         }
     }
 
@@ -220,6 +226,33 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                 foreach (XmlElement variable in var_list_node.ChildNodes)
                 {
                     data.vars.Add(new AbilityXMLVariable(variable));
+                }
+            }
+
+            var ability_tag_node = ability["ability_tags"];
+            if (ability_tag_node != null)
+            {
+                foreach (XmlElement tag in ability_tag_node.ChildNodes)
+                {
+                    data.ability_tags.Add(tag.InnerText);
+                }
+            }
+
+            var ability_blocked_tag_node = ability["ability_tags_to_block"];
+            if (ability_blocked_tag_node != null)
+            {
+                foreach (XmlElement tag in ability_blocked_tag_node.ChildNodes)
+                {
+                    data.ability_blocked_tags.Add(tag.InnerText);
+                }
+            }
+
+            var ability_applied_tag_node = ability["ability_tags_to_apply"];
+            if (ability_applied_tag_node != null)
+            {
+                foreach (XmlElement tag in ability_applied_tag_node.ChildNodes)
+                {
+                    data.ability_applied_tags.Add(tag.InnerText);
                 }
             }
 
@@ -464,6 +497,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         if (entry.duration.HasValue)
         {
             a.maxDuration = entry.duration.Value;
+            a.ResetDuration();
         }
 
         if(entry.doesTicking.HasValue)
@@ -497,6 +531,19 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             {
                 DoField(a, s, variable, entry);
             }
+        }
+
+        foreach(string tag in entry.ability_tags)
+        {
+            a.abilityTags.AddTagPermanent(GameplayTagFlags.TagLookup[tag]);
+        }
+        foreach (string tag in entry.ability_blocked_tags)
+        {
+            a.tagsToBlock.AddTagPermanent(GameplayTagFlags.TagLookup[tag]);
+        }
+        foreach (string tag in entry.ability_applied_tags)
+        {
+            a.tagsToApply.AddTagPermanent(GameplayTagFlags.TagLookup[tag]);
         }
 
         a.OnAbilityDataUpdated();

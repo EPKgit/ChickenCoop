@@ -96,6 +96,12 @@ public class GameplayTagContainer
         return tag.ID;
     }
 
+    public void AddTagPermanent(RawGameplayTag f)
+    {
+        var tag = new GameplayTagWrapper(f);
+        tags.Add(tag);
+    }
+
     public bool RemoveFirstTag(RawGameplayTag f)
     {
         for(int x = 0; x < tags.Count; ++x)

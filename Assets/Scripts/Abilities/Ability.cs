@@ -122,7 +122,7 @@ public abstract class Ability : ScriptableObject
     public bool isTickingAbilityOverride = false;
 
     /// <summary>
-    /// The amount of time the ability will remain active if hasDuration is true
+    /// The amount of time the ability will remain active
     /// </summary>
     public float maxDuration = -1;
 
@@ -569,6 +569,11 @@ public abstract class Ability : ScriptableObject
     protected void DecrementTargetingType()
     {
         currentTargetingType = (--currentTargetingType + _targetingData.Length) % _targetingData.Length;
+    }
+
+    public void ResetDuration()
+    {
+        currentDuration = maxDuration;
     }
 
     public float GetCooldownPercent()

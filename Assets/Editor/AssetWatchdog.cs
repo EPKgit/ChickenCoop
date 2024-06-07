@@ -30,7 +30,7 @@ public class AssetWatchdog : AssetPostprocessor
                     Debug.Log(EditorApplication.timeSinceStartup + "~ Hot Reloading Gameplay Tags");
                     GameplayTagInternals.GameplayTagXMLParser.instance.ForceReimport();
 #if UNITY_EDITOR_WIN
-                    GameplayTagInternals.GameplayTagXMLParser.instance.GenerateTagEnumFile();
+                    GameplayTagInternals.GameplayTagXMLParser.instance.GenerateFiles();
 #endif
                 }
             }

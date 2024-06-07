@@ -24,7 +24,7 @@ public class XmlDataEditorWindow : EditorWindow
         {
             GameplayTagInternals.GameplayTagXMLParser.instance.ForceReimport();
 #if UNITY_EDITOR_WIN
-            GameplayTagInternals.GameplayTagXMLParser.instance.GenerateTagEnumFile();
+            GameplayTagInternals.GameplayTagXMLParser.instance.GenerateFiles();
 #endif
         }
     }

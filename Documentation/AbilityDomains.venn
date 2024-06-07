@@ -1,0 +1,19 @@
+{
+    "groups": {
+        "RED": {
+            "name": "RED"
+        },
+        "YELLOW": {
+            "name": "YELLOW"
+        },
+        "BLUE": {
+            "name": "BLUE"
+        }
+    },
+    "items": [ 
+        {"name": "Damage Mitigation", "groups": ["RED"]},
+        {"name": "DAMAGE", "groups": ["YELLOW"]},
+        {"name": "SUPPORT", "groups": ["BLUE"]},
+        {"name": "HEALING", "groups": ["RED","BLUE"]}
+    ]
+}

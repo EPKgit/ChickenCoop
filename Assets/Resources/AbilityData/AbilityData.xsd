@@ -4,6 +4,7 @@ elementFormDefault="qualified">
 
 	<xs:include schemaLocation="AbilityTargetingData.xsd"/>
 	<xs:include schemaLocation="AbilityVariableData.xsd"/>
+	<xs:include schemaLocation="GameplayFlagData.xsd"/>
 	<xs:include schemaLocation="Generated_GameplayFlags.xsd"/>
 
 	<xs:element name="ability_list">
@@ -25,6 +26,9 @@ elementFormDefault="qualified">
 				<xs:element minOccurs="0" maxOccurs="1" ref="tooltip_list" />
 				<xs:element minOccurs="1" maxOccurs="1" ref="targeting_list" />
 				<xs:element minOccurs="0" maxOccurs="1" ref="var_list" />
+				<xs:element minOccurs="0" maxOccurs="1" name="ability_tags" type="tagListType" />
+				<xs:element minOccurs="0" maxOccurs="1" name="ability_tags_to_block" type="tagListType" />
+				<xs:element minOccurs="0" maxOccurs="1" name="ability_tags_to_apply" type="tagListType" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

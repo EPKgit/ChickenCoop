@@ -11,11 +11,21 @@ public class Porcupine_Test_Passive : Ability
     {
         base.Initialize(pa);
         handle = pa.stats.GetStat(StatName.MaxHealth).AddAdditiveModifier(5);
+        pa.preAbilityCastEvent += OnCast;
     }
 
     public override void Cleanup(PlayerAbilities pa)
     {
         base.Cleanup(pa);
         pa.stats.GetStat(StatName.MaxHealth).RemoveAdditiveModifier(handle);
+        pa.preAbilityCastEvent -= OnCast;
+    }
+
+    void OnCast(AbilityEventData data)
+    {
+        if(data.ability.abilityTags.Contains(GameplayTagFlags.ABILITY_DAMAGE))
+        {
+            Debug.Log("damage");
+        }
     }
 }

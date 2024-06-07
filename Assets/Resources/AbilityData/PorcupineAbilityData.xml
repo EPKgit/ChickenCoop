@@ -41,6 +41,9 @@
 			<variable name="damage" type="float" value="10"/>
 			<variable name="spinePrefab" type="asset" value="spine"/>
 		</var_list>
+		<ability_tags>
+			<tag>ABILITY_DAMAGE</tag>
+		</ability_tags>
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->

@@ -23,6 +23,9 @@
 			<variable name="movementSpeedMultiplier" type="float" value="1.5"/>
 			<variable name="damageMultiplier" type="float" value="2.0"/>
 		</var_list>
+		<ability_tags_to_apply>
+			<tag>INVISIBLE</tag>
+		</ability_tags_to_apply>
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
@@ -105,6 +108,9 @@
 			<variable name="damageFinal" type="float" value="20"/>
 			<variable name="hitboxDuration" type="float" value="0.25"/>
 		</var_list>
+		<ability_tags_to_apply>
+			<tag>NORMAL_MOVEMENT_DISABLED</tag>
+		</ability_tags_to_apply>
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
