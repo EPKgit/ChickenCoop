@@ -41,7 +41,7 @@ public delegate void AbilityCastingDelegate(AbilityEventData data);
 /// then initialized, and used repeatedly over the lifetime of the player object. The player gets a reference to a
 /// saved asset AbilitySet that hold the abilities it will have, abilities are activated by PlayerAbilities.
 /// </summary>
-public abstract class Ability : ScriptableObject
+public abstract class Ability
 {
     public event MutableCooldownTickDelegate preCooldownTick = delegate { };
     public event CooldownTickDelegate cooldownTick = delegate { };
@@ -80,22 +80,22 @@ public abstract class Ability : ScriptableObject
     /// <summary>
     /// The ability tooltip to be displayed when the ability is displayed in a menu
     /// </summary>
-    private string[] tooltipDescriptions;
+    private string[] tooltipDescriptions = null;
 
     /// <summary>
     /// Tag set that apply to what this ability is
     /// </summary>
-    public GameplayTagContainer abilityTags;
+    public GameplayTagContainer abilityTags = new GameplayTagContainer();
 
     /// <summary>
     /// Tag set that prevent abilities that have these tags from being cast while the ability is active
     /// </summary>
-    public GameplayTagContainer tagsToBlock;
+    public GameplayTagContainer tagsToBlock = new GameplayTagContainer();
 
     /// <summary>
     /// Tag set that is applied to the caster while the ability is active
     /// </summary>
-    public GameplayTagContainer tagsToApply;
+    public GameplayTagContainer tagsToApply = new GameplayTagContainer();
 
     /// <summary>
     /// Set true if you want the ability to be passive, meant it is never used, the only methods to be called
@@ -421,7 +421,7 @@ public abstract class Ability : ScriptableObject
     /// <returns>Returns true if the ability is used succesfully</returns>
     public virtual bool AttemptUseAbility()
     {
-        DebugFlags.Log(DebugFlags.Flags.ABILITY, string.Format("{0} ATTEMPT USE AT {1}", name, targetingData.inputPoint));
+        DebugFlags.Log(DebugFlags.Flags.ABILITY, string.Format("{0} ATTEMPT USE AT {1}", abilityName, targetingData.inputPoint));
         // if the ability is already ticking or on cooldown
         // should also check cost
         if (!IsCastable())
@@ -590,15 +590,7 @@ public abstract class Ability : ScriptableObject
     /// <returns></returns>
     public GameObject GameObjectManipulation(GameObject g, bool create)
     {
-        if (create)
-        {
-            return Instantiate(g);
-        }
-        else
-        {
-            Destroy(g);
-            return null;
-        }
+        return playerAbilities.GameObjectManipulation(g, create);
     }
 
     /// <summary>

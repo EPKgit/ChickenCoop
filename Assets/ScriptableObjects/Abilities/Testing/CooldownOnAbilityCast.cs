@@ -22,7 +22,7 @@ public class CooldownOnAbilityCast : Ability
 
     public void OnAbilityCast(AbilityEventData aed)
     {
-        foreach(Ability a in playerAbilities.abilities)
+        foreach(Ability a in playerAbilities.Abilities)
         {
             a.Cooldown(amount);
         }

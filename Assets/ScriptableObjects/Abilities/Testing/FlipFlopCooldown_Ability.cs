@@ -16,7 +16,7 @@ public class FlipFlopCooldown_Ability : Ability
     public override void Initialize(PlayerAbilities pa)
     {
         base.Initialize(pa);
-        foreach(Ability a in pa.abilities)
+        foreach(Ability a in pa.Abilities)
         {
             a.preCooldownTick += OnCooldownTick;
         }
@@ -29,7 +29,7 @@ public class FlipFlopCooldown_Ability : Ability
     {
         base.Cleanup(pa);
         pa.abilityChanged -= OnAbilityChanged;
-        foreach (Ability a in pa.abilities)
+        foreach (Ability a in pa.Abilities)
         {
             a.preCooldownTick -= OnCooldownTick;
         }
@@ -37,11 +37,11 @@ public class FlipFlopCooldown_Ability : Ability
 
     void OnAbilityChanged(Ability previousAbility, Ability newAbility, AbilitySlot slot, PlayerAbilities.AbilityChangeType type)
     {
-        if(previousAbility)
+        if(previousAbility != null)
         {
             previousAbility.preCooldownTick -= OnCooldownTick;
         }
-        if (newAbility)
+        if (newAbility != null)
         {
             newAbility.preCooldownTick -= OnCooldownTick;
             newAbility.preCooldownTick += OnCooldownTick;

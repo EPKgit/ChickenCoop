@@ -26,7 +26,7 @@ public class GameplayTagContainer
         get => tags.AsReadOnly();
     }
     [SerializeField]
-    private List<GameplayTagWrapper> tags;
+    private List<GameplayTagWrapper> tags = new List<GameplayTagWrapper>();
 
     /// <summary>
     /// Returns if any of the other containers flags are contained within this container.

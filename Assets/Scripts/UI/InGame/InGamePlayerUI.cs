@@ -48,7 +48,7 @@ public class InGamePlayerUI : MonoBehaviour
         if(playerAbilities.IsInitialized())
         {
             SetUIIcons();
-            OnAbilityInitialized(playerAbilities.abilities);
+            OnAbilityInitialized(playerAbilities.Abilities);
         }
 
         UpdateHealthUI();

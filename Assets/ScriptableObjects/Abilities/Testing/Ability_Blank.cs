@@ -50,7 +50,7 @@ public class Ability_Blank : Ability
             }
             else
             {
-                Destroy(collider.gameObject);
+                GameObjectManipulation(collider.gameObject, false);
             }
         }
     }

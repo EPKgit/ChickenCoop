@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System.Runtime.Remoting.Lifetime;
+using GameplayTagInternals;
 
 public class PlayerAbilities : MonoBehaviour
 {
@@ -38,10 +40,11 @@ public class PlayerAbilities : MonoBehaviour
     [HideInInspector] public PlayerMovement movement;
     [HideInInspector] public PlayerCollision collision;
 
-    public AbilitySetContainer abilities { get { return _abilities; } }
+    public AbilitySetContainer Abilities { get => _abilities; }
     private AbilitySetContainer _abilities;
 
-    private List<Ability> passives = new List<Ability>();
+    public IList<Ability> Passives { get => _passives.AsReadOnly(); }
+    private List<Ability> _passives = new List<Ability>();
 
     private AbilityQueue abilityQueue;
 
@@ -81,30 +84,38 @@ public class PlayerAbilities : MonoBehaviour
         abilityQueue = new AbilityQueue(this);
         abilityQueue.preAbilityCastEvent += PreCastEvent;
         abilityQueue.postAbilityCastEvent += PostCastEvent;
-        passives = new List<Ability>();
+        _passives = new List<Ability>();
 
-        abilitySet = Instantiate(abilitySet);
-        for(int x = 0; x < abilitySet.abilities.Length; ++x)
+        Ability[] abilities = new Ability[(int)AbilitySlot.MAX];
+        for (int x = 0; x < abilitySet.abilityIDs.Length; ++x)
         {
-            if (abilitySet.abilities[x] != null)
+            // 0 is an invalid ID for ability IDs
+            if (abilitySet.abilityIDs[x] == 0)
             {
-                abilitySet.abilities[x] = ScriptableObject.Instantiate(abilitySet.abilities[x]);
+#if UNITY_EDITOR_WIN
+                Debug.LogError($"ERROR: ability set {abilitySet.name} has an invalid ID");
+                return;
+#else
+                continue;
+#endif
             }
+            abilities[x] = AbilityLookup.CreateAbilityFromId(abilitySet.abilityIDs[x]);
         }
-        _abilities = new AbilitySetContainer(abilitySet.abilities);
-		foreach(Ability a in abilitySet.passiveEffects)
-		{
-            if(a == null)
+        _abilities = new AbilitySetContainer(abilities);
+        for (int x = 0; x < abilitySet.passiveEffectIDs.Count; ++x)
+        {
+            if (abilitySet.passiveEffectIDs[x] != 0)
             {
                 continue;
             }
-			passives.Add(ScriptableObject.Instantiate(a));
-		}
-        foreach (Ability a in abilities)
+            //_passives.Add(AbilityLookup.CreateAbilityFromId(abilitySet.abilityIDs[x]));
+        }
+
+        foreach (Ability a in _abilities)
         {
             a.Initialize(this);
         }
-        foreach (Ability a in passives)
+        foreach (Ability a in _passives)
         {
 			a.Initialize(this);
             if(!a.isPassive)
@@ -114,7 +125,7 @@ public class PlayerAbilities : MonoBehaviour
             abilityQueue.AbilityStarted(a);
         }
         initialized = true;
-		initializedEvent(abilities);
+		initializedEvent(_abilities);
         for (int x = 0; x < _abilities.Length; ++x)
         {
             abilityChanged.Invoke(null, _abilities[x], (AbilitySlot)x, AbilityChangeType.ADDED);
@@ -134,13 +145,13 @@ public class PlayerAbilities : MonoBehaviour
         }
         for(int x = 0; x < callbacks.Length; ++x)
         {
-            if(callbacks[x] == null || abilities[x] == null)
+            if(callbacks[x] == null || Abilities[x] == null)
             {
                 callbacks[x](new CooldownTickData(-1, -1, -1, -1));
                 continue;
             }
-            abilities[x].cooldownTick += callbacks[x];
-            callbacks[x](new CooldownTickData(abilities[x].currentCooldownTimer, abilities[x].maxCooldown, abilities[x].currentRecastTimer, abilities[x].recastWindow));
+            Abilities[x].cooldownTick += callbacks[x];
+            callbacks[x](new CooldownTickData(Abilities[x].currentCooldownTimer, Abilities[x].maxCooldown, Abilities[x].currentRecastTimer, Abilities[x].recastWindow));
         }
 	}
 
@@ -156,11 +167,11 @@ public class PlayerAbilities : MonoBehaviour
         }
         for (int x = 0; x < callbacks.Length; ++x)
         {
-            if(abilities[x] == null)
+            if(Abilities[x] == null)
             {
                 continue;
             }
-            abilities[x].cooldownTick -= callbacks[x];
+            Abilities[x].cooldownTick -= callbacks[x];
         }
     }
 
@@ -171,7 +182,7 @@ public class PlayerAbilities : MonoBehaviour
             return new List<string>();
         }
 		List<string> ret = new List<string>();
-        foreach(Ability a in abilities)
+        foreach(Ability a in Abilities)
         {
             ret.Add(a.ToString());
         }
@@ -189,7 +200,7 @@ public class PlayerAbilities : MonoBehaviour
         {
             return;
         }
-        foreach (Ability a in abilities)
+        foreach (Ability a in Abilities)
         {
             a.Cooldown(Time.deltaTime);
         }
@@ -200,21 +211,21 @@ public class PlayerAbilities : MonoBehaviour
 
 	public Sprite GetIcon(int index)
 	{
-		if(index >= (int)AbilitySlot.MAX || abilities[index] == null)
+		if(index >= (int)AbilitySlot.MAX || Abilities[index] == null)
         {
             return null;
         }
-        return abilities[index].icon;
+        return Abilities[index].icon;
 	}
 
     public void AbilityInput(AbilitySlot index, InputAction.CallbackContext ctx, Vector2 point)
     {
-        AbilityInput(abilities[index], ctx, point);
+        AbilityInput(Abilities[index], ctx, point);
     }
 
     public void AbilityInput(int index, InputAction.CallbackContext ctx, Vector2 point)
     {
-        AbilityInput(abilities[index], ctx, point);
+        AbilityInput(Abilities[index], ctx, point);
     }
 
 
@@ -269,13 +280,13 @@ public class PlayerAbilities : MonoBehaviour
     /// <returns>True if the slot wasn't empty and an ability was removed, and false otherwise</returns>
     public bool RemoveAbility(AbilitySlot index)
     {
-        if(!index.ValidSlot() || abilities[index] == null)
+        if(!index.ValidSlot() || Abilities[index] == null)
         {
             return false;
         }
         abilityChanged.Invoke(_abilities[index], null, index, AbilityChangeType.REMOVED);
         _abilities[index] = null;
-        initializedEvent(abilities);
+        initializedEvent(Abilities);
         return true;
     }
 
@@ -286,13 +297,13 @@ public class PlayerAbilities : MonoBehaviour
     /// <returns>True if the ability was found and removed, false if it wasn't found</returns>
     public bool RemoveAbility(Ability a)
     {
-        for(int x = 0; x < abilities.Length; ++x)
+        for(int x = 0; x < Abilities.Length; ++x)
         {
-            if(abilities[x] == a)
+            if(Abilities[x] == a)
             {
                 abilityChanged.Invoke(_abilities[x], null, (AbilitySlot)x, AbilityChangeType.REMOVED);
                 _abilities[x] = null;
-                initializedEvent(abilities);
+                initializedEvent(Abilities);
                 return true;
             }
         }
@@ -307,13 +318,13 @@ public class PlayerAbilities : MonoBehaviour
     /// <returns></returns>
     public bool AddAbility(AbilitySlot index, Ability a)
     {
-        if(!index.ValidSlot() || abilities[index] != null)
+        if(!index.ValidSlot() || Abilities[index] != null)
         {
             return false;
         }
         abilityChanged.Invoke(_abilities[index], null, index, AbilityChangeType.ADDED);
         _abilities[index] = a;
-        initializedEvent(abilities);
+        initializedEvent(Abilities);
         return true;
     }
 
@@ -331,12 +342,33 @@ public class PlayerAbilities : MonoBehaviour
         }
         abilityChanged.Invoke(_abilities[index], a, index, AbilityChangeType.OVERRIDDEN);
         _abilities[index] = a;
-        initializedEvent(abilities);
+        initializedEvent(Abilities);
         return true;
     }
 
 
-    private bool inventoryOpen = true;
+    /// <summary>
+    /// Create or destroy gameobjects. Necessary because abilities aren't a monobheaviour or scriptable object so they don't have access
+    /// to these methods
+    /// </summary>
+    /// <param name="g">The prefab to create or gameobject to destroy</param>
+    /// <param name="create">Whether to create or destroy</param>
+    /// <returns></returns>
+    public GameObject GameObjectManipulation(GameObject g, bool create)
+    {
+        if (create)
+        {
+            return Instantiate(g);
+        }
+        else
+        {
+            Destroy(g);
+            return null;
+        }
+    }
+
+
+private bool inventoryOpen = true;
     
     public void ToggleInventory()
     {

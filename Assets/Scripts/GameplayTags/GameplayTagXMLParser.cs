@@ -156,11 +156,11 @@ public class GameplayTagXMLParser : Singleton<GameplayTagXMLParser>
     }
 #endif
 
-        /// <summary>
-        /// Helper method to check if we have already setup our table
-        /// </summary>
-        /// <returns>True if the table is loaded, false otherwise</returns>
-        public bool XMLLoaded()
+    /// <summary>
+    /// Helper method to check if we have already setup our table
+    /// </summary>
+    /// <returns>True if the table is loaded, false otherwise</returns>
+    public bool XMLLoaded()
     {
         return loadedTable;
     }

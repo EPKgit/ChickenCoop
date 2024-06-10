@@ -132,7 +132,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         ParseXMLData();
         foreach(PlayerInitialization player in PlayerInitialization.all)
         {
-            foreach(Ability a in player.GetComponent<PlayerAbilities>().abilities)
+            foreach(Ability a in player.GetComponent<PlayerAbilities>().Abilities)
             {
                 UpdateAbilityData(a);
             }

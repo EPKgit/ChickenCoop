@@ -63,13 +63,13 @@ public class AbilityQueue
             {
                 case AbilityInputData.AbilityInputState.WAITING_IN_QUEUE:
                 {
-                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} STARTED FRAME WAITING IN QUEUE, STARTING", current.ability.name));
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} STARTED FRAME WAITING IN QUEUE, STARTING", current.ability.abilityName));
                     current.state = AbilityInputData.AbilityInputState.START_PREVIEW;
                     goto case AbilityInputData.AbilityInputState.START_PREVIEW;
                 }
                 case AbilityInputData.AbilityInputState.START_PREVIEW:
                 {
-                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} START PREVIEW", a.name));
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} START PREVIEW", a.abilityName));
                     current.ability.targetingData.Preview(a, attached);
                     current.state = AbilityInputData.AbilityInputState.WAITING_FOR_INPUT;
                     goto case AbilityInputData.AbilityInputState.WAITING_FOR_INPUT;
@@ -86,7 +86,7 @@ public class AbilityQueue
                 } break;
                 case AbilityInputData.AbilityInputState.CASTING:
                 {
-                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1} {2}", a.name, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1} {2}", a.abilityName, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
                     preAbilityCastEvent(new AbilityEventData(a));
                     if (a.AttemptUseAbility())
                     {
@@ -105,7 +105,7 @@ public class AbilityQueue
                 }
                 case AbilityInputData.AbilityInputState.FINISHED:
                 {
-                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} FINISHED", current.ability.name));
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} FINISHED", current.ability.abilityName));
                     a.targetingData.isInputSet = false;
                     a.CleanupAllTargeting(attached);
                     abilityInputQueue.Dequeue();
@@ -129,17 +129,17 @@ public class AbilityQueue
         {
             if(data.ability == a)
             {
-                DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("FAILED ENQUEING {0} BECAUSE IT WAS ALREADY IN QUEUE", a.name));
+                DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("FAILED ENQUEING {0} BECAUSE IT WAS ALREADY IN QUEUE", a.abilityName));
                 return;
             }
         }
-        DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ENQUEING {0}", a.name));
+        DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ENQUEING {0}", a.abilityName));
         abilityInputQueue.Enqueue(new AbilityInputData(a));
     }
 
     public bool AbilityEndedExternal(Ability a)
     {
-        for (int x = 0; x < currentlyTicking.Count; ++x)
+        for (int x = 0; x < currentlyTicking.Count; ++x)    
         {
             if (currentlyTicking[x] != a)
             {
@@ -169,7 +169,7 @@ public class AbilityQueue
         if(aid != null)
         {
             Targeting.RuntimeAbilityTargetingData atd = aid.ability.targetingData;
-            DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", ability.name, targetData));
+            DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ABILITY:{0} RECIEVE INPUT OF {1}", ability.abilityName, targetData));
             atd.inputPoint = targetData;
             Vector2 relativePosition = new Vector2(atd.inputPoint.x - playerAbilities.transform.position.x, atd.inputPoint.y - playerAbilities.transform.position.y);
             atd.inputRotationZ = Vector2.SignedAngle(Vector2.up, relativePosition);

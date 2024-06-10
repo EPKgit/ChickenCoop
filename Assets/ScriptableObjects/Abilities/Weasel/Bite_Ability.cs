@@ -82,7 +82,7 @@ public class Bite_Ability : Ability
 
         if (GetAbilityUpgradeStatus(AbilityUpgradeSlot.YELLOW))
         {
-            foreach (Ability a in playerAbilities.abilities)
+            foreach (Ability a in playerAbilities.Abilities)
             {
                 a.Cooldown(otherAbilityCooldownTick);
             }

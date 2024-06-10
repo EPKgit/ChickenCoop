@@ -119,7 +119,7 @@ public class UI_PlayerInventory : MonoBehaviour
             return;
         }
         var w = rect.width;
-        var h = rect.height / (float)(playerAbilities.abilities.Length + 1);
+        var h = rect.height / (float)(playerAbilities.Abilities.Length + 1);
         // if (w > h)
         {
             gridGroup.cellSize = new Vector2(w, h);
@@ -128,16 +128,16 @@ public class UI_PlayerInventory : MonoBehaviour
         // {
         //     gridGroup.cellSize = new Vector2(w, w);
         // }
-        gridGroup.spacing = new Vector2(w, h / (float)playerAbilities.abilities.Length);
+        gridGroup.spacing = new Vector2(w, h / (float)playerAbilities.Abilities.Length);
         transform.hasChanged = false;
     }
 
     void GenerateAbilities()
     {
-        for (int x = 0; x < playerAbilities.abilities.Length; ++x)
+        for (int x = 0; x < playerAbilities.Abilities.Length; ++x)
         {
             UI_Ability temp = Instantiate(abilityPrefab).GetComponent<UI_Ability>();
-            temp.Setup(playerAbilities.abilities[x], null);
+            temp.Setup(playerAbilities.Abilities[x], null);
             playerAbilityObjects.Add(temp.gameObject);
             temp.SetSlot(slots[x], false);
             temp.name = "ABILITY " + x;
@@ -162,8 +162,8 @@ public class UI_PlayerInventory : MonoBehaviour
             return;
         }
         InGameUIManager.instance.RevokeCallbacks();
-        playerAbilities.abilities.SetSlot(newAbilitySlot, newAbility?.ability);
-        playerAbilities.abilities.SetSlot(oldAbilitySlot, previousAbility?.ability);
+        playerAbilities.Abilities.SetSlot(newAbilitySlot, newAbility?.ability);
+        playerAbilities.Abilities.SetSlot(oldAbilitySlot, previousAbility?.ability);
         if(newAbility != null && newAbility.droppedAbilityObject != null)
         {
             Destroy(newAbility.droppedAbilityObject);

@@ -15,7 +15,7 @@ public class PiercingSpine_Ability : Ability
 
     public override void Initialize(PlayerAbilities pa)
 	{
-		base.Initialize(pa);
+        base.Initialize(pa);
         pa.stats.RegisterStatChangeCallback(StatName.SpineDuration, OnSpineDurationChange);
         pa.stats.RegisterStatChangeCallback(StatName.SpineSpeed, OnSpineSpeedChange);
     }

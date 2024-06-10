@@ -13,10 +13,5 @@ MonoBehaviour:
   m_Name: Porcupine_Ability_Set
   m_EditorClassIdentifier: 
   name: Pocurpine_Ability_Set
-  abilities:
-  - {fileID: 11400000, guid: 7e85580bf68c18545bb9a4f43c864190, type: 2}
-  - {fileID: 11400000, guid: 062b5b6d6b69ac44d849ff980007479b, type: 2}
-  - {fileID: 11400000, guid: 062b5b6d6b69ac44d849ff980007479b, type: 2}
-  - {fileID: 11400000, guid: 062b5b6d6b69ac44d849ff980007479b, type: 2}
-  passiveEffects:
-  - {fileID: 11400000, guid: 2cd000e17265ca54889985f3a9cf6d22, type: 2}
+  abilityIDs: c9000000ca000000ca000000ca000000
+  passiveEffectIDs: c8000000
