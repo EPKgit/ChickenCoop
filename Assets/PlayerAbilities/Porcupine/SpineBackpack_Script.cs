@@ -18,6 +18,9 @@ public class SpineBackpack_Script : Poolable
     private float spineCount;
     private bool triggerableBySpine;
 
+    // Red Upgrade
+    private float armorAmount = 5;
+
     // Blue Upgrade
     private Vector3 startPosition;
     private Vector3 endPosition;

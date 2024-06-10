@@ -689,7 +689,7 @@ public abstract class Ability
 
     public void SetTooltip(AbilityUpgradeSlot slot, string s)
     {
-        if(tooltipDescriptions == null || (int)slot > tooltipDescriptions.Length)
+        if(tooltipDescriptions == null || (int)slot >= tooltipDescriptions.Length)
         {
             tooltipDescriptions = new string[(int)slot + 1];
         }

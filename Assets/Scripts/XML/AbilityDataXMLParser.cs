@@ -24,7 +24,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         public int? recasts = null;
         public float? recastWindow = null;
 
-        public List<AbilityXMLTooltip> tooltips;
+        public string[] tooltips;
         public List<AbilityXMLTargetingData> targetingData;
         public List<AbilityXMLVariable> vars;
         public List<string> ability_tags;
@@ -37,24 +37,11 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             defaultLibrary = defaultLib;
             iconPath = icon;
             targetingData = new List<AbilityXMLTargetingData>();
-            tooltips = new List<AbilityXMLTooltip>();
+            tooltips = new string[(int)Ability.AbilityUpgradeSlot.MAX + 1];
             vars = new List<AbilityXMLVariable>();
             ability_tags = new List<string>();
             ability_blocked_tags = new List<string>();
             ability_applied_tags = new List<string>();
-        }
-    }
-
-    private class AbilityXMLTooltip
-    {
-        public string type;
-        public string text;
-
-        private AbilityXMLTooltip() { }
-        public AbilityXMLTooltip(XmlElement node)
-        {
-            type = node.GetAttribute("type");
-            text = node.GetAttribute("text");
         }
     }
 
@@ -209,10 +196,27 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             var tooltip_list_node = ability["tooltip_list"];
             if (tooltip_list_node != null)
             {
-                foreach (XmlElement tooltip in tooltip_list_node.ChildNodes)
+                var tooltip = tooltip_list_node["default"];
+                if (tooltip != null)
                 {
-                    data.tooltips.Add(new AbilityXMLTooltip(tooltip));
+                    data.tooltips[(int)Ability.AbilityUpgradeSlot.DEFAULT] = tooltip.InnerText;
                 }
+                tooltip = tooltip_list_node["red"];
+                if (tooltip != null)
+                {
+                    data.tooltips[(int)Ability.AbilityUpgradeSlot.RED] = tooltip.InnerText;
+                }
+                tooltip = tooltip_list_node["yellow"];
+                if (tooltip != null)
+                {
+                    data.tooltips[(int)Ability.AbilityUpgradeSlot.YELLOW] = tooltip.InnerText;
+                }
+                tooltip = tooltip_list_node["blue"];
+                if (tooltip != null)
+                {
+                    data.tooltips[(int)Ability.AbilityUpgradeSlot.BLUE] = tooltip.InnerText;
+                }
+
             }
 
             foreach (XmlElement targetData in ability["targeting_list"].ChildNodes)
@@ -511,9 +515,9 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
             a.recastWindow = entry.recastWindow.Value;
         }
 
-        foreach (AbilityXMLTooltip tooltip in entry.tooltips)
+        for (int x = 0; x < entry.tooltips.Length; ++x)
         {
-            a.SetTooltip(abilityUpgradeLookup[tooltip.type], tooltip.text);
+            a.SetTooltip((Ability.AbilityUpgradeSlot)x, entry.tooltips[x]);
         }
         
         int n = entry.targetingData.Count;

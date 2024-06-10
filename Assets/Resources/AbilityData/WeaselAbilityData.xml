@@ -14,7 +14,7 @@
 			<duration>4</duration>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Go invisible and increase your movement speed by {movementSpeedMultiplier} times."/>
+			<default>Go invisible and increase your movement speed by {movementSpeedMultiplier} times.</default>
 		</tooltip_list>
 		<targeting_list>
 			<noneTargetingData/>
@@ -38,10 +38,10 @@
 			<cd>1</cd>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Bite in front of you"/>
-			<tooltip type="red" text="and stun"/>
-			<tooltip type="blue" text="and hit twice"/>
-			<tooltip type="yellow" text="and reduce all cooldowns"/>
+			<default>Bite in front of you</default>
+			<red>and stun</red>
+			<blue>and hit twice</blue>
+			<yellow>and reduce all cooldowns</yellow>
 		</tooltip_list>
 		<targeting_list>
 			<lineTargetingData>
@@ -70,7 +70,7 @@
 			<cd>1</cd>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Swipe in a cone in front of you"/>
+			<default>Swipe in a cone in front of you</default>
 		</tooltip_list>
 		<targeting_list>
 			<lineTargetingData>
@@ -95,7 +95,7 @@
 			<doesTicking>true</doesTicking>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Swing multiple times in front of you"/>
+			<default>Swing multiple times in front of you</default>
 		</tooltip_list>
 		<targeting_list>
 			<lineTargetingData>

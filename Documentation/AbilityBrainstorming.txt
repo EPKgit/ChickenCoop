@@ -23,7 +23,7 @@ RED - Tanking/Front Lining/Tactitian
         - Circumventing enemies
             - Timed encounters?
 
-YELLOW - Damage/AOE
+BLUE - Damage/AOE
     - Strengths
         - Area damage
             - Bombs/Sprays/Pools
@@ -40,7 +40,7 @@ YELLOW - Damage/AOE
             - High shield enemies
         - Collateral damage?
 
-BLUE - Support/Objective Focused/Big Game Hunting
+YELLOW - Support/Objective Focused/Big Game Hunting
     - Strengths
         - High single target damage
             - High caliber/All out

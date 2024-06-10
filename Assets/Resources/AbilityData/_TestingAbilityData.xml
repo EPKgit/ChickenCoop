@@ -10,7 +10,7 @@
 			<cd>1</cd>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Shoots an egg in targeted direction dealing {damage} damage to the first enemy hit"/>
+			<default>Shoots an egg in targeted direction dealing {damage} damage to the first enemy hit</default>
 		</tooltip_list>
 		<targeting_list>
 			<lineTargetingData>
@@ -33,7 +33,7 @@
 			<cd>8</cd>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Launch an explosive egg towards target area which explodes on landing dealing {dmg} damage in a {aoe} unit AOE"/>
+			<default>Launch an explosive egg towards target area which explodes on landing dealing {dmg} damage in a {aoe} unit AOE</default>
 		</tooltip_list>
 		<targeting_list>
 			<groundTargetingData>
@@ -61,7 +61,7 @@
 			<duration>0.1</duration>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Dash for {range} units over {duration}s in a target direction"/>
+			<default>Dash for {range} units over {duration}s in a target direction</default>
 		</tooltip_list>
 		<targeting_list>
 			<lineTargetingData>
@@ -81,7 +81,7 @@
 			<cd>10</cd>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Heal a targeted unit for {amount} health"/>
+			<default>Heal a targeted unit for {amount} health</default>
 		</tooltip_list>
 		<targeting_list>
 			<entityTargetingData>
@@ -104,7 +104,7 @@
 			<isPassive>true</isPassive>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Everytime you cast an ability, decrease all cooldowns by {amount}s"/>
+			<default>Everytime you cast an ability, decrease all cooldowns by {amount}s</default>
 		</tooltip_list>
 		<targeting_list>
 			<noneTargetingData/>
@@ -125,7 +125,7 @@
 			<duration>0.15</duration>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Destroy all enemy projectiles in an {aoe} unit AOE for the next {duration}s"/>
+			<default>Destroy all enemy projectiles in an {aoe} unit AOE for the next {duration}s</default>
 		</tooltip_list>
 		<targeting_list>
 			<noneTargetingData/>
@@ -145,7 +145,7 @@
 			<cd>1</cd>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Stun targeted enemy for {stunDuration}s"/>
+			<default>Stun targeted enemy for {stunDuration}s</default>
 		</tooltip_list>
 		<targeting_list>
 			<entityTargetingData>
@@ -168,7 +168,7 @@
 			<cd>10</cd>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Teleports to target location, recast to return to your original position"/>
+			<default>Teleports to target location, recast to return to your original position</default>
 		</tooltip_list>
 		<targeting_list>
 			<groundTargetingData>
@@ -192,7 +192,7 @@
 			<duration>0.1</duration>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Dash {range} units in a target direction, recastable {recasts} more times"/>
+			<default>Dash {range} units in a target direction, recastable {recasts} more times</default>
 		</tooltip_list>
 		<targeting_list>
 			<lineTargetingData>
@@ -217,7 +217,7 @@
 			<cd>20</cd>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Unleash a shockwave, dealing {dmg} damage and stunning nearby enemies for {stunDuration}s"/>
+			<default>Unleash a shockwave, dealing {dmg} damage and stunning nearby enemies for {stunDuration}s</default>
 		</tooltip_list>
 		<targeting_list>
 			<noneTargetingData/>
@@ -239,7 +239,7 @@
 			<isPassive>true</isPassive>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Every {NumAbilitiesBeforeReset} abilities causes the next ability cooldown to be set to {SetCDTo}s"/>
+			<default>Every {NumAbilitiesBeforeReset} abilities causes the next ability cooldown to be set to {SetCDTo}s</default>
 		</tooltip_list>
 		<targeting_list>
 			<noneTargetingData/>
@@ -260,7 +260,7 @@
 			<isPassive>true</isPassive>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Every {interval} secondds swap between increasing your cooldowns at a {increaseMultiplier} times rate and decreasing them at {decreaseMultiplier} times rate"/>
+			<default>Every {interval} secondds swap between increasing your cooldowns at a {increaseMultiplier} times rate and decreasing them at {decreaseMultiplier} times rate</default>
 		</tooltip_list>
 		<targeting_list>
 			<noneTargetingData/>
@@ -283,7 +283,7 @@
 			<duration>10</duration>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Construct a teleporter at your and target location that allows you to teleport between them with an interaction"/>
+			<default>Construct a teleporter at your and target location that allows you to teleport between them with an interaction</default>
 		</tooltip_list>
 		<targeting_list>
 			<groundTargetingData>
@@ -309,7 +309,7 @@
 			<isPassive>true</isPassive>
 		</ability_data>
 		<tooltip_list>
-			<tooltip type="default" text="Regen {1} per second"/>
+			<default>Regen {1} per second</default>
 		</tooltip_list>
 		<targeting_list>
 			<noneTargetingData/>
