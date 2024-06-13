@@ -15,7 +15,7 @@ public class Dummy : MonoBehaviour
     {
         if(health)
         {
-            health.healthChangeEvent += Shake;
+            health.healthChangeNotification += Shake;
         }
     }
 
@@ -23,7 +23,7 @@ public class Dummy : MonoBehaviour
     {
         if (health)
         {
-            health.healthChangeEvent -= Shake;
+            health.healthChangeNotification -= Shake;
         }
     }
 

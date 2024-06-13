@@ -9,6 +9,7 @@ public static class AbilityLookup
 		{ 2, typeof(BasicBomb) },
 		{ 1, typeof(BasicShoot) },
 		{ 4, typeof(BasicTargetHeal) },
+		{ 15, typeof(BasicTargetShield) },
 		{ 7, typeof(BasicTargetStun) },
 		{ 13, typeof(ConstructTeleporter_Ability) },
 		{ 5, typeof(CooldownOnAbilityCast) },

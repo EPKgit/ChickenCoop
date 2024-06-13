@@ -11,27 +11,26 @@ public class MutableHealthChangeEventData
     public HealthChangeData data;
     public float delta;
     public bool cancelled;
+    public bool targetHasShield;
 
-    public MutableHealthChangeEventData(HealthChangeData data)
+    public MutableHealthChangeEventData(HealthChangeData data, bool targetHasShield)
     {
         this.data = data;
         this.delta = data.Delta;
         this.cancelled = false;
+        this.targetHasShield = targetHasShield;
     }
 }
 
 public class HealthChangeData
 {
     public bool Valid { get; private set; } = false;
-    public GameObject OverallSource { get; private set; }
-    public GameObject LocalSource { get; private set; }
-    public GameObject Target { get; private set; }
+    public BilateralData BilateralData { get; private set; } = new BilateralData(); //required so we can safely init
     public float Delta { get; private set; }
     public float UnmodifiedDelta { get;  private set; }
-    public KnockbackData KnockbackData { get; private set; }
+    public KnockbackData KnockbackData { get; private set; } = null;
     public Func<Vector3> DamageLocation { get; private set; }
-    public StatName FlatStat { get; private set; } = StatName.MAX;
-    public StatName PercentageStat { get; private set; } = StatName.MAX;
+    public StatInfluencedData StatInfluencedData { get; private set; } = new StatInfluencedData();
 
     public class HealthChangeDataBuilder
     {
@@ -43,38 +42,38 @@ public class HealthChangeData
 
         public HealthChangeDataBuilder OverallSource(GameObject g)
         {
-            data.OverallSource = g;
+            data.BilateralData.OverallSource = g;
             return this;
         }
 
         public HealthChangeDataBuilder LocalSource(GameObject g)
         {
-            data.LocalSource = g;
+            data.BilateralData.LocalSource = g;
             return this;
         }
 
         public HealthChangeDataBuilder BothSources(GameObject g)
         {
-            data.LocalSource = g;
-            data.OverallSource = g;
+            data.BilateralData.LocalSource = g;
+            data.BilateralData.OverallSource = g;
             return this;
         }
 
         public HealthChangeDataBuilder Target(GameObject g)
         {
-            data.Target = g;
+            data.BilateralData.Target = g;
             return this;
         }
 
         public HealthChangeDataBuilder Target(IDamagable i)
         {
-            data.Target = i.attached;
+            data.BilateralData.Target = i.attached;
             return this;
         }
 
         public HealthChangeDataBuilder Target(IHealable i)
         {
-            data.Target = i.attached;
+            data.BilateralData.Target = i.attached;
             return this;
         }
 
@@ -87,26 +86,26 @@ public class HealthChangeData
         public HealthChangeDataBuilder Damage(float f)
         {
             data.UnmodifiedDelta = -f;
-            if (data.PercentageStat == StatName.MAX)
+            if (data.StatInfluencedData.PercentageStat == StatName.MAX)
             {
-                data.PercentageStat = StatName.DamagePercentage;
+                data.StatInfluencedData.PercentageStat = StatName.DamagePercentage;
             }
-            if (data.FlatStat == StatName.MAX)
+            if (data.StatInfluencedData.FlatStat == StatName.MAX)
             {
-                data.FlatStat = StatName.FlatDamage;
+                data.StatInfluencedData.FlatStat = StatName.FlatDamage;
             }
             return this;
         }
 
         public HealthChangeDataBuilder Healing(float f)
         {
-            if (data.PercentageStat == StatName.MAX)
+            if (data.StatInfluencedData.PercentageStat == StatName.MAX)
             {
-                data.PercentageStat = StatName.HealingPercentage;
+                data.StatInfluencedData.PercentageStat = StatName.HealingPercentage;
             }
-            if (data.FlatStat == StatName.MAX)
+            if (data.StatInfluencedData.FlatStat == StatName.MAX)
             {
-                data.FlatStat = StatName.FlatHealing;
+                data.StatInfluencedData.FlatStat = StatName.FlatHealing;
             }
             return Value(f);
         }
@@ -131,23 +130,19 @@ public class HealthChangeData
 
         public HealthChangeDataBuilder PercentageStat(StatName stat)
         {
-            data.PercentageStat = stat;
+            data.StatInfluencedData.PercentageStat = stat;
             return this;
         }
 
         public HealthChangeDataBuilder FlatStat(StatName stat)
         {
-            data.FlatStat = stat;
+            data.StatInfluencedData.FlatStat = stat;
             return this;
         }
 
         private bool Valid()
         {
-            if(data.OverallSource == null)
-            {
-                return false;
-            }
-            if(data.Target == null)
+            if(data.BilateralData.OverallSource == null || data.BilateralData.Target == null)
             {
                 return false;
             }
@@ -161,7 +156,7 @@ public class HealthChangeData
                 Debug.LogError("ERROR: HealthChangeBuilder created with invalid parameters");
                 throw new Exception();
             }
-            StatBlockComponent stats = Lib.FindDownwardsInTree<StatBlockComponent>(data.OverallSource);
+            StatBlockComponent stats = Lib.FindDownwardsInTree<StatBlockComponent>(data.BilateralData.OverallSource);
             if (stats == null)
             {
                 data.Delta = data.UnmodifiedDelta;
@@ -169,8 +164,8 @@ public class HealthChangeData
             else
             {
                 bool negative = data.UnmodifiedDelta < 0;
-                float flatIncrease = stats.GetValue(data.FlatStat);
-                float percentIncrease = stats.GetValue(data.PercentageStat);
+                float flatIncrease = stats.GetValue(data.StatInfluencedData.FlatStat);
+                float percentIncrease = stats.GetValue(data.StatInfluencedData.PercentageStat);
                 if(negative)
                 {
                     data.Delta = (data.UnmodifiedDelta - flatIncrease) * percentIncrease;

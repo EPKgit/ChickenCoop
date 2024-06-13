@@ -7,7 +7,7 @@ public class EnemyHealth : BaseHealth
     protected override void Awake()
     {
         base.Awake();
-        postDamageEvent += OnDamage;
+        postDamageNotification += OnDamage;
     }
 
     void OnDamage(HealthChangeData hcd)
@@ -17,9 +17,9 @@ public class EnemyHealth : BaseHealth
         {
             location = hcd.DamageLocation();
         }
-        else if (hcd.Target != null)
+        else if (hcd.BilateralData.Target != null)
         {
-            location = hcd.Target.transform.position;
+            location = hcd.BilateralData.Target.transform.position;
         }
         else
         {

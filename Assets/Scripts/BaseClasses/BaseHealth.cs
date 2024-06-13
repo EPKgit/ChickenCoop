@@ -1,17 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
 [RequireComponent(typeof(GameplayTagComponent), typeof(StatBlockComponent))]
-public class BaseHealth : MonoBehaviour, IHealable, IDamagable
+public class BaseHealth : MonoBehaviour, IHealable, IDamagable, IShieldable
 {
     public event HealthValueSetDelegate healthValueUpdateEvent = delegate { };
+
 	public event MutableHealthChangeDelegate preDamageEvent = delegate { };
 	public event MutableHealthChangeDelegate preHealEvent = delegate { };
-	public event HealthChangeNotificationDelegate postDamageEvent = delegate { };
-	public event HealthChangeNotificationDelegate postHealEvent = delegate { };
-	public event HealthChangeNotificationDelegate healthChangeEvent = delegate { };
+	public event MutableShieldApplicationDelegate preShieldEvent = delegate { };
+
+	public event ShieldAbsorbedDamageNotificationDelegate shieldAbsorbedDamageNotification = delegate { };
+
+    public event ShieldApplicationNotificationDelegate postShieldAppliedNotification = delegate { };
+	public event HealthChangeNotificationDelegate postDamageNotification = delegate { };
+	public event HealthChangeNotificationDelegate postHealNotification = delegate { };
+	public event HealthChangeNotificationDelegate healthChangeNotification = delegate { };
 	
 	public float maxHealth
     {
@@ -32,6 +39,13 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
         get;
         protected set;
     }
+
+	public float currentShield
+	{
+		get;
+		protected set;
+	} = -1;
+
     public GameObject attached { get => gameObject; }
 
     private StatBlockComponent stats;
@@ -91,71 +105,134 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable
 		healthValueUpdateEvent(currentHealth, maxHealth);
 	}
 
-	public void Damage(HealthChangeData data)
+	public void Damage(HealthChangeData hcData)
 	{
-		if(!data.Valid)
+		if(!hcData.Valid)
         {
 			throw new System.Exception("ERROR Invalid HealthChangeData used in damage method");
         }
+
 		if(tagComponent?.tags.Contains(GameplayTagFlags.INVULNERABLE) ?? false)
 		{
 			DebugFlags.Log(DebugFlags.Flags.HEALTH, "DAMAGE CANCELED FROM INVULN");
 			return;
 		}
-		DebugFlags.Log(DebugFlags.Flags.HEALTH, "taking damage");
-		MutableHealthChangeEventData mutableEventData = new MutableHealthChangeEventData(data);
+
 		DebugFlags.Log(DebugFlags.Flags.HEALTH, "pre damage");
-		preDamageEvent(mutableEventData);
+
+		MutableHealthChangeEventData mutableEventData = new MutableHealthChangeEventData(hcData, HasShield());
+		preDamageEvent(mutableEventData); //this is sent out to see if anyone wants to cancel the damage for any reason e.g. invuln
 		if(mutableEventData.cancelled)
 		{
 			DebugFlags.Log(DebugFlags.Flags.HEALTH, "cancelled");
 			return;
 		}
-		DebugFlags.Log(DebugFlags.Flags.HEALTH, "not cancelled");
-		currentHealth += mutableEventData.delta;
-		float aggroValue = data.OverallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
-        if (data.KnockbackData != null && knockbackHandler != null)
-        {
-			if(data.KnockbackData.direction == Vector2.zero)
+
+		if(HasShield())
+		{
+            ShieldAbsorbtionData saData = new ShieldAbsorbtionData();
+			saData.amountAbsorbed = Math.Min(currentShield, mutableEventData.delta);
+
+            DebugFlags.Log(DebugFlags.Flags.HEALTH, $"hitting shield of {currentShield} for {mutableEventData.delta}");
+            currentShield += mutableEventData.delta;
+
+			
+
+            if (currentShield <= 0)
 			{
-                data.KnockbackData.direction = (knockbackHandler.position - data.LocalSource.transform.position).normalized;
+				DebugFlags.Log(DebugFlags.Flags.HEALTH, $"broke shield");
+
+				saData.remainingValue = 0;
+				saData.broken = true;
+				currentShield = -1;
+			}
+			else
+			{
+                DebugFlags.Log(DebugFlags.Flags.HEALTH, $"shield survived with {currentShield}");
+
+				saData.remainingValue = currentShield;
+				saData.broken = false;
             }
-            knockbackHandler.ApplyKnockback(data.KnockbackData);
+			shieldAbsorbedDamageNotification(saData);
+			return;
         }
-		postDamageEvent(data);
-		data.OverallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(data);
-		healthChangeEvent(data);
+
+        DebugFlags.Log(DebugFlags.Flags.HEALTH, $"taking {mutableEventData.delta}");
+		currentHealth += mutableEventData.delta;
+        
+		if (hcData.KnockbackData != null && knockbackHandler != null)
+        {
+			if(hcData.KnockbackData.direction == Vector2.zero)
+			{
+                hcData.KnockbackData.direction = (knockbackHandler.position - hcData.BilateralData.LocalSource.transform.position).normalized;
+            }
+            knockbackHandler.ApplyKnockback(hcData.KnockbackData);
+        }
+		
+		postDamageNotification(hcData);
+		hcData.BilateralData.OverallSource?.GetComponent<IHealthCallbacks>()?.DamageDealtCallback(hcData);
+		healthChangeNotification(hcData);
 		
 		if(currentHealth <= 0)
 		{
-			Die(data.OverallSource);			
+			Die(hcData.BilateralData.OverallSource);			
 		}
 	}
 
 	public void Heal(HealthChangeData data)
 	{
 		DebugFlags.Log(DebugFlags.Flags.HEALTH, "healing");
-		MutableHealthChangeEventData mutableEventData = new MutableHealthChangeEventData(data);
+		MutableHealthChangeEventData mutableEventData = new MutableHealthChangeEventData(data, HasShield());
 		preHealEvent(mutableEventData);
 		if(mutableEventData.cancelled)
 		{
 			return;
 		}
 		currentHealth += mutableEventData.delta;
-		float aggroValue = data.OverallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
-		postHealEvent(data);
-		healthChangeEvent(data);
-		data.OverallSource?.GetComponent<IHealthCallbacks>()?.DamageHealedCallback(data);
+		float aggroValue = data.BilateralData.OverallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
+		postHealNotification(data);
+		healthChangeNotification(data);
+		data.BilateralData.OverallSource?.GetComponent<IHealthCallbacks>()?.DamageHealedCallback(data);
 		if(currentHealth > maxHealth)
 		{
 			currentHealth = maxHealth;
 		}
 	}
 
-	protected virtual void Die(GameObject killer = null)
+    public void ApplyShield(ShieldApplicationData data)
+    {
+        DebugFlags.Log(DebugFlags.Flags.HEALTH, "applying shield");
+        MutableShieldApplicationEventData mutableEventData = new MutableShieldApplicationEventData(data);
+        preShieldEvent(mutableEventData);
+        if (mutableEventData.cancelled)
+        {
+            return;
+        }
+
+		if(HasShield())
+		{
+			if(currentShield > data.Value)
+			{
+				return;
+			}
+		}
+
+        currentShield = mutableEventData.value;
+
+        postShieldAppliedNotification(data);
+
+		// TODO do shielding callbacks
+    }
+
+    protected virtual void Die(GameObject killer = null)
 	{
 		currentHealth = maxHealth;
 		healthValueUpdateEvent(currentHealth, maxHealth);
 		killer?.GetComponent<IHealthCallbacks>()?.KillCallback(gameObject);
+	}    
+
+	public bool HasShield()
+	{
+		return currentShield > 0;
 	}
 }

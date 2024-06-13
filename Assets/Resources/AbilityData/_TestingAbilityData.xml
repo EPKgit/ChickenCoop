@@ -320,5 +320,26 @@
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>15</ability_ID>
+		<ability_name>Hen Shield</ability_name>
+		<ability_icon>null</ability_icon>
+		<ability_data>
+			<cd>1</cd>
+		</ability_data>
+		<tooltip_list>
+			<default>Shields a targeted unit for {amount}</default>
+		</tooltip_list>
+		<targeting_list>
+			<entityTargetingData>
+				<range>7</range>
+				<affiliation>PLAYERS</affiliation>
+			</entityTargetingData>
+		</targeting_list>
+		<var_list>
+			<variable name="amount" type="float" value="5"/>
+		</var_list>
+	</ability>
 	
 </ability_list>

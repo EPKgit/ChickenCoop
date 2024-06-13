@@ -39,19 +39,19 @@ public class ShieldEnemy : BaseEnemy
 
 	void CheckIfBlocked(MutableHealthChangeEventData mhced)
 	{
-		float angle = Vector3.Angle(arc.transform.up, mhced.data.LocalSource.transform.position - mhced.data.Target.transform.position);
+		float angle = Vector3.Angle(arc.transform.up, mhced.data.BilateralData.LocalSource.transform.position - mhced.data.BilateralData.Target.transform.position);
         DebugFlags.Log(DebugFlags.Flags.ENEMYHEALTH, "" + arc.transform.up);
-        DebugFlags.Log(DebugFlags.Flags.ENEMYHEALTH, "" + (mhced.data.LocalSource.transform.position - mhced.data.Target.transform.position));
+        DebugFlags.Log(DebugFlags.Flags.ENEMYHEALTH, "" + (mhced.data.BilateralData.LocalSource.transform.position - mhced.data.BilateralData.Target.transform.position));
         DebugFlags.Log(DebugFlags.Flags.ENEMYHEALTH, "" + angle);
 		if(angle < blockAngle)
 		{
             DebugFlags.Log(DebugFlags.Flags.ENEMYHEALTH, "cancelling");
 			mhced.cancelled = true;
-			ShieldClankEffect(mhced.data.LocalSource);
+			ShieldClankEffect(mhced.data.BilateralData.LocalSource);
 		}
         else
         {
-			DamageEffect(mhced.data.LocalSource);
+			DamageEffect(mhced.data.BilateralData.LocalSource);
     	}
 	}
 

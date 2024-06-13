@@ -18,13 +18,20 @@ public class PlayerHealth : BaseHealth
     protected override void OnEnable()
     {
         base.OnEnable();
-        postDamageEvent += OnDamageTaken;
+        postDamageNotification += OnDamageTaken;
+        shieldAbsorbedDamageNotification += OnShieldAbsorbedDamage;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        postDamageEvent -= OnDamageTaken;
+        postDamageNotification -= OnDamageTaken;
+        shieldAbsorbedDamageNotification -= OnShieldAbsorbedDamage;
+    }
+
+    void OnShieldAbsorbedDamage(ShieldAbsorbtionData sad)
+    {
+        StatusEffectManager.instance.ApplyEffect(gameObject, Statuses.StatusEffectType.INVULERNABILITY, 0.5f);
     }
 
     void OnDamageTaken(HealthChangeData hcd)

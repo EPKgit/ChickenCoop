@@ -19,6 +19,10 @@ public enum StatName
     HealingPercentage, 
     FlatHealing, 
 
+    //Shielding
+    ShieldingPercentage,
+    FlatShielding,
+
     //Abilities
     CooldownReduction, 
 
@@ -57,12 +61,22 @@ public class StatBlock : ISerializationCallbackReceiver
         { StatName.FlatDamage,              0.0f },
         { StatName.HealingPercentage,       1.0f },
         { StatName.FlatHealing,             0.0f },
+        { StatName.ShieldingPercentage,     1.0f },
+        { StatName.FlatShielding,           0.0f },
         { StatName.CooldownReduction,       1.0f },
         { StatName.PuzzleSolving,           0.0f },
         { StatName.SpineDuration,           0.2f },
         { StatName.SpineSpeed,              25.0f },
-        { StatName.MAX,                     -1.0f },
     };
+
+    static StatBlock()
+    {
+        if(defaultValues.Count != (int)StatName.MAX)
+        {
+            Debug.LogError($"ERROR: not all stats have default values {defaultValues} != {(int)StatName.MAX}");
+        }
+    }
+
 
     private bool initialized = false;
     public StatBlock() 

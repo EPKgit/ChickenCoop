@@ -6,8 +6,12 @@ using TMPro;
 
 public class InGamePlayerUI : MonoBehaviour
 {
+    [SerializeField]
 	private float maxHealth;
-	private float currentHealth;
+    [SerializeField]
+    private float currentHealth;
+    [SerializeField]
+    private float currentShield;
 
 	private GameObject player;
 	private BaseHealth playerHealth;
@@ -15,6 +19,8 @@ public class InGamePlayerUI : MonoBehaviour
 
 	private GameObject UIActive;
 	private Slider healthSlider;
+	private Slider shieldSlider;
+    private Image shieldIcon;
 	private Image[] icons = new Image[(int)AbilitySlot.MAX];
 	private Image[] cds = new Image[(int)AbilitySlot.MAX];
     private TextMeshProUGUI[] cdTexts = new TextMeshProUGUI[(int)AbilitySlot.MAX];
@@ -22,7 +28,9 @@ public class InGamePlayerUI : MonoBehaviour
     void Awake()
 	{
 		UIActive = transform.Find("UI").gameObject;
-		healthSlider = UIActive.transform.Find("Health").Find("Slider").GetComponent<Slider>();
+		healthSlider = UIActive.transform.Find("Health").Find("HealthSlider").GetComponent<Slider>();
+        shieldSlider = UIActive.transform.Find("Health").Find("ShieldSlider").GetComponent<Slider>();
+        shieldIcon = UIActive.transform.Find("Health").Find("ShieldSlider").Find("ShieldIcon").GetComponent<Image>();
         string[] arr = new string[] { "Attack", "Ability1", "Ability2", "Ability3" };
         for (int x = 0; x < arr.Length; ++x)
         {
@@ -40,8 +48,11 @@ public class InGamePlayerUI : MonoBehaviour
 		playerHealth = Lib.FindUpwardsInTree<BaseHealth>(player);
 		currentHealth = playerHealth.currentHealth;
 		maxHealth = playerHealth.maxHealth;
+        currentShield = playerHealth.currentShield;
 		playerHealth.healthValueUpdateEvent += UpdateCachedHealthValues;
-		playerHealth.healthChangeEvent += HealthChange;
+		playerHealth.healthChangeNotification += HealthChange;
+		playerHealth.postShieldAppliedNotification += ShieldChange;
+		playerHealth.shieldAbsorbedDamageNotification += ShieldDamaged;
 
 		playerAbilities = Lib.FindUpwardsInTree<PlayerAbilities>(player);
         playerAbilities.initializedEvent += OnAbilityInitialized;
@@ -61,7 +72,7 @@ public class InGamePlayerUI : MonoBehaviour
             return;
         }
         playerHealth.healthValueUpdateEvent -= UpdateCachedHealthValues;
-        playerHealth.healthChangeEvent -= HealthChange;
+        playerHealth.healthChangeNotification -= HealthChange;
         playerAbilities.initializedEvent -= OnAbilityInitialized;
         playerAbilities.UnregisterAbilityCooldownCallbacks(new CooldownTickDelegate[] { UpdateAttackUI, UpdateAbility1UI, UpdateAbility2UI, UpdateAbility3UI });
     }
@@ -114,7 +125,26 @@ public class InGamePlayerUI : MonoBehaviour
 		UpdateHealthUI();
 	}
 
-	void UpdateHealthUI()
+    public void ShieldChange(ShieldApplicationData sad)
+    {
+        currentShield = sad.Value;
+        UpdateHealthUI();
+    }
+
+    public void ShieldDamaged(ShieldAbsorbtionData sad)
+    {
+        if (sad.broken)
+        {
+            currentShield = 0;
+        }
+        else
+        {
+            currentShield = sad.remainingValue;
+        }
+        UpdateHealthUI();
+    }
+
+    void UpdateHealthUI()
 	{
         if(maxHealth <= 0)
         {
@@ -122,7 +152,17 @@ public class InGamePlayerUI : MonoBehaviour
             return;
         }
 		healthSlider.value = currentHealth / maxHealth;
-	}
+
+        if(currentShield > 0)
+        {
+            shieldSlider.value = currentShield / maxHealth;
+            shieldSlider.gameObject.SetActive(true);
+        }
+        else
+        {
+            shieldSlider.gameObject.SetActive(false);
+        }
+    }
 
 	void UpdateAttackUI(CooldownTickData data)
 	{
