@@ -72,10 +72,14 @@
 		</targeting_list>
 		<var_list>
 			<variable name="damage" type="float" value="10"/>
-			<variable name="spineCount" type="float" value="16"/>
+			<variable name="spineCount" type="int" value="16"/>
 			<variable name="backpackLifetime" type="float" value="30"/>
 			<variable name="backpackPrefab" type="asset" value="porcupine.backpack"/>
-			
+
+			<variable name="setupTime" type="float" value="2.0"/>
+			<variable name="shieldAmount" type="float" value="0.2"/>
+			<variable name="spineKnockbackModifier" type="kb" value="MEDIUM"/>
+
 			<variable name="launchTime" type="float" value="0.5"/>			
 			<variable name="arcSteepness" type="float" value="2.0"/>			
 		</var_list>

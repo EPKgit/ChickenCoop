@@ -5,7 +5,8 @@ using UnityEngine;
 public class SpineProjectile_Script : BaseLineTargeted
 {
     public float damage;
-    
+    public KnockbackPreset knockbackOverride = KnockbackPreset.MAX;
+
     private List<IDamagable> alreadyHit = new List<IDamagable>();
 
     public override void Reset()
@@ -14,13 +15,14 @@ public class SpineProjectile_Script : BaseLineTargeted
         alreadyHit.Clear();
     }
 
-    public void Setup(Vector3 pos, Vector3 direction, GameObject p, float d, float l = 1.0f)
+    public void Setup(Vector3 pos, Vector3 direction, GameObject p, float d, float l = 1.0f, KnockbackPreset kp = KnockbackPreset.MAX)
     {
         transform.position = pos;
         rb.velocity = direction;
         creator = p;
         damage = d;
         timeLeftMax = timeLeftCurrent = l;
+        knockbackOverride = kp;
         transform.rotation = Quaternion.FromToRotation(Vector2.up, direction);
     }
 
@@ -35,7 +37,7 @@ public class SpineProjectile_Script : BaseLineTargeted
                     .Damage(damage)
                     .LocalSource(gameObject)
                     .OverallSource(creator)
-                    .KnockbackData(KnockbackPreset.TINY)
+                    .KnockbackData(knockbackOverride == KnockbackPreset.MAX ? KnockbackPreset.TINY : knockbackOverride)
                     .Target(damagable)
                     .Finalize()
             );

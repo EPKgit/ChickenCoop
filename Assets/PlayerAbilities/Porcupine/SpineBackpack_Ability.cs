@@ -9,16 +9,23 @@ public class SpineBackpack_Ability : Ability
 
     public GameObject backpackPrefab;
 
-    public float damage = 1.0f;
-    public float spineCount = 1.0f;
-    public float backpackLifetime = 1.5f;
-    
-    private float projectileSpeed = 10.0f;
-    private float projectileLifetime = 0.5f;
+    // XML VARIABLES
+    private float damage = 1.0f;
+    private int spineCount = 16;
+    private float backpackLifetime = 30f;
+
+    // RED UPGRADE
+    private float setupTime = 2.0f;
+    private float shieldAmount = 0.2f;
+    private KnockbackPreset spineKnockbackModifier = KnockbackPreset.MEDIUM;
 
     // BLUE UPGRADE
     private float launchTime = 0.5f;
     private float arcSteepness = 2.0f;
+
+    // filled from stats
+    private float projectileSpeed = 10.0f;
+    private float projectileLifetime = 0.5f;
 
 
     public override void Initialize(PlayerAbilities pa)
@@ -67,9 +74,13 @@ public class SpineBackpack_Ability : Ability
             spineCount,
             backpackLifetime,
             projectileLifetime,
-            projectileSpeed,
-            GetAbilityUpgradeStatus(AbilityUpgradeSlot.YELLOW)
+            projectileSpeed
         );
+
+        if (GetAbilityUpgradeStatus(AbilityUpgradeSlot.RED))
+        {
+            backpack.SetupRed(setupTime, shieldAmount, spineKnockbackModifier);
+        }
 
         if(GetAbilityUpgradeStatus(AbilityUpgradeSlot.BLUE))
         {
@@ -79,6 +90,11 @@ public class SpineBackpack_Ability : Ability
         else
         {
             backpack.SetupGrounded();
+        }
+
+        if (GetAbilityUpgradeStatus(AbilityUpgradeSlot.YELLOW))
+        {
+            backpack.SetupYellow();
         }
     }
 }

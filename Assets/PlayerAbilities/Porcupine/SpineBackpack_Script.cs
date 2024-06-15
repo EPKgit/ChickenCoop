@@ -17,9 +17,12 @@ public class SpineBackpack_Script : Poolable
     private float damage;
     private float spineCount;
     private bool triggerableBySpine;
+    private bool triggerableByAlly;
 
     // Red Upgrade
-    private float armorAmount = 5;
+    private float setupTime = 0;
+    private float shieldAmount;
+    private KnockbackPreset knockbackModifier;
 
     // Blue Upgrade
     private Vector3 startPosition;
@@ -28,6 +31,7 @@ public class SpineBackpack_Script : Poolable
     private float launchTimeMax;
     private float arcSteepness;
 
+    private HashSet<GameObject> pendingCollisions = new HashSet<GameObject>(); 
     
 
     public override void PoolInit(GameObject g)
@@ -43,7 +47,7 @@ public class SpineBackpack_Script : Poolable
         collider2D.enabled = false;
     }
 
-    public void Setup(Vector3 startPos, GameObject creator, float damage, float spineCount, float myLifetime, float projLifetime, float projSpeed, bool triggerableBySpine)
+    public void Setup(Vector3 startPos, GameObject creator, float damage, float spineCount, float myLifetime, float projLifetime, float projSpeed)
     {
         transform.rotation = Quaternion.identity;
         this.creator = creator;
@@ -54,22 +58,44 @@ public class SpineBackpack_Script : Poolable
         timeLeftMax = timeLeftCurrent = myLifetime;
         transform.position = startPos;
         startPosition = startPos;
-        this.triggerableBySpine = triggerableBySpine;
+        this.knockbackModifier = KnockbackPreset.MAX;
+    }
+
+    public void SetupRed(float setupTime, float shieldPercentage, KnockbackPreset knockbackModifier)
+    {
+        this.setupTime = setupTime;
+        this.shieldAmount = shieldPercentage;
+        this.knockbackModifier = knockbackModifier;
+        this.triggerableByAlly = true;
+    }
+
+    public void SetupYellow()
+    {
+        this.triggerableBySpine = true;
     }
 
     public void SetupGrounded()
     {
+        collider2D.enabled = true;
+        launchTimeMax = -1;
+        
         float radius = Lib.LibGetComponentDownTree<CircleCollider2D>(gameObject).radius;
         var initialOverlaps = Physics2D.OverlapCircleAll(transform.position, radius);
         foreach (var collision in initialOverlaps)
         {
-            if(CheckCollision(collision.gameObject))
+            if (setupTime > 0)
             {
-                break;
+                pendingCollisions.Add(collision.gameObject);
+            }
+            else
+            {
+                if (CheckCollision(collision.gameObject))
+                {
+                    break;
+                }
             }
         }
-        collider2D.enabled = true;
-        launchTimeMax = -1;
+        
     }
 
     public void SetupLaunch(Vector3 endPos, float arcTime, float arcSteepness)
@@ -80,7 +106,7 @@ public class SpineBackpack_Script : Poolable
         this.arcSteepness = arcSteepness;
     }
 
-    void Detonate()
+    void Detonate(GameObject ally)
     {
         collider2D.enabled = false;
         for (int i = 0; i < spineCount; ++i)
@@ -89,14 +115,41 @@ public class SpineBackpack_Script : Poolable
             float x = Mathf.Sin(radians);
             float y = Mathf.Cos(radians);
             GameObject temp = PoolManager.instance.RequestObject(spinePrefab);
-            temp.GetComponent<SpineProjectile_Script>().Setup
+            var spine = temp.GetComponent<SpineProjectile_Script>();
+            spine.Setup
             (
                 transform.position,
                 new Vector2(x, y) * projectileSpeed,
                 creator,
                 damage,
-                projectileLifetime
+                projectileLifetime,
+                knockbackModifier
             );
+        }
+        if(ally != null)
+        {
+            IShieldable shieldable = Lib.FindUpwardsInTree<IShieldable>(ally);
+            if (shieldable != null)
+            {
+                shieldable.ApplyShield
+                (
+                    ShieldApplicationData.GetBuilder()
+                        .LocalSource(gameObject)
+                        .OverallSource(creator)
+                        .Target(shieldable)
+                        .Value(shieldAmount)
+                        .Finalize()
+                );
+            }
+
+            //Collider2D[] nearby = Physics2D.OverlapCircleAll(transform.position, stunRadius);
+            //foreach (Collider2D col in nearby)
+            //{
+            //    if (col.gameObject.CompareTag("Enemy"))
+            //    {
+            //        StatusEffectManager.instance.ApplyEffect(col.gameObject, Statuses.StatusEffectType.STUN, stunDuration);
+            //    }
+            //}
         }
         DestroySelf();
     }
@@ -105,12 +158,17 @@ public class SpineBackpack_Script : Poolable
     {
         if (g.CompareTag("Enemy"))
         {
-            Detonate();
+            Detonate(null);
             return true;
         }
         if(triggerableBySpine && g.GetComponent<SpineProjectile_Script>() != null)
         {
-            Detonate();
+            Detonate(null);
+            return true;
+        }
+        if (triggerableByAlly && g != creator && g.CompareTag("Player"))
+        {
+            Detonate(g);
             return true;
         }
         return false;
@@ -118,11 +176,41 @@ public class SpineBackpack_Script : Poolable
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        if (setupTime > 0)
+        {
+            pendingCollisions.Add(col.gameObject);
+            return;
+        }
         CheckCollision(col.gameObject);
+    }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (setupTime > 0)
+        {
+            pendingCollisions.Remove(col.gameObject);
+            return;
+        }
     }
 
     void Update()
     {
+        if(setupTime > 0)
+        {
+            setupTime -= Time.deltaTime;
+            if(setupTime <= 0)
+            {
+                setupTime = 0;
+                foreach(GameObject g in pendingCollisions)
+                {
+                    if(CheckCollision(g.gameObject))
+                    {
+                        break;
+                    }
+                }
+                pendingCollisions.Clear();
+            }
+        }
         if(launchTimeMax > 0)
         {
             launchTimeCurrent += Time.deltaTime;
@@ -142,7 +230,7 @@ public class SpineBackpack_Script : Poolable
         timeLeftCurrent -= Time.deltaTime;
         if (timeLeftCurrent <= 0)
         {
-            Detonate();
+            Detonate(null);
         }
     }
 }
