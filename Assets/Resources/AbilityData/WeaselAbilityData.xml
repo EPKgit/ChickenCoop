@@ -20,8 +20,8 @@
 			<noneTargetingData/>
 		</targeting_list>
 		<var_list>
-			<variable name="movementSpeedMultiplier" type="float" value="1.5"/>
-			<variable name="damageMultiplier" type="float" value="2.0"/>
+			<float name="movementSpeedMultiplier">1.5</float>
+			<float name="damageMultiplier">2.0</float>
 		</var_list>
 		<ability_tags_to_apply>
 			<tag>INVISIBLE</tag>
@@ -50,13 +50,13 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="damage" type="float" value="5"/>
-			<variable name="hitboxDuration" type="float" value="0.25"/>
-			<variable name="hitboxRadius" type="float" value="0.5"/>
-			<variable name="knockbackPreset" type="kb" value="BIG"/>
-			<variable name="stunDuration" type="float" value="1.0"/>
-			<variable name="multiHit" type="int" value="2"/>
-			<variable name="otherAbilityCooldownTick" type="float" value="1.0"/>
+			<float name="damage">5</float>
+			<float name="hitboxDuration">0.25</float>
+			<float name="hitboxRadius">0.5</float>
+			<kb name="knockbackPreset">BIG</kb>
+			<float name="stunDuration">1.0</float>
+			<int name="multiHit">2</int>
+			<float name="otherAbilityCooldownTick">1.0</float>
 		</var_list>
 	</ability>
 
@@ -79,8 +79,8 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="damage" type="float" value="20"/>
-			<variable name="hitboxDuration" type="float" value="0.25"/>
+			<float name="damage">20</float>
+			<float name="hitboxDuration">0.25</float>
 		</var_list>
 	</ability>
 
@@ -104,9 +104,9 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="damageInitial" type="float" value="10"/>
-			<variable name="damageFinal" type="float" value="20"/>
-			<variable name="hitboxDuration" type="float" value="0.25"/>
+			<float name="damageInitial">10</float>
+			<float name="damageFinal">20</float>
+			<float name="hitboxDuration">0.25</float>
 		</var_list>
 		<ability_tags_to_apply>
 			<tag>NORMAL_MOVEMENT_DISABLED</tag>

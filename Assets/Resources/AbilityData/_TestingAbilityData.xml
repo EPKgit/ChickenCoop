@@ -19,7 +19,7 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="dmg" type="float" value="1"/>
+			<float name="dmg">1</float>
 		</var_list>
 	</ability>
 
@@ -45,8 +45,8 @@
 			</groundTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="dmg" type="float" value="9"/>
-			<variable name="aoe" type="float" value="2"/>
+			<float name="dmg">9</float>
+			<float name="aoe">2</float>
 		</var_list>
 	</ability>
 
@@ -90,7 +90,7 @@
 			</entityTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="amount" type="float" value="5"/>
+			<float name="amount">5</float>
 		</var_list>
 	</ability>
 
@@ -110,7 +110,7 @@
 			<noneTargetingData/>
 		</targeting_list>
 		<var_list>
-			<variable name="amount" type="float" value="0.5"/>
+			<float name="amount">0.5</float>
 		</var_list>
 	</ability>
 
@@ -131,7 +131,7 @@
 			<noneTargetingData/>
 		</targeting_list>
 		<var_list>
-			<variable name="aoe" type="float" value="3"/>
+			<float name="aoe">3</float>
 		</var_list>
 	</ability>
 
@@ -154,7 +154,7 @@
 			</entityTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="stunDuration" type="float" value="2.0"/>
+			<float name="stunDuration">2.0</float>
 		</var_list>
 	</ability>
 
@@ -201,9 +201,9 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="recasts" type="int" value="3"/>
-			<variable name="cd" type="float" value="10"/>
-			<variable name="recastWindow" type="float" value="3"/>
+			<int name="recasts">3</int>
+			<float name="cd">10</float>
+			<float name="recastWindow">3</float>
 		</var_list>
 	</ability>
 
@@ -223,9 +223,9 @@
 			<noneTargetingData/>
 		</targeting_list>
 		<var_list>
-			<variable name="stunDuration" type="float" value="1.5"/>
-			<variable name="damage" type="float" value="20"/>
-			<variable name="aoe" type="float" value="10"/>
+			<float name="stunDuration">1.5</float>
+			<float name="damage">20</float>
+			<float name="aoe">10</float>
 		</var_list>
 	</ability>
 
@@ -245,8 +245,8 @@
 			<noneTargetingData/>
 		</targeting_list>
 		<var_list>
-			<variable name="SetCDTo" type="float" value="0.5"/>
-			<variable name="NumAbilitiesBeforeReset" type="int" value="5"/>
+			<float name="SetCDTo">0.5</float>
+			<int name="NumAbilitiesBeforeReset">5</int>
 		</var_list>
 	</ability>
 
@@ -266,9 +266,9 @@
 			<noneTargetingData/>
 		</targeting_list>
 		<var_list>
-			<variable name="increaseMultiplier" type="float" value="-3"/>
-			<variable name="decreaseMultiplier" type="float" value="5"/>
-			<variable name="interval" type="float" value="1"/>
+			<float name="increaseMultiplier">-3</float>
+			<float name="decreaseMultiplier">5</float>
+			<float name="interval">1</float>
 		</var_list>
 	</ability>
 
@@ -295,7 +295,7 @@
 			</groundTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="tpUses" type="int" value="3"/>
+			<int name="tpUses">3</int>
 		</var_list>
 	</ability>
 
@@ -315,7 +315,7 @@
 			<noneTargetingData/>
 		</targeting_list>
 		<var_list>
-			<variable name="hpPerSecond" type="int" value="5"/>
+			<int name="hpPerSecond">5</int>
 		</var_list>
 	</ability>
 
@@ -338,7 +338,7 @@
 			</entityTargetingData>
 		</targeting_list>
 		<var_list>
-			<variable name="amount" type="float" value="5"/>
+			<float name="amount">5</float>
 		</var_list>
 	</ability>
 	

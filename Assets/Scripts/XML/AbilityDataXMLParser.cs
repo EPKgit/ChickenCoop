@@ -96,9 +96,9 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         private AbilityXMLVariable() { }
         public AbilityXMLVariable(XmlElement node)
         {
+            type = node.Name;
             name = node.GetAttribute("name");
-            value = node.GetAttribute("value");
-            type = node.GetAttribute("type");
+            value = node.InnerText;
         }
     }
 

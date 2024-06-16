@@ -4,29 +4,59 @@ elementFormDefault="qualified">
 	
 	<xs:element name="var_list">
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element minOccurs="1" maxOccurs="unbounded" ref="variable" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	
-	<xs:element name="variable">
-		<xs:complexType>
-			<xs:attribute name="name" type="xs:string" use="required" />
-			<xs:attribute name="type" type="variableType" use="required" />
-			<xs:attribute name="value" type="xs:string" use="required" />
+			<xs:choice minOccurs="1" maxOccurs="unbounded">
+				<xs:element name="kb">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="knockbackPresetType">
+								<xs:attribute name="name" type="xs:string" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="float">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:float">
+								<xs:attribute name="name" type="xs:string" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="asset">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="name" type="xs:string" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="int">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:int">
+								<xs:attribute name="name" type="xs:string" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="bool">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:boolean">
+								<xs:attribute name="name" type="xs:string" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
 		</xs:complexType>
 	</xs:element>
 
-	<xs:simpleType name="variableType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="int"/>
-			<xs:enumeration value="float"/>
-			<xs:enumeration value="bool"/>
-			<xs:enumeration value="kb"/>
-			<xs:enumeration value="asset"/>
-		</xs:restriction>
-	</xs:simpleType>
+	<xs:element name="variable">
+		
+	</xs:element>	
 
 	<xs:simpleType name="knockbackPresetType">
 		<xs:restriction base="xs:string">
