@@ -71,17 +71,19 @@
 			</groundTargetingData>
 		</targeting_list>
 		<var_list>
+			<!-- Default -->
 			<float name="damage">10</float>
 			<int name="spineCount">16</int>
 			<float name="backpackLifetime">30</float>
 			<asset name="backpackPrefab">porcupine.backpack</asset>
 
-
+			<!-- Red -->
 			<float name="setupTime">2.0</float>
 			<float name="shieldAmount">0.2</float>
 			<kb name="spineKnockbackModifier">MEDIUM</kb>
 
 
+			<!-- Blue -->
 			<float name="launchTime">0.5</float>
 			<float name="arcSteepness">2.0</float>
 		</var_list>

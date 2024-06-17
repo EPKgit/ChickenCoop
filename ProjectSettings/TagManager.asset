@@ -25,7 +25,7 @@ TagManager:
   - GroundAbilities
   - Interactables
   - PlayerDrops
-  - 
+  - Encounters
   - 
   - 
   - 
@@ -45,6 +45,9 @@ TagManager:
   m_SortingLayers:
   - name: Background
     uniqueID: 3601880525
+    locked: 0
+  - name: Terrain
+    uniqueID: 3712293853
     locked: 0
   - name: Indicators
     uniqueID: 724919111

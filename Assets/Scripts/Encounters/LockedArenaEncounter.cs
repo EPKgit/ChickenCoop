@@ -1,63 +1,83 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Encounters;
 
 [RequireComponent(typeof(Collider2D))]
-public class LockedArenaEncounter : MonoBehaviour
+public class LockedArenaEncounter : LockedEncounter
 {
     public Vector2[] spawnPoints;
+    public WaveData[] waveData;
 
-    [SerializeField]
-    public EncounterData encounterData;
+    private int waveIndex = 0;
+    private List<GameObject> spawnedEnemies;
 
-    public GameObject entryDoor;
-    public GameObject exitDoor;
-
-    void OnTriggerEnter2D(Collider2D other) 
+    protected override void StartEncounter()
     {
-        if(other.gameObject.CompareTag("Player"))
+        spawnedEnemies = new List<GameObject>();
+        EncounterManager.instance.OnEncounterUpdate += WaveUpdate;
+        WaveStart();
+    }
+
+    protected override void Cleanup()
+    {
+        foreach(GameObject enemy in spawnedEnemies)
         {
-            TriggerEncounter();
+            Destroy(enemy);
+        }
+        EncounterManager.instance.OnEncounterUpdate -= WaveUpdate;
+    }
+
+
+    public override void OnEncounterStateChange(EncounterState oldState, EncounterState newState)
+    {
+        base.OnEncounterStateChange(oldState, newState);
+    }
+
+
+    void WaveStart()
+    {
+        WaveData currentWave = waveData[waveIndex];
+        if (currentWave.maxAmount == 0)
+        {
+            throw new System.Exception("ERROR: 0 ENEMIES IN WAVE");
+        }
+        spawnedEnemies.AddRange(EncounterManager.SpawnWave(currentWave, spawnPoints, transform.position));
+    }
+
+    void WaveUpdate()
+    {
+        for (int x = spawnedEnemies.Count - 1; x >= 0; --x)
+        {
+            GameObject g = spawnedEnemies[x];
+            ///TODO figure out a more sophisticated callback for this
+            if (g == null || g.Equals(null))
+            {
+                spawnedEnemies.RemoveAt(x);
+            }
+        }
+        if (spawnedEnemies.Count == 0)
+        {
+            WaveEnd();
         }
     }
 
-    void TriggerEncounter()
+    void WaveEnd()
     {
-        if (entryDoor != null)
+        ++waveIndex;
+        if (waveIndex >= waveData.Length)
         {
-            entryDoor.SetActive(true);
+            EncounterManager.instance.EndEncounter();
         }
-        if (exitDoor != null)
+        else
         {
-            exitDoor.SetActive(true);
-        }
-        EncounterManager.instance.OnEncounterStateChange += OnEncounterStateChange;
-        EncounterManager.instance.StartEncounter(encounterData, new List<Vector2>(spawnPoints), transform.position);
-    }
-
-    void EndEncounter()
-    {
-        if (entryDoor != null)
-        {
-            entryDoor.SetActive(false);
-        }
-        if (exitDoor != null)
-        {
-            exitDoor.SetActive(false);
-        }
-        EncounterManager.instance.OnEncounterStateChange -= OnEncounterStateChange;
-        Destroy(gameObject);
-    }
-    public void OnEncounterStateChange(EncounterState oldState, EncounterState newState)
-    {
-        if(newState == EncounterState.ENCOUNTER_ENDED)
-        {
-            EndEncounter();
+            WaveStart();
         }
     }
 
-    void OnDrawGizmosSelected()
+    protected override void OnDrawGizmosSelected()
     {
+        base.OnDrawGizmosSelected();
         if(spawnPoints == null)
         {
             return;
