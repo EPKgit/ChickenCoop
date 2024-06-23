@@ -25,11 +25,22 @@ public abstract class CustomPropertyDrawerBase : PropertyDrawer
         return rect;
     }
 
+    protected Rect NextLine(SerializedProperty property)
+    {
+        float height = EditorGUI.GetPropertyHeight(property);
+        rect = new Rect(startRect.x, yofs, startRect.width, height);
+        yofs += height;
+        return rect;
+    }
+
     abstract protected bool DoesExpansion();
 
     protected bool StartOnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // EditorGUI.DrawRect(position, Color.red);
+
+        EditorGUI.BeginProperty(position, label, property);
+
         startRect = position;
         yofs = position.y;
         yinc = (position.height - GetExtraSpace(property)) / GetNumLines(property);
@@ -45,6 +56,7 @@ public abstract class CustomPropertyDrawerBase : PropertyDrawer
         }
         if (!property.isExpanded)
         {
+            EditorGUI.EndProperty();
             return true;
         }
         return false;
@@ -61,6 +73,7 @@ public abstract class CustomPropertyDrawerBase : PropertyDrawer
             CustomRightClickMenu(property);
             current.Use();
         }
+        EditorGUI.EndProperty();
     }
 
     protected virtual void CustomRightClickMenu(SerializedProperty property)

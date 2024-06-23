@@ -75,6 +75,7 @@ public class AbilityTargetingDataDrawer : CustomPropertyDrawerBase
             } 
         }
         DrawHorizontalLine(1, 0.25f);
+        EndOnGUI(property);
     }
 
     void SetupProperties(SerializedProperty prop)

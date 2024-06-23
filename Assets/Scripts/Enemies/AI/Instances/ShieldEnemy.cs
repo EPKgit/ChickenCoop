@@ -23,6 +23,9 @@ public class ShieldEnemy : BaseEnemy
         updateList.Add(new EnemyBehaviourAction().If(IsKnockedBack).Then(KnockbackUpdate).AndEnd());
         updateList.Add(new EnemyBehaviourAction().Do(AnimationUpdate));
         updateList.Add(new EnemyBehaviourAction().If(CanMove).Then(Move).Else(StopMovement).AndEnd());
+
+        movementSprings.Add(new MoveTowardsTargetPlayerSpring());
+        movementSprings.Add(new SeperateEnemiesSpring());
     }
     void OnEnable()
 	{

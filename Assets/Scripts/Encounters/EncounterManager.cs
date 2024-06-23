@@ -30,31 +30,55 @@ public class EncounterManager : MonoSingleton<EncounterManager>
         OnEncounterUpdate();
     }
 
-    public static List<GameObject> SpawnWave(WaveData data, Vector2[] spawnPoints, Vector3 offset)
+    public static List<GameObject> SpawnWave(EnemyWaveData waveData, Vector2[] generalSpawnPoints, Vector3 offset)
     {
+        if(waveData.spawns == null || waveData.spawns.Length == 0)
+        {
+            throw new ArgumentException();
+        }
         List<GameObject> spawnedEnemies = new List<GameObject>();
         GrabBag<int> spawnBag = null;
         int spawnIndex = 0;
-        if(data.spawnType == SpawnType.RANDOM)
+        foreach (EnemyWaveData.EnemySpawnData spawnWithinWave in waveData.spawns)
         {
-            spawnBag = new GrabBag<int>(Enumerable.Range(0, spawnPoints.Length - 1).ToArray(), true);
-        }
-        for (int x = 0; x < data.maxAmount; ++x)
-        {
-            Vector3 position;
-            switch(data.spawnType)
+            SpawnData spawnData = spawnWithinWave.spawnData;
+            if (spawnData.spawnType == SpawnType.USE_GENERAL_RANDOM)
             {
-                case SpawnType.RANDOM:
-                    position = spawnPoints[spawnBag.Grab()];
-                    break;
-                case SpawnType.SEQUENTIAL:
-                    position = spawnPoints[spawnIndex++ % spawnPoints.Length];
-                    break;
-                default:
-                    throw new System.Exception();
+                spawnBag = new GrabBag<int>(Enumerable.Range(0, generalSpawnPoints.Length - 1).ToArray(), true);
             }
-            position += offset;
-            spawnedEnemies.Add(EnemyManager.instance.SpawnEnemy(data.enemyType, position));
+            else if (spawnData.spawnType == SpawnType.USE_GENERAL_RANDOM)
+            {
+                spawnBag = new GrabBag<int>(Enumerable.Range(0, spawnData.spawnPoints.Length - 1).ToArray(), true);
+            }
+
+            for (int x = 0; x < (spawnData.spawnType == SpawnType.SINGLE_POINT ? 1 : spawnData.spawnCount); ++x)
+            {
+                Vector3 position;
+                switch (spawnData.spawnType)
+                {
+                    case SpawnType.USE_GENERAL_RANDOM:
+                        position = generalSpawnPoints[spawnBag.Grab()];
+                        break;
+                    case SpawnType.RANDOM_OVER_POINTS:
+                        position = spawnData.spawnPoints[spawnBag.Grab()];
+                        break;
+                    case SpawnType.SINGLE_POINT:
+                        position = spawnData.spawnPoint;
+                        break;
+                    case SpawnType.SEQUENTIAL_OVER_POINTS:
+                        position = spawnData.spawnPoints[spawnIndex++ % generalSpawnPoints.Length];
+                        break;
+                    case SpawnType.RANDOM_IN_AREA:
+                        float randX = UnityEngine.Random.Range(0, spawnData.spawnArea.width);
+                        float randY = UnityEngine.Random.Range(0, spawnData.spawnArea.height);
+                        position = new Vector2(spawnData.spawnArea.x + randX, spawnData.spawnArea.y + randY);
+                        break;
+                    default:
+                        throw new System.Exception();
+                }
+                position += offset;
+                spawnedEnemies.Add(EnemyManager.instance.SpawnEnemy(spawnWithinWave.enemyType, position));
+            }
         }
         return spawnedEnemies;
     }
