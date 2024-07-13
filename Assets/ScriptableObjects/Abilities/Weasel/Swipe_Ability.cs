@@ -23,7 +23,7 @@ public class Swipe_Ability : Ability
         HitboxManager.instance.SpawnHitbox(customHitbox, targetingData.inputPoint, HitboxCallback, targetingData.inputRotationZ, hitboxDuration);
     }
 
-    void HitboxCallback(Collider2D col)
+    void HitboxCallback(Collider2D col, Hitbox hitbox)
     {
         col.GetComponent<IDamagable>().Damage
         (

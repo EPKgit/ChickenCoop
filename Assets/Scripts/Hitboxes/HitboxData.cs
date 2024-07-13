@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum HitboxShape
+public enum HitboxShapeType
 {
     CIRCLE,
     SQUARE,
@@ -32,12 +32,12 @@ public class HitboxData
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //These are what are necessary for a valid hitbox
     public Vector3 StartPosition { get; private set; } = Vector3.positiveInfinity;
-    public Action<Collider2D> OnCollision { get; private set; }
+    public Action<Collider2D, Hitbox> OnCollision { get; private set; }
     public Func<Collider2D, bool> Discriminator { get; private set; }
 
 
     //These have defaults and aren't necessary
-    public HitboxShape Shape { get; private set; } = HitboxShape.CIRCLE;
+    public HitboxShapeType ShapeType { get; private set; } = HitboxShapeType.CIRCLE;
     public Vector2[] Points { get; private set; }
     public HitboxInteractionType InteractionType { get; private set; } = HitboxInteractionType.ALL;
     public HitboxRepeatPolicy RepeatPolicy { get; private set; } = HitboxRepeatPolicy.ONLY_ONCE;
@@ -48,7 +48,7 @@ public class HitboxData
     public float Delay { get; private set; } = 0;
     public float StartRotationZ { get; private set; } = 0;
     public Dictionary<GameObject, float> InteractionTimeStamps { get; private set; } = null;
-
+    public object CustomData { get; private set; } = null;
     public bool IsDelayed()
     {
         return Delay > 0;
@@ -76,9 +76,9 @@ public class HitboxData
             data = d;
         }
 
-        public HitboxDataBuilder Shape(HitboxShape shape)
+        public HitboxDataBuilder ShapeType(HitboxShapeType shape)
         {
-            data.Shape = shape;
+            data.ShapeType = shape;
             return this;
         }
 
@@ -118,7 +118,7 @@ public class HitboxData
             return this;
         }
 
-        public HitboxDataBuilder Callback(Action<Collider2D> c)
+        public HitboxDataBuilder Callback(Action<Collider2D, Hitbox> c)
         {
             data.OnCollision = c;
             return this;
@@ -148,6 +148,12 @@ public class HitboxData
             return this;
         }
 
+        public HitboxDataBuilder CustomData(object o)
+        {
+            data.CustomData = o;
+            return this;
+        }
+
         public HitboxDataBuilder StartRotationZ(float f)
         {
             data.StartRotationZ = f;
@@ -160,22 +166,36 @@ public class HitboxData
             return this;
         }
 
-        private bool Valid()
+        private bool Validate()
         {
             if (data.OnCollision == null)
             {
+                Debug.LogError("ERROR: INVALID HURTBOX DATA NO COLLISION METHOD");
                 return false;
             }
             if (data.StartPosition == Vector3.positiveInfinity)
             {
+                Debug.LogError("ERROR: INVALID HURTBOX DATA NO START POSITION");
                 return false;
             }
             if (data.RepeatPolicy == HitboxRepeatPolicy.COOLDOWN && data.RepeatCooldown == -1)
             {
+                Debug.LogError("ERROR: INVALID HURTBOX DATA NO REPEAT COOLDOWN");
                 return false;
             }
-            if (data.Shape == HitboxShape.POLYGON && data.Points == null)
+            if (data.ShapeType == HitboxShapeType.POLYGON && data.Points == null)
             {
+                Debug.LogError("ERROR: POLYGON WITHOUT POINTS SPECIFIED");
+                return false;
+            }
+            if (data.ShapeType == HitboxShapeType.CIRCLE || data.ShapeType == HitboxShapeType.SQUARE && data.Radius <= 0)
+            {
+                Debug.LogError("ERROR: SHAPE WITHOUT INVALID RADIUS");
+                return false;
+            }
+            if (data.Duration <= float.Epsilon)
+            {
+                Debug.LogError("ERROR: HITBOX WITH TOO SHORT DURATION");
                 return false;
             }
             return true;
@@ -183,7 +203,7 @@ public class HitboxData
 
         public HitboxData Finalize()
         {
-            if (!Valid())
+            if (!Validate())
             {
                 throw new System.Exception("ERROR: INVALID HURTBOX DATA CREATED");
             }
@@ -204,13 +224,13 @@ public class HitboxData
     public static HitboxDataBuilder GetBuilder(HitboxDataAsset dataAsset)
     {
         return new HitboxDataBuilder(new HitboxData())
-                .Shape(dataAsset.Shape)
-                .Points(dataAsset.Points)
+                .ShapeType(dataAsset.ShapeAsset.Type)
+                .Points(dataAsset.ShapeAsset.Points)
+                .Radius(dataAsset.ShapeAsset.Radius)
                 .InteractionType(dataAsset.InteractionType)
                 .RepeatPolicy(dataAsset.RepeatPolicy)
                 .RepeatCooldown(dataAsset.RepeatCooldown)
                 .Layer(dataAsset.LayerMask)
-                .Radius(dataAsset.Radius)
                 .Duration(dataAsset.Duration);
     }
 }

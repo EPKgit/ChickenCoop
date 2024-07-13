@@ -75,7 +75,7 @@ public class Maul_Ability : Ability
         }
     }
 
-    void HitboxCallback(Collider2D col, int index)
+    void HitboxCallback(Collider2D col, Hitbox hitbox, int index)
     {
         float dmg = index > 1 ? damageFinal : damageInitial;
         KnockbackPreset kb = index > 1 ? KnockbackPreset.BIG : KnockbackPreset.LITTLE;

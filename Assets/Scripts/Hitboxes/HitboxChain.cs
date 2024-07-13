@@ -8,13 +8,13 @@ public class HitboxChain
     public HitboxChainAsset chainData;
     public Func<Vector2> positionCallback;
     public Func<float> rotationCallback;
-    public Action<Collider2D, int> onHitCallback;
+    public Action<Collider2D, Hitbox, int> onHitCallback;
     public Action<int> onSpawnHitboxCallback;
 
     private float timer = 0;
     private int index = 0;
 
-    public HitboxChain(HitboxChainAsset d, Func<Vector2> p, Func<float> r, Action<Collider2D, int> onHitCallback, Action<int> onSpawnHitboxCallback = null)
+    public HitboxChain(HitboxChainAsset d, Func<Vector2> p, Func<float> r, Action<Collider2D, Hitbox, int> onHitCallback, Action<int> onSpawnHitboxCallback = null)
     {
         chainData = d;
         positionCallback = p;
@@ -47,11 +47,11 @@ public class HitboxChain
                 Vector2 position = positionCallback() + (Vector2)(Quaternion.Euler(0, 0, rotZ) * (currentFrame.Offset + hitboxWithOffset.Offset));
                 HitboxDataAsset assetData = hitboxWithOffset.Hitbox != null ? hitboxWithOffset.Hitbox : chainData.DefaultHitbox;
                 HitboxData hitboxData = HitboxData.GetBuilder(assetData)
-                                                    .Callback((collider) => { onHitCallback(collider, index); })
+                                                    .Callback((collider, hitbox) => { onHitCallback(collider, hitbox, index); })
                                                     .Duration(currentFrame.Duration < 0 ? chainData.DefaultDuration : currentFrame.Duration)
                                                     .StartRotationZ(rotZ)
                                                     .StartPosition(position)
-                                                    .Radius(hitboxWithOffset.SizeOverride < 0 ? assetData.Radius : hitboxWithOffset.SizeOverride)
+                                                    .Radius(hitboxWithOffset.SizeOverride < 0 ? assetData.ShapeAsset.Radius : hitboxWithOffset.SizeOverride)
                                                     .InteractionTimeStamps(its)
                                                     .Finalize();
                 HitboxManager.instance.SpawnHitbox(hitboxData);

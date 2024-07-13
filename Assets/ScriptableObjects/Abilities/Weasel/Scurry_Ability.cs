@@ -43,7 +43,7 @@ public class Scurry_Ability : Ability
                 HitboxData.GetBuilder()
                     .Duration(smokeCloudDuration)
                     .Delay(0.5f)
-                    .Shape(HitboxShape.CIRCLE)
+                    .ShapeType(HitboxShapeType.CIRCLE)
                     .StartRotationZ(0)
                     .StartPosition(playerAbilities.transform.position)
                     .Callback(HitboxCallback)
@@ -56,7 +56,7 @@ public class Scurry_Ability : Ability
         }
     }
 
-    void HitboxCallback(Collider2D col)
+    void HitboxCallback(Collider2D col, Hitbox hitbox)
     {
         IDamagable damageInterface = col.GetComponent<IDamagable>();
         if (damageInterface == null)

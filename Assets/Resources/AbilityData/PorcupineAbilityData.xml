@@ -56,7 +56,7 @@
 			<cd>0.1</cd>
 		</ability_data>
 		<tooltip_list>
-			<default>Drop a backpack rigged to explode with spines when an enemy passes near it"</default>
+			<default>Drop a backpack rigged to explode with spines when an enemy passes near it</default>
 			<red>Backpacks are no longer triggered by enemies but instead by allies, triggering the explosion and shielding the triggering ally</red>
 			<blue>You can now throw the backpack, and it will setup up landing</blue>
 		</tooltip_list>
@@ -90,5 +90,34 @@
 	</ability>
 
 	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>203</ability_ID>
+		<ability_name>Tail Whip</ability_name>
+		<ability_icon>3_82</ability_icon>
+		<ability_data>
+			<cd>0.1</cd>
+		</ability_data>
+		<tooltip_list>
+			<default>Swing your tail </default>
+		</tooltip_list>
+		<targeting_list>
+			<lineTargetingData>
+				<range>1</range>
+				<width>1</width>
+				<secondaryPreviewPrefab>tail_swipe_preview</secondaryPreviewPrefab>
+			</lineTargetingData>
+		</targeting_list>
+		<var_list>
+			<float name="damage">20</float>
+			<float name="hitboxDuration">0.25</float>
+			<scriptableObject name="hitboxAsset">tail_swipe_hitbox</scriptableObject>
+
+			<!-- Red -->
+			<float name="backpackKnockbackDuration">0.6</float>
+			<float name="backpackKnockbackForce">12.0</float>
+
+		</var_list>
+	</ability>
 	
 </ability_list>

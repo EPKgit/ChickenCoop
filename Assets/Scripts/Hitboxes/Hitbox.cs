@@ -48,7 +48,7 @@ public class Hitbox : Poolable
             polyCollider = GetComponent<PolygonCollider2D>();
         }
 #endif
-        if (data.Shape == HitboxShape.POLYGON)
+        if (data.ShapeType == HitboxShapeType.POLYGON)
         {
             polyCollider.points = data.Points;
             polyCollider.enabled = true;
@@ -91,17 +91,20 @@ public class Hitbox : Poolable
     List<Collider2D> GatherCollisionCandidates()
     {
         Collider2D[] overlaps = null;
-        switch (data.Shape)
+        switch (data.ShapeType)
         {
-            case HitboxShape.CIRCLE:
+            case HitboxShapeType.CIRCLE:    
                 overlaps = Physics2D.OverlapCircleAll(transform.position, data.Radius, data.LayerMask.value);
                 break;
-            case HitboxShape.SQUARE:
+            case HitboxShapeType.SQUARE:
                 overlaps = Physics2D.OverlapBoxAll(transform.position, new Vector2(data.Radius * 2, data.Radius * 2), data.StartRotationZ, data.LayerMask.value);
                 break;
-            case HitboxShape.POLYGON:
+            case HitboxShapeType.POLYGON:
                 overlaps = new Collider2D[8];
-                Physics2D.OverlapCollider(polyCollider, new ContactFilter2D() { layerMask = data.LayerMask, useLayerMask = true }, overlaps);
+                ContactFilter2D filter = new ContactFilter2D();
+                filter.SetLayerMask(data.LayerMask);
+                filter.useTriggers = true;
+                Physics2D.OverlapCollider(polyCollider, filter, overlaps);
                 break;
             default:
                 Debug.LogError("ERROR: HURTBOX UPDATED WITH INCORRECT TYPE INFORMATION");
@@ -181,7 +184,7 @@ public class Hitbox : Poolable
         {
             interactionTimestamps.Add(col.gameObject, Time.time);
         }
-        data.OnCollision(col);
+        data.OnCollision(col, this);
     }
 
 #if UNITY_EDITOR
@@ -206,13 +209,13 @@ public class Hitbox : Poolable
     void DrawGizmo()
     {
         UnityEditor.Handles.color = data.IsDelayed() ? debugColorDelayed : debugColorNormal;
-        switch (data.Shape)
+        switch (data.ShapeType)
         {
-            case HitboxShape.CIRCLE:
+            case HitboxShapeType.CIRCLE:
             {
                 UnityEditor.Handles.DrawSolidDisc(transform.position, transform.forward, data.Radius);
             } break;
-            case HitboxShape.SQUARE:
+            case HitboxShapeType.SQUARE:
             {
                 var points = new Vector3[4];
                 Rect rect = new Rect(0, 0, data.Radius * 2, data.Radius * 2);
@@ -223,7 +226,7 @@ public class Hitbox : Poolable
                 UnityEditor.Handles.DrawAAConvexPolygon(points);
             } break;
 
-            case HitboxShape.POLYGON:
+            case HitboxShapeType.POLYGON:
             { 
                 var points = new Vector3[data.Points.Length];
                 int x = 0;
@@ -249,17 +252,17 @@ public class Hitbox : Poolable
     public void DrawInGameDebug()
     {
         var color = data.IsDelayed() ? debugColorDelayed : debugColorNormal;
-        switch (data.Shape)
+        switch (data.ShapeType)
         {
-            case HitboxShape.CIRCLE:
+            case HitboxShapeType.CIRCLE:
                 GLHelpers.GLDrawCircle(transform, data.Radius, 32, color);
                 break;
-            case HitboxShape.SQUARE:
+            case HitboxShapeType.SQUARE:
                 Rect rect = new Rect(0, 0, data.Radius * 2, data.Radius * 2);
                 rect.center = transform.position;
                 GLHelpers.GLDrawRect(transform, rect, color);
                 break;
-            case HitboxShape.POLYGON:
+            case HitboxShapeType.POLYGON:
                 var points = new Vector3[data.Points.Length];
                 int x = 0;
                 foreach (Vector2 v in data.Points)

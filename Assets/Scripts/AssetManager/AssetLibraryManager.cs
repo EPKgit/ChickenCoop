@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,24 @@ public class AssetLibraryManager : MonoSingleton<AssetLibraryManager>
         main.Initialize();
     }
 
+    public Tuple<string, string> ParseStringToCategoryAndName(string initial, string defaultLibrary = "")
+    {
+        string category = "";
+        string name = "";
+        int index = initial.IndexOf('.');
+        if (index == -1)
+        {
+            category = defaultLibrary;
+            name = initial;
+        }
+        else
+        {
+            category = initial.Substring(0, index);
+            name = initial.Substring(index + 1);
+        }
+        return new Tuple<string, string>(name, category);
+    }
+
     public GameObject GetPrefab(string name, string category)
     {
         return main.GetAsset(name, category);
@@ -23,5 +42,10 @@ public class AssetLibraryManager : MonoSingleton<AssetLibraryManager>
     public Sprite GetIcon(string name, string category)
     {
         return main.GetIcon(name, category);
+    }
+
+    public ScriptableObject GetScriptableObject(string name, string category)
+    {
+        return main.GetScriptableObject(name, category);
     }
 }

@@ -26,6 +26,7 @@ public static class AbilityLookup
 		{ 201, typeof(PiercingSpine_Ability) },
 		{ 200, typeof(Porcupine_Test_Passive) },
 		{ 202, typeof(SpineBackpack_Ability) },
+		{ 203, typeof(TailWhip_Ability) },
 	};
 	public static Ability CreateAbilityFromId(uint ID)
 	{

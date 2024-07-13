@@ -27,6 +27,8 @@ elementFormDefault="qualified">
 				<xs:sequence>
 					<xs:element name="range" type="xs:decimal" />
 					<xs:element name="width" type="xs:decimal" />
+					<xs:element name="rangePreviewPrefab" minOccurs="0" maxOccurs="1" type="xs:string" />
+					<xs:element name="secondaryPreviewPrefab" minOccurs="0" maxOccurs="1" type="xs:string" />
 				</xs:sequence>
 				<xs:attribute name="type" type="targetingType" fixed="LINE_TARGETED"/>
 			</xs:extension>
@@ -39,6 +41,8 @@ elementFormDefault="qualified">
 				<xs:sequence>
 					<xs:element default="0" name="range" type="xs:decimal" />
 					<xs:element name="size" type="vector2Type" />
+					<xs:element name="rangePreviewPrefab" minOccurs="0" maxOccurs="1" type="xs:string" />
+					<xs:element name="secondaryPreviewPrefab" minOccurs="0" maxOccurs="1" type="xs:string" />
 				</xs:sequence>
 				<xs:attribute name="type" type="targetingType" fixed="LINE_TARGETED"/>
 			</xs:extension>
@@ -51,6 +55,8 @@ elementFormDefault="qualified">
 				<xs:sequence>
 					<xs:element default="0" name="range" type="xs:decimal" />
 					<xs:element name="affiliation" type="targetAffiliationType" />
+					<xs:element name="rangePreviewPrefab" minOccurs="0" maxOccurs="1" type="xs:string" />
+					<xs:element name="secondaryPreviewPrefab" minOccurs="0" maxOccurs="1" type="xs:string" />
 				</xs:sequence>
 				<xs:attribute name="type" type="targetingType" fixed="LINE_TARGETED"/>
 			</xs:extension>

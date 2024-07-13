@@ -5,6 +5,12 @@ using UnityEngine;
 using UnityEditor;
 using Targeting;
 
+/**********************************************************
+ * 
+ * CURRENT UNUSED
+ *
+ **********************************************************/
+
 [CustomPropertyDrawer(typeof(Targeting.AbilityTargetingData))]
 public class AbilityTargetingDataDrawer : CustomPropertyDrawerBase
 {

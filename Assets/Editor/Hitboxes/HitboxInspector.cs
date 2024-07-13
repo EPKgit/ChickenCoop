@@ -7,14 +7,14 @@ using UnityEditor;
 [CustomEditor(typeof(Hitbox))]
 public class HitboxInspector : Editor
 {
-    private Hitbox hb;
+    private Hitbox hitbox;
 
     HitboxDataAsset dataAsset;
     SerializedProperty data;
 
     void OnEnable()
     {
-        hb = target as Hitbox;
+        hitbox = target as Hitbox;
         data = serializedObject.FindProperty("data");
     }
 
@@ -22,32 +22,32 @@ public class HitboxInspector : Editor
     {
         serializedObject.Update();
         dataAsset = EditorGUILayout.ObjectField(dataAsset, typeof(HitboxDataAsset), false) as HitboxDataAsset;
-        if (hb.data == null)
+        if (hitbox.data == null)
         {
             if (dataAsset != null)
             {
-                hb.Setup(HitboxData.GetBuilder()
-                    .StartPosition(hb.transform.position)
+                hitbox.Setup(HitboxData.GetBuilder()
+                    .StartPosition(hitbox.transform.position)
                     .Callback(FakeCallback)
-                    .StartRotationZ(hb.transform.rotation.eulerAngles.z)
-                    .Shape(dataAsset.Shape)
-                    .Points(dataAsset.Points)
+                    .StartRotationZ(hitbox.transform.rotation.eulerAngles.z)
+                    .ShapeType(dataAsset.ShapeAsset.Type)
+                    .Points(dataAsset.ShapeAsset.Points)
+                    .Radius(dataAsset.ShapeAsset.Radius)
                     .InteractionType(dataAsset.InteractionType)
                     .RepeatPolicy(dataAsset.RepeatPolicy)
                     .RepeatCooldown(dataAsset.RepeatCooldown)
                     .Layer(dataAsset.LayerMask)
-                    .Radius(dataAsset.Radius)
                     .Duration(dataAsset.Duration)
                     .Finalize());
             }
         }
         else
         {
-            //EditorGUILayout.PropertyField(data);
+            EditorGUILayout.PropertyField(data);
         }
     }
 
-    void FakeCallback(Collider2D col)
+    void FakeCallback(Collider2D col, Hitbox hitbox)
     {
 
     }

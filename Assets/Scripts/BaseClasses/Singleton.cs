@@ -45,6 +45,11 @@ public abstract class MonoSingleton<T> : SingletonMonoStub where T : MonoSinglet
                 if(temp != null)
                 {
                     _instance = temp;
+                    if (!temp.created)
+                    {
+                        temp.OnCreation();
+                        temp.created = true;
+                    }
                 }
                 else
                 {
@@ -62,8 +67,13 @@ public abstract class MonoSingleton<T> : SingletonMonoStub where T : MonoSinglet
     /// </summary>
     protected override sealed void Awake()
     {
-        OverwriteSingleton((T)this);
+        if (!created)
+        {
+            OverwriteSingleton((T)this);
+        }
     }
+
+    public bool created = false;
     protected virtual void OnCreation() { }
 
     protected void OverwriteSingleton(T inst)
@@ -78,6 +88,7 @@ public abstract class MonoSingleton<T> : SingletonMonoStub where T : MonoSinglet
         }
         _instance = inst;
         OnCreation();
+        created = true;
     }
 
     /// <summary>

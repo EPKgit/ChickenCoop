@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public GameObject player;
+    public GameObject[] players;
     public Vector2 minMaxZValue = new Vector2(-20.0f, -3.0f);
     public float zoomSensitivity = 1.0f;
     public float zoomLerpSpeed = 3.0f;
@@ -14,15 +14,28 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        if(player == null)
+        if (players == null || players.Length == 0)
         {
-            player = GameObject.FindGameObjectWithTag("Player");
-            if (player == null)
+            players = GameObject.FindGameObjectsWithTag("Player");
+            if (players == null)
             {
-                throw new System.Exception("ERROR: NO PLAYER FOUND ON CAMERA");
+                throw new System.Exception("ERROR: NO PLAYERS FOUND ON CAMERA");
             }
         }
-        player.GetComponent<PlayerInput>()?.SetCamera(this);
+        int index = 0;
+        foreach (GameObject p in players)
+        {
+            PlayerInput input = p.GetComponent<PlayerInput>();
+            if(!input)
+            {
+                players[index] = null;
+            }
+            else
+            {
+                input.SetCamera(this);
+            }
+            ++index;
+        }
         localOffset = new Vector3(0, 0, transform.position.z);
         desiredZoom = transform.position.z;
     }
@@ -45,6 +58,17 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        transform.position = player.transform.position + localOffset;
+        Vector3 avgPosition = Vector3.zero;
+        int count = 0;
+        foreach(GameObject p in players)
+        {
+            if (p != null)
+            {
+                avgPosition += p.transform.position;
+                ++count;
+            }
+        }
+
+        transform.position = (avgPosition / count) + localOffset;
     }
 }

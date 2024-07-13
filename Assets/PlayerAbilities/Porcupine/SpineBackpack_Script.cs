@@ -10,6 +10,7 @@ public class SpineBackpack_Script : Poolable
     private float timeLeftCurrent;
 
     private new Collider2D collider2D;
+    private Rigidbody2D rb;
 
     private GameObject creator;
     private float projectileLifetime;
@@ -31,13 +32,15 @@ public class SpineBackpack_Script : Poolable
     private float launchTimeMax;
     private float arcSteepness;
 
-    private HashSet<GameObject> pendingCollisions = new HashSet<GameObject>(); 
-    
+    private HashSet<GameObject> pendingCollisions = new HashSet<GameObject>();
+
+    public Vector3 position => throw new System.NotImplementedException();
 
     public override void PoolInit(GameObject g)
     {
         spinePrefab = AssetLibraryManager.instance.GetPrefab("spine", "porcupine");
         collider2D = GetComponent<Collider2D>();
+        rb = GetComponent<Rigidbody2D>();
         base.PoolInit(g);
     }
 
@@ -195,7 +198,8 @@ public class SpineBackpack_Script : Poolable
 
     void Update()
     {
-        if(setupTime > 0)
+        CheckKnockbackInput();
+        if (setupTime > 0)
         {
             setupTime -= Time.deltaTime;
             if(setupTime <= 0)
@@ -231,6 +235,39 @@ public class SpineBackpack_Script : Poolable
         if (timeLeftCurrent <= 0)
         {
             Detonate(null);
+        }
+    }
+
+    private float knockbackStartTime;
+    private float knockbackDuration;
+    public virtual void ApplyKnockback(KnockbackData data)
+    {
+        knockbackStartTime = Time.time;
+        knockbackDuration = data.duration;
+        rb.velocity = (data.direction * data.force) / knockbackDuration;
+        rb.drag = 0;
+    }
+
+    protected bool IsKnockedBack()
+    {
+        return knockbackDuration != 0;
+    }
+
+    protected void KnockbackUpdate()
+    {
+        float t = (Time.time - knockbackStartTime) / knockbackDuration;
+        if (t > 1)
+        {
+            rb.velocity = Vector2.zero;
+            knockbackDuration = 0;
+        }
+    }
+
+    protected void CheckKnockbackInput()
+    {
+        if (IsKnockedBack())
+        {
+            KnockbackUpdate();
         }
     }
 }

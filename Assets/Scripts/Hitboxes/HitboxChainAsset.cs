@@ -8,7 +8,7 @@ public enum HitboxFrameInteractionPolicy
     MULTIPLE,
 }
 
-[Serializable, CreateAssetMenu(menuName = "HitboxChainAsset")]
+[Serializable, CreateAssetMenu(menuName = "Hitboxes/Hitboxes/HitboxChainAsset")]
 public class HitboxChainAsset : ScriptableObject
 {
     public float DefaultDuration { get => _defaultDuration; }

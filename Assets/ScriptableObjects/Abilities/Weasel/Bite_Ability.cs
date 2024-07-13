@@ -40,7 +40,7 @@ public class Bite_Ability : Ability
         (
             HitboxData.GetBuilder()
                 .Duration(hitboxDuration)
-                .Shape(HitboxShape.CIRCLE)
+                .ShapeType(HitboxShapeType.CIRCLE)
                 .StartRotationZ(targetingData.inputRotationZ)
                 .StartPosition(targetingData.inputPoint)
                 .Callback(HitboxCallback)
@@ -53,7 +53,7 @@ public class Bite_Ability : Ability
 
     }
 
-    void HitboxCallback(Collider2D col)
+    void HitboxCallback(Collider2D col, Hitbox hitbox)
     {
         IDamagable damageInterface = col.GetComponent<IDamagable>();
         if(damageInterface == null)

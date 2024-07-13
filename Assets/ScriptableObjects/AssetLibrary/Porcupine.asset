@@ -19,15 +19,34 @@ MonoBehaviour:
     type: 0
     reference: {fileID: 1925506602525786021, guid: 9aa133e85efd77045b1bdbc90598ca12, type: 3}
     icon: {fileID: 0}
+    scriptableObject: {fileID: 0}
   - name: backpack
     type: 0
     reference: {fileID: 111988119544191453, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
     icon: {fileID: 0}
+    scriptableObject: {fileID: 0}
   - name: 6_09
     type: 1
     reference: {fileID: 111988119544191453, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
     icon: {fileID: 21300000, guid: e78959404ab609943ad5218e6da5d952, type: 3}
+    scriptableObject: {fileID: 0}
   - name: 8_84
     type: 1
     reference: {fileID: 111988119544191453, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
     icon: {fileID: 21300000, guid: 2eaa6f92e9977844bae6e0a9a0f1f048, type: 3}
+    scriptableObject: {fileID: 0}
+  - name: 3_82
+    type: 1
+    reference: {fileID: 111988119544191453, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
+    icon: {fileID: 21300000, guid: 3d7a2606c9360c84b9c0150d2a01f88e, type: 3}
+    scriptableObject: {fileID: 0}
+  - name: tail_swipe_hitbox
+    type: 2
+    reference: {fileID: 111988119544191453, guid: ca4c7563edab7a547987e9926168e44a, type: 3}
+    icon: {fileID: 21300000, guid: 3d7a2606c9360c84b9c0150d2a01f88e, type: 3}
+    scriptableObject: {fileID: 11400000, guid: 3749564298a5b424d9ff0849b063057d, type: 2}
+  - name: tail_swipe_preview
+    type: 0
+    reference: {fileID: 4790134168722434369, guid: 0d8f8f599b2475a4dbf8f270f5b21305, type: 3}
+    icon: {fileID: 21300000, guid: 3d7a2606c9360c84b9c0150d2a01f88e, type: 3}
+    scriptableObject: {fileID: 11400000, guid: 3749564298a5b424d9ff0849b063057d, type: 2}

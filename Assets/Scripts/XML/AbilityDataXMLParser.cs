@@ -49,7 +49,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
     {
         public AbilityTargetingData targetingData;
         private AbilityXMLTargetingData() { }
-        public AbilityXMLTargetingData(XmlElement node)
+        public AbilityXMLTargetingData(XmlElement node, string defaultLibrary)
         {
             targetingData = new AbilityTargetingData();
             switch(node.Name)
@@ -82,7 +82,19 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                 } break;
             }
 
-            //TODO do custom preview parsing
+            var rangePreviewPrefabNode = node["rangePreviewPrefab"];
+            if (rangePreviewPrefabNode != null)
+            {
+                Tuple<string, string> path = AssetLibraryManager.instance.ParseStringToCategoryAndName(rangePreviewPrefabNode.InnerText, defaultLibrary);
+                targetingData.rangePreviewPrefab = AssetLibraryManager.instance.GetPrefab(path.Item1, path.Item2);
+            }
+
+            var secondaryPreviewPrefabNode = node["secondaryPreviewPrefab"];
+            if (secondaryPreviewPrefabNode != null)
+            {
+                Tuple<string, string> path = AssetLibraryManager.instance.ParseStringToCategoryAndName(secondaryPreviewPrefabNode.InnerText, defaultLibrary);
+                targetingData.secondaryPreviewPrefab = AssetLibraryManager.instance.GetPrefab(path.Item1, path.Item2);
+            }
         }
     }
     
@@ -221,7 +233,7 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 
             foreach (XmlElement targetData in ability["targeting_list"].ChildNodes)
             {
-                data.targetingData.Add(new AbilityXMLTargetingData(targetData));
+                data.targetingData.Add(new AbilityXMLTargetingData(targetData, default_library));
             }
 
             var var_list_node = ability["var_list"];
@@ -364,20 +376,15 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
         {
             "asset", (a, s) =>
             {
-                string category = "";
-                string name = "";
-                int index = s.IndexOf('.');
-                if(index == -1)
-                {
-                    category = a.defaultAssetLibraryName;
-                    name = s;
-                }
-                else
-                {
-                    category = s.Substring(0, index);
-                    name = s.Substring(index + 1);
-                }
-                return AssetLibraryManager.instance.GetPrefab(name, category);
+                Tuple<string, string> path = AssetLibraryManager.instance.ParseStringToCategoryAndName(s, a.defaultAssetLibraryName);
+                return AssetLibraryManager.instance.GetPrefab(path.Item1, path.Item2);
+            }
+        },
+        {
+            "scriptableobject", (a, s) =>
+            {
+                Tuple<string, string> path = AssetLibraryManager.instance.ParseStringToCategoryAndName(s, a.defaultAssetLibraryName);
+                return AssetLibraryManager.instance.GetScriptableObject(path.Item1, path.Item2);
             }
         },
     };

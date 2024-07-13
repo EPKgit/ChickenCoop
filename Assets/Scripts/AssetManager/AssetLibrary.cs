@@ -9,7 +9,7 @@ public class AssetLibrary : ScriptableObject
     public string libraryName;
 
     private Dictionary<string, AssetLibrary> libraryLookups;
-    private Dictionary<string, GameObject> assetLookups;
+    private Dictionary<string, AssetReference> assetLookups;
 
     [SerializeField]
     private AssetLibrary[] subLibraries;
@@ -21,11 +21,13 @@ public class AssetLibrary : ScriptableObject
         {
             GAMEOBJECT,
             ICON,
+            SCRIPTABLE_OBJECT,
         }
         public string name;
         public AssetType type = AssetType.GAMEOBJECT;
         public GameObject reference;
         public Sprite icon;
+        public ScriptableObject scriptableObject;
     }
 
     [SerializeField]
@@ -33,14 +35,14 @@ public class AssetLibrary : ScriptableObject
 
     public void Initialize()
     {
-        assetLookups = new Dictionary<string, GameObject>();
+        assetLookups = new Dictionary<string, AssetReference>();
         foreach (var asset in assets) 
         {
             if(assetLookups.ContainsKey(asset.name))
             {
                 throw new System.Exception("ERROR: duplicate asset created");
             }
-            assetLookups[asset.name] = asset.reference;
+            assetLookups[asset.name] = asset;
         }
 
         libraryLookups = new Dictionary<string, AssetLibrary>();
@@ -62,7 +64,7 @@ public class AssetLibrary : ScriptableObject
         {
             return libraryLookups[category].GetAsset(name);
         }
-        return assetLookups[name];
+        return assetLookups[name].reference;
     }
 
     public Sprite GetIcon(string name, string category = "")
@@ -71,15 +73,16 @@ public class AssetLibrary : ScriptableObject
         {
             return libraryLookups[category].GetIcon(name);
         }
+        return assetLookups[name].icon;
+    }
 
-        foreach(AssetReference asset in assets)
+    public ScriptableObject GetScriptableObject(string name, string category = "")
+    {
+        if (category != "")
         {
-            if(asset.name == name)
-            {
-                return asset.icon;
-            }
+            return libraryLookups[category].GetScriptableObject(name);
         }
-        return null;
+        return assetLookups[name].scriptableObject;
     }
 
 }

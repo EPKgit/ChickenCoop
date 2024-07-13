@@ -29,42 +29,42 @@ public class HitboxManager : MonoSingleton<HitboxManager>
         activeHitboxes.Add(hitbox);
     }
 
-    public void SpawnHitbox(HitboxDataAsset dataAsset, Vector3 startPosition, Action<Collider2D> callback, float startRotationZ = 0)
+    public void SpawnHitbox(HitboxDataAsset dataAsset, Vector3 startPosition, Action<Collider2D, Hitbox> callback, float startRotationZ = 0)
     {
         SpawnHitbox(HitboxData.GetBuilder()
                 .StartPosition(startPosition)
                 .Callback(callback)
                 .StartRotationZ(startRotationZ)
-                .Shape(dataAsset.Shape)
-                .Points(dataAsset.Points)
+                .ShapeType(dataAsset.ShapeAsset.Type)
+                .Points(dataAsset.ShapeAsset.Points)
+                .Radius(dataAsset.ShapeAsset.Radius)
                 .InteractionType(dataAsset.InteractionType)
                 .RepeatPolicy(dataAsset.RepeatPolicy)
                 .RepeatCooldown(dataAsset.RepeatCooldown)
                 .Layer(dataAsset.LayerMask)
-                .Radius(dataAsset.Radius)
                 .Duration(dataAsset.Duration)
                 .Finalize());
     }
 
-    public void SpawnHitbox(HitboxDataAsset dataAsset, Vector3 startPosition, Action<Collider2D> callback, float startRotationZ = 0, float durationOverride = 0)
+    public void SpawnHitbox(HitboxDataAsset dataAsset, Vector3 startPosition, Action<Collider2D, Hitbox> callback, float startRotationZ = 0, float durationOverride = 0)
     {
         SpawnHitbox(HitboxData.GetBuilder()
                 .StartPosition(startPosition)
                 .Callback(callback)
                 .StartRotationZ(startRotationZ)
-                .Shape(dataAsset.Shape)
-                .Points(dataAsset.Points)
+                .ShapeType(dataAsset.ShapeAsset.Type)
+                .Points(dataAsset.ShapeAsset.Points)
+                .Radius(dataAsset.ShapeAsset.Radius)
                 .InteractionType(dataAsset.InteractionType)
                 .RepeatPolicy(dataAsset.RepeatPolicy)
                 .RepeatCooldown(dataAsset.RepeatCooldown)
                 .Layer(dataAsset.LayerMask)
-                .Radius(dataAsset.Radius)
                 .Duration(durationOverride)
                 .Finalize());
     }
 
     private static RollingIDNumber IDCounter = new RollingIDNumber();
-    public HitboxChainHandle StartHitboxChain(HitboxChainAsset data, Func<Vector2> positionCallback, Func<float> rotationCallback, Action<Collider2D, int> onHitCallback, Action<int> onHitboxSpawnCallback = null)
+    public HitboxChainHandle StartHitboxChain(HitboxChainAsset data, Func<Vector2> positionCallback, Func<float> rotationCallback, Action<Collider2D, Hitbox, int> onHitCallback, Action<int> onHitboxSpawnCallback = null)
     {
         var handle = new HitboxChainHandle(IDCounter++);
         activeChains.Add((handle, new HitboxChain(ScriptableObject.Instantiate(data), positionCallback, rotationCallback, onHitCallback, onHitboxSpawnCallback)));

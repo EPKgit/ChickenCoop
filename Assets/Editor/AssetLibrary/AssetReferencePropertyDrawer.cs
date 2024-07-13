@@ -10,6 +10,7 @@ public class AssetReferencePropertyDrawer : CustomPropertyDrawerBase
     private SerializedProperty type;
     private SerializedProperty prefab;
     private SerializedProperty icon;
+    private SerializedProperty scriptableObject;
 
     private List<string> assetTypeNames;
 
@@ -51,6 +52,7 @@ public class AssetReferencePropertyDrawer : CustomPropertyDrawerBase
         {
             case (int)AssetLibrary.AssetReference.AssetType.GAMEOBJECT:
             case (int)AssetLibrary.AssetReference.AssetType.ICON:
+            case (int)AssetLibrary.AssetReference.AssetType.SCRIPTABLE_OBJECT:
                 name.stringValue = EditorGUI.DelayedTextField(rect, name.stringValue);
                 break;
         }
@@ -58,13 +60,16 @@ public class AssetReferencePropertyDrawer : CustomPropertyDrawerBase
 
     void DrawAssetValue()
     {
-        switch (type.enumValueIndex)
+        switch ((AssetLibrary.AssetReference.AssetType)type.enumValueIndex)
         {
-            case (int)AssetLibrary.AssetReference.AssetType.GAMEOBJECT:
+            case AssetLibrary.AssetReference.AssetType.GAMEOBJECT:
                 EditorGUI.ObjectField(rect, prefab, GUIContent.none);
                 break;
-            case (int)AssetLibrary.AssetReference.AssetType.ICON:
+            case AssetLibrary.AssetReference.AssetType.ICON:
                 EditorGUI.ObjectField(rect, icon, GUIContent.none);
+                break;
+            case AssetLibrary.AssetReference.AssetType.SCRIPTABLE_OBJECT:
+                EditorGUI.ObjectField(rect, scriptableObject, GUIContent.none);
                 break;
         }
     }
@@ -84,6 +89,7 @@ public class AssetReferencePropertyDrawer : CustomPropertyDrawerBase
         type = prop.FindPropertyRelative("type");
         prefab = prop.FindPropertyRelative("reference");
         icon = prop.FindPropertyRelative("icon");
+        scriptableObject = prop.FindPropertyRelative("scriptableObject");
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

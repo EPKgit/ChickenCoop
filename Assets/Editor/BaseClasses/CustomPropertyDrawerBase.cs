@@ -35,7 +35,7 @@ public abstract class CustomPropertyDrawerBase : PropertyDrawer
 
     abstract protected bool DoesExpansion();
 
-    protected bool StartOnGUI(Rect position, SerializedProperty property, GUIContent label)
+    protected bool StartOnGUI(Rect position, SerializedProperty property, GUIContent label, bool isRefValue = false)
     {
         // EditorGUI.DrawRect(position, Color.red);
 
@@ -48,7 +48,17 @@ public abstract class CustomPropertyDrawerBase : PropertyDrawer
         if (DoesExpansion())
         {
             topRect = rect = NextLine();
+            bool refValueNotNull = isRefValue && property.objectReferenceValue != null;
+            if(isRefValue)
+            {
+                rect.width *= 0.5f;
+            }
             property.isExpanded = EditorGUI.Foldout(rect, property.isExpanded, textInfo.ToTitleCase(label.text));
+            if (isRefValue)
+            {
+                rect.x += rect.width;
+                EditorGUI.ObjectField(rect, property, GUIContent.none);
+            }
         }
         else
         {

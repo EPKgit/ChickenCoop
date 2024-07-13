@@ -19,8 +19,8 @@ public class DebugFlags
         INGAMEUI = 0,
         RENDER = 0,
         ABILITYQUEUE = 0,
-        HITBOXES_EDITOR_ALWAYS = 0,
-        HITBOXES_IN_GAME = 0,
+        HITBOXES_EDITOR_ALWAYS = 1,
+        HITBOXES_IN_GAME = 1,
         ABILITYXML = 0,
         ASSET_WATCHDOG = 0,
     }
