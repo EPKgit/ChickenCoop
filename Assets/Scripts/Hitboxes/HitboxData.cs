@@ -6,6 +6,7 @@ public enum HitboxShapeType
 {
     CIRCLE,
     SQUARE,
+    PROJECTED_RECT,
     POLYGON,
     MAX
 }
@@ -39,14 +40,16 @@ public class HitboxData
     //These have defaults and aren't necessary
     public HitboxShapeType ShapeType { get; private set; } = HitboxShapeType.CIRCLE;
     public Vector2[] Points { get; private set; }
+    public float Radius { get; private set; } = -1.0f;
+    public float Length { get; private set; } = -1.0f;
     public HitboxInteractionType InteractionType { get; private set; } = HitboxInteractionType.ALL;
     public HitboxRepeatPolicy RepeatPolicy { get; private set; } = HitboxRepeatPolicy.ONLY_ONCE;
     public float RepeatCooldown { get; private set; } = -1;
     public LayerMask LayerMask { get; private set; } = -1;
-    public float Radius { get; private set; } = 0.5f;
     public float Duration { get; private set; } = 0;
     public float Delay { get; private set; } = 0;
     public float StartRotationZ { get; private set; } = 0;
+    public Vector2 Axis { get; private set; } = new Vector2(0, 0);
     public Dictionary<GameObject, float> InteractionTimeStamps { get; private set; } = null;
     public object CustomData { get; private set; } = null;
     public bool IsDelayed()
@@ -118,6 +121,12 @@ public class HitboxData
             return this;
         }
 
+        public HitboxDataBuilder Length(float l)
+        {
+            data.Length = l;
+            return this;
+        }
+
         public HitboxDataBuilder Callback(Action<Collider2D, Hitbox> c)
         {
             data.OnCollision = c;
@@ -160,6 +169,19 @@ public class HitboxData
             return this;
         }
 
+        public HitboxDataBuilder Axis(Vector2 v)
+        {
+            data.Axis = v.normalized;
+            return this;
+        }
+
+        public HitboxDataBuilder RotationInfo(float rotZ, Vector2 axis)
+        {
+            data.StartRotationZ = rotZ;
+            data.Axis = axis.normalized;
+            return this;
+        }
+
         public HitboxDataBuilder InteractionTimeStamps(Dictionary<GameObject, float> d)
         {
             data.InteractionTimeStamps = d;
@@ -188,9 +210,14 @@ public class HitboxData
                 Debug.LogError("ERROR: POLYGON WITHOUT POINTS SPECIFIED");
                 return false;
             }
-            if (data.ShapeType == HitboxShapeType.CIRCLE || data.ShapeType == HitboxShapeType.SQUARE && data.Radius <= 0)
+            if ((data.ShapeType == HitboxShapeType.CIRCLE || data.ShapeType == HitboxShapeType.SQUARE || data.ShapeType == HitboxShapeType.PROJECTED_RECT) && data.Radius <= 0)
             {
-                Debug.LogError("ERROR: SHAPE WITHOUT INVALID RADIUS");
+                Debug.LogError("ERROR: SHAPE WITH INVALID RADIUS");
+                return false;
+            }
+            if (data.ShapeType == HitboxShapeType.PROJECTED_RECT && data.Length <= 0)
+            {
+                Debug.LogError("ERROR: SQUARE WITH INVALID LENGTH");
                 return false;
             }
             if (data.Duration <= float.Epsilon)
@@ -227,6 +254,7 @@ public class HitboxData
                 .ShapeType(dataAsset.ShapeAsset.Type)
                 .Points(dataAsset.ShapeAsset.Points)
                 .Radius(dataAsset.ShapeAsset.Radius)
+                .Length(dataAsset.ShapeAsset.Length)
                 .InteractionType(dataAsset.InteractionType)
                 .RepeatPolicy(dataAsset.RepeatPolicy)
                 .RepeatCooldown(dataAsset.RepeatCooldown)

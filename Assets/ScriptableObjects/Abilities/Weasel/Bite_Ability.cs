@@ -41,7 +41,7 @@ public class Bite_Ability : Ability
             HitboxData.GetBuilder()
                 .Duration(hitboxDuration)
                 .ShapeType(HitboxShapeType.CIRCLE)
-                .StartRotationZ(targetingData.inputRotationZ)
+                .RotationInfo(targetingData.inputRotationZ, targetingData.relativeInputDirection)
                 .StartPosition(targetingData.inputPoint)
                 .Callback(HitboxCallback)
                 .Discriminator(HitboxManager.Discriminators.Damagables)
@@ -61,7 +61,7 @@ public class Bite_Ability : Ability
             return;
         }
 
-        int hitCount = GetAbilityUpgradeStatus(AbilityUpgradeSlot.BLUE) ? multiHit : 1;
+        int hitCount = BlueUpgraded() ? multiHit : 1;
         for (int x = 0; x < hitCount; ++x)
         {
             damageInterface.Damage

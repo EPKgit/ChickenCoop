@@ -69,3 +69,13 @@ public class Invulnerability_StatusEffect : StatusEffectBase
         GameplayTagFlags.INVULNERABLE,
     };
 }
+
+public class Slow_StatusEffect : StatusEffectBase
+{
+    public override StatusEffectType type => StatusEffectType.SLOW;
+
+    public override RawGameplayTag[] flags => new RawGameplayTag[]
+    {
+        GameplayTagFlags.MOVEMENT_EFFECTED,
+    };
+}

@@ -350,6 +350,33 @@ public abstract class Ability
     }
 
     /// <summary>
+    /// Get if the ability is red upgraded
+    /// </summary>
+    /// <returns>True if the ability is red upgraded, false otherwise</returns>
+    public bool RedUpgraded()
+    {
+        return upgradeStatus[(int)AbilityUpgradeSlot.RED];
+    }
+
+    /// <summary>
+    /// Get if the ability is yellow upgraded
+    /// </summary>
+    /// <returns>True if the ability is yellow upgraded, false otherwise</returns>
+    public bool YellowUpgraded()
+    {
+        return upgradeStatus[(int)AbilityUpgradeSlot.YELLOW];
+    }
+
+    /// <summary>
+    /// Get if the ability is blue upgraded
+    /// </summary>
+    /// <returns>True if the ability is blue upgraded, false otherwise</returns>
+    public bool BlueUpgraded()
+    {
+        return upgradeStatus[(int)AbilityUpgradeSlot.BLUE];
+    }
+
+    /// <summary>
     /// Lowers the cooldown time of the ability, potentially making it castable
     /// </summary>
     /// <param name="deltaTime">The time since the last cooldown tick</param>

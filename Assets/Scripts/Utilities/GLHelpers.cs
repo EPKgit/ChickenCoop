@@ -53,7 +53,10 @@ public class GLHelpers
         lineMaterial.SetPass(0);
 
         GL.PushMatrix();
-        GL.MultMatrix(transform.localToWorldMatrix);
+        Matrix4x4 matrix = new Matrix4x4();
+        matrix.SetTRS(transform.position + (Vector3)rect.center, transform.rotation, transform.localScale);
+        GL.MultMatrix(matrix);
+
         GL.Begin(GL.TRIANGLE_STRIP);
         GL.Color(color);
         rect.center = Vector2.zero;

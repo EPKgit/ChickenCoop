@@ -20,6 +20,7 @@ namespace Targeting
         private AbilityTargetingData _targetingData;
 
         public Vector2 inputPoint;
+        public Vector2 relativeInputDirection;
         public float inputRotationZ;
         public ITargetable inputTarget;
 

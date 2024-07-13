@@ -18,33 +18,41 @@ public class HitboxInspector : Editor
         data = serializedObject.FindProperty("data");
     }
 
+    static bool preview = false;
     public override void OnInspectorGUI()
     {
-        serializedObject.Update();
-        dataAsset = EditorGUILayout.ObjectField(dataAsset, typeof(HitboxDataAsset), false) as HitboxDataAsset;
-        if (hitbox.data == null)
-        {
-            if (dataAsset != null)
-            {
-                hitbox.Setup(HitboxData.GetBuilder()
-                    .StartPosition(hitbox.transform.position)
-                    .Callback(FakeCallback)
-                    .StartRotationZ(hitbox.transform.rotation.eulerAngles.z)
-                    .ShapeType(dataAsset.ShapeAsset.Type)
-                    .Points(dataAsset.ShapeAsset.Points)
-                    .Radius(dataAsset.ShapeAsset.Radius)
-                    .InteractionType(dataAsset.InteractionType)
-                    .RepeatPolicy(dataAsset.RepeatPolicy)
-                    .RepeatCooldown(dataAsset.RepeatCooldown)
-                    .Layer(dataAsset.LayerMask)
-                    .Duration(dataAsset.Duration)
-                    .Finalize());
-            }
-        }
-        else
+        if (data != null)
         {
             EditorGUILayout.PropertyField(data);
         }
+
+        EditorGUI.BeginChangeCheck();
+        dataAsset = EditorGUILayout.ObjectField(dataAsset, typeof(HitboxDataAsset), false) as HitboxDataAsset;
+        if(EditorGUI.EndChangeCheck()) 
+        {
+            preview = false;
+        }
+        if (dataAsset != null)
+        {
+            preview = GUILayout.Toggle(preview, "Preview");
+            if(preview)
+            {
+                hitbox.previewData = HitboxData.GetBuilder(dataAsset)
+                    .Callback(FakeCallback)
+                    .StartPosition(hitbox.transform.position)
+                    .Duration(10)
+                    .Finalize();
+            }
+            else
+            {
+                hitbox.previewData = null;
+            }
+        }
+    }
+
+    public override bool RequiresConstantRepaint()
+    {
+        return true;
     }
 
     void FakeCallback(Collider2D col, Hitbox hitbox)

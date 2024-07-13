@@ -77,12 +77,12 @@ public class SpineBackpack_Ability : Ability
             projectileSpeed
         );
 
-        if (GetAbilityUpgradeStatus(AbilityUpgradeSlot.RED))
+        if (RedUpgraded())
         {
             backpack.SetupRed(setupTime, shieldAmount, spineKnockbackModifier);
         }
 
-        if(GetAbilityUpgradeStatus(AbilityUpgradeSlot.BLUE))
+        if(BlueUpgraded())
         {
             targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint);
             backpack.SetupLaunch(targetingData.inputPoint, launchTime, arcSteepness);
@@ -92,7 +92,7 @@ public class SpineBackpack_Ability : Ability
             backpack.SetupGrounded();
         }
 
-        if (GetAbilityUpgradeStatus(AbilityUpgradeSlot.YELLOW))
+        if (YellowUpgraded())
         {
             backpack.SetupYellow();
         }

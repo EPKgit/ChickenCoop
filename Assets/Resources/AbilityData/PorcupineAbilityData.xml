@@ -107,6 +107,11 @@
 				<width>1</width>
 				<secondaryPreviewPrefab>tail_swipe_preview</secondaryPreviewPrefab>
 			</lineTargetingData>
+			<lineTargetingData>
+				<range>5</range>
+				<width>1</width>
+				<secondaryPreviewPrefab>square_preview</secondaryPreviewPrefab>
+			</lineTargetingData>
 		</targeting_list>
 		<var_list>
 			<float name="damage">20</float>
@@ -116,6 +121,9 @@
 			<!-- Red -->
 			<float name="backpackKnockbackDuration">0.6</float>
 			<float name="backpackKnockbackForce">12.0</float>
+
+			<scriptableObject name="blueHitboxAsset">tail_swipe_blue_hitbox</scriptableObject>
+
 
 		</var_list>
 	</ability>

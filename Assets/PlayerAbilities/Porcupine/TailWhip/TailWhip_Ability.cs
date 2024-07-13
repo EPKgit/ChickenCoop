@@ -16,6 +16,10 @@ public class TailWhip_Ability : Ability
     public float backpackKnockbackDuration = 1.0f;
     public float backpackKnockbackForce = 1.0f;
 
+    // BLUE
+    public float slowDuration = 2.0f;
+    public HitboxDataAsset blueHitboxAsset;
+
     private LayerMask layerMaskDefault;
     private LayerMask layerMaskRed;
 
@@ -26,15 +30,33 @@ public class TailWhip_Ability : Ability
         layerMaskRed = layerMaskDefault | LayerMask.GetMask("PlayerDrops");
     }
 
+    public override void OnUpgrade(AbilityUpgradeSlot slot)
+    {
+        if (slot == AbilityUpgradeSlot.BLUE)
+        {
+            IncrementTargetingType();
+        }
+    }
+
+    public override void OnDowngrade(AbilityUpgradeSlot slot)
+    {
+        if (slot == AbilityUpgradeSlot.BLUE)
+        {
+            DecrementTargetingType();
+        }
+    }
+
     protected override void UseAbility()
     {
         base.UseAbility();
         targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, 0.01f);
 
-        var hitboxData = HitboxData.GetBuilder(hitboxAsset)
-            .Layer(GetAbilityUpgradeStatus(AbilityUpgradeSlot.RED) ? layerMaskRed : layerMaskDefault)
+        var hitboxToUse = BlueUpgraded() ? blueHitboxAsset : hitboxAsset;
+        var layerMask = RedUpgraded() ? layerMaskRed : layerMaskDefault;
+        var hitboxData = HitboxData.GetBuilder(hitboxToUse)
+            .Layer(layerMask)
             .StartPosition(targetingData.inputPoint)
-            .StartRotationZ(targetingData.inputRotationZ)
+            .RotationInfo(targetingData.inputRotationZ, targetingData.relativeInputDirection)
             .Callback(HitboxCallback)
             .Duration(hitboxDuration)
             .Finalize();
@@ -43,7 +65,7 @@ public class TailWhip_Ability : Ability
 
     void HitboxCallback(Collider2D col, Hitbox hitbox)
     {
-        if(GetAbilityUpgradeStatus(AbilityUpgradeSlot.RED))
+        if(RedUpgraded())
         {
             SpineBackpack_Script backpack = col.GetComponent<SpineBackpack_Script>();
             if(backpack != null) 
@@ -71,6 +93,10 @@ public class TailWhip_Ability : Ability
                     .KnockbackData(KnockbackPreset.BIG)
                     .Finalize()
             );
+        }
+        if(BlueUpgraded())
+        {
+            StatusEffectManager.instance.ApplyEffect(col.gameObject, Statuses.StatusEffectType.SLOW, slowDuration);
         }
     }
 }

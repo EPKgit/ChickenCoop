@@ -97,7 +97,11 @@ public class Hitbox : Poolable
                 overlaps = Physics2D.OverlapCircleAll(transform.position, data.Radius, data.LayerMask.value);
                 break;
             case HitboxShapeType.SQUARE:
-                overlaps = Physics2D.OverlapBoxAll(transform.position, new Vector2(data.Radius * 2, data.Radius * 2), data.StartRotationZ, data.LayerMask.value);
+                overlaps = Physics2D.OverlapBoxAll(transform.position, new Vector2(data.Radius * 2, data.Length * 2), data.StartRotationZ, data.LayerMask.value);
+                break;
+            case HitboxShapeType.PROJECTED_RECT:
+                Vector2 center = (Vector2)transform.position + data.Axis * data.Length * 0.5f;
+                overlaps = Physics2D.OverlapBoxAll(center, new Vector2(data.Radius, data.Length), data.StartRotationZ, data.LayerMask.value);
                 break;
             case HitboxShapeType.POLYGON:
                 overlaps = new Collider2D[8];
@@ -188,12 +192,21 @@ public class Hitbox : Poolable
     }
 
 #if UNITY_EDITOR
+
+    //only appears in editor while we are previewing hitboxes
+    [NonSerialized]
+    public HitboxData previewData;
 #pragma warning disable 162 //depending on the debug flag one of these is unreachable
     void OnDrawGizmosSelected()
     {
         if (data != null)
         {
-            DrawGizmo();
+            DrawGizmo(this.data);
+        }
+
+        if(previewData != null)
+        {
+            DrawGizmo(previewData);
         }
     }
 
@@ -201,12 +214,12 @@ public class Hitbox : Poolable
     {
         if((int)DebugFlags.Flags.HITBOXES_EDITOR_ALWAYS == 1 && data != null)
         {
-            DrawGizmo();
+            DrawGizmo(this.data);
         }
     }
 #pragma warning restore 162
 
-    void DrawGizmo()
+    public void DrawGizmo(HitboxData data)
     {
         UnityEditor.Handles.color = data.IsDelayed() ? debugColorDelayed : debugColorNormal;
         switch (data.ShapeType)
@@ -218,13 +231,23 @@ public class Hitbox : Poolable
             case HitboxShapeType.SQUARE:
             {
                 var points = new Vector3[4];
-                Rect rect = new Rect(0, 0, data.Radius * 2, data.Radius * 2);
-                points[0] = transform.rotation * new Vector3(-data.Radius, -data.Radius) + transform.position;
-                points[1] = transform.rotation * new Vector3( data.Radius, -data.Radius) + transform.position;
-                points[2] = transform.rotation * new Vector3( data.Radius,  data.Radius) + transform.position;
-                points[3] = transform.rotation * new Vector3(-data.Radius,  data.Radius) + transform.position;
+                points[0] = transform.rotation * new Vector3(-data.Radius, -data.Length) + transform.position;
+                points[1] = transform.rotation * new Vector3( data.Radius, -data.Length) + transform.position;
+                points[2] = transform.rotation * new Vector3( data.Radius,  data.Length) + transform.position;
+                points[3] = transform.rotation * new Vector3(-data.Radius,  data.Length) + transform.position;
                 UnityEditor.Handles.DrawAAConvexPolygon(points);
             } break;
+
+            case HitboxShapeType.PROJECTED_RECT:
+            {
+                var points = new Vector3[4];
+                points[0] = transform.rotation * new Vector3(-data.Radius, 0) + transform.position;
+                points[1] = transform.rotation * new Vector3(data.Radius, 0) + transform.position;
+                points[2] = transform.rotation * new Vector3(data.Radius, data.Length) + transform.position;
+                points[3] = transform.rotation * new Vector3(-data.Radius, data.Length) + transform.position;
+                UnityEditor.Handles.DrawAAConvexPolygon(points);
+            }
+            break;
 
             case HitboxShapeType.POLYGON:
             { 
@@ -245,11 +268,11 @@ public class Hitbox : Poolable
     {
         if ((int)DebugFlags.Flags.HITBOXES_IN_GAME == 1 && data != null && active)
         {
-            DrawInGameDebug();
+            DrawInGameDebug(this.data);
         }
     }
 
-    public void DrawInGameDebug()
+    public void DrawInGameDebug(HitboxData data)
     {
         var color = data.IsDelayed() ? debugColorDelayed : debugColorNormal;
         switch (data.ShapeType)
@@ -258,10 +281,16 @@ public class Hitbox : Poolable
                 GLHelpers.GLDrawCircle(transform, data.Radius, 32, color);
                 break;
             case HitboxShapeType.SQUARE:
-                Rect rect = new Rect(0, 0, data.Radius * 2, data.Radius * 2);
-                rect.center = transform.position;
+            {
+                Rect rect = new Rect(0, 0, data.Radius * 2, data.Length * 2);
                 GLHelpers.GLDrawRect(transform, rect, color);
-                break;
+            } break;
+            case HitboxShapeType.PROJECTED_RECT:
+            {
+                Rect rect = new Rect(0, 0, data.Radius * 2, data.Length);
+                rect.center = data.Axis * 0.5f * data.Length;
+                GLHelpers.GLDrawRect(transform, rect, color);
+            } break;
             case HitboxShapeType.POLYGON:
                 var points = new Vector3[data.Points.Length];
                 int x = 0;

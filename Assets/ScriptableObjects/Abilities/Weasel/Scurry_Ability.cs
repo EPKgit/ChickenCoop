@@ -44,7 +44,6 @@ public class Scurry_Ability : Ability
                     .Duration(smokeCloudDuration)
                     .Delay(0.5f)
                     .ShapeType(HitboxShapeType.CIRCLE)
-                    .StartRotationZ(0)
                     .StartPosition(playerAbilities.transform.position)
                     .Callback(HitboxCallback)
                     .Discriminator(HitboxManager.Discriminators.Damagables)

@@ -10,5 +10,7 @@ public class HitboxShapeAsset : ScriptableObject
     public Vector2[] Points { get => _points; }
     [SerializeField] Vector2[] _points = null;
     public float Radius { get => _radius; }
-    [SerializeField] float _radius = 0.5f;
+    [SerializeField] float _radius = -1.0f;
+    public float Length { get => _length; }
+    [SerializeField] float _length = -1.0f;
 }

@@ -50,3 +50,13 @@ MonoBehaviour:
     reference: {fileID: 4790134168722434369, guid: 0d8f8f599b2475a4dbf8f270f5b21305, type: 3}
     icon: {fileID: 21300000, guid: 3d7a2606c9360c84b9c0150d2a01f88e, type: 3}
     scriptableObject: {fileID: 11400000, guid: 3749564298a5b424d9ff0849b063057d, type: 2}
+  - name: square_preview
+    type: 0
+    reference: {fileID: 3925878329255204487, guid: 1a2352757b6d44947a9178f67569daab, type: 3}
+    icon: {fileID: 21300000, guid: 3d7a2606c9360c84b9c0150d2a01f88e, type: 3}
+    scriptableObject: {fileID: 11400000, guid: 3749564298a5b424d9ff0849b063057d, type: 2}
+  - name: tail_swipe_blue_hitbox
+    type: 2
+    reference: {fileID: 3925878329255204487, guid: 1a2352757b6d44947a9178f67569daab, type: 3}
+    icon: {fileID: 21300000, guid: 3d7a2606c9360c84b9c0150d2a01f88e, type: 3}
+    scriptableObject: {fileID: 11400000, guid: bc2389b366d1aae47ae9acbda415f1b7, type: 2}

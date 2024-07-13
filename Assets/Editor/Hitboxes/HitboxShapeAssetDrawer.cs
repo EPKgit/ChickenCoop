@@ -24,6 +24,7 @@ public class HitboxShapeAssetDrawer : CustomPropertyDrawerBase
     private SerializedProperty _type;
     private SerializedProperty _points;
     private SerializedProperty _radius;
+    private SerializedProperty _length;
 
     protected override bool DoesExpansion() { return true; }
 
@@ -49,13 +50,15 @@ public class HitboxShapeAssetDrawer : CustomPropertyDrawerBase
         }
         switch (type)
         {
-            case HitboxShapeType.CIRCLE:
+            case HitboxShapeType.PROJECTED_RECT:
+                EditorGUI.PropertyField(NextLine(), _radius);
+                EditorGUI.PropertyField(NextLine(), _length);
+                break;
             case HitboxShapeType.SQUARE:
-                Debug.Log("radius");
+            case HitboxShapeType.CIRCLE:
                 EditorGUI.PropertyField(NextLine(), _radius);
                 break;
             case HitboxShapeType.POLYGON:
-                Debug.Log("radius");
                 EditorGUI.PropertyField(NextLine(), _points);
                 break;
         }
@@ -74,6 +77,7 @@ public class HitboxShapeAssetDrawer : CustomPropertyDrawerBase
             _type = prop.FindPropertyRelative("_type");
             _points = prop.FindPropertyRelative("_points");
             _radius = prop.FindPropertyRelative("_radius");
+            _length = prop.FindPropertyRelative("_length");
         }
         else
         {
@@ -81,6 +85,7 @@ public class HitboxShapeAssetDrawer : CustomPropertyDrawerBase
             _type = self.FindProperty("_type");
             _points = self.FindProperty("_points");
             _radius = self.FindProperty("_radius");
+            _length = self.FindProperty("_length");
         }
     }
 
@@ -130,8 +135,11 @@ public class HitboxShapeAssetDrawer : CustomPropertyDrawerBase
         }
         switch (type)
         {
-            case HitboxShapeType.CIRCLE:
+            case HitboxShapeType.PROJECTED_RECT:
+                num += 2;
+                break;
             case HitboxShapeType.SQUARE:
+            case HitboxShapeType.CIRCLE:
                 num += 1;
                 break;
             case HitboxShapeType.POLYGON:
