@@ -69,34 +69,53 @@ public class StatusEffectManager : MonoSingleton<StatusEffectManager>
         }
     }
 
+    public void ApplyEffect(GameObject toApply, StatusEffectBase effect)
+    {
+        StatusBarData statusData;
+        if (activeStatuses.ContainsKey(toApply)) //if we already have a bar for the effect
+        {
+            statusData = activeStatuses[toApply];
+        }
+        else //if we don't have a bar make one
+        {
+            statusData = CreateBar(toApply);
+        }
+        ApplyEffectAndCreatePopup(statusData, effect);
+    }
+
     public void ApplyEffect(GameObject toApply, StatusEffectType type, float duration)
     {
         StatusBarData statusData;
         if (activeStatuses.ContainsKey(toApply)) //if we already have a bar for the effect
         {
             statusData = activeStatuses[toApply];
-            ApplyEffectAndCreatePopup(statusData, type, duration);
         }
         else //if we don't have a bar
         {
-            ApplyEffectAndCreatePopup(CreateBar(toApply), type, duration);
+            statusData = CreateBar(toApply);
         }
+        ApplyEffectAndCreatePopup(statusData, type, duration);
     }
 
     void ApplyEffectAndCreatePopup(StatusBarData bar, StatusEffectType type, float duration)
     {
-        bool newStatusCreated;
         var effect = StatusEffectBase.GetStatusObjectByType(type, duration);
-        bar.container.AddStatus(effect, out newStatusCreated);
+        ApplyEffectAndCreatePopup(bar, effect);
+    }
+
+    void ApplyEffectAndCreatePopup(StatusBarData bar, StatusEffectBase status)
+    {
+        bool newStatusCreated;
+        bar.container.AddStatus(status, out newStatusCreated);
         if (newStatusCreated)
         {
-            if(effectSprites[(int)type] == null)
+            if (effectSprites[(int)status.type] == null)
             {
                 return;
             }
             var popup = PoolManager.instance.RequestObject(effectPopupPrefab).GetComponent<StatusEffectPopup>();
             popup.gameObject.transform.SetParent(bar.barObject.transform);
-            popup.Setup(effectSprites[(int)type], effect);
+            popup.Setup(effectSprites[(int)status.type], status);
             bar.popups.Add(popup);
         }
     }

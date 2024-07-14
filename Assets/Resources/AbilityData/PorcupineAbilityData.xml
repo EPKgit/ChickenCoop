@@ -123,6 +123,8 @@
 			<float name="backpackKnockbackForce">12.0</float>
 
 			<scriptableObject name="blueHitboxAsset">tail_swipe_blue_hitbox</scriptableObject>
+			<float name="slowPercentage">0.2</float>
+			<float name="slowDuration">2.0</float>
 
 
 		</var_list>

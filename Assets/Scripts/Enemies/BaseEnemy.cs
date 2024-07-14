@@ -7,7 +7,6 @@ using EnemyBehaviourSyntax;
 public abstract class BaseEnemy : BaseMovement
 {
     public abstract EnemyType type { get; }
-    public float speed = 1f;
 
 	[HideInInspector]
 	public bool isRegistered;
@@ -219,7 +218,7 @@ public abstract class BaseEnemy : BaseMovement
         {
 			dir += spring.EvaluateDirection(currentFrameSpringData);
         }
-		rb.velocity = dir.normalized * speed;
+		rb.velocity = dir.normalized * movementSpeed;
 	}
 
 	private void OnCollisionEnter2D(Collision2D other) 

@@ -18,6 +18,7 @@ public class TailWhip_Ability : Ability
 
     // BLUE
     public float slowDuration = 2.0f;
+    public float slowPercentage = 0.5f;
     public HitboxDataAsset blueHitboxAsset;
 
     private LayerMask layerMaskDefault;
@@ -96,7 +97,8 @@ public class TailWhip_Ability : Ability
         }
         if(BlueUpgraded())
         {
-            StatusEffectManager.instance.ApplyEffect(col.gameObject, Statuses.StatusEffectType.SLOW, slowDuration);
+            StatusEffectManager.instance.ApplyEffect(col.gameObject, new Slow_StatusEffect(slowDuration, slowPercentage));
+            StatusEffectManager.instance.ApplyEffect(col.gameObject, new Slow_StatusEffect(10, 0.5f));
         }
     }
 }

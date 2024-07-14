@@ -21,7 +21,7 @@ public class StatusEffectContainerComponent : MonoBehaviour
         {
             if (statuses[x].duration <= 0 || statuses[x].Tick(Time.deltaTime))
             {
-                statuses[x].OnRemovalExternal(tagComponent);
+                statuses[x].OnRemoval(tagComponent);
                 statuses.RemoveAt(x);
             }
         }
@@ -57,7 +57,7 @@ public class StatusEffectContainerComponent : MonoBehaviour
                 }
             }
         }
-        status.OnApplicationExternal(tagComponent);
+        status.OnApplication(tagComponent);
         statuses.Add(status);
         newStatusCreated = true;
         return status;
@@ -81,6 +81,8 @@ public class StatusEffectContainerComponent : MonoBehaviour
                 return true;
             case StatusEffectStackingType.MULTIPLE_INSTANCES:
                 return false;
+            case StatusEffectStackingType.CUSTOM:
+                return original.HandleStacking(challenger);
             default:
                 throw new System.NotImplementedException();
         }
