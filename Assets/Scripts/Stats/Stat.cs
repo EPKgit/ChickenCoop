@@ -69,12 +69,12 @@ public class Stat : ISerializationCallbackReceiver
 	/// to ensure that they remove the same bonus they added. 
 	/// </summary>
     [NonSerialized]
-	private uint currentID = 0;
+    private static RollingIDNumber IDCounter = new RollingIDNumber();
 
     [NonSerialized]
-    private List<Tuple<uint, float>> multiplicativeModifiers = new List<Tuple<uint, float>>();
+    private List<Tuple<StatModificationHandle, float>> multiplicativeModifiers = new List<Tuple<StatModificationHandle, float>>();
     [NonSerialized]
-    private List<Tuple<uint, float>> additiveModifiers = new List<Tuple<uint, float>>();
+    private List<Tuple<StatModificationHandle, float>> additiveModifiers = new List<Tuple<StatModificationHandle, float>>();
 
 	public Stat(StatName s, float f)
 	{
@@ -89,11 +89,11 @@ public class Stat : ISerializationCallbackReceiver
     private void UpdateCurrentValue(bool forceUpdate = false)
     {
         float finalResult = BaseValue;
-        foreach(Tuple<uint, float> t in additiveModifiers)
+        foreach(Tuple<StatModificationHandle, float> t in additiveModifiers)
         {
             finalResult += t.Item2;
         }
-        foreach(Tuple<uint, float> t in multiplicativeModifiers)
+        foreach(Tuple<StatModificationHandle, float> t in multiplicativeModifiers)
         {
             finalResult *= t.Item2;
         }
@@ -105,9 +105,9 @@ public class Stat : ISerializationCallbackReceiver
         }
     }
 
-	uint GetID()
+    StatModificationHandle GetID()
 	{
-		return currentID++;
+		return new StatModificationHandle(IDCounter++);
 	}
 
 	/// <summary>
@@ -115,12 +115,12 @@ public class Stat : ISerializationCallbackReceiver
 	/// </summary>
 	/// <param name="f">The bonus amount</param>
 	/// <returns>Returns the ID handle of the bonus added</returns>
-    public uint AddAdditiveModifier(float f)
+    public StatModificationHandle AddAdditiveModifier(float f)
     {
-		uint ID = GetID();
-        additiveModifiers.Add(new Tuple<uint, float>(ID, f));
+        StatModificationHandle handle = GetID();
+        additiveModifiers.Add(new Tuple<StatModificationHandle, float>(handle, f));
         UpdateCurrentValue();
-		return ID;
+		return handle;
     }
 
 	/// <summary>
@@ -128,19 +128,19 @@ public class Stat : ISerializationCallbackReceiver
 	/// </summary>
 	/// <param name="f">The bonus amount</param>
 	/// <returns>Returns the ID handle of the bonus added</returns>
-    public uint AddMultiplicativeModifier(float f)
+    public StatModificationHandle AddMultiplicativeModifier(float f)
     {
-		uint ID = GetID();
-        multiplicativeModifiers.Add(new Tuple<uint, float>(ID, f));
+        StatModificationHandle handle = GetID();
+        multiplicativeModifiers.Add(new Tuple<StatModificationHandle, float>(handle, f));
         UpdateCurrentValue();
-        return ID;
+        return handle;
     }
     
 	/// <summary>
 	/// Removes a bonus by it's ID handle
 	/// </summary>
 	/// <param name="i">The ID of the bonus to remove</param>
-    public void RemoveAdditiveModifier(uint i)
+    public void RemoveAdditiveModifier(StatModificationHandle i)
     {
         additiveModifiers.RemoveAll( (t) => t.Item1 == i );
         UpdateCurrentValue();
@@ -150,7 +150,7 @@ public class Stat : ISerializationCallbackReceiver
 	/// Removes a bonus by it's ID handle
 	/// </summary>
 	/// <param name="i">The ID of the bonus to remove</param>
-    public void RemoveMultiplicativeModifier(uint i)
+    public void RemoveMultiplicativeModifier(StatModificationHandle i)
     {
         multiplicativeModifiers.RemoveAll( (t) => t.Item1 == i );
         UpdateCurrentValue();
@@ -191,8 +191,18 @@ public class Stat : ISerializationCallbackReceiver
 
     public void OnAfterDeserialize()
     {
-        multiplicativeModifiers = new List<Tuple<uint, float>>();
-        additiveModifiers = new List<Tuple<uint, float>>();
+        multiplicativeModifiers = new List<Tuple<StatModificationHandle, float>>();
+        additiveModifiers = new List<Tuple<StatModificationHandle, float>>();
         OnStatChange = delegate { };
+    }
+}
+
+public class StatModificationHandle : IHandleWithIDNumber
+{
+    public StatModificationHandle(RollingIDNumber i) : base(i) { }
+
+    public static implicit operator uint(StatModificationHandle smh)
+    {
+        return smh.ID;
     }
 }

@@ -6,7 +6,7 @@ public class Porcupine_Test_Passive : Ability
 {
     public override uint ID => 200;
 
-    public uint handle;
+    public StatModificationHandle handle;
     public override void Initialize(PlayerAbilities pa)
     {
         base.Initialize(pa);

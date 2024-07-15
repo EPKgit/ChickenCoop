@@ -98,7 +98,6 @@ public class TailWhip_Ability : Ability
         if(BlueUpgraded())
         {
             StatusEffectManager.instance.ApplyEffect(col.gameObject, new Slow_StatusEffect(slowDuration, slowPercentage));
-            StatusEffectManager.instance.ApplyEffect(col.gameObject, new Slow_StatusEffect(10, 0.5f));
         }
     }
 }

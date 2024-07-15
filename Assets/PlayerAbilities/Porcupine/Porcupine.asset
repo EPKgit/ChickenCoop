@@ -60,3 +60,13 @@ MonoBehaviour:
     reference: {fileID: 3925878329255204487, guid: 1a2352757b6d44947a9178f67569daab, type: 3}
     icon: {fileID: 21300000, guid: 3d7a2606c9360c84b9c0150d2a01f88e, type: 3}
     scriptableObject: {fileID: 11400000, guid: bc2389b366d1aae47ae9acbda415f1b7, type: 2}
+  - name: 1_45
+    type: 1
+    reference: {fileID: 3925878329255204487, guid: 1a2352757b6d44947a9178f67569daab, type: 3}
+    icon: {fileID: 21300000, guid: 1206fbf67ea35f444a114058401639bb, type: 3}
+    scriptableObject: {fileID: 11400000, guid: bc2389b366d1aae47ae9acbda415f1b7, type: 2}
+  - name: SpineRain_Hitbox
+    type: 2
+    reference: {fileID: 3925878329255204487, guid: 1a2352757b6d44947a9178f67569daab, type: 3}
+    icon: {fileID: 21300000, guid: 1206fbf67ea35f444a114058401639bb, type: 3}
+    scriptableObject: {fileID: 11400000, guid: d2dc309374d52464cbe738c1ed8eae89, type: 2}

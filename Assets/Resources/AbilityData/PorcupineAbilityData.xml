@@ -130,4 +130,33 @@
 		</var_list>
 	</ability>
 	
+	<!--|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
+
+	<ability>
+		<ability_ID>204</ability_ID>
+		<ability_name>Spine Rain</ability_name>
+		<ability_icon>1_45</ability_icon>
+		<ability_data>
+			<cd>0.1</cd>
+		</ability_data>
+		<tooltip_list>
+			<default>Choose an area to drop spines in </default>
+		</tooltip_list>
+		<targeting_list>
+			<groundTargetingData>
+				<range>4</range>
+				<size>
+					<x>4</x>
+					<y>4</y>
+				</size>
+			</groundTargetingData>
+		</targeting_list>
+		<var_list>
+			<float name="damage">5</float>
+			<float name="hitboxDuration">4</float>
+			<float name="interval">0.1</float>
+			<scriptableObject name="hitboxAsset">SpineRain_Hitbox</scriptableObject>
+		</var_list>
+	</ability>
+	
 </ability_list>

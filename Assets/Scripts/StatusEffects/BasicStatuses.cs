@@ -88,7 +88,7 @@ public class Slow_StatusEffect : StatusEffectBase
     {
         public float duration;
         public float percent;
-        public uint handle;
+        public StatModificationHandle handle;
         public bool Tick(float dt)
         {
             duration -= dt;
@@ -187,7 +187,7 @@ public class Slow_StatusEffect : StatusEffectBase
         }
 
         // less than because slows are inverted
-        if(other.current.percent < current.percent)
+        if(other.current.percent > current.percent)
         {
             slows.Add(current);
             SetNewCurrent(other.current);

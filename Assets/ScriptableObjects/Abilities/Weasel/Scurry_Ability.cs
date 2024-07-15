@@ -12,8 +12,8 @@ public class Scurry_Ability : Ability
     public float damageMultiplier = 2.0f;
     public float smokeCloudDuration = 3.0f;
 
-    private uint? movementSpeedBonusHandle;
-    private uint? dmgStatusHandle;
+    private StatModificationHandle movementSpeedBonusHandle = null;
+    private StatModificationHandle dmgStatusHandle = null;
     private StatBlock statBlock;
     public override void Initialize(PlayerAbilities pa)
 	{
@@ -85,14 +85,14 @@ public class Scurry_Ability : Ability
     public override void FinishAbility()
     {
         base.FinishAbility();
-        if(movementSpeedBonusHandle.HasValue)
+        if(movementSpeedBonusHandle != null)
         {
-            statBlock.GetStat(StatName.MovementSpeed)?.RemoveMultiplicativeModifier(movementSpeedBonusHandle.Value);
+            statBlock.GetStat(StatName.MovementSpeed)?.RemoveMultiplicativeModifier(movementSpeedBonusHandle);
             movementSpeedBonusHandle = null;
         }
-        if (dmgStatusHandle.HasValue)
+        if (dmgStatusHandle != null)
         {
-            statBlock.GetStat(StatName.DamagePercentage)?.RemoveMultiplicativeModifier(dmgStatusHandle.Value);
+            statBlock.GetStat(StatName.DamagePercentage)?.RemoveMultiplicativeModifier(dmgStatusHandle);
             dmgStatusHandle = null;
         }
     }
