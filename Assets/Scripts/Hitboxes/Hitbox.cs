@@ -8,6 +8,8 @@ public class Hitbox : Poolable
 {
     public static Color debugColorNormal = new Color(1.0f, 0.0f, 0.0f, 0.4f);
     public static Color debugColorDelayed = new Color(1.0f, 1.0f, 0.0f, 0.4f);
+
+    private static Collider2D[] collisions = new Collider2D[20];
     
     public HitboxData data;
 
@@ -68,6 +70,11 @@ public class Hitbox : Poolable
 
     public bool UpdateHitbox()
     {
+        if (data.UpdateCallback != null)
+        {
+            data.UpdateCallback(this);
+        }
+
         if(!active)
         {
             return true;
@@ -79,59 +86,65 @@ public class Hitbox : Poolable
             return true;
         }
 
-        List<Collider2D> collisions = GatherCollisionCandidates();
-        if(collisions == null)
+        if(!GatherCollisionCandidates())
         {
             return true;
         }
-        ResolveCollisions(collisions);
+        ResolveCollisions();
         return data.TickDuration(Time.deltaTime);
     }
 
-    List<Collider2D> GatherCollisionCandidates()
+    bool GatherCollisionCandidates()
     {
-        Collider2D[] overlaps = null;
+        int amount = 0;
         switch (data.ShapeType)
         {
-            case HitboxShapeType.CIRCLE:    
-                overlaps = Physics2D.OverlapCircleAll(transform.position, data.Radius, data.LayerMask.value);
+            case HitboxShapeType.CIRCLE:
+                amount = Physics2D.OverlapCircleNonAlloc(transform.position, data.Radius, collisions, data.LayerMask.value);
                 break;
             case HitboxShapeType.SQUARE:
-                overlaps = Physics2D.OverlapBoxAll(transform.position, new Vector2(data.Radius * 2, data.Length * 2), data.StartRotationZ, data.LayerMask.value);
+                amount = Physics2D.OverlapBoxNonAlloc(transform.position, new Vector2(data.Radius * 2, data.Length * 2), data.StartRotationZ, collisions, data.LayerMask.value);
                 break;
             case HitboxShapeType.PROJECTED_RECT:
                 Vector2 center = (Vector2)transform.position + data.Axis * data.Length * 0.5f;
-                overlaps = Physics2D.OverlapBoxAll(center, new Vector2(data.Radius, data.Length), data.StartRotationZ, data.LayerMask.value);
+                amount = Physics2D.OverlapBoxNonAlloc(center, new Vector2(data.Radius, data.Length), data.StartRotationZ, collisions, data.LayerMask.value);
                 break;
             case HitboxShapeType.POLYGON:
-                overlaps = new Collider2D[8];
                 ContactFilter2D filter = new ContactFilter2D();
                 filter.SetLayerMask(data.LayerMask);
                 filter.useTriggers = true;
-                Physics2D.OverlapCollider(polyCollider, filter, overlaps);
+                Physics2D.OverlapCollider(polyCollider, filter, collisions);
                 break;
             default:
                 Debug.LogError("ERROR: HURTBOX UPDATED WITH INCORRECT TYPE INFORMATION");
-                return null;
+                return false;
         }
-        List<Collider2D> candidates = new List<Collider2D>();
-        foreach (Collider2D col in overlaps)
+
+        if(amount <= 0)
+        {
+            return false;
+        }
+
+        int index = 0;
+        foreach (Collider2D col in collisions)
         { 
-            if (col != null && (data.Discriminator == null || data.Discriminator(col)))
+            if (col != null && (data.Discriminator != null && !data.Discriminator(col)))
             {
-                candidates.Add(col);
+                collisions[index] = null;
             }
+            ++index;
         }
-        return candidates;
+        return true;
     }
 
-    void ResolveCollisions(List<Collider2D> collisions)
+    void ResolveCollisions()
     {
+        // check if our interaction timestamps are not in this frames info, if so call the leave collisions callback
         float closestCenterDistSq = float.MaxValue;
         Collider2D bestOption = null;
         foreach (var col in collisions)
         {
-            if(!PassesRepeatPolicy(col))
+            if(col == null || !PassesRepeatPolicy(col))
             {
                 continue;
             }

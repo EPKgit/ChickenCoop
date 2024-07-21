@@ -82,10 +82,13 @@ elementFormDefault="qualified">
 	</xs:simpleType>
 
 	<xs:complexType name="vector2Type">
-		<xs:sequence>
-			<xs:element name="x" type="xs:decimal"/>
-			<xs:element name="y" type="xs:decimal"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="x" type="xs:decimal"/>
+				<xs:element name="y" type="xs:decimal"/>
+			</xs:sequence>
+			<xs:element name="xy" type="xs:decimal"/>
+		</xs:choice>
 	</xs:complexType>
 
 	<xs:complexType name="vector3Type">

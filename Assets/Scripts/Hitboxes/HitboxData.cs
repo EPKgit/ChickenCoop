@@ -38,6 +38,7 @@ public class HitboxData
 
 
     //These have defaults and aren't necessary
+    public Action<Hitbox> UpdateCallback { get; private set; } = null;
     public HitboxShapeType ShapeType { get; private set; } = HitboxShapeType.CIRCLE;
     public Vector2[] Points { get; private set; }
     public float Radius { get; private set; } = -1.0f;
@@ -185,6 +186,12 @@ public class HitboxData
         public HitboxDataBuilder InteractionTimeStamps(Dictionary<GameObject, float> d)
         {
             data.InteractionTimeStamps = d;
+            return this;
+        }
+
+        public HitboxDataBuilder UpdateCallback(Action<Hitbox> callback)
+        {
+            data.UpdateCallback = callback;
             return this;
         }
 

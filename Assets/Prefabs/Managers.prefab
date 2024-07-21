@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c45c61f937ec61343bc31be4388a66a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  created: 0
   playerUIPrefab: {fileID: 8564876881577561736, guid: 076636c2ee7d0894daf4e65be1b1bd0b, type: 3}
   rangeIndicatorPrefab: {fileID: 5597262486086814138, guid: c7043fb43aabd854882368336e377dee, type: 3}
   arrowIndicatorPrefab: {fileID: 5927306085603650659, guid: a60985986de8ac14c91279ee3c01c05c, type: 3}
@@ -70,6 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578c004bfa23fba4f91865e841e1e252, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  created: 0
   textPrefab: {fileID: 1647112879069678025, guid: 993f25f36fde53944b1902f14864ca2a, type: 3}
   lowDamageColor: {r: 0.71687007, g: 1, b: 0, a: 1}
   highDamageColor: {r: 1, g: 0, b: 0, a: 1}
@@ -87,6 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e69e1959a52da645b50ae9c2119991b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  created: 0
 --- !u!114 &8448847093921120769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47e55d27f9cd94c46b2aedfb695e0382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  created: 0
   enemySpawnData:
   - prefab: {fileID: 8904934775474808004, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
     spawningEffect: {fileID: 6187125037231300774, guid: d720295e61e68dd4683b35658ae53ac9, type: 3}
@@ -118,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 521683c472d8d5c4182f3ba3ad48935b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  created: 0
   effectBarPrefab: {fileID: 1468872562951632356, guid: ad3791e431644fc4186e442069c9435c, type: 3}
   effectPopupPrefab: {fileID: 8291693686039335391, guid: 15927a20f75351544a42778e1010971d, type: 3}
   effectSprites:
@@ -125,7 +130,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d286c7bd3e6cd4e45b0fd69d6ddff717, type: 3}
   - {fileID: 21300000, guid: 2f6a5ce2b479b6844aee597800d6c6eb, type: 3}
   - {fileID: 21300000, guid: eda31b814e40ee6418ed11d9d1f8fa4e, type: 3}
-  - {fileID: 21300000, guid: 1516139bcf87f114186e242b96084bfe, type: 3}
+  - {fileID: 21300000, guid: 98d294b70691f414e8a1457b48fd4ffa, type: 3}
+  - {fileID: 21300000, guid: 6c03e49ecab85db468299a16d0e0a9de, type: 3}
   - {fileID: 21300000, guid: 56b738fcc595c414b8e40c7b1b806ae3, type: 3}
   - {fileID: 0}
   - {fileID: 0}
@@ -141,6 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c60d293fac80914f84df2adc794647f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  created: 0
   minigamePrefabs:
   - {fileID: 6341083261711086353, guid: 0379eba381e229e4eb0122acdc397e98, type: 3}
 --- !u!114 &7630090134084184713
@@ -155,6 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42476e3377a4404d808e936f2fb7023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  created: 0
   hitboxPrefab: {fileID: 2140549124854207220, guid: 9549a57d901f1384191539d33b9ab7b5, type: 3}
   defaultLayer:
     serializedVersion: 2
@@ -172,7 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
+  m_sendNavigationEvents: 0
   m_DragThreshold: 10
 --- !u!114 &6091651632433799909
 MonoBehaviour:
@@ -216,4 +224,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7725da9e87a33b24a9721f81c0baedf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  created: 0
   main: {fileID: 11400000, guid: 057ea0fa6a6bafa4083c146aaedba127, type: 2}

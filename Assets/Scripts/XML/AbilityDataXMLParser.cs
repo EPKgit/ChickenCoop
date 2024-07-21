@@ -71,7 +71,17 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                     targetingData.targetType = TargetType.GROUND_TARGETED;
                     targetingData.range = float.Parse(node["range"].InnerText);
                     var size = node["size"];
-                    targetingData.previewScale = new Vector3(float.Parse(size["x"].InnerText), float.Parse(size["y"].InnerText), 0);
+                    float x = 0, y = 0;
+                    if (size["xy"] != null)
+                    {
+                        x = y = float.Parse(size["xy"].InnerText);
+                    }
+                    else
+                    {
+                        x = float.Parse(size["x"].InnerText);
+                        y = float.Parse(size["y"].InnerText);
+                    }
+                    targetingData.previewScale = new Vector3(x, y, 0);
                 } break;
 
                 case "entityTargetingData":

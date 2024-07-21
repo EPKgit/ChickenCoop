@@ -15,6 +15,7 @@ public enum StatusEffectType
     ROOT,
     BLIND,
     SLOW,
+    HASTE,
     FEAR,
     KNOCKBACK_IMMUNITY,
     INVULERNABILITY,
