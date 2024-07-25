@@ -32,9 +32,10 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
 
     public event MovementDeltaEventDelegate movementEvent = delegate { };
 
-    public float movementSpeed = 1;
     public bool getsKnockbackInvuln = false;
 
+    [System.NonSerialized]
+    protected float movementSpeed = 1;
     protected Vector2 previousPosition;
     protected bool movingAtStartOfFrame;
     protected bool movedDuringFrame;
@@ -67,12 +68,12 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
         movingAtStartOfFrame = rb.velocity.magnitude > float.Epsilon;
     }
 
-    void OnEnable()
+    protected virtual void OnEnable()
     {
         stats.RegisterStatChangeCallback(StatName.MovementSpeed, UpdateMovementSpeedStat);
     }
 
-    void OnDisable()
+    protected virtual void OnDisable()
     {
         stats?.DeregisterStatChangeCallback(StatName.MovementSpeed, UpdateMovementSpeedStat);
     }
@@ -160,8 +161,8 @@ public class BaseMovement : MonoBehaviour, IKnockbackHandler
         }
         knockbackTagID = tagComponent.tags.AddTag(GameplayTagFlags.KNOCKBACK);
         knockbackStartTime = Time.time;
-        knockbackDuration = data.duration;
-        rb.velocity = (data.direction * data.force) / knockbackDuration;
+        knockbackDuration = data.duration * (1.0f - stats.GetValue(StatName.KnockbackDurationResistance));
+        rb.velocity = (data.direction * data.force * (1.0f - stats.GetValue(StatName.KnockbackForceResistance))) / knockbackDuration;
         rb.drag = 0;
     }
 

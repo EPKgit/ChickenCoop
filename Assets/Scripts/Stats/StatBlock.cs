@@ -23,6 +23,10 @@ public enum StatName
     ShieldingPercentage,
     FlatShielding,
 
+    //Knockback
+    KnockbackDurationResistance,
+    KnockbackForceResistance,
+
     //Abilities
     CooldownReduction, 
 
@@ -54,19 +58,21 @@ public class StatBlock : ISerializationCallbackReceiver
     public static Dictionary<StatName, float> defaultValues = new Dictionary<StatName, float>()
     {
 
-        { StatName.MovementSpeed,           1.0f },
-        { StatName.MaxHealth,               1.0f },
-        { StatName.AggroPercentage,         1.0f },
-        { StatName.DamagePercentage,        1.0f },
-        { StatName.FlatDamage,              0.0f },
-        { StatName.HealingPercentage,       1.0f },
-        { StatName.FlatHealing,             0.0f },
-        { StatName.ShieldingPercentage,     1.0f },
-        { StatName.FlatShielding,           0.0f },
-        { StatName.CooldownReduction,       1.0f },
-        { StatName.PuzzleSolving,           0.0f },
-        { StatName.SpineDuration,           0.2f },
-        { StatName.SpineSpeed,              25.0f },
+        { StatName.MovementSpeed,               1.0f },
+        { StatName.MaxHealth,                   1.0f },
+        { StatName.AggroPercentage,             1.0f },
+        { StatName.DamagePercentage,            1.0f },
+        { StatName.FlatDamage,                  0.0f },
+        { StatName.HealingPercentage,           1.0f },
+        { StatName.FlatHealing,                 0.0f },
+        { StatName.ShieldingPercentage,         1.0f },
+        { StatName.FlatShielding,               0.0f },
+        { StatName.CooldownReduction,           1.0f },
+        { StatName.KnockbackDurationResistance, 0.0f },
+        { StatName.KnockbackForceResistance,    0.0f },
+        { StatName.PuzzleSolving,               0.0f },
+        { StatName.SpineDuration,               0.2f },
+        { StatName.SpineSpeed,                  25.0f },
     };
 
     static StatBlock()

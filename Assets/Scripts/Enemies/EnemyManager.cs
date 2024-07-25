@@ -8,6 +8,7 @@ public enum EnemyType
     DEBUG,
     NORMAL,
     SHIELD,
+    HEAVY,
     MAX,
 }
 

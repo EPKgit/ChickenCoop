@@ -60,7 +60,7 @@ public class Hitbox : Poolable
             polyCollider.enabled = false;
         }
 
-        if(data.InteractionTimeStamps != null)
+        if (data.InteractionTimeStamps != null)
         {
             interactionTimestamps = data.InteractionTimeStamps;
         }
@@ -86,12 +86,16 @@ public class Hitbox : Poolable
             return true;
         }
 
-        if(!GatherCollisionCandidates())
+        if(!data.TickDuration(Time.deltaTime))
         {
-            return true;
+            return false;
         }
-        ResolveCollisions();
-        return data.TickDuration(Time.deltaTime);
+
+        if(GatherCollisionCandidates())
+        {
+            ResolveCollisions();
+        }
+        return true;
     }
 
     bool GatherCollisionCandidates()
@@ -113,7 +117,7 @@ public class Hitbox : Poolable
                 ContactFilter2D filter = new ContactFilter2D();
                 filter.SetLayerMask(data.LayerMask);
                 filter.useTriggers = true;
-                Physics2D.OverlapCollider(polyCollider, filter, collisions);
+                amount = Physics2D.OverlapCollider(polyCollider, filter, collisions);
                 break;
             default:
                 Debug.LogError("ERROR: HURTBOX UPDATED WITH INCORRECT TYPE INFORMATION");

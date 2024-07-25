@@ -23,6 +23,9 @@ public class SpineBackpack_Ability : Ability
     private float launchTime = 0.5f;
     private float arcSteepness = 2.0f;
 
+    // YELLOW UPGRADE
+    private int pierceCount = 3;
+
     // filled from stats
     private float projectileSpeed = 10.0f;
     private float projectileLifetime = 0.5f;
