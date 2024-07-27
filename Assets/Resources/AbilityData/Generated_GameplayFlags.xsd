@@ -9,6 +9,7 @@
 					<xs:enumeration value="MOVEMENT_DASHING"/>
 					<xs:enumeration value="KNOCKBACK"/>
 					<xs:enumeration value="KNOCKBACK_IMMUNITY"/>
+					<xs:enumeration value="ABILITY_CASTING"/>
 				<xs:enumeration value="INTERACTION"/>
 				<xs:enumeration value="ABILITY"/>
 					<xs:enumeration value="ABILITY_MOVEMENT"/>

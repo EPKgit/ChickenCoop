@@ -11,14 +11,14 @@ public class Porcupine_Test_Passive : Ability
     {
         base.Initialize(pa);
         handle = pa.stats.GetStat(StatName.MaxHealth).AddAdditiveModifier(5);
-        pa.preAbilityCastEvent += OnCast;
+        pa.preAbilityActivateEvent += OnCast;
     }
 
     public override void Cleanup(PlayerAbilities pa)
     {
         base.Cleanup(pa);
         pa.stats.GetStat(StatName.MaxHealth).RemoveAdditiveModifier(handle);
-        pa.preAbilityCastEvent -= OnCast;
+        pa.preAbilityActivateEvent -= OnCast;
     }
 
     void OnCast(AbilityEventData data)

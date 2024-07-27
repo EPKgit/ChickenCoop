@@ -152,6 +152,7 @@
 			<noneTargetingData/>
 		</targeting_list>
 		<var_list>
+			<float name="castTime">1</float>
 			<float name="damage">5</float>
 			<float name="hitboxDuration">4</float>
 			<float name="interval">0.4</float>

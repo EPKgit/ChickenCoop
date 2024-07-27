@@ -13,6 +13,7 @@ public class Shockwave_Ability : Ability
     public float stunDuration;
     public float lifetime;
     public float thickness;
+    public float aoe;
 
     public override void Initialize(PlayerAbilities pa)
 	{

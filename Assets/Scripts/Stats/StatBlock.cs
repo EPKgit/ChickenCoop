@@ -29,6 +29,9 @@ public enum StatName
 
     //Abilities
     CooldownReduction, 
+    CooldownSpeed, 
+    CastingSpeed,
+    SpeedWhileCastingModifier,
 
     //Misc
     PuzzleSolving, 
@@ -38,14 +41,6 @@ public enum StatName
     SpineSpeed, 
 
     MAX
-}
-
-public static class ___
-{
-    public static int Index(this StatName s)
-    {
-        return (int)s;
-    }
 }
 
 [System.Serializable]
@@ -68,6 +63,9 @@ public class StatBlock : ISerializationCallbackReceiver
         { StatName.ShieldingPercentage,         1.0f },
         { StatName.FlatShielding,               0.0f },
         { StatName.CooldownReduction,           1.0f },
+        { StatName.CooldownSpeed,               1.0f },
+        { StatName.CastingSpeed,                1.0f },
+        { StatName.SpeedWhileCastingModifier,   0.2f },
         { StatName.KnockbackDurationResistance, 0.0f },
         { StatName.KnockbackForceResistance,    0.0f },
         { StatName.PuzzleSolving,               0.0f },

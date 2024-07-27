@@ -172,6 +172,11 @@ public abstract class Ability
     public int currentTargetingType = 0;
 
     /// <summary>
+    /// The amount of time spent in a cast time
+    /// </summary>
+    public float castTime = 0;
+
+    /// <summary>
     /// Represents the current duration of the ticking ability while it is running.
     /// Resets to the max duration after the ability is finished
     /// </summary>
@@ -215,11 +220,6 @@ public abstract class Ability
         get;
         protected set;
     }
-
-    /// <summary>
-    /// The size of the ability aoe
-    /// </summary>
-    public float aoe = -1;
 
 #endregion
 
@@ -278,6 +278,7 @@ public abstract class Ability
         appliedTagIDs.Clear();
     }
 
+#region UPGRADES
     /// <summary>
     /// Upgrades the ability on the slot passed in, will fail if it's already upgraded on that slot
     /// </summary>
@@ -375,6 +376,7 @@ public abstract class Ability
     {
         return upgradeStatus[(int)AbilityUpgradeSlot.BLUE];
     }
+#endregion
 
     /// <summary>
     /// Lowers the cooldown time of the ability, potentially making it castable
@@ -386,7 +388,7 @@ public abstract class Ability
         if (currentCooldownTimer > 0)
         {
             ticked = true;
-            MutableCooldownTickData mpctd = new MutableCooldownTickData(deltaTime);
+            MutableCooldownTickData mpctd = new MutableCooldownTickData(deltaTime * playerAbilities.stats.GetValue(StatName.CooldownSpeed));
             preCooldownTick(mpctd);
             currentCooldownTimer -= mpctd.tickDelta.Value;
             if(currentCooldownTimer <= 0)
@@ -694,8 +696,7 @@ public abstract class Ability
     }
 #endregion
 
-
-#region OPERATORS
+#region XML_INTERACTION
     /// <summary>
     /// Returns a tooltip with all of the values plugged in, child classes are expected to override this with a string.format of their own variables setup
     /// </summary>
@@ -777,7 +778,9 @@ public abstract class Ability
         }
         return result.ToString();
     }
+#endregion
 
+#region OPERATORS
     public new virtual string ToString()
     {
         if (maxDuration >= 0)

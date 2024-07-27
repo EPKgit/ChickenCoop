@@ -10,6 +10,7 @@ public static class GameplayTagFlags
 		{ "MOVEMENT_DASHING", "MOVEMENT.MOVEMENT_DASHING" },
 		{ "KNOCKBACK", "MOVEMENT.KNOCKBACK" },
 		{ "KNOCKBACK_IMMUNITY", "MOVEMENT.KNOCKBACK_IMMUNITY" },
+		{ "ABILITY_CASTING", "MOVEMENT.ABILITY_CASTING" },
 		{ "INTERACTION", "INTERACTION" },
 		{ "ABILITY", "ABILITY" },
 		{ "ABILITY_MOVEMENT", "ABILITY.ABILITY_MOVEMENT" },
@@ -31,6 +32,7 @@ public static class GameplayTagFlags
 			public static string MOVEMENT_DASHING { get => "MOVEMENT.MOVEMENT_DASHING"; }
 			public static string KNOCKBACK { get => "MOVEMENT.KNOCKBACK"; }
 			public static string KNOCKBACK_IMMUNITY { get => "MOVEMENT.KNOCKBACK_IMMUNITY"; }
+			public static string ABILITY_CASTING { get => "MOVEMENT.ABILITY_CASTING"; }
 		public static string INTERACTION { get => "INTERACTION"; }
 		public static string ABILITY { get => "ABILITY"; }
 			public static string ABILITY_MOVEMENT { get => "ABILITY.ABILITY_MOVEMENT"; }

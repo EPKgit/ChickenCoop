@@ -11,6 +11,7 @@ public class BasicBomb : Ability
 	public float arcSteepness;
 	public float arcTime;
     public float damage;
+    public float aoe;
 
     public override void Initialize(PlayerAbilities pa)
 	{

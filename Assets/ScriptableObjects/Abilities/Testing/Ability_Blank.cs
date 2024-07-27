@@ -8,6 +8,7 @@ public class Ability_Blank : Ability
 {
     public override uint ID => 6;
 
+    public float aoe;
 
     private uint? collisionHandle;
     public GameObject splashPrefab;

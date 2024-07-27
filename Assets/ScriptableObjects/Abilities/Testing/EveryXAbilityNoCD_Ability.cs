@@ -14,13 +14,13 @@ public class EveryXAbilityNoCD_Ability : Ability
     public override void Initialize(PlayerAbilities pa)
 	{
 		base.Initialize(pa);
-        pa.postAbilityCastEvent += OnAbilityCast;
+        pa.postAbilityActivateEvent += OnAbilityCast;
     }
 
     public override void Cleanup(PlayerAbilities pa)
     {
         base.Cleanup(pa);
-        pa.postAbilityCastEvent -= OnAbilityCast;
+        pa.postAbilityActivateEvent -= OnAbilityCast;
     }
 
     void OnAbilityCast(AbilityEventData a)

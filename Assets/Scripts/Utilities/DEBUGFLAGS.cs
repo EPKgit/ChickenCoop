@@ -18,7 +18,7 @@ public class DebugFlags
         HEALTHCALLBACKS = 0,
         INGAMEUI = 0,
         RENDER = 0,
-        ABILITYQUEUE = 0,
+        ABILITYQUEUE = 1,
         HITBOXES_EDITOR_ALWAYS = 1,
         HITBOXES_IN_GAME = 1,
         ABILITYXML = 0,

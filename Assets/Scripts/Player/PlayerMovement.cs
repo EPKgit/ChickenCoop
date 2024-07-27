@@ -50,7 +50,8 @@ public class PlayerMovement : BaseMovement
         if (rb.velocity.magnitude < movementSpeed * 1.05f)
         {
             DebugFlags.Log(DebugFlags.Flags.MOVEMENT, "SETTING SPEED FROM INPUT");
-            rb.velocity = movementInputAxis.normalized * movementSpeed;
+            float castingSpeedModifer = tagComponent.tags.Contains(GameplayTagFlags.ABILITY_CASTING) ? stats.GetValue(StatName.SpeedWhileCastingModifier) : 1.0f;
+            rb.velocity = movementInputAxis.normalized * movementSpeed * castingSpeedModifer;
         }
         else
         {

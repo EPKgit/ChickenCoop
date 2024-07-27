@@ -201,10 +201,6 @@ namespace Targeting
         {
             previewSecondary.transform.position = usedAbility.ClampPointWithinRange(user.GetComponent<PlayerInput>().aimPoint);
             Vector2 scale = new Vector2(PreviewScale.x, PreviewScale.y);
-            if (usedAbility.aoe > 0)
-            {
-                scale = new Vector2(usedAbility.aoe, usedAbility.aoe);
-            }
 
             previewSecondary.transform.localScale = new Vector3(scale.x, scale.y, 1);
         }

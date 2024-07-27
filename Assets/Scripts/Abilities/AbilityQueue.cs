@@ -5,7 +5,10 @@ using UnityEngine;
 public class AbilityQueue
 {
     public event AbilityCastingDelegate preAbilityCastEvent = delegate { };
+    public event AbilityCastingDelegate castTickEvent = delegate { };
     public event AbilityCastingDelegate postAbilityCastEvent = delegate { };
+    public event AbilityCastingDelegate preAbilityActivateEvent = delegate { };
+    public event AbilityCastingDelegate postAbilityActivateEvent = delegate { };
 
     private class AbilityInputData
     {
@@ -20,7 +23,10 @@ public class AbilityQueue
             WAITING_IN_QUEUE,
             START_PREVIEW,
             WAITING_FOR_INPUT,
+            STARTING_CAST_TIME,
             CASTING,
+            FINISHED_CAST_TIME,
+            ACTIVATED,
             FINISHED,
             MAX,
         }
@@ -36,6 +42,7 @@ public class AbilityQueue
     private List<Ability> currentlyTicking = new List<Ability>();
 
     private PlayerAbilities playerAbilities;
+    private float currentCastTimer = 0.0f;
 
     public AbilityQueue(PlayerAbilities pa)
     {
@@ -48,7 +55,7 @@ public class AbilityQueue
         {
             if (currentlyTicking[x].Tick(Time.deltaTime))
             {
-                postAbilityCastEvent(new AbilityEventData(currentlyTicking[x]));
+                postAbilityActivateEvent(new AbilityEventData(currentlyTicking[x]));
                 currentlyTicking[x].FinishAbility();
                 currentlyTicking.RemoveAt(x);
             }
@@ -57,7 +64,8 @@ public class AbilityQueue
         {
             AbilityInputData current = abilityInputQueue.Peek();
             Ability a = current.ability;
-            //DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("ABILITY QUEUE UPDATE WITH {0}", current));
+            AbilityEventData eventData = new AbilityEventData(a);
+            DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("ABILITY QUEUE UPDATE WITH {0}", current));
 
             switch (current.state)
             {
@@ -76,18 +84,51 @@ public class AbilityQueue
                 }
                 case AbilityInputData.AbilityInputState.WAITING_FOR_INPUT:
                 {
-                    //DEBUGFLAGS.Log(DEBUGFLAGS.FLAGS.ABILITYQUEUE, string.Format("Ability:{0} WAITING FOR INPUT", a.name));
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} WAITING FOR INPUT", a.abilityName));
                     current.ability.targetingData.PreviewUpdate(a, attached);
                     if (current.ability.targetingData.isInputSet)
                     {
-                        current.state = AbilityInputData.AbilityInputState.CASTING;
-                        goto case AbilityInputData.AbilityInputState.CASTING;
+                        if (a.castTime > 0)
+                        {
+                            current.state = AbilityInputData.AbilityInputState.STARTING_CAST_TIME;
+                            goto case AbilityInputData.AbilityInputState.STARTING_CAST_TIME;
+                        }
+                        else
+                        {
+                            current.state = AbilityInputData.AbilityInputState.ACTIVATED;
+                            goto case AbilityInputData.AbilityInputState.ACTIVATED;
+                        }
                     }
+                } break;
+                case AbilityInputData.AbilityInputState.STARTING_CAST_TIME:
+                {
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1} {2}", a.abilityName, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
+                    preAbilityCastEvent(eventData);
+                    currentCastTimer = 0.0f;
+                    current.state = AbilityInputData.AbilityInputState.CASTING;
                 } break;
                 case AbilityInputData.AbilityInputState.CASTING:
                 {
-                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1} {2}", a.abilityName, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
-                    preAbilityCastEvent(new AbilityEventData(a));
+                    currentCastTimer += Time.deltaTime * playerAbilities.stats.GetValue(StatName.CastingSpeed);
+                    eventData.currentCastProgress = Mathf.Clamp(currentCastTimer / a.castTime, 0, 1);
+                    castTickEvent(eventData);
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} CASTING {1}/{2}", a.abilityName, currentCastTimer, a.castTime));
+                    if (currentCastTimer >= a.castTime)
+                    {
+                        current.state = AbilityInputData.AbilityInputState.FINISHED_CAST_TIME;
+                        goto case AbilityInputData.AbilityInputState.FINISHED_CAST_TIME;
+                    }
+                } break;
+                case AbilityInputData.AbilityInputState.FINISHED_CAST_TIME:
+                {
+                    postAbilityCastEvent(eventData);
+                    current.state = AbilityInputData.AbilityInputState.ACTIVATED;
+                    goto case AbilityInputData.AbilityInputState.ACTIVATED;
+                } 
+                case AbilityInputData.AbilityInputState.ACTIVATED:
+                { 
+                    DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} ACTIVATED CAST WITH INPUT {1} {2}", a.abilityName, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
+                    preAbilityActivateEvent(eventData);
                     if (a.AttemptUseAbility())
                     {
                         if (a.IsTickingAbility)
@@ -97,7 +138,7 @@ public class AbilityQueue
                         else
                         {
                             a.FinishAbility();
-                            postAbilityCastEvent(new AbilityEventData(a));
+                            postAbilityActivateEvent(eventData);
                         }
                     }
                     current.state = AbilityInputData.AbilityInputState.FINISHED;
@@ -145,7 +186,7 @@ public class AbilityQueue
             {
                 continue;
             }
-            postAbilityCastEvent(new AbilityEventData(currentlyTicking[x]));
+            postAbilityActivateEvent(new AbilityEventData(currentlyTicking[x]));
             currentlyTicking[x].FinishAbility();
             currentlyTicking.RemoveAt(x);
             return true;
@@ -178,7 +219,7 @@ public class AbilityQueue
             atd.isInputSet = true;
             if(!atd.isInputSet)
             {
-                aid.state = AbilityInputData.AbilityInputState.FINISHED;
+                aid.state = AbilityInputData.AbilityInputState.ACTIVATED;
             }
         }
     }
@@ -205,4 +246,5 @@ public class AbilityEventData
         ability = a;
     }
     public Ability ability;
+    public float currentCastProgress;
 }
