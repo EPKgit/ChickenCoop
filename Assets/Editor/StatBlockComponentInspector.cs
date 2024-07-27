@@ -43,8 +43,16 @@ public class StatBlockComponentInspector : Editor
                 {
                     continue;
                 }
-                EditorGUILayout.LabelField(string.Format("{0}:{1}", pair.Key.ToString(), pair.Value.Value));
-			}
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField(string.Format("{0}:{1}", pair.Key.ToString(), pair.Value.Value.ToString()));
+                EditorGUI.BeginChangeCheck();
+                float f = EditorGUILayout.DelayedFloatField(pair.Value.BaseValue);
+                if(EditorGUI.EndChangeCheck()) 
+                {
+                    pair.Value.BaseValue = f;
+                }
+                EditorGUILayout.EndHorizontal();
+            }
             return;
 		}
 

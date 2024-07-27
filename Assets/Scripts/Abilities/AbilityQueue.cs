@@ -105,6 +105,7 @@ public class AbilityQueue
                     DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} STARTING CAST WITH INPUT {1} {2}", a.abilityName, current.ability.targetingData.inputPoint, current.ability.targetingData.inputTarget));
                     preAbilityCastEvent(eventData);
                     currentCastTimer = 0.0f;
+                    a.CleanupAllTargeting(attached);
                     current.state = AbilityInputData.AbilityInputState.CASTING;
                 } break;
                 case AbilityInputData.AbilityInputState.CASTING:
@@ -147,8 +148,8 @@ public class AbilityQueue
                 case AbilityInputData.AbilityInputState.FINISHED:
                 {
                     DebugFlags.Log(DebugFlags.Flags.ABILITYQUEUE, string.Format("Ability:{0} FINISHED", current.ability.abilityName));
-                    a.targetingData.isInputSet = false;
                     a.CleanupAllTargeting(attached);
+                    a.targetingData.isInputSet = false;
                     abilityInputQueue.Dequeue();
                 } break;
             }

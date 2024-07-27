@@ -15,12 +15,13 @@ public class UI_CastBar : MonoBehaviour
         playerAbilities.preAbilityCastEvent += (AbilityEventData aed) => SetEnabled(true);
         playerAbilities.postAbilityActivateEvent += (AbilityEventData aed) => SetEnabled(false);
         playerAbilities.abilityCastTickEvent += (AbilityEventData aed) => SetProgress(aed.currentCastProgress);
+        SetEnabled(false);
     }
 
     void SetEnabled(bool enabled)
     {
         slider.value = 0;
-        slider.enabled = enabled;
+        slider.gameObject.SetActive(enabled);
     }
 
     void SetProgress(float percent)
