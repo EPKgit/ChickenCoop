@@ -12,9 +12,9 @@ public class UI_CastBar : MonoBehaviour
     void Start()
     {
         playerAbilities = PlayerInitialization.all[0].gameObject.GetComponent<PlayerAbilities>();
-        playerAbilities.preAbilityCastEvent += (AbilityEventData aed) => SetEnabled(true);
-        playerAbilities.postAbilityActivateEvent += (AbilityEventData aed) => SetEnabled(false);
-        playerAbilities.abilityCastTickEvent += (AbilityEventData aed) => SetProgress(aed.currentCastProgress);
+        playerAbilities.OnAbilityCasting += (AbilityEventData aed) => SetEnabled(true);
+        playerAbilities.OnAbilityActivated += (AbilityEventData aed) => SetEnabled(false);
+        playerAbilities.OnAbilityCastTick += (AbilityEventData aed) => SetProgress(aed.currentCastProgress);
         SetEnabled(false);
     }
 

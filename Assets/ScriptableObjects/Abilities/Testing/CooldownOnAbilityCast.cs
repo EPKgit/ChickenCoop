@@ -11,13 +11,13 @@ public class CooldownOnAbilityCast : Ability
     public override void Initialize(PlayerAbilities pa)
     {
         base.Initialize(pa);
-        pa.postAbilityActivateEvent += OnAbilityCast;
+        pa.OnAbilityActivated += OnAbilityCast;
     }
 
     public override void Cleanup(PlayerAbilities pa)
     {
         base.Cleanup(pa);
-        pa.postAbilityActivateEvent -= OnAbilityCast;
+        pa.OnAbilityActivated -= OnAbilityCast;
     }
 
     public void OnAbilityCast(AbilityEventData aed)

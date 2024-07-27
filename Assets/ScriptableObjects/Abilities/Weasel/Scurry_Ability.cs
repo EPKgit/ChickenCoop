@@ -19,14 +19,14 @@ public class Scurry_Ability : Ability
 	{
 		base.Initialize(pa);
         statBlock = pa.stats;
-        pa.postAbilityActivateEvent += OnPostAbilityCast;
+        pa.OnAbilityActivated += OnPostAbilityCast;
         scurryVFXPrefab.GetComponent<VFXPoolable>().fixedDuration = smokeCloudDuration;
     }
     
     public override void Cleanup(PlayerAbilities pa)
     {
         base.Cleanup(pa);
-        pa.postAbilityActivateEvent -= OnPostAbilityCast;
+        pa.OnAbilityActivated -= OnPostAbilityCast;
     }
 
     protected override void UseAbility()

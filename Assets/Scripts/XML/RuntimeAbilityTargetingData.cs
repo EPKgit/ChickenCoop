@@ -19,7 +19,7 @@ namespace Targeting
         /// </summary>
         private AbilityTargetingData _targetingData;
 
-        public Vector2 inputPoint;
+        public Vector2 inputPoint = Vector2.negativeInfinity;
         public Vector2 relativeInputDirection;
         public float inputRotationZ;
         public ITargetable inputTarget;
@@ -32,7 +32,7 @@ namespace Targeting
         public RuntimeAbilityTargetingData(AbilityTargetingData targetingData)
         {
             _targetingData = targetingData;
-            _isInputSet = false;
+            ResetInput();
 
             if(targetingData.rangePreviewPrefab == null)
             {
@@ -66,28 +66,16 @@ namespace Targeting
             }
         }
 
-        /// <summary>
-        /// Flag that describes if we have recieved input for our ability, this gets reset after every use
-        /// </summary>
-        public bool isInputSet
+        public bool IsInputSet()
         {
-            get
-            {
-                return _isInputSet && !(TargetType == TargetType.ENTITY_TARGETED && inputTarget == null);
-            }
-            set
-            {
-                if (!value)
-                {
-                    inputPoint = Vector2.zero;
-                    inputTarget = null;
-                }
-                _isInputSet = value;
-            }
+            return (TargetType == TargetType.ENTITY_TARGETED && inputTarget != null) ||
+                   (inputPoint != Vector2.negativeInfinity);
         }
-        private bool _isInputSet = false;
-
-        
+        public void ResetInput()
+        {
+            inputPoint = Vector2.negativeInfinity;
+            inputTarget = null;
+        }        
 
         public void Preview(Ability usedAbility, GameObject user)
         {

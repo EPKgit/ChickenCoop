@@ -600,6 +600,17 @@ public abstract class Ability
         currentTargetingType = (--currentTargetingType + _targetingData.Length) % _targetingData.Length;
     }
 
+    public bool ValidateTargeting(Vector2 targetData)
+    {
+        Targeting.RuntimeAbilityTargetingData atd = targetingData;
+        atd.inputPoint = targetData;
+        atd.relativeInputDirection = new Vector2(atd.inputPoint.x - playerAbilities.transform.position.x, atd.inputPoint.y - playerAbilities.transform.position.y);
+        atd.inputRotationZ = Vector2.SignedAngle(Vector2.up, atd.relativeInputDirection);
+        atd.inputRotationZ = atd.inputRotationZ < 0 ? atd.inputRotationZ + 360.0f : atd.inputRotationZ;
+        atd.inputTarget = Ability.FindTargetable(targetData, targetingData.Affiliation);
+        return targetingData.IsInputSet();
+    }
+
     public void ResetDuration()
     {
         currentDuration = maxDuration;

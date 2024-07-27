@@ -20,11 +20,11 @@ public class PlayerAbilities : MonoBehaviour
     public delegate void AbilityChangedDelegate(Ability previousAbility, Ability newAbility, AbilitySlot slot, AbilityChangeType type);
     public event AbilityChangedDelegate abilityChanged = delegate { };
 
-    public event AbilityCastingDelegate preAbilityCastEvent = delegate { };
-    public event AbilityCastingDelegate abilityCastTickEvent = delegate { };
-    public event AbilityCastingDelegate postAbilityCastEvent = delegate { };
-    public event AbilityCastingDelegate preAbilityActivateEvent = delegate { };
-    public event AbilityCastingDelegate postAbilityActivateEvent = delegate { };
+    public event AbilityCastingDelegate OnAbilityCasting = delegate { };
+    public event AbilityCastingDelegate OnAbilityCastTick = delegate { };
+    public event AbilityCastingDelegate OnAbilityCasted = delegate { };
+    public event AbilityCastingDelegate OnAbilityActivating = delegate { };
+    public event AbilityCastingDelegate OnAbilityActivated = delegate { };
 
 #if UNITY_EDITOR
     public bool DEBUG_LOW_COOLDOWN = false;
@@ -75,40 +75,40 @@ public class PlayerAbilities : MonoBehaviour
 
     private void PreCastEvent(AbilityEventData aed)
     {
-        preAbilityCastEvent(aed);
+        OnAbilityCasting(aed);
         castingTag = tagComponent.tags.AddTag(GameplayTagFlags.ABILITY_CASTING);
     }
 
     private void AbilityCastTickEvent(AbilityEventData aed)
     {
-        abilityCastTickEvent(aed);
+        OnAbilityCastTick(aed);
     }
 
     private void PostCastEvent(AbilityEventData aed)
     {
-        postAbilityCastEvent(aed);
+        OnAbilityCasted(aed);
         tagComponent.tags.RemoveFirstTagWithID(castingTag);
         castingTag = null;
     }
     
     private void PreActivateEvent(AbilityEventData aed)
     {
-        preAbilityActivateEvent(aed);
+        OnAbilityActivating(aed);
     }
 
     private void PostActivateEvent(AbilityEventData aed)
     {
-        postAbilityActivateEvent(aed);
+        OnAbilityActivated(aed);
     }
 
     public void Initialize(AbilitySetAsset abilitySet)
 	{
         abilityQueue = new AbilityQueue(this);
-        abilityQueue.preAbilityCastEvent += PreCastEvent;
-        abilityQueue.postAbilityCastEvent += PostCastEvent;
-        abilityQueue.castTickEvent += AbilityCastTickEvent;
-        abilityQueue.preAbilityActivateEvent += PreActivateEvent;
-        abilityQueue.postAbilityActivateEvent += PostActivateEvent;
+        abilityQueue.OnAbilityCasting += PreCastEvent;
+        abilityQueue.OnAbilityCasted += PostCastEvent;
+        abilityQueue.OnAbilityCastTick += AbilityCastTickEvent;
+        abilityQueue.OnAbilityActivating += PreActivateEvent;
+        abilityQueue.OnAbilityActivated += PostActivateEvent;
         _passives = new List<Ability>();
 
         Ability[] abilities = new Ability[(int)AbilitySlot.MAX];
