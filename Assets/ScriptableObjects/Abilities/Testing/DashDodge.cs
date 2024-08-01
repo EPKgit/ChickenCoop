@@ -24,7 +24,7 @@ public class DashDodge : Ability
     protected override void UseAbility()
     {
         base.UseAbility();
-        Vector2 direction = GetNormalizedDirectionTowardsTarget(targetingData.inputPoint);
+        Vector2 direction = targetingData.inputDirectionNormalized;
         destination = (Vector2)playerAbilities.transform.position + (direction * Range);
         startPosition = playerAbilities.transform.position;
         playerAbilities.movement.DashInput(startPosition, destination, maxDuration);

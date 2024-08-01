@@ -30,7 +30,7 @@ public class Maul_Ability : Ability
     protected override void UseAbility()
 	{
         base.UseAbility();
-        startPosition = targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, 0.5f);
+        //startPosition = targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, 0.5f);
         startRotation = targetingData.inputRotationZ;
         handle = HitboxManager.instance.StartHitboxChain(customChain, HitboxPositionCallback, HitboxRotationCallback, HitboxCallback, HitboxSpawnCallback);
     }

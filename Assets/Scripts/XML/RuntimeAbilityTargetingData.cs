@@ -9,6 +9,7 @@ namespace Targeting
         public Affiliation Affiliation { get => _targetingData.affiliation; }
         public Targeting.TargetType TargetType { get => _targetingData.targetType; }
         public float Range { get => rangeOverride < 0 ? _targetingData.range : rangeOverride; }
+        public OutOfRangeHandlingType OutOfRangeHandlingType { get => _targetingData.outOfRangeHandlingType; }
         public Vector3 PreviewScale { get => _targetingData.previewScale; }
         public GameObject PreviewPrefab { get => _targetingData.rangePreviewPrefab; }
         public GameObject SecondaryPreviewPrefab { get => _targetingData.secondaryPreviewPrefab; }
@@ -19,10 +20,11 @@ namespace Targeting
         /// </summary>
         private AbilityTargetingData _targetingData;
 
-        public Vector2 inputPoint = Vector2.negativeInfinity;
-        public Vector2 relativeInputDirection;
-        public float inputRotationZ;
-        public ITargetable inputTarget;
+        public Vector2 inputPoint { get; private set; } = Vector2.negativeInfinity;
+        public Vector2 inputDirectionNormalized { get; private set; }
+        public float inputMagnitude { get; private set; }
+        public float inputRotationZ { get; private set; }
+        public ITargetable inputTarget { get; private set; }
 
         private GameObject preview;
         private GameObject previewSecondary;
@@ -187,7 +189,23 @@ namespace Targeting
 
         void PreviewGround(Ability usedAbility, GameObject user)
         {
-            previewSecondary.transform.position = usedAbility.ClampPointWithinRange(user.GetComponent<PlayerInput>().aimPoint);
+            Vector2 aimPoint = user.GetComponent<PlayerInput>().aimPoint;
+            switch (usedAbility.targetingData.OutOfRangeHandlingType)
+            {
+                case OutOfRangeHandlingType.NONE:
+                    previewSecondary.transform.position = aimPoint;
+                    break;
+                case OutOfRangeHandlingType.CANCEL:
+                    float magnitude = (aimPoint - (Vector2)user.transform.position).magnitude;
+                    previewSecondary.SetActive(magnitude < usedAbility.targetingData.Range);
+                    previewSecondary.transform.position = aimPoint;
+                    break;
+                case OutOfRangeHandlingType.CLAMP:
+                    previewSecondary.transform.position = usedAbility.ClampPointWithinRange(aimPoint);
+                    break;
+                case OutOfRangeHandlingType.CUSTOM:
+                    throw new System.NotImplementedException();
+            }
             Vector2 scale = new Vector2(PreviewScale.x, PreviewScale.y);
 
             previewSecondary.transform.localScale = new Vector3(scale.x, scale.y, 1);
@@ -207,6 +225,35 @@ namespace Targeting
                 previewSecondary.GetComponent<SpriteRenderer>().color = Color.red;
                 previewSecondary.transform.position = aim;
             }
+        }
+
+        public bool SetRuntimeData(Vector2 inputPoint, Vector2 originatorPosition)
+        {
+            inputDirectionNormalized = inputPoint - originatorPosition;
+            inputMagnitude = inputDirectionNormalized.magnitude;
+            inputDirectionNormalized = inputDirectionNormalized.normalized;
+
+            if (inputMagnitude >= Range)
+            {
+                switch(OutOfRangeHandlingType)
+                {
+                    case OutOfRangeHandlingType.CANCEL:
+                        return false;
+                    case OutOfRangeHandlingType.CLAMP:
+                        inputPoint = originatorPosition + inputDirectionNormalized * Range;
+                        break;
+                    case OutOfRangeHandlingType.NONE:
+                        //intentionally do nothing
+                        break;
+                    case OutOfRangeHandlingType.CUSTOM:
+                        throw new System.NotImplementedException();
+                }
+            }
+            this.inputPoint = inputPoint;
+            inputRotationZ = Vector2.SignedAngle(Vector2.up, inputDirectionNormalized);
+            inputRotationZ = inputRotationZ < 0 ? inputRotationZ + 360.0f : inputRotationZ;
+            inputTarget = Ability.FindTargetable(inputPoint, Affiliation);
+            return IsInputSet();
         }
 
     }

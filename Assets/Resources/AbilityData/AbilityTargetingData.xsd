@@ -15,6 +15,7 @@ elementFormDefault="qualified">
 
 	<xs:complexType name="targetingDataType">
 		<xs:attribute name="index" type="xs:integer" default="-1"/>
+		<xs:attribute name="oorHandling" type="outOfRangeHandlingType" default="CLAMP"/>
 	</xs:complexType>
 	
 	<xs:complexType name="noneTargetingDataType">
@@ -69,6 +70,15 @@ elementFormDefault="qualified">
 			<xs:enumeration value="LINE_TARGETED"/>
 			<xs:enumeration value="GROUND_TARGETED"/>
 			<xs:enumeration value="ENTITY_TARGETED"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="outOfRangeHandlingType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NONE"/>
+			<xs:enumeration value="CANCEL"/>
+			<xs:enumeration value="CLAMP"/>
+			<xs:enumeration value="CUSTOM"/>
 		</xs:restriction>
 	</xs:simpleType>
 

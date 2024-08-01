@@ -45,7 +45,6 @@ public class SpineRain_Ability : Ability
     protected override void UseAbility()
     {
         base.UseAbility();
-        targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, targetingData.Range);
 
         var hitboxData = HitboxData.GetBuilder(hitboxAsset)
             .StartPosition(targetingData.inputPoint)

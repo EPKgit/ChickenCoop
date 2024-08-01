@@ -15,6 +15,15 @@ namespace Targeting
         MAX,
     }
 
+    public enum OutOfRangeHandlingType
+    {
+        NONE, // just let us cast outside the range
+        CANCEL, //cancel the ability if we try and use it out of range
+        CLAMP, // clamp the point to be the closest point that is in range
+        CUSTOM, // query the ability for what to do
+        MAX
+    }
+
     [System.Serializable]
     public class AbilityTargetingData
     {
@@ -37,6 +46,12 @@ namespace Targeting
         /// The distance from the caster that the targeting is valid at. Also used to scale the preview
         /// </summary>
         public float range = -1;
+
+        /// <summary>
+        /// Used to determine what to do when the player attempts to use an ability targeted outside of
+        /// the range of the ability
+        /// </summary>
+        public OutOfRangeHandlingType outOfRangeHandlingType = OutOfRangeHandlingType.CLAMP;
 
         /// <summary>
         /// The scale of the preview, this means different things to different targeting types

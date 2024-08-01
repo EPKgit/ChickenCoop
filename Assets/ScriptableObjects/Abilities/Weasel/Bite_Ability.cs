@@ -35,13 +35,14 @@ public class Bite_Ability : Ability
     protected override void UseAbility()
 	{
         base.UseAbility();
-        targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, targetingData.Range - 0.5f);
+        //revisit this after testing
+        //targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, targetingData.Range - 0.5f);
         HitboxManager.instance.SpawnHitbox
         (
             HitboxData.GetBuilder()
                 .Duration(hitboxDuration)
                 .ShapeType(HitboxShapeType.CIRCLE)
-                .RotationInfo(targetingData.inputRotationZ, targetingData.relativeInputDirection)
+                .RotationInfo(targetingData.inputRotationZ, targetingData.inputDirectionNormalized)
                 .StartPosition(targetingData.inputPoint)
                 .Callback(HitboxCallback)
                 .Discriminator(HitboxManager.Discriminators.Damagables)

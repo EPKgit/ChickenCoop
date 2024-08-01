@@ -50,14 +50,13 @@ public class TailWhip_Ability : Ability
     protected override void UseAbility()
     {
         base.UseAbility();
-        targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, 0.01f);
 
         var hitboxToUse = BlueUpgraded() ? blueHitboxAsset : hitboxAsset;
         var layerMask = RedUpgraded() ? layerMaskRed : layerMaskDefault;
         var hitboxData = HitboxData.GetBuilder(hitboxToUse)
             .Layer(layerMask)
             .StartPosition(targetingData.inputPoint)
-            .RotationInfo(targetingData.inputRotationZ, targetingData.relativeInputDirection)
+            .RotationInfo(targetingData.inputRotationZ, targetingData.inputDirectionNormalized)
             .Callback(HitboxCallback)
             .Duration(hitboxDuration)
             .Finalize();

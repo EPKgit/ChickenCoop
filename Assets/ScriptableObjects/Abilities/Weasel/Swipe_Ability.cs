@@ -19,7 +19,7 @@ public class Swipe_Ability : Ability
     protected override void UseAbility()
 	{
         base.UseAbility();
-        targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, 0.5f);
+        //targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint, 0.5f);
         HitboxManager.instance.SpawnHitbox(customHitbox, targetingData.inputPoint, HitboxCallback, targetingData.inputRotationZ, hitboxDuration);
     }
 

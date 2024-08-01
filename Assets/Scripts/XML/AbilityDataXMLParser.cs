@@ -7,6 +7,9 @@ using UnityEngine.UI;
 using UnityEditor;
 using Targeting;
 using static UnityEngine.Timeline.TimelineAsset;
+using static UnityEngine.InputSystem.Controls.AxisControl;
+using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.SocialPlatforms;
 
 public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
 {
@@ -63,6 +66,8 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                 {
                     targetingData.targetType = TargetType.LINE_TARGETED;
                     targetingData.range = float.Parse(node["range"].InnerText);
+                    ParseOORHandling(node);
+
                     targetingData.previewScale = new Vector3(float.Parse(node["width"].InnerText), 0, 0);
                 } break;
 
@@ -70,6 +75,8 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                 {
                     targetingData.targetType = TargetType.GROUND_TARGETED;
                     targetingData.range = float.Parse(node["range"].InnerText);
+                    ParseOORHandling(node);
+
                     var size = node["size"];
                     float x = 0, y = 0;
                     if (size["xy"] != null)
@@ -88,6 +95,8 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                 {
                     targetingData.targetType = TargetType.ENTITY_TARGETED;
                     targetingData.range = float.Parse(node["range"].InnerText);
+                    ParseOORHandling(node);
+
                     targetingData.affiliation = (Targeting.Affiliation)Enum.Parse(typeof(Targeting.Affiliation), node["affiliation"].InnerText);
                 } break;
             }
@@ -105,6 +114,15 @@ public class AbilityDataXMLParser : Singleton<AbilityDataXMLParser>
                 Tuple<string, string> path = AssetLibraryManager.instance.ParseStringToCategoryAndName(secondaryPreviewPrefabNode.InnerText, defaultLibrary);
                 targetingData.secondaryPreviewPrefab = AssetLibraryManager.instance.GetPrefab(path.Item1, path.Item2);
             }
+        }
+
+        void ParseOORHandling(XmlElement node)
+        {
+            var oorNode = node.GetAttribute("oorHandling");
+            if(oorNode != null && oorNode != "")
+            {
+                targetingData.outOfRangeHandlingType = (OutOfRangeHandlingType)Enum.Parse(typeof(OutOfRangeHandlingType), oorNode);
+            } 
         }
     }
     

@@ -600,15 +600,9 @@ public abstract class Ability
         currentTargetingType = (--currentTargetingType + _targetingData.Length) % _targetingData.Length;
     }
 
-    public bool ValidateTargeting(Vector2 targetData)
+    public bool SetTargetPoint(Vector2 inputPoint)
     {
-        Targeting.RuntimeAbilityTargetingData atd = targetingData;
-        atd.inputPoint = targetData;
-        atd.relativeInputDirection = new Vector2(atd.inputPoint.x - playerAbilities.transform.position.x, atd.inputPoint.y - playerAbilities.transform.position.y);
-        atd.inputRotationZ = Vector2.SignedAngle(Vector2.up, atd.relativeInputDirection);
-        atd.inputRotationZ = atd.inputRotationZ < 0 ? atd.inputRotationZ + 360.0f : atd.inputRotationZ;
-        atd.inputTarget = Ability.FindTargetable(targetData, targetingData.Affiliation);
-        return targetingData.IsInputSet();
+        return targetingData.SetRuntimeData(inputPoint, playerAbilities.transform.position);
     }
 
     public void ResetDuration()
@@ -638,7 +632,7 @@ public abstract class Ability
     /// </summary>
     /// <param name="point">The input mouse position</param>
     /// <returns>Vector2 represetning the direction towards the mouse from the player</returns>
-    public Vector2 GetDirectionTowardsTarget(Vector2 point)
+    public Vector2 GetDirectionTowardsPoint(Vector2 point)
     {
         return point - (Vector2)playerAbilities.transform.position;
     }
@@ -648,9 +642,9 @@ public abstract class Ability
     /// </summary>
     /// <param name="point">The input mouse position</param>
     /// <returns>Normalized Vector2 represetning the direction towards the mouse from the player</returns>
-    public Vector2 GetNormalizedDirectionTowardsTarget(Vector2 point)
+    public Vector2 GetNormalizedDirectionTowardsPoint(Vector2 point)
     {
-        return GetDirectionTowardsTarget(point).normalized;
+        return GetDirectionTowardsPoint(point).normalized;
     }
 
     /// <summary>

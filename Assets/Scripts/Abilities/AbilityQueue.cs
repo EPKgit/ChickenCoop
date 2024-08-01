@@ -232,7 +232,7 @@ public class AbilityQueue
         }
         if(aid != null)
         {
-            if (aid.ability.ValidateTargeting(targetData))
+            if (aid.ability.SetTargetPoint(targetData))
             {
                 aid.state = AbilityInputData.AbilityInputState.RECEIVED_INPUT;
             }

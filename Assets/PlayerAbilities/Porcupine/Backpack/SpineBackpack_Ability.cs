@@ -87,7 +87,6 @@ public class SpineBackpack_Ability : Ability
 
         if(BlueUpgraded())
         {
-            targetingData.inputPoint = ClampPointWithinRange(targetingData.inputPoint);
             backpack.SetupLaunch(targetingData.inputPoint, launchTime, arcSteepness);
         }
         else
