@@ -11,7 +11,8 @@
                     "id": "9f211ff4-0be1-49b8-8200-2d38bb1fec48",
                     "expectedControlType": "Stick",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Attack",
@@ -19,7 +20,8 @@
                     "id": "a790137a-947c-4d28-a27f-4c80293bc7f0",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Ability1",
@@ -27,7 +29,8 @@
                     "id": "38512e4b-b5fc-42ab-8bca-6d730567a42a",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Ability2",
@@ -35,7 +38,8 @@
                     "id": "27fc1795-a3f3-4fde-a32f-1be7f296c542",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Ability3",
@@ -43,7 +47,8 @@
                     "id": "cde73211-1d80-4c94-8a92-989e5403017c",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Interact",
@@ -51,7 +56,8 @@
                     "id": "057bc86b-38dc-45bf-a044-488394d30e55",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "AimDirection",
@@ -59,7 +65,8 @@
                     "id": "07ebc293-7729-4fef-b77a-44b6738ebd9c",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Inventory",
@@ -67,7 +74,8 @@
                     "id": "ae944a57-c78c-4a12-a929-fb1572c4eab5",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "CameraZoom",
@@ -75,7 +83,17 @@
                     "id": "54fa248c-3e8f-4fe3-9a57-776a0a548b0b",
                     "expectedControlType": "Axis",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "AbilityCancel",
+                    "type": "Button",
+                    "id": "6fe74251-5a03-4778-bf8e-95cc0f88acfa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -276,6 +294,17 @@
                     "action": "CameraZoom",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "008bd3b6-36e8-40b2-8739-83fb62dc33dd",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AbilityCancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -289,7 +318,8 @@
                     "id": "4919cee2-b4c3-4f64-9bcd-0e37e2109eb4",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [

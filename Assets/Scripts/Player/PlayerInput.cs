@@ -150,7 +150,15 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-	private bool TestOverride<T>(Action<InputEventData<T>> action, T d)
+    public void OnAbilityCancel(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            playerAbilities.AbilityCancel();
+        }
+    }
+
+    private bool TestOverride<T>(Action<InputEventData<T>> action, T d)
 	{
         InputEventData<T> data = new InputEventData<T>(d);
         action.Invoke(data);

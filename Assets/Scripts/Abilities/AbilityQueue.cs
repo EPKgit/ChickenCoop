@@ -217,7 +217,16 @@ public class AbilityQueue
         return false;
     }
 
-    
+    public void CancelCurrentAbility()
+    {
+        AbilityInputData current = abilityInputQueue.Peek();
+        if(current.state == AbilityInputData.AbilityInputState.WAITING_FOR_INPUT)
+        {
+            current.state = AbilityInputData.AbilityInputState.CANCELLED;
+        }
+    }
+
+
 
     public void AbilityRecieveInput(Ability ability, Vector2 targetData)
     {

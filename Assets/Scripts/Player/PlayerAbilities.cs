@@ -253,6 +253,11 @@ public class PlayerAbilities : MonoBehaviour
         AbilityInput(Abilities[index], ctx, point);
     }
 
+    public void AbilityCancel()
+    {
+        abilityQueue.CancelCurrentAbility();
+    }
+
 
     /// <summary>
     /// Called from player input, attempts to perform the ability, may fail becdause it's not castable or other reasons. Will add to queue if another ability is in the pipe

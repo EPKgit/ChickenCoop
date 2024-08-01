@@ -529,6 +529,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 54fa248c-3e8f-4fe3-9a57-776a0a548b0b
     m_ActionName: Gameplay/CameraZoom[/Mouse/scroll/y]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7987175305514420297}
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
+        m_MethodName: OnAbilityCancel
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6fe74251-5a03-4778-bf8e-95cc0f88acfa
+    m_ActionName: Gameplay/AbilityCancel[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -646,7 +662,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a90155df74a8a347aae6c6b8eac690f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 0
   getsKnockbackInvuln: 1
 --- !u!114 &1718664106219268464
 MonoBehaviour:
