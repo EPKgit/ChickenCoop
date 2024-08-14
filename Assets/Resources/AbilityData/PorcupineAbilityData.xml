@@ -7,21 +7,6 @@
 	<!--Porcupine XML |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||-->
 
 	<ability>
-		<ability_ID>200</ability_ID>
-		<ability_name>Testing Passive</ability_name>
-		<ability_icon>6_09</ability_icon>
-		<ability_data>
-			<isPassive>true</isPassive>
-		</ability_data>
-		<targeting_list>
-			<noneTargetingData/>
-		</targeting_list>
-		<var_list>
-			<bool name="isPassive">true</bool>
-		</var_list>
-	</ability>
-
-	<ability>
 		<ability_ID>201</ability_ID>
 		<ability_name>Piercing Spine</ability_name>
 		<ability_icon>6_09</ability_icon>
@@ -33,13 +18,20 @@
 		</tooltip_list>
 		<targeting_list>
 			<lineTargetingData>
-				<range>3</range>
+				<range>0.5</range>
 				<width>1</width>
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
+			<float name="castTime">0.1</float>
 			<float name="damage">10</float>
 			<asset name="spinePrefab">spine</asset>
+			<kb name="knockbackDefault">TINY</kb>
+			
+			<!--RED-->
+			<kb name="knockbackRed">MEDIUM</kb>
+			<int name="projectileCount">5</int>
+			<float name="projectileSpreadArc">90</float>
 		</var_list>
 		<ability_tags>
 			<tag>ABILITY_DAMAGE</tag>
@@ -71,7 +63,7 @@
 			</groundTargetingData>
 		</targeting_list>
 		<var_list>
-			<!-- Default -->
+			<float name="castTime">0.2</float>
 			<float name="damage">10</float>
 			<int name="spineCount">16</int>
 			<float name="backpackLifetime">30</float>
@@ -114,6 +106,7 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
+			<float name="castTime">0.2</float>
 			<float name="damage">20</float>
 			<float name="hitboxDuration">0.25</float>
 			<scriptableObject name="hitboxAsset">tail_swipe_hitbox</scriptableObject>
@@ -152,7 +145,7 @@
 			<noneTargetingData/>
 		</targeting_list>
 		<var_list>
-			<float name="castTime">1</float>
+			<float name="castTime">0.5</float>
 			<float name="damage">5</float>
 			<float name="hitboxDuration">4</float>
 			<float name="interval">0.4</float>

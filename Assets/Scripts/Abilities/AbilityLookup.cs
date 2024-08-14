@@ -25,7 +25,6 @@ public static class AbilityLookup
 		{ 103, typeof(Swipe_Ability) },
 		{ 202, typeof(SpineBackpack_Ability) },
 		{ 201, typeof(PiercingSpine_Ability) },
-		{ 200, typeof(Porcupine_Test_Passive) },
 		{ 204, typeof(SpineRain_Ability) },
 		{ 203, typeof(TailWhip_Ability) },
 	};

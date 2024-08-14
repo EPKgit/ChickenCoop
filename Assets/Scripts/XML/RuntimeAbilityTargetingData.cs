@@ -23,6 +23,9 @@ namespace Targeting
         public Vector2 inputPoint { get; private set; } = Vector2.negativeInfinity;
         public Vector2 inputDirectionNormalized { get; private set; }
         public float inputMagnitude { get; private set; }
+        /// <summary>
+        /// Rotation in counterclockwise degrees from 2d up
+        /// </summary>
         public float inputRotationZ { get; private set; }
         public ITargetable inputTarget { get; private set; }
 

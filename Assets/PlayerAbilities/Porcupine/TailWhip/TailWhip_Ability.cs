@@ -51,11 +51,12 @@ public class TailWhip_Ability : Ability
     {
         base.UseAbility();
 
+        Vector2 startPosition = targetingData.inputPoint + -(targetingData.inputDirectionNormalized * 1f);
         var hitboxToUse = BlueUpgraded() ? blueHitboxAsset : hitboxAsset;
         var layerMask = RedUpgraded() ? layerMaskRed : layerMaskDefault;
         var hitboxData = HitboxData.GetBuilder(hitboxToUse)
             .Layer(layerMask)
-            .StartPosition(targetingData.inputPoint)
+            .StartPosition(startPosition)
             .RotationInfo(targetingData.inputRotationZ, targetingData.inputDirectionNormalized)
             .Callback(HitboxCallback)
             .Duration(hitboxDuration)

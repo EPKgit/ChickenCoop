@@ -2095,17 +2095,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2136376036 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7987175305514420297, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-  m_PrefabInstance: {fileID: 9139186485823034384}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43dc22961d51b1446bfdba4457ef8a6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2324766657843645317
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2625,46 +2614,6 @@ PrefabInstance:
     - target: {fileID: 7987175305514420296, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.size
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_ActionId
-      value: 6fe74251-5a03-4778-bf8e-95cc0f88acfa
-      objectReference: {fileID: 0}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_ActionName
-      value: Gameplay/AbilityCancel[/Mouse/rightButton]
-      objectReference: {fileID: 0}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 2136376036}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnAbilityCancel
-      objectReference: {fileID: 0}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PlayerInput, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 7987175305514420298, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
-      propertyPath: m_ActionEvents.Array.data[10].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7987175305514420303, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
       propertyPath: m_Name
