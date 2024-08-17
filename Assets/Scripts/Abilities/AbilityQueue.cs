@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class AbilityQueue
 {
@@ -219,8 +220,13 @@ public class AbilityQueue
 
     public void CancelCurrentAbility()
     {
+        if(abilityInputQueue.Count <= 0)
+        {
+            return;
+        }
+
         AbilityInputData current = abilityInputQueue.Peek();
-        if(current.state == AbilityInputData.AbilityInputState.WAITING_FOR_INPUT)
+        if (current.state == AbilityInputData.AbilityInputState.WAITING_FOR_INPUT)
         {
             current.state = AbilityInputData.AbilityInputState.CANCELLED;
         }

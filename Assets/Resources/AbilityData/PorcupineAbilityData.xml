@@ -23,14 +23,14 @@
 			</lineTargetingData>
 		</targeting_list>
 		<var_list>
-			<float name="castTime">0.1</float>
+			<!--<float name="castTime">0.1</float>-->
 			<float name="damage">10</float>
 			<asset name="spinePrefab">spine</asset>
 			<kb name="knockbackDefault">TINY</kb>
 			
 			<!--RED-->
 			<kb name="knockbackRed">MEDIUM</kb>
-			<int name="projectileCount">5</int>
+			<int name="projectileCountRed">5</int>
 			<float name="projectileSpreadArc">90</float>
 		</var_list>
 		<ability_tags>

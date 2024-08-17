@@ -15,7 +15,7 @@ public class PiercingSpine_Ability : Ability
 
     // RED
     public KnockbackPreset knockbackRed;
-    public int projectileCount;
+    public int projectileCountRed;
     public float projectileSpreadArc;
 
     public override void Initialize(PlayerAbilities pa)
@@ -51,36 +51,28 @@ public class PiercingSpine_Ability : Ability
         Vector2 direction = targetingData.inputDirectionNormalized;
         direction = Lib.DefaultDirectionCheck(direction);
         direction *= projectileSpeed;
-        GameObject temp = PoolManager.instance.RequestObject(spinePrefab);
-        temp.GetComponent<SpineProjectile_Script>().Setup
-        (
-            playerAbilities.transform.position,
-            direction,
-            playerAbilities.gameObject,
-            damage,
-            projectileLifetime,
-            knockback
-        );
         
-        if(!RedUpgraded())
+        float projectileCount = 1;
+        float startingDegrees = targetingData.inputRotationZ;
+        float degreeInc = 0;
+        if (RedUpgraded())
         {
-            return;
+            projectileCount = projectileCountRed;
+            startingDegrees -= (projectileSpreadArc / 2);
+            if(projectileCount <= 1)
+            {
+                throw new System.Exception();
+            }
+            degreeInc = projectileSpreadArc / (projectileCount - 1);
         }
 
-        float degreeInc = projectileSpreadArc / projectileCount;
-        float startingDegrees = targetingData.inputRotationZ - (projectileSpreadArc / 2);
         for (int i = 0; i < projectileCount; ++i)
         {
-            if (i == projectileCount / 2)
-            {
-                continue;
-            }
-            l
             float rot = (startingDegrees + degreeInc * i) % 360 * Mathf.Deg2Rad;
             float x = -Mathf.Sin(rot);
             float y = Mathf.Cos(rot);
             direction = new Vector2(x, y) * projectileSpeed;
-            temp = PoolManager.instance.RequestObject(spinePrefab);
+            GameObject temp = PoolManager.instance.RequestObject(spinePrefab);
             temp.GetComponent<SpineProjectile_Script>().Setup
             (
                 playerAbilities.transform.position,
