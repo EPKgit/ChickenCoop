@@ -131,12 +131,10 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable, IShieldable
 		if(HasShield())
 		{
             ShieldAbsorbtionData saData = new ShieldAbsorbtionData();
-			saData.amountAbsorbed = Math.Min(currentShield, mutableEventData.delta);
+			saData.amountAbsorbed = Math.Min(currentShield, mutableEventData.rawDelta);
 
-            DebugFlags.Log(DebugFlags.Flags.HEALTH, $"hitting shield of {currentShield} for {mutableEventData.delta}");
-            currentShield += mutableEventData.delta;
-
-			
+            DebugFlags.Log(DebugFlags.Flags.HEALTH, $"hitting shield of {currentShield} for {mutableEventData.rawDelta}");
+            currentShield += mutableEventData.rawDelta;			
 
             if (currentShield <= 0)
 			{
@@ -157,8 +155,8 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable, IShieldable
 			return;
         }
 
-        DebugFlags.Log(DebugFlags.Flags.HEALTH, $"taking {mutableEventData.delta}");
-		currentHealth += mutableEventData.delta;
+        DebugFlags.Log(DebugFlags.Flags.HEALTH, $"taking {mutableEventData.rawDelta}");
+		currentHealth += mutableEventData.rawDelta;
         
 		if (hcData.KnockbackData != null && knockbackHandler != null)
         {
@@ -188,7 +186,7 @@ public class BaseHealth : MonoBehaviour, IHealable, IDamagable, IShieldable
 		{
 			return;
 		}
-		currentHealth += mutableEventData.delta;
+		currentHealth += mutableEventData.rawDelta;
 		float aggroValue = data.BilateralData.OverallSource?.GetComponent<StatBlockComponent>()?.GetValue(StatName.AggroPercentage) ?? 1;
 		postHealNotification(data);
 		healthChangeNotification(data);

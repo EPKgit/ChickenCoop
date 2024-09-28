@@ -13,9 +13,9 @@ public class EnemyHealth : BaseHealth
     void OnDamage(HealthChangeData hcd)
     {
         Vector3 location;
-        if (hcd.DamageLocation != null)
+        if (hcd.ChangeLocation != null)
         {
-            location = hcd.DamageLocation();
+            location = hcd.ChangeLocation();
         }
         else if (hcd.BilateralData.Target != null)
         {

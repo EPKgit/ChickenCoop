@@ -11,7 +11,7 @@ public class BilateralData
     public GameObject Target = null;
 }
 
-public class StatInfluencedData
+public class StatInfluenceData
 {
     public StatName FlatStat = StatName.MAX;
     public StatName PercentageStat = StatName.MAX;

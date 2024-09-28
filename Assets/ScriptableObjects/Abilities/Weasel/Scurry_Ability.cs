@@ -33,7 +33,7 @@ public class Scurry_Ability : Ability
     {
         base.UseAbility();
         movementSpeedBonusHandle = statBlock.GetStat(StatName.MovementSpeed)?.AddMultiplicativeModifier(movementSpeedMultiplier);
-        dmgStatusHandle = statBlock.GetStat(StatName.DamagePercentage)?.AddMultiplicativeModifier(damageMultiplier);
+        dmgStatusHandle = statBlock.GetStat(StatName.DamageAmplification)?.AddMultiplicativeModifier(damageMultiplier);
 
         if(GetAbilityUpgradeStatus(AbilityUpgradeSlot.RED))
         {
@@ -92,7 +92,7 @@ public class Scurry_Ability : Ability
         }
         if (dmgStatusHandle != null)
         {
-            statBlock.GetStat(StatName.DamagePercentage)?.RemoveMultiplicativeModifier(dmgStatusHandle);
+            statBlock.GetStat(StatName.DamageAmplification)?.RemoveMultiplicativeModifier(dmgStatusHandle);
             dmgStatusHandle = null;
         }
     }

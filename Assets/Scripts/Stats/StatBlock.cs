@@ -9,15 +9,23 @@ public enum StatName
     //General 
     MovementSpeed, 
     MaxHealth,
-    
+
     //Damage
     AggroPercentage, 
-    DamagePercentage,
+    DamageAmplification,
     FlatDamage,
+    
+    //Damage Resistance
+    DamageResistance,
+    Armor,
 
-    //Healing
+    // Outgoing Healing
     HealingPercentage, 
     FlatHealing, 
+
+    //Incoming Healing
+    HealingResistance,
+    HealingArmor,
 
     //Shielding
     ShieldingPercentage,
@@ -43,6 +51,14 @@ public enum StatName
     MAX
 }
 
+public static class StatNameExt
+{
+    public static bool IsMax(this StatName statName)
+    {
+        return statName == StatName.MAX;
+    }
+}
+
 [System.Serializable]
 public class StatBlock : ISerializationCallbackReceiver
 {
@@ -52,23 +68,45 @@ public class StatBlock : ISerializationCallbackReceiver
 
     public static Dictionary<StatName, float> defaultValues = new Dictionary<StatName, float>()
     {
-
+        //General 
         { StatName.MovementSpeed,               1.0f },
         { StatName.MaxHealth,                   1.0f },
+
+        //Damage
         { StatName.AggroPercentage,             1.0f },
-        { StatName.DamagePercentage,            1.0f },
+        { StatName.DamageAmplification,         0.0f },
         { StatName.FlatDamage,                  0.0f },
+
+        //Damage Resistance
+        { StatName.DamageResistance,            0.0f },
+        { StatName.Armor,                       0.0f },
+
+        // Outgoing Healing
         { StatName.HealingPercentage,           1.0f },
         { StatName.FlatHealing,                 0.0f },
+
+        //Incoming Healing
+        { StatName.HealingResistance,           0.0f },
+        { StatName.HealingArmor,                0.0f },
+
+        //Shielding
         { StatName.ShieldingPercentage,         1.0f },
         { StatName.FlatShielding,               0.0f },
+
+        //Knockback
+        { StatName.KnockbackDurationResistance, 0.0f },
+        { StatName.KnockbackForceResistance,    0.0f },
+
+        //Abilities
         { StatName.CooldownReduction,           1.0f },
         { StatName.CooldownSpeed,               1.0f },
         { StatName.CastingSpeed,                1.0f },
         { StatName.SpeedWhileCastingModifier,   0.2f },
-        { StatName.KnockbackDurationResistance, 0.0f },
-        { StatName.KnockbackForceResistance,    0.0f },
+
+        //Misc
         { StatName.PuzzleSolving,               0.0f },
+
+        // PORCUPINE
         { StatName.SpineDuration,               0.2f },
         { StatName.SpineSpeed,                  25.0f },
     };
@@ -253,7 +291,7 @@ public class StatBlock : ISerializationCallbackReceiver
         string s = "";
         foreach (var pair in statDict)
         {
-            s += string.Format("{0}:{1}\n", pair.Key.ToString(), pair.Value.Value);
+            s += string.Format("{0} : {1}\n", pair.Key.ToString(), pair.Value.Value);
         }
         return s;
     }

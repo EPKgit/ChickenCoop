@@ -9,14 +9,16 @@ public delegate void KilledCharacterDelegate(GameObject killed);
 public class MutableHealthChangeEventData
 {
     public HealthChangeData data;
-    public float delta;
+    public float rawDelta;
+    public float finalDelta;
     public bool cancelled;
     public bool targetHasShield;
 
     public MutableHealthChangeEventData(HealthChangeData data, bool targetHasShield)
     {
         this.data = data;
-        this.delta = data.Delta;
+        this.rawDelta = data.UnmodifiedDelta;
+        this.finalDelta = data.Delta;
         this.cancelled = false;
         this.targetHasShield = targetHasShield;
     }
@@ -29,8 +31,9 @@ public class HealthChangeData
     public float Delta { get; private set; }
     public float UnmodifiedDelta { get;  private set; }
     public KnockbackData KnockbackData { get; private set; } = null;
-    public Func<Vector3> DamageLocation { get; private set; }
-    public StatInfluencedData StatInfluencedData { get; private set; } = new StatInfluencedData();
+    public Func<Vector3> ChangeLocation { get; private set; }
+    public StatInfluenceData InstigatorStatData { get; private set; } = new StatInfluenceData();
+    public StatInfluenceData ResistorStatData { get; private set; } = new StatInfluenceData();
 
     public class HealthChangeDataBuilder
     {
@@ -86,26 +89,42 @@ public class HealthChangeData
         public HealthChangeDataBuilder Damage(float f)
         {
             data.UnmodifiedDelta = -f;
-            if (data.StatInfluencedData.PercentageStat == StatName.MAX)
+            if (data.InstigatorStatData.PercentageStat == StatName.MAX)
             {
-                data.StatInfluencedData.PercentageStat = StatName.DamagePercentage;
+                data.InstigatorStatData.PercentageStat = StatName.DamageAmplification;
             }
-            if (data.StatInfluencedData.FlatStat == StatName.MAX)
+            if (data.InstigatorStatData.FlatStat == StatName.MAX)
             {
-                data.StatInfluencedData.FlatStat = StatName.FlatDamage;
+                data.InstigatorStatData.FlatStat = StatName.FlatDamage;
+            }
+            if(data.ResistorStatData.PercentageStat == StatName.MAX)
+            {
+                data.ResistorStatData.PercentageStat = StatName.DamageResistance;
+            }
+            if (data.ResistorStatData.FlatStat == StatName.MAX)
+            {
+                data.ResistorStatData.FlatStat = StatName.Armor;
             }
             return this;
         }
 
         public HealthChangeDataBuilder Healing(float f)
         {
-            if (data.StatInfluencedData.PercentageStat == StatName.MAX)
+            if (data.InstigatorStatData.PercentageStat == StatName.MAX)
             {
-                data.StatInfluencedData.PercentageStat = StatName.HealingPercentage;
+                data.InstigatorStatData.PercentageStat = StatName.HealingPercentage;
             }
-            if (data.StatInfluencedData.FlatStat == StatName.MAX)
+            if (data.InstigatorStatData.FlatStat == StatName.MAX)
             {
-                data.StatInfluencedData.FlatStat = StatName.FlatHealing;
+                data.InstigatorStatData.FlatStat = StatName.FlatHealing;
+            }
+            if (data.ResistorStatData.PercentageStat == StatName.MAX)
+            {
+                data.ResistorStatData.PercentageStat = StatName.HealingResistance;
+            }
+            if (data.ResistorStatData.FlatStat == StatName.MAX)
+            {
+                data.ResistorStatData.FlatStat = StatName.HealingArmor;
             }
             return Value(f);
         }
@@ -124,19 +143,31 @@ public class HealthChangeData
 
         public HealthChangeDataBuilder LocationFunction(Func<Vector3> f)
         {
-            data.DamageLocation = f;
+            data.ChangeLocation = f;
             return this;
         }
 
-        public HealthChangeDataBuilder PercentageStat(StatName stat)
+        public HealthChangeDataBuilder InstigatorPercentageStat(StatName stat)
         {
-            data.StatInfluencedData.PercentageStat = stat;
+            data.InstigatorStatData.PercentageStat = stat;
             return this;
         }
 
-        public HealthChangeDataBuilder FlatStat(StatName stat)
+        public HealthChangeDataBuilder IntigatorFlatStat(StatName stat)
         {
-            data.StatInfluencedData.FlatStat = stat;
+            data.InstigatorStatData.FlatStat = stat;
+            return this;
+        }
+
+        public HealthChangeDataBuilder ResistorPercentageStat(StatName stat)
+        {
+            data.ResistorStatData.PercentageStat = stat;
+            return this;
+        }
+
+        public HealthChangeDataBuilder ResistorFlatStat(StatName stat)
+        {
+            data.ResistorStatData.FlatStat = stat;
             return this;
         }
 
@@ -163,16 +194,19 @@ public class HealthChangeData
             }
             else
             {
-                bool negative = data.UnmodifiedDelta < 0;
-                float flatIncrease = stats.GetValue(data.StatInfluencedData.FlatStat);
-                float percentIncrease = stats.GetValue(data.StatInfluencedData.PercentageStat);
-                if(negative)
+                data.Delta = Mathf.Abs(data.UnmodifiedDelta);
+                
+                float flatIncrease = stats.GetValue(data.InstigatorStatData.FlatStat);
+                float percentIncrease = stats.GetValue(data.InstigatorStatData.PercentageStat);
+                data.Delta = (data.Delta + flatIncrease) * (1.0f + percentIncrease);
+
+                float flatDecrease = stats.GetValue(data.ResistorStatData.FlatStat);
+                float percentDecrease = stats.GetValue(data.ResistorStatData.PercentageStat);
+                data.Delta = data.Delta * (1.0f - percentDecrease) - flatDecrease;
+
+                if(data.UnmodifiedDelta < 0)
                 {
-                    data.Delta = (data.UnmodifiedDelta - flatIncrease) * percentIncrease;
-                }
-                else
-                {
-                    data.Delta = (data.UnmodifiedDelta + flatIncrease) * percentIncrease;
+                    data.Delta = -data.Delta;
                 }
             }
             data.Valid = true;

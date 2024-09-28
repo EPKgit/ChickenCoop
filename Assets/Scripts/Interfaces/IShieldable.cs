@@ -32,7 +32,7 @@ public class ShieldApplicationData
     public BilateralData BilateralData { get; private set; } = new BilateralData();
     public float Value { get; private set; }
     public float InitialValue { get; private set; } = -1;
-    public StatInfluencedData StatInfluencedData { get; private set; } = new StatInfluencedData();
+    public StatInfluenceData StatInfluencedData { get; private set; } = new StatInfluenceData();
 
     public class ShieldApplicationDataBuilder
     {
