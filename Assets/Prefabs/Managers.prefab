@@ -112,6 +112,8 @@ MonoBehaviour:
     spawningEffect: {fileID: 6187125037231300774, guid: d720295e61e68dd4683b35658ae53ac9, type: 3}
   - prefab: {fileID: 4143272025756334814, guid: 5a5a7aeac3d1e9540b4aefa34b908cd9, type: 3}
     spawningEffect: {fileID: 6187125037231300774, guid: d720295e61e68dd4683b35658ae53ac9, type: 3}
+  - prefab: {fileID: 1905754657136250373, guid: 3392c410a73d3a945bd6e838d8f700d8, type: 3}
+    spawningEffect: {fileID: 6187125037231300774, guid: d720295e61e68dd4683b35658ae53ac9, type: 3}
 --- !u!114 &396800620
 MonoBehaviour:
   m_ObjectHideFlags: 0

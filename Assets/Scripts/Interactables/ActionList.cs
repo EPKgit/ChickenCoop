@@ -16,7 +16,6 @@ public class ActionList
 
 	public ActionList()
 	{
-		//actions = new SortedList<int, PerformableAction>(new PerformableActionComparator());
 		actions = new List<PerformableAction>();
 	}
 
@@ -39,7 +38,7 @@ public class ActionList
 		PerformableAction candidate = null;
 		foreach (var action in actions)
         {
-			if (!(action.IsPerformable?.Invoke() ?? false)) //we only want to check if it's a better candidate if we can perform it
+			if (!(action.isPerformable?.Invoke() ?? false)) //we only want to check if it's a better candidate if we can perform it
             {
 				continue;
             }

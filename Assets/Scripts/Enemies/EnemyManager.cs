@@ -9,6 +9,7 @@ public enum EnemyType
     NORMAL,
     SHIELD,
     HEAVY,
+    ARMORED,
     MAX,
 }
 

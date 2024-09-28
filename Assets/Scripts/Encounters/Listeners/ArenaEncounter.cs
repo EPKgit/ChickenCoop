@@ -69,6 +69,7 @@ public class ArenaEncounter : IEncounterListener
         }
     }
 
+#if UNITY_EDITOR
     public override void OnDrawGizmosSelected(Encounter encounter)
     {
         if (spawnPoints == null)
@@ -90,4 +91,5 @@ public class ArenaEncounter : IEncounterListener
             waveData.OnDrawGizmosSelected(encounter.transform.position, false);
         }
     }
+#endif
 }

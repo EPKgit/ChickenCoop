@@ -5,9 +5,9 @@ using UnityEngine;
 public class PerformableAction
 {
 	public GameObject source;	
-	public Func<bool> IsPerformable;	
-	public int priority; //
-	public Action<GameObject> Action;
+	public Func<bool> isPerformable;	
+	public int priority;
+	public Action<GameObject> action;
 
 	/// <summary>
 	/// Create an instance of a PerformableAction
@@ -21,8 +21,8 @@ public class PerformableAction
 	public PerformableAction(GameObject s, Func<bool> bd, int p, Action<GameObject> ad)
 	{
 		source = s;
-		IsPerformable = bd;
+		isPerformable = bd;
 		priority = p;
-		Action = ad;
+		action = ad;
 	}
 }

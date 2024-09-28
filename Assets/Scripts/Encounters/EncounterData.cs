@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
-using static UnityEngine.GraphicsBuffer;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace Encounters
 { 
@@ -32,6 +28,7 @@ namespace Encounters
         public Rect spawnArea;
         public int spawnCount;
 
+#if UNITY_EDITOR
         public void OnDrawGizmosSelected(Vector2 encounterPosition, bool doColor)
         {
             if (doColor)
@@ -78,8 +75,8 @@ namespace Encounters
                 default:
                     throw new System.Exception();
             }
-
         }
+#endif
     }
 
     [System.Serializable]
@@ -96,7 +93,7 @@ namespace Encounters
         }
         public EnemySpawnData[] spawns;
 
-        
+#if UNITY_EDITOR
         public void OnDrawGizmosSelected(Vector2 encounterPosition, bool doColor)
         {
             #if UNITY_EDITOR_WIN
@@ -110,6 +107,7 @@ namespace Encounters
                 data.spawnData.OnDrawGizmosSelected(encounterPosition, doColor);
             }
         }
+#endif
     }
 
 
