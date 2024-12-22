@@ -52,7 +52,12 @@ public class Hitbox : Poolable
 #endif
         if (data.ShapeType == HitboxShapeType.POLYGON)
         {
-            polyCollider.points = data.Points;
+            Vector2[] scaledPoints = new Vector2[data.Points.Length];
+            for (int i = 0; i < data.Points.Length; ++i)
+            {
+                scaledPoints[i] = data.Points[i] * data.Scale;
+            }
+            polyCollider.points = scaledPoints;
             polyCollider.enabled = true;
         }
         else
@@ -104,14 +109,14 @@ public class Hitbox : Poolable
         switch (data.ShapeType)
         {
             case HitboxShapeType.CIRCLE:
-                amount = Physics2D.OverlapCircleNonAlloc(transform.position, data.Radius, collisions, data.LayerMask.value);
+                amount = Physics2D.OverlapCircleNonAlloc(transform.position, data.Radius * data.Scale, collisions, data.LayerMask.value);
                 break;
             case HitboxShapeType.SQUARE:
-                amount = Physics2D.OverlapBoxNonAlloc(transform.position, new Vector2(data.Radius * 2, data.Length * 2), data.StartRotationZ, collisions, data.LayerMask.value);
+                amount = Physics2D.OverlapBoxNonAlloc(transform.position, new Vector2(data.Radius * data.Scale * 2, data.Length * data.Scale * 2), data.StartRotationZ, collisions, data.LayerMask.value);
                 break;
             case HitboxShapeType.PROJECTED_RECT:
-                Vector2 center = (Vector2)transform.position + data.Axis * data.Length * 0.5f;
-                amount = Physics2D.OverlapBoxNonAlloc(center, new Vector2(data.Radius, data.Length), data.StartRotationZ, collisions, data.LayerMask.value);
+                Vector2 center = (Vector2)transform.position + (data.Axis * data.Length * data.Scale * 0.5f);
+                amount = Physics2D.OverlapBoxNonAlloc(center, new Vector2(data.Radius * data.Scale, data.Length * data.Scale), data.StartRotationZ, collisions, data.LayerMask.value);
                 break;
             case HitboxShapeType.POLYGON:
                 ContactFilter2D filter = new ContactFilter2D();
@@ -248,20 +253,20 @@ public class Hitbox : Poolable
             case HitboxShapeType.SQUARE:
             {
                 var points = new Vector3[4];
-                points[0] = transform.rotation * new Vector3(-data.Radius, -data.Length) + transform.position;
-                points[1] = transform.rotation * new Vector3( data.Radius, -data.Length) + transform.position;
-                points[2] = transform.rotation * new Vector3( data.Radius,  data.Length) + transform.position;
-                points[3] = transform.rotation * new Vector3(-data.Radius,  data.Length) + transform.position;
+                points[0] = transform.position + transform.rotation * new Vector3(-data.Radius * data.Scale, -data.Length * data.Scale);
+                points[1] = transform.position + transform.rotation * new Vector3( data.Radius * data.Scale, -data.Length * data.Scale);
+                points[2] = transform.position + transform.rotation * new Vector3( data.Radius * data.Scale,  data.Length * data.Scale);
+                points[3] = transform.position + transform.rotation * new Vector3(-data.Radius * data.Scale,  data.Length * data.Scale);
                 UnityEditor.Handles.DrawAAConvexPolygon(points);
             } break;
 
             case HitboxShapeType.PROJECTED_RECT:
             {
                 var points = new Vector3[4];
-                points[0] = transform.rotation * new Vector3(-data.Radius, 0) + transform.position;
-                points[1] = transform.rotation * new Vector3(data.Radius, 0) + transform.position;
-                points[2] = transform.rotation * new Vector3(data.Radius, data.Length) + transform.position;
-                points[3] = transform.rotation * new Vector3(-data.Radius, data.Length) + transform.position;
+                points[0] = transform.position + transform.rotation * new Vector3(-data.Radius * data.Scale, 0);
+                points[1] = transform.position + transform.rotation * new Vector3( data.Radius * data.Scale, 0);
+                points[2] = transform.position + transform.rotation * new Vector3( data.Radius * data.Scale, data.Length * data.Scale);
+                points[3] = transform.position + transform.rotation * new Vector3(-data.Radius * data.Scale, data.Length * data.Scale);
                 UnityEditor.Handles.DrawAAConvexPolygon(points);
             }
             break;
@@ -272,7 +277,7 @@ public class Hitbox : Poolable
                 int x = 0;
                 foreach(Vector2 v in data.Points)
                 {
-                    points[x] = (transform.rotation * (Vector3)data.Points[x++]) + transform.position;
+                    points[x] = (transform.rotation * (Vector3)(data.Points[x++] * data.Scale)) + transform.position;
                 }
                 UnityEditor.Handles.DrawAAConvexPolygon(points);
             } break;
@@ -295,25 +300,24 @@ public class Hitbox : Poolable
         switch (data.ShapeType)
         {
             case HitboxShapeType.CIRCLE:
-                GLHelpers.GLDrawCircle(transform, data.Radius, 32, color);
+                GLHelpers.GLDrawCircle(transform, data.Radius * data.Scale, 32, color);
                 break;
             case HitboxShapeType.SQUARE:
             {
-                Rect rect = new Rect(0, 0, data.Radius * 2, data.Length * 2);
+                Rect rect = new Rect(0, 0, data.Radius * data.Scale * 2, data.Length * data.Scale * 2);
                 GLHelpers.GLDrawRect(transform, rect, color);
             } break;
             case HitboxShapeType.PROJECTED_RECT:
             {
-                Rect rect = new Rect(0, 0, data.Radius * 2, data.Length);
-                rect.center = data.Axis * 0.5f * data.Length;
+                Rect rect = new Rect(0, 0, data.Radius * data.Scale * 2, data.Length * data.Scale);
+                rect.center = data.Axis * 0.5f * data.Length * data.Scale;
                 GLHelpers.GLDrawRect(transform, rect, color);
             } break;
             case HitboxShapeType.POLYGON:
                 var points = new Vector3[data.Points.Length];
-                int x = 0;
-                foreach (Vector2 v in data.Points)
+                for(int i = 0; i < data.Points.Length; ++i)
                 {
-                    points[x] = data.Points[x++];
+                    points[i] = data.Points[i] * data.Scale;
                 }
                 GLHelpers.GLDrawPolygon(transform, points, color);
                 break;

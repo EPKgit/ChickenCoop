@@ -157,13 +157,9 @@ public abstract class Ability
     /// <summary>
     /// Helper property to display ranges when needed
     /// </summary>
-    public float Range
-    {
-        get
-        {
-            return targetingData.Range;
-        }
-    }
+    public float Range => targetingData.Range;
+
+    public float BaseRange => targetingData.BaseRange;
 
     /// <summary>
     /// The index of what type of targeting we want to use on our ability. We can have a wide variety of targeting over a single
@@ -330,13 +326,13 @@ public abstract class Ability
     {
         if (upgradeStatus[(int)slot])
         {
-            OnDowngrade(slot);
             upgradeStatus[(int)slot] = false;
+            OnDowngrade(slot);
         } 
         else
         {
-            OnUpgrade(slot);
             upgradeStatus[(int)slot] = true;
+            OnUpgrade(slot);
         }
     }
 

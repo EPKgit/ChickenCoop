@@ -57,7 +57,11 @@ public class StatusEffectContainerComponent : MonoBehaviour
                 }
             }
         }
-        status.OnApplication(tagComponent);
+        if(!status.OnApplication(tagComponent))
+        {
+            newStatusCreated = false;
+            return null;
+        }
         statuses.Add(status);
         newStatusCreated = true;
         return status;

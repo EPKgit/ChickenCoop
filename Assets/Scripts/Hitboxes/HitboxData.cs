@@ -43,6 +43,7 @@ public class HitboxData
     public Vector2[] Points { get; private set; }
     public float Radius { get; private set; } = -1.0f;
     public float Length { get; private set; } = -1.0f;
+    public float Scale { get; private set; } = 1.0f;
     public HitboxInteractionType InteractionType { get; private set; } = HitboxInteractionType.ALL;
     public HitboxRepeatPolicy RepeatPolicy { get; private set; } = HitboxRepeatPolicy.ONLY_ONCE;
     public float RepeatCooldown { get; private set; } = -1;
@@ -125,6 +126,12 @@ public class HitboxData
         public HitboxDataBuilder Length(float l)
         {
             data.Length = l;
+            return this;
+        }
+
+        public HitboxDataBuilder Scale(float s)
+        {
+            data.Scale = s;
             return this;
         }
 

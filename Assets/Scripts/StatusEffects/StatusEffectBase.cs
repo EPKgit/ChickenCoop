@@ -62,7 +62,7 @@ public abstract class StatusEffectBase
     /// after determining if we have a valid target
     /// </summary>
     /// <param name="tagComponent">The target</param>
-    public void OnApplication(GameplayTagComponent tagComponent) 
+    public bool OnApplication(GameplayTagComponent tagComponent) 
     {
         if (OnApplicationInternal(tagComponent))
         {
@@ -71,7 +71,9 @@ public abstract class StatusEffectBase
             {
                 tagHandles.Add(tagComponent.tags.AddTag(flag));
             }
+            return true;
         }
+        return false;
     }
 
     /// <summary>
@@ -89,10 +91,13 @@ public abstract class StatusEffectBase
     /// </summary>
     /// <param name="tagComponent">The target</param>
     public void OnRemoval(GameplayTagComponent appliedTo) 
-    { 
-        foreach(GameplayTagInternals.GameplayTagID i in tagHandles)
+    {
+        if (tagHandles != null)
         {
-            appliedTo.tags.RemoveFirstTagWithID(i);
+            foreach (GameplayTagInternals.GameplayTagID i in tagHandles)
+            {
+                appliedTo.tags.RemoveFirstTagWithID(i);
+            }
         }
         OnRemovalInternal(appliedTo);
         OnRemoved.Invoke(this);

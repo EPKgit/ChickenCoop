@@ -9,25 +9,43 @@ public class TailWhip_Ability : Ability
 
     public float damage = 20.0f;
     public float hitboxDuration = 0.25f;
+    public float hitboxScaleDefault = 2.0f;
     public HitboxDataAsset hitboxAsset;
 
     // RED
     public float backpackKnockbackDuration = 1.0f;
     public float backpackKnockbackForce = 1.0f;
 
+    // YELLOW
+    public float hitboxScaleModifierYellow = 1.5f;
+
     // BLUE
     public float slowDuration = 2.0f;
     public float slowPercentage = 0.5f;
+    public float hitboxScaleBlue = 1.0f;
     public HitboxDataAsset blueHitboxAsset;
 
     private LayerMask layerMaskDefault;
     private LayerMask layerMaskRed;
+    private float CurrentHitboxScale
+    {
+        get
+        {
+            float currentScale = BlueUpgraded() ? hitboxScaleBlue : hitboxScaleDefault;
+            if(YellowUpgraded())
+            {
+                currentScale *= hitboxScaleModifierYellow;
+            }
+            return currentScale;
+        }
+    }
 
     public override void Initialize(PlayerAbilities pa)
     {
         base.Initialize(pa);
         layerMaskDefault = LayerMask.GetMask("Enemies");
         layerMaskRed = layerMaskDefault | LayerMask.GetMask("PlayerDrops");
+        targetingData.SetPreviewScaleMultiplier(CurrentHitboxScale);
     }
 
     public override void OnUpgrade(AbilityUpgradeSlot slot)
@@ -35,7 +53,13 @@ public class TailWhip_Ability : Ability
         if (slot == AbilityUpgradeSlot.BLUE)
         {
             IncrementTargetingType();
+            targetingData.SetRangeOverride(BaseRange * (YellowUpgraded() ? hitboxScaleModifierYellow : 1.0f));
         }
+        if (slot == AbilityUpgradeSlot.YELLOW)
+        {
+            targetingData.SetRangeOverride(BaseRange * (YellowUpgraded() ? hitboxScaleModifierYellow : 1.0f));
+        }
+        targetingData.SetPreviewScaleMultiplier(CurrentHitboxScale);
     }
 
     public override void OnDowngrade(AbilityUpgradeSlot slot)
@@ -44,19 +68,21 @@ public class TailWhip_Ability : Ability
         {
             DecrementTargetingType();
         }
+        targetingData.SetPreviewScaleMultiplier(CurrentHitboxScale);
     }
 
     protected override void UseAbility()
     {
         base.UseAbility();
 
-        Vector2 startPosition = targetingData.inputPoint + -(targetingData.inputDirectionNormalized * 1f);
+        Vector2 startPosition = playerAbilities.transform.position + (Vector3)targetingData.inputDirectionNormalized * 0.1f;
         var hitboxToUse = BlueUpgraded() ? blueHitboxAsset : hitboxAsset;
         var layerMask = RedUpgraded() ? layerMaskRed : layerMaskDefault;
         var hitboxData = HitboxData.GetBuilder(hitboxToUse)
             .Layer(layerMask)
             .StartPosition(startPosition)
             .RotationInfo(targetingData.inputRotationZ, targetingData.inputDirectionNormalized)
+            .Scale(CurrentHitboxScale)
             .Callback(HitboxCallback)
             .Duration(hitboxDuration)
             .Finalize();

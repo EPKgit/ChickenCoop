@@ -109,13 +109,19 @@
 			<float name="castTime">0.2</float>
 			<float name="damage">20</float>
 			<float name="hitboxDuration">0.25</float>
+			<float name="hitboxScaleDefault">2.0</float>
 			<scriptableObject name="hitboxAsset">tail_swipe_hitbox</scriptableObject>
 
 			<!-- Red -->
 			<float name="backpackKnockbackDuration">0.6</float>
 			<float name="backpackKnockbackForce">12.0</float>
 
+			<!-- Yellow -->
+			<float name="hitboxScaleModifierYellow">1.5</float>
+				
+			<!-- Blue -->
 			<scriptableObject name="blueHitboxAsset">tail_swipe_blue_hitbox</scriptableObject>
+			<float name="hitboxScaleBlue">1.0</float>
 			<float name="slowPercentage">0.2</float>
 			<float name="slowDuration">2.0</float>
 

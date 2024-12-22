@@ -8,7 +8,7 @@ namespace Targeting
     {
         public Affiliation Affiliation { get => _targetingData.affiliation; }
         public Targeting.TargetType TargetType { get => _targetingData.targetType; }
-        public float Range { get => rangeOverride < 0 ? _targetingData.range : rangeOverride; }
+        public float BaseRange { get => _targetingData.range; }
         public OutOfRangeHandlingType OutOfRangeHandlingType { get => _targetingData.outOfRangeHandlingType; }
         public Vector3 PreviewScale { get => _targetingData.previewScale; }
         public GameObject PreviewPrefab { get => _targetingData.rangePreviewPrefab; }
@@ -20,6 +20,7 @@ namespace Targeting
         /// </summary>
         private AbilityTargetingData _targetingData;
 
+        public float Range { get => rangeOverride < 0 ? _targetingData.range : rangeOverride; }
         public Vector2 inputPoint { get; private set; } = Vector2.negativeInfinity;
         public Vector2 inputDirectionNormalized { get; private set; }
         public float inputMagnitude { get; private set; }
@@ -33,6 +34,7 @@ namespace Targeting
         private GameObject previewSecondary;
 
         private float rangeOverride = -1;
+        private float previewScaleMultiplier = 1;
 
         public RuntimeAbilityTargetingData(AbilityTargetingData targetingData)
         {
@@ -173,6 +175,16 @@ namespace Targeting
         {
             rangeOverride = -1;
         }
+        
+        public void SetPreviewScaleMultiplier(float f)
+        {
+            previewScaleMultiplier = f;
+        }
+
+        public void ResetPreviewScaleMultiplier()
+        {
+            previewScaleMultiplier = 1;
+        }
 
         void PreviewLine(Ability usedAbility, GameObject user)
         {
@@ -187,7 +199,7 @@ namespace Targeting
             {
                 previewSecondary.transform.rotation = Quaternion.Euler(0, 0, 360 - Vector3.Angle(Vector3.up, direction));
             }
-            previewSecondary.transform.localScale = new Vector3(PreviewScale.x, Range, 1);
+            previewSecondary.transform.localScale = new Vector3(PreviewScale.x, Range, 1) * previewScaleMultiplier;
         }
 
         void PreviewGround(Ability usedAbility, GameObject user)
@@ -209,7 +221,7 @@ namespace Targeting
                 case OutOfRangeHandlingType.CUSTOM:
                     throw new System.NotImplementedException();
             }
-            Vector2 scale = new Vector2(PreviewScale.x, PreviewScale.y);
+            Vector2 scale = new Vector2(PreviewScale.x, PreviewScale.y) * previewScaleMultiplier;
 
             previewSecondary.transform.localScale = new Vector3(scale.x, scale.y, 1);
         }
@@ -218,6 +230,7 @@ namespace Targeting
         {
             Vector2 aim = user.GetComponent<PlayerInput>().aimPoint;
             ITargetable target = Ability.FindTargetable(aim, Affiliation);
+            previewSecondary.transform.localScale = new Vector3(previewScaleMultiplier, previewScaleMultiplier, previewScaleMultiplier);
             if (target != null)
             {
                 previewSecondary.GetComponent<SpriteRenderer>().color = Color.green;

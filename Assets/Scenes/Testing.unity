@@ -556,7 +556,7 @@ GameObject:
   m_Component:
   - component: {fileID: 367439378}
   - component: {fileID: 367439379}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Dummy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1211,7 +1211,7 @@ GameObject:
   m_Component:
   - component: {fileID: 898811861}
   - component: {fileID: 898811862}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Targeting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1401,11 +1401,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8904934775474808006, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.95
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8904934775474808006, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.7697059
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8904934775474808006, guid: 6c50cb9f1518ade478a609f74c5a24e1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2194,9 +2194,9 @@ GameObject:
   - component: {fileID: 2355492399931680184}
   - component: {fileID: 2355492399931680185}
   - component: {fileID: 2355492399931680186}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EnemyDummy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2354,6 +2354,10 @@ PrefabInstance:
     - target: {fileID: 1905754657136250373, guid: 3392c410a73d3a945bd6e838d8f700d8, type: 3}
       propertyPath: m_Name
       value: ArmoredEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1905754657136250373, guid: 3392c410a73d3a945bd6e838d8f700d8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1905754657136250375, guid: 3392c410a73d3a945bd6e838d8f700d8, type: 3}
       propertyPath: m_RootOrder
@@ -2654,7 +2658,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7987175305514420296, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.48
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7987175305514420296, guid: 448389af815a5054388a3b3f968f4b10, type: 3}
       propertyPath: m_LocalPosition.z
